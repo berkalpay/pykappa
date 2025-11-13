@@ -470,8 +470,19 @@ class System:
         else:
             self.tallies[str(rule)]["failed"] += 1
 
+    def _warn_about_rule_symmetries(self) -> None:
+        if any(
+            isinstance(rule, KappaRule) and rule.n_symmetries > 1
+            for rule in self.rules.values()
+        ):
+            warnings.warn(
+                "Some rules have multiple symmetries; Kappybara normalizes reactivities correspondingly. "
+                "Results may differ from KaSim."
+            )
+
     def update(self) -> None:
         """Perform one simulation step."""
+        self._warn_about_rule_symmetries()
         self.wait()
         if (rule := self.choose_rule()) is not None:
             self.apply_rule(rule)
@@ -491,6 +502,7 @@ class System:
         Raises:
             AssertionError: If KaSim is not found in PATH.
         """
+        self._warn_about_rule_symmetries()
         assert shutil.which(
             "KaSim"
         ), "To update via KaSim, it must be installed and in the PATH."
