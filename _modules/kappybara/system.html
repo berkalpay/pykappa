@@ -847,10 +847,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">tallies</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)][</span><span class="s2">&quot;failed&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_warn_about_rule_symmetries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">)</span> <span class="ow">and</span> <span class="n">rule</span><span class="o">.</span><span class="n">n_symmetries</span> <span class="o">&gt;</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Some rules have multiple symmetries; Kappybara normalizes reactivities correspondingly. &quot;</span>
+                <span class="s2">&quot;Results may differ from KaSim.&quot;</span>
+            <span class="p">)</span>
+
 <div class="viewcode-block" id="System.update">
 <a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform one simulation step.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_warn_about_rule_symmetries</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">rule</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choose_rule</span><span class="p">())</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apply_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
@@ -873,6 +884,7 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If KaSim is not found in PATH.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_warn_about_rule_symmetries</span><span class="p">()</span>
         <span class="k">assert</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span>
             <span class="s2">&quot;KaSim&quot;</span>
         <span class="p">),</span> <span class="s2">&quot;To update via KaSim, it must be installed and in the PATH.&quot;</span>
