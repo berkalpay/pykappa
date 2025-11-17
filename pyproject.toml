@@ -1,6 +1,6 @@
 [project]
 name = "kappybara"
-version = "0.1.3"
+version = "0.1.4"
 description = "Work with Kappa rule-based models in Python"
 readme = "README.md"
 requires-python = ">=3.12"
