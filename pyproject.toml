@@ -11,8 +11,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://kappybara.io"
-Documentation = "https://kappybara.io/api/index.html"
+Homepage = "https://pykappa.org"
+Documentation = "https://pykappa.org/api/index.html"
 Repository = "https://github.com/berkalpay/kappybara"
 Issues = "https://github.com/berkalpay/kappybara/issues"
 
