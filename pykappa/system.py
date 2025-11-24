@@ -476,7 +476,7 @@ class System:
             for rule in self.rules.values()
         ):
             warnings.warn(
-                "Some rules have multiple symmetries; Kappybara normalizes reactivities correspondingly. "
+                "Some rules have multiple symmetries; PyKappa normalizes reactivities correspondingly. "
                 "Results may differ from KaSim."
             )
 
@@ -494,7 +494,7 @@ class System:
 
         Note:
             KaSim must be installed and in the PATH.
-            Some features may not be compatible between Kappybara and KaSim.
+            Some features may not be compatible between PyKappa and KaSim.
 
         Args:
             time: Additional time units to simulate.

@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "Kappybara"
-copyright = "2025, Kappybara Developers"
-author = "Kappybara Developers"
+project = "PyKappa"
+copyright = "2025, PyKappa Developers"
+author = "PyKappa Developers"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -48,4 +48,4 @@ html_theme_options = {
     ],
 }
 html_static_path = ["_static"]
-html_title = "Kappybara"
+html_title = "PyKappa"
