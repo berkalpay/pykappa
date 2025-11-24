@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>kappybara.algebra &#8212; Kappybara</title>
+    <title>pykappa.algebra &#8212; Kappybara</title>
   
   
   
@@ -41,7 +41,7 @@
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/kappybara/algebra';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pykappa/algebra';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -180,7 +180,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -278,7 +278,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -325,7 +325,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kappybara.algebra</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pykappa.algebra</span></li>
   </ul>
 </nav>
 </div>
@@ -342,15 +342,15 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for kappybara.algebra</h1><div class="highlight"><pre>
+  <h1>Source code for pykappa.algebra</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
 
 
 <span class="n">string_to_operator</span> <span class="o">=</span> <span class="p">{</span>
@@ -379,7 +379,7 @@
 
 
 <div class="viewcode-block" id="parse_operator">
-<a class="viewcode-back" href="../../api/generated/kappybara.algebra.html#kappybara.algebra.parse_operator">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.algebra.html#pykappa.algebra.parse_operator">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_operator</span><span class="p">(</span><span class="n">kappa_operator</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Kappa string operator to a Python function.</span>
 
@@ -400,7 +400,7 @@
 
 
 <div class="viewcode-block" id="Expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.algebra.html#kappybara.algebra.Expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.algebra.html#pykappa.algebra.Expression">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Expression</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Algebraic expressions as specified by the Kappa language.</span>
 
@@ -410,7 +410,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Expression.from_kappa">
-<a class="viewcode-back" href="../../api/generated/kappybara.algebra.html#kappybara.algebra.Expression.from_kappa">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.algebra.html#pykappa.algebra.Expression.from_kappa">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_kappa</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">kappa_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse an Expression from a Kappa string.</span>
@@ -424,7 +424,7 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If the string doesn&#39;t represent a valid expression.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">kappa_parser</span><span class="p">,</span> <span class="n">parse_tree_to_expression</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">kappa_parser</span><span class="p">,</span> <span class="n">parse_tree_to_expression</span>
 
         <span class="n">input_tree</span> <span class="o">=</span> <span class="n">kappa_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">kappa_str</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;kappa_input&quot;</span>
@@ -499,7 +499,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported node type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Expression.evaluate">
-<a class="viewcode-back" href="../../api/generated/kappybara.algebra.html#kappybara.algebra.Expression.evaluate">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.algebra.html#pykappa.algebra.Expression.evaluate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the expression to get its value.</span>
 
@@ -586,7 +586,7 @@
 
 
 <div class="viewcode-block" id="Expression.filter">
-<a class="viewcode-back" href="../../api/generated/kappybara.algebra.html#kappybara.algebra.Expression.filter">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.algebra.html#pykappa.algebra.Expression.filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns all nodes in the expression tree whose type matches the provided string.</span>

@@ -1,7 +1,7 @@
-﻿kappybara.mixture
-=================
+﻿pykappa.mixture
+===============
 
-.. automodule:: kappybara.mixture
+.. automodule:: pykappa.mixture
 
    
    .. rubric:: Functions

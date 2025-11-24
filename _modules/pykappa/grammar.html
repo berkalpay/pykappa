@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>kappybara.grammar &#8212; Kappybara</title>
+    <title>pykappa.grammar &#8212; Kappybara</title>
   
   
   
@@ -41,7 +41,7 @@
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/kappybara/grammar';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pykappa/grammar';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -180,7 +180,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -278,7 +278,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -325,7 +325,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kappybara.grammar</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pykappa.grammar</span></li>
   </ul>
 </nav>
 </div>
@@ -342,19 +342,19 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for kappybara.grammar</h1><div class="highlight"><pre>
+  <h1>Source code for pykappa.grammar</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lark</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lark</span><span class="p">,</span> <span class="n">ParseTree</span><span class="p">,</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">Visitor</span><span class="p">,</span> <span class="n">Token</span><span class="p">,</span> <span class="n">Transformer_NonRecursive</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">SiteType</span><span class="p">,</span> <span class="n">Partner</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">,</span> <span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.algebra</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">SiteType</span><span class="p">,</span> <span class="n">Partner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">,</span> <span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.algebra</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
 
 
 <div class="viewcode-block" id="KappaParser">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.KappaParser">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.KappaParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KappaParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parser for Kappa language files and expressions.</span>
 
@@ -377,13 +377,13 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="KappaParser.parse">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.KappaParser.parse">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.KappaParser.parse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParseTree</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="KappaParser.parse_file">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.KappaParser.parse_file">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.KappaParser.parse_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParseTree</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
@@ -395,7 +395,7 @@
 
 
 <div class="viewcode-block" id="SiteBuilder">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.SiteBuilder">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.SiteBuilder">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SiteBuilder</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds Site objects from Lark parse trees.</span>
@@ -420,14 +420,14 @@
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="SiteBuilder.site_name">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.SiteBuilder.site_name">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.SiteBuilder.site_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">site_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parsed_site_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="SiteBuilder.state">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.SiteBuilder.state">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.SiteBuilder.state">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">match</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="k">case</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
@@ -444,7 +444,7 @@
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="SiteBuilder.partner">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.SiteBuilder.partner">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.SiteBuilder.partner">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">match</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
             <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;#&quot;</span><span class="p">]:</span>
@@ -477,7 +477,7 @@
 
 
 <div class="viewcode-block" id="AgentBuilder">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.AgentBuilder">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.AgentBuilder">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AgentBuilder</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds Agent objects from Lark parse trees.</span>
@@ -501,14 +501,14 @@
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="AgentBuilder.agent_name">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.AgentBuilder.agent_name">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.AgentBuilder.agent_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">agent_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parsed_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="AgentBuilder.site">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.AgentBuilder.site">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.AgentBuilder.site">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">site</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parsed_interface</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SiteBuilder</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span><span class="o">.</span><span class="n">object</span><span class="p">)</span></div>
 
@@ -523,7 +523,7 @@
 
 
 <div class="viewcode-block" id="PatternBuilder">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.PatternBuilder">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.PatternBuilder">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PatternBuilder</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds Pattern objects from Lark parse trees.</span>
@@ -544,7 +544,7 @@
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="PatternBuilder.agent">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.PatternBuilder.agent">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.PatternBuilder.agent">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parsed_agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AgentBuilder</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span><span class="o">.</span><span class="n">object</span><span class="p">)</span></div>
 
@@ -556,7 +556,7 @@
 
 
 <div class="viewcode-block" id="RuleBuilder">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.RuleBuilder">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.RuleBuilder">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RuleBuilder</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds Rule objects from Lark parse trees.</span>
@@ -590,7 +590,7 @@
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="RuleBuilder.rate">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.RuleBuilder.rate">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.RuleBuilder.rate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;rate&quot;</span>
 
@@ -603,7 +603,7 @@
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="RuleBuilder.rule_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.RuleBuilder.rule_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.RuleBuilder.rule_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rule_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">tree</span><span class="o">.</span><span class="n">data</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rule_expression&quot;</span><span class="p">,</span> <span class="s2">&quot;rev_rule_expression&quot;</span><span class="p">]</span>
         <span class="n">mid_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
@@ -627,7 +627,7 @@
 
     <span class="c1"># Visitor method for Lark</span>
 <div class="viewcode-block" id="RuleBuilder.rev_rule_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.RuleBuilder.rev_rule_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.RuleBuilder.rev_rule_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rev_rule_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ParseTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rule_expression</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div>
 
@@ -675,7 +675,7 @@
 
 
 <div class="viewcode-block" id="LarkTreetoExpression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LarkTreetoExpression</span><span class="p">(</span><span class="n">Transformer_NonRecursive</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms a Lark ParseTree into an Expression object.</span>
 
@@ -686,7 +686,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="LarkTreetoExpression.algebraic_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.algebraic_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.algebraic_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">algebraic_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -699,34 +699,34 @@
 
     <span class="c1"># --- Literals ---</span>
 <div class="viewcode-block" id="LarkTreetoExpression.SIGNED_FLOAT">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.SIGNED_FLOAT">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.SIGNED_FLOAT">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">SIGNED_FLOAT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">value</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.SIGNED_INT">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.SIGNED_INT">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.SIGNED_INT">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">SIGNED_INT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">value</span><span class="p">))</span></div>
 
 
     <span class="c1"># --- Variables/Constants ---</span>
 <div class="viewcode-block" id="LarkTreetoExpression.declared_variable_name">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.declared_variable_name">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.declared_variable_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">declared_variable_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.reserved_variable_name">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.reserved_variable_name">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.reserved_variable_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reserved_variable_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;reserved_variable&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">child</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.pattern">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.pattern">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.pattern">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
         <span class="n">pattern</span> <span class="o">=</span> <span class="n">PatternBuilder</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span><span class="o">.</span><span class="n">object</span>
@@ -739,7 +739,7 @@
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.defined_constant">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.defined_constant">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.defined_constant">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">defined_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;defined_constant&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
@@ -747,7 +747,7 @@
 
     <span class="c1"># --- Operations ---</span>
 <div class="viewcode-block" id="LarkTreetoExpression.binary_op_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.binary_op_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.binary_op_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">binary_op_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">children</span>
@@ -755,13 +755,13 @@
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.binary_op">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.binary_op">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.binary_op">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">binary_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.unary_op_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.unary_op_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.unary_op_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">unary_op_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="n">op</span><span class="p">,</span> <span class="n">child</span> <span class="o">=</span> <span class="n">children</span>
@@ -769,13 +769,13 @@
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.unary_op">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.unary_op">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.unary_op">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">unary_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.list_op_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.list_op_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.list_op_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">list_op_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="n">op_token</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="o">=</span> <span class="n">children</span>
@@ -784,7 +784,7 @@
 
     <span class="c1"># --- Parentheses ---</span>
 <div class="viewcode-block" id="LarkTreetoExpression.parentheses">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.parentheses">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.parentheses">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">parentheses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;parentheses&quot;</span><span class="p">,</span> <span class="n">child</span><span class="o">=</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
@@ -792,7 +792,7 @@
 
     <span class="c1"># --- Ternary Conditional ---</span>
 <div class="viewcode-block" id="LarkTreetoExpression.conditional_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.conditional_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.conditional_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">conditional_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="n">cond</span><span class="p">,</span> <span class="n">true_expr</span><span class="p">,</span> <span class="n">false_expr</span> <span class="o">=</span> <span class="n">children</span>
@@ -804,7 +804,7 @@
 
     <span class="c1"># --- Boolean Logic ---</span>
 <div class="viewcode-block" id="LarkTreetoExpression.comparison">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.comparison">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.comparison">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">comparison</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">children</span>
@@ -812,7 +812,7 @@
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.logical_or">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.logical_or">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.logical_or">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">logical_or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">children</span>
@@ -820,7 +820,7 @@
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.logical_and">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.logical_and">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.logical_and">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">children</span>
@@ -828,7 +828,7 @@
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.logical_not">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.logical_not">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.logical_not">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">logical_not</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;logical_not&quot;</span><span class="p">,</span> <span class="n">child</span><span class="o">=</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
@@ -836,13 +836,13 @@
 
     <span class="c1"># --- Boolean Literals ---</span>
 <div class="viewcode-block" id="LarkTreetoExpression.TRUE">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.TRUE">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.TRUE">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">TRUE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;boolean_literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LarkTreetoExpression.FALSE">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.LarkTreetoExpression.FALSE">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.LarkTreetoExpression.FALSE">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">FALSE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;boolean_literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
@@ -854,7 +854,7 @@
 
 
 <div class="viewcode-block" id="parse_tree_to_expression">
-<a class="viewcode-back" href="../../api/generated/kappybara.grammar.html#kappybara.grammar.parse_tree_to_expression">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.grammar.html#pykappa.grammar.parse_tree_to_expression">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_tree_to_expression</span><span class="p">(</span><span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Lark ParseTree to an Expression object.</span>
 

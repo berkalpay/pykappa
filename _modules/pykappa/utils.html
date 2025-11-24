@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>kappybara.utils &#8212; Kappybara</title>
+    <title>pykappa.utils &#8212; Kappybara</title>
   
   
   
@@ -41,7 +41,7 @@
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/kappybara/utils';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pykappa/utils';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -180,7 +180,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -278,7 +278,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -325,7 +325,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kappybara.utils</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pykappa.utils</span></li>
   </ul>
 </nav>
 </div>
@@ -342,7 +342,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for kappybara.utils</h1><div class="highlight"><pre>
+  <h1>Source code for pykappa.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Self</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
@@ -350,7 +350,7 @@
 
 
 <div class="viewcode-block" id="str_table">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.str_table">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.str_table">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">str_table</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">header</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format rows into a table with aligned columns.</span>
 
@@ -379,7 +379,7 @@
 
 
 <div class="viewcode-block" id="rejection_sample">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.rejection_sample">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.rejection_sample">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rejection_sample</span><span class="p">(</span><span class="n">population</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">excluded</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">max_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
     <span class="n">population</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">population</span><span class="p">:</span>
@@ -401,7 +401,7 @@
 
 
 <div class="viewcode-block" id="OrderedSet">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.OrderedSet">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.OrderedSet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderedSet</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
@@ -413,13 +413,13 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OrderedSet.add">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.OrderedSet.add">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.OrderedSet.add">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="OrderedSet.remove">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.OrderedSet.remove">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.OrderedSet.remove">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span></div>
 </div>
@@ -427,7 +427,7 @@
 
 
 <div class="viewcode-block" id="Counted">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.Counted">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.Counted">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Counted</span><span class="p">:</span>
     <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -449,7 +449,7 @@
 
 
 <div class="viewcode-block" id="SetProperty">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.SetProperty">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.SetProperty">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetProperty</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class should be initialized with a function or lambda which</span>
@@ -477,7 +477,7 @@
 
 
 <div class="viewcode-block" id="Property">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.Property">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.Property">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Property</span><span class="p">(</span><span class="n">SetProperty</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class should be initialized with a function or lambda which</span>
@@ -500,7 +500,7 @@
 
 
 <div class="viewcode-block" id="IndexedSet">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.IndexedSet">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">IndexedSet</span><span class="p">(</span><span class="nb">set</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subclass of the built-in `set`, with support for indexing</span>
@@ -552,7 +552,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="IndexedSet.add">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.IndexedSet.add">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.add">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">return</span>
@@ -572,7 +572,7 @@
 
 
 <div class="viewcode-block" id="IndexedSet.remove">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.IndexedSet.remove">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.remove">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -595,7 +595,7 @@
 
 
 <div class="viewcode-block" id="IndexedSet.lookup">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.IndexedSet.lookup">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.lookup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="n">prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">value</span><span class="p">]</span>
@@ -608,7 +608,7 @@
 
 
 <div class="viewcode-block" id="IndexedSet.remove_by">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.IndexedSet.remove_by">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.remove_by">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove all set members whose property `prop_name` matches or contains `value`.</span>
@@ -622,7 +622,7 @@
 
 
 <div class="viewcode-block" id="IndexedSet.create_index">
-<a class="viewcode-back" href="../../api/generated/kappybara.utils.html#kappybara.utils.IndexedSet.create_index">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.create_index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prop</span><span class="p">:</span> <span class="n">SetProperty</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given a function which maps a set member to an `Any`-typed value, create</span>

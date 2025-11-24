@@ -1,7 +1,7 @@
-﻿kappybara.algebra
-=================
+﻿pykappa.algebra
+===============
 
-.. automodule:: kappybara.algebra
+.. automodule:: pykappa.algebra
 
    
    .. rubric:: Functions

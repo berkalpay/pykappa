@@ -1,7 +1,7 @@
-﻿kappybara.rule
-==============
+﻿pykappa.rule
+============
 
-.. automodule:: kappybara.rule
+.. automodule:: pykappa.rule
 
    
    .. rubric:: Functions

@@ -40,7 +40,7 @@
       "metadata": {},
       "outputs": [],
       "source": [
-        "from kappybara.pattern import Agent, Pattern, Component\n",
+        "from pykappa.pattern import Agent, Pattern, Component\n",
         "\n",
         "# Parse agents A and B from Kappa strings\n",
         "a = Agent.from_kappa(\"A(x[.])\")\n",
@@ -93,7 +93,7 @@
       "metadata": {},
       "outputs": [],
       "source": [
-        "from kappybara.mixture import Mixture\n",
+        "from pykappa.mixture import Mixture\n",
         "\n",
         "mixture = Mixture()\n",
         "mixture.instantiate(\"A(x[.])\", n_copies=3)\n",
@@ -130,7 +130,7 @@
       "metadata": {},
       "outputs": [],
       "source": [
-        "from kappybara.rule import KappaRule\n",
+        "from pykappa.rule import KappaRule\n",
         "\n",
         "print(\"AB count before one binding event:\", len(mixture.embeddings(complex)))\n",
         "\n",

@@ -1,7 +1,7 @@
-﻿kappybara.utils
-===============
+﻿pykappa.utils
+=============
 
-.. automodule:: kappybara.utils
+.. automodule:: pykappa.utils
 
    
    .. rubric:: Functions

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>kappybara.system &#8212; Kappybara</title>
+    <title>pykappa.system &#8212; Kappybara</title>
   
   
   
@@ -41,7 +41,7 @@
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/kappybara/system';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pykappa/system';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -180,7 +180,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -278,7 +278,7 @@
           
           
           
-          <a href="https://github.com/berkalpay/kappybara" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/berkalpay/pykappa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -325,7 +325,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kappybara.system</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pykappa.system</span></li>
   </ul>
 </nav>
 </div>
@@ -342,7 +342,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for kappybara.system</h1><div class="highlight"><pre>
+  <h1>Source code for pykappa.system</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
@@ -356,15 +356,15 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.figure</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span><span class="p">,</span> <span class="n">ComponentMixture</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">,</span> <span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.algebra</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span><span class="p">,</span> <span class="n">ComponentMixture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">,</span> <span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.algebra</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_table</span>
 
 
 <div class="viewcode-block" id="System">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">System</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A Kappa system containing agents, rules, observables, and variables for simulation.</span>
 
@@ -387,7 +387,7 @@
     <span class="n">tallies</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
 
 <div class="viewcode-block" id="System.read_ka">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.read_ka">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.read_ka">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_ka</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read and parse a Kappa .ka file to create a System.</span>
@@ -403,7 +403,7 @@
 
 
 <div class="viewcode-block" id="System.from_ka">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.from_ka">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.from_ka">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_ka</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ka_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a System from a Kappa (.ka style) string.</span>
@@ -414,7 +414,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A new System instance parsed from the string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">kappybara.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">kappa_parser</span><span class="p">,</span>
             <span class="n">parse_tree_to_expression</span><span class="p">,</span>
             <span class="n">PatternBuilder</span><span class="p">,</span>
@@ -505,7 +505,7 @@
 
 
 <div class="viewcode-block" id="System.from_kappa">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.from_kappa">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.from_kappa">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_kappa</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
@@ -687,7 +687,7 @@
         <span class="k">return</span> <span class="n">kappa_str</span>
 
 <div class="viewcode-block" id="System.to_ka">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.to_ka">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.to_ka">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_ka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write system information to a Kappa file.</span>
 
@@ -699,7 +699,7 @@
 
 
 <div class="viewcode-block" id="System.set_mixture">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.set_mixture">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.set_mixture">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_mixture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the system&#39;s mixture and update tracking.</span>
 
@@ -716,7 +716,7 @@
 
 
 <div class="viewcode-block" id="System.add_rule">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.add_rule">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.add_rule">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new rule to the system.</span>
 
@@ -740,7 +740,7 @@
 
 
 <div class="viewcode-block" id="System.remove_rule">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.remove_rule">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.remove_rule">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a rule by setting its rate to zero.</span>
 
@@ -798,7 +798,7 @@
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_reactivities</span><span class="p">)</span>
 
 <div class="viewcode-block" id="System.wait">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.wait">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.wait">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Advance simulation time according to exponential distribution.</span>
 
@@ -814,7 +814,7 @@
 
 
 <div class="viewcode-block" id="System.choose_rule">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.choose_rule">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.choose_rule">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">choose_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Rule</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Choose a rule to apply based on reactivity weights.</span>
 
@@ -831,7 +831,7 @@
 
 
 <div class="viewcode-block" id="System.apply_rule">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.apply_rule">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.apply_rule">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply a rule to the mixture and update tallies.</span>
 
@@ -858,7 +858,7 @@
             <span class="p">)</span>
 
 <div class="viewcode-block" id="System.update">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.update">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform one simulation step.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_warn_about_rule_symmetries</span><span class="p">()</span>
@@ -870,7 +870,7 @@
 
 
 <div class="viewcode-block" id="System.update_via_kasim">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.System.update_via_kasim">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.update_via_kasim">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_via_kasim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulate for a given amount of time using KaSim.</span>
 
@@ -916,7 +916,7 @@
 
 
 <div class="viewcode-block" id="Monitor">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.Monitor">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Monitor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Records the history of the values of observables in a system.</span>
 
@@ -938,7 +938,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="p">[]}</span> <span class="o">|</span> <span class="p">{</span><span class="n">obs_name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">obs_name</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">observables</span><span class="p">}</span>
 
 <div class="viewcode-block" id="Monitor.update">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.Monitor.update">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Record current time and observable values.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
@@ -949,7 +949,7 @@
 
 
 <div class="viewcode-block" id="Monitor.measure">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.Monitor.measure">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor.measure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observable_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of an observable at a specific time.</span>
 
@@ -984,7 +984,7 @@
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Monitor.plot">
-<a class="viewcode-back" href="../../api/generated/kappybara.system.html#kappybara.system.Monitor.plot">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor.plot">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combined</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a plot of all observables over time.</span>
 

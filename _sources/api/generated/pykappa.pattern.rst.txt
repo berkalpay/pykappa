@@ -1,7 +1,7 @@
-﻿kappybara.pattern
-=================
+﻿pykappa.pattern
+===============
 
-.. automodule:: kappybara.pattern
+.. automodule:: pykappa.pattern
 
    
    .. rubric:: Classes

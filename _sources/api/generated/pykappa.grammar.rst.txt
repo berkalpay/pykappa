@@ -1,7 +1,7 @@
-﻿kappybara.grammar
-=================
+﻿pykappa.grammar
+===============
 
-.. automodule:: kappybara.grammar
+.. automodule:: pykappa.grammar
 
    
    .. rubric:: Functions
