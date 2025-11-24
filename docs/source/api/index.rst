@@ -5,20 +5,20 @@ API reference
    :toctree: generated
    :recursive:
    
-   kappybara.system
-   kappybara.mixture
-   kappybara.rule
-   kappybara.pattern
+   pykappa.system
+   pykappa.mixture
+   pykappa.rule
+   pykappa.pattern
 
 .. autosummary::
    :toctree: generated
    :recursive:
 
-   kappybara.grammar
-   kappybara.algebra
+   pykappa.grammar
+   pykappa.algebra
 
 .. autosummary::
    :toctree: generated
    :recursive:
 
-   kappybara.utils
+   pykappa.utils

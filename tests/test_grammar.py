@@ -2,10 +2,10 @@ import pytest
 import math
 from pathlib import Path
 
-from kappybara.grammar import kappa_parser
-from kappybara.pattern import Pattern
-from kappybara.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
-from kappybara.system import System
+from pykappa.grammar import kappa_parser
+from pykappa.pattern import Pattern
+from pykappa.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
+from pykappa.system import System
 
 # Parser
 

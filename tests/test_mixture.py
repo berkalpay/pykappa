@@ -1,7 +1,7 @@
 import pytest
 
-from kappybara.pattern import Pattern
-from kappybara.mixture import ComponentMixture
+from pykappa.pattern import Pattern
+from pykappa.mixture import ComponentMixture
 
 
 @pytest.mark.parametrize(

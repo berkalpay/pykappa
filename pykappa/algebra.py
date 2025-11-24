@@ -4,8 +4,8 @@ from collections import deque
 from typing import Self, Optional, Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from kappybara.pattern import Component
-    from kappybara.system import System
+    from pykappa.pattern import Component
+    from pykappa.system import System
 
 
 string_to_operator = {
@@ -72,7 +72,7 @@ class Expression:
         Raises:
             AssertionError: If the string doesn't represent a valid expression.
         """
-        from kappybara.grammar import kappa_parser, parse_tree_to_expression
+        from pykappa.grammar import kappa_parser, parse_tree_to_expression
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"

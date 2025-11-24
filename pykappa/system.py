@@ -11,11 +11,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.figure
 
-from kappybara.mixture import Mixture, ComponentMixture
-from kappybara.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
-from kappybara.pattern import Component, Pattern
-from kappybara.algebra import Expression
-from kappybara.utils import str_table
+from pykappa.mixture import Mixture, ComponentMixture
+from pykappa.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
+from pykappa.pattern import Component, Pattern
+from pykappa.algebra import Expression
+from pykappa.utils import str_table
 
 
 class System:
@@ -62,7 +62,7 @@ class System:
         Returns:
             A new System instance parsed from the string.
         """
-        from kappybara.grammar import (
+        from pykappa.grammar import (
             kappa_parser,
             parse_tree_to_expression,
             PatternBuilder,

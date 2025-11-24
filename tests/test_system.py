@@ -4,8 +4,8 @@ import itertools
 import random
 from collections import defaultdict
 
-from kappybara.rule import AVOGADRO, DIFFUSION_RATE, kinetic_to_stochastic_on_rate
-from kappybara.system import System
+from pykappa.rule import AVOGADRO, DIFFUSION_RATE, kinetic_to_stochastic_on_rate
+from pykappa.system import System
 
 
 def heterodimerization_system(k_on: float = 2.5e9) -> System:

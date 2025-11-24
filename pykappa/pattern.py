@@ -3,10 +3,10 @@ from functools import cached_property
 from itertools import permutations
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
-from kappybara.utils import Counted, IndexedSet, Property
+from pykappa.utils import Counted, IndexedSet, Property
 
 if TYPE_CHECKING:
-    from kappybara.mixture import Mixture
+    from pykappa.mixture import Mixture
 
 
 # String partner states can be: "#" (wildcard), "." (empty), "_" (bound), "?" (undetermined)
@@ -169,7 +169,7 @@ class Agent(Counted):
         Raises:
             AssertionError: If the string doesn't describe exactly one agent.
         """
-        from kappybara.grammar import kappa_parser, AgentBuilder
+        from pykappa.grammar import kappa_parser, AgentBuilder
 
         # Check pattern describes only a single agent
         input_tree = kappa_parser.parse(kappa_str)
@@ -592,7 +592,7 @@ class Pattern:
         Raises:
             AssertionError: If the string doesn't describe exactly one pattern.
         """
-        from kappybara.grammar import kappa_parser, PatternBuilder
+        from pykappa.grammar import kappa_parser, PatternBuilder
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"

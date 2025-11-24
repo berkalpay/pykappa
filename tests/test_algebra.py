@@ -1,5 +1,5 @@
 import pytest
-from kappybara.system import System
+from pykappa.system import System
 
 
 @pytest.mark.parametrize(

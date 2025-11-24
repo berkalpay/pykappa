@@ -41,7 +41,7 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/berkalpay/kappybara",
+            "url": "https://github.com/berkalpay/pykappa",
             "icon": "fa-brands fa-github",
             "type": "fontawesome",
         }

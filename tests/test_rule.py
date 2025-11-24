@@ -1,10 +1,10 @@
 import pytest
 from math import comb
 
-from kappybara.algebra import Expression
-from kappybara.pattern import Pattern
-from kappybara.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
-from kappybara.system import System
+from pykappa.algebra import Expression
+from pykappa.pattern import Pattern
+from pykappa.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
+from pykappa.system import System
 
 
 @pytest.mark.parametrize(

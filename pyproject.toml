@@ -1,5 +1,5 @@
 [project]
-name = "kappybara"
+name = "pykappa"
 version = "0.1.4"
 description = "Work with Kappa rule-based models in Python"
 readme = "README.md"
@@ -13,15 +13,15 @@ dependencies = [
 [project.urls]
 Homepage = "https://pykappa.org"
 Documentation = "https://pykappa.org/api/index.html"
-Repository = "https://github.com/berkalpay/kappybara"
-Issues = "https://github.com/berkalpay/kappybara/issues"
+Repository = "https://github.com/berkalpay/pykappa"
+Issues = "https://github.com/berkalpay/pykappa/issues"
 
 [tool.setuptools.package-data]
-kappybara = ["*.lark"]
+pykappa = ["*.lark"]
 
 [tool.uv]
 dev-dependencies = [
-  "kappybara",
+  "pykappa",
   "py-spy>=0.4.0",
   "pytest",
   "black",
@@ -32,12 +32,12 @@ dev-dependencies = [
 ]
 
 [tool.uv.sources]
-kappybara = { workspace = true }
+pykappa = { workspace = true }
 
 [tool.pytest.ini_options]
 testpaths = [
   "tests",
-  "kappybara",
+  "pykappa",
 ]
 norecursedirs = [
   ".*",

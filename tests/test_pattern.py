@@ -1,5 +1,5 @@
 import pytest
-from kappybara.pattern import Component, Pattern
+from pykappa.pattern import Component, Pattern
 
 
 @pytest.mark.parametrize(

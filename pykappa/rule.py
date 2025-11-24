@@ -6,13 +6,13 @@ from typing import Optional, Self, TYPE_CHECKING
 from functools import cached_property
 from copy import deepcopy
 
-from kappybara.pattern import Pattern, Component, Agent, Site
-from kappybara.mixture import Mixture, ComponentMixture, MixtureUpdate
-from kappybara.algebra import Expression
-from kappybara.utils import rejection_sample
+from pykappa.pattern import Pattern, Component, Agent, Site
+from pykappa.mixture import Mixture, ComponentMixture, MixtureUpdate
+from pykappa.algebra import Expression
+from pykappa.utils import rejection_sample
 
 if TYPE_CHECKING:
-    from kappybara.system import System
+    from pykappa.system import System
 
 
 # Useful constants
@@ -120,7 +120,7 @@ class KappaRule(Rule):
         Returns:
             List of parsed rules.
         """
-        from kappybara.grammar import kappa_parser, RuleBuilder
+        from pykappa.grammar import kappa_parser, RuleBuilder
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"

@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from typing import Optional
 from lark import Lark, ParseTree, Tree, Visitor, Token, Transformer_NonRecursive
 
-from kappybara.pattern import Site, Agent, Pattern, SiteType, Partner
-from kappybara.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
-from kappybara.algebra import Expression
+from pykappa.pattern import Site, Agent, Pattern, SiteType, Partner
+from pykappa.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
+from pykappa.algebra import Expression
 
 
 class KappaParser:

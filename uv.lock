@@ -157,7 +157,7 @@ wheels = [
 ]
 
 [[package]]
-name = "kappybara"
+name = "pykappa"
 version = "0.1.4"
 source = { virtual = "." }
 dependencies = [
@@ -169,7 +169,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "black" },
-    { name = "kappybara" },
+    { name = "pykappa" },
     { name = "matplotlib" },
     { name = "memory-profiler" },
     { name = "mypy" },
@@ -188,7 +188,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "black" },
-    { name = "kappybara", virtual = "." },
+    { name = "pykappa", virtual = "." },
     { name = "matplotlib", specifier = ">=3.10.3" },
     { name = "memory-profiler", specifier = ">=0.61.0" },
     { name = "mypy", specifier = ">=1.15.0" },

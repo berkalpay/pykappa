@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Optional, Iterable, Iterator, Self
 
-from kappybara.pattern import Site, Agent, Component, Pattern, Embedding
-from kappybara.utils import SetProperty, Property, IndexedSet
+from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
+from pykappa.utils import SetProperty, Property, IndexedSet
 
 
 @dataclass(frozen=True)
