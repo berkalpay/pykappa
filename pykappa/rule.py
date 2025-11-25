@@ -1,5 +1,4 @@
 import random
-from dataclasses import dataclass
 from math import prod
 from abc import ABC, abstractmethod
 from typing import Optional, Self, TYPE_CHECKING
