@@ -1,6 +1,6 @@
-#########
+#######
 PyKappa
-#########
+#######
 
 PyKappa is a Python package that provides a simulator of and interpreted interface to rule-based models of the variety specified by the `Kappa language <https://kappalanguage.org/>`_.
 Supported are
