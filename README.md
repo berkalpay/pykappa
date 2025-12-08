@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="docs/source/_static/logo.png" width="150">
+</div>
+
 # PyKappa
 
 [![PyPI](https://img.shields.io/pypi/v/pykappa)](https://pypi.org/project/pykappa)
