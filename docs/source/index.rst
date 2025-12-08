@@ -1,7 +1,3 @@
-#######
-PyKappa
-#######
-
 PyKappa is a Python package for simulating and analyzing rule-based models of the variety specified by the `Kappa language <https://kappalanguage.org/>`_.
 It supports
    * programatic construction of :class:`systems <pykappa.system.System>` from Kappa strings;
