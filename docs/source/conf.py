@@ -35,17 +35,11 @@ nbsphinx_execute = "always"
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "pydata_sphinx_theme"
 html_theme_options = {
-    "secondary_sidebar_items": [],
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": "https://github.com/berkalpay/pykappa",
-            "icon": "fa-brands fa-github",
-            "type": "fontawesome",
-        }
-    ],
+    "github_user": "berkalpay",
+    "github_repo": "pykappa",
+    "github_button": False,
+    "github_banner": True,
 }
 html_static_path = ["_static"]
 html_title = "PyKappa"
