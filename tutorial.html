@@ -46,7 +46,7 @@
             
   <section id="Tutorial">
 <h1>Tutorial<a class="headerlink" href="#Tutorial" title="Link to this heading">¶</a></h1>
-<p>PyKappa works in terms of patterns, mixtures, and rules, culminating in systems. Let’s see how the API works at each level. (This tutorial is a work in progress and will in the future also describe such core functionality as expressions and ComponentMixtures.)</p>
+<p>PyKappa works in terms of patterns, mixtures, and rules, and expressions, culminating in systems. Let’s see how the API works at each level.</p>
 <section id="Patterns">
 <h2>Patterns<a class="headerlink" href="#Patterns" title="Link to this heading">¶</a></h2>
 <p>As in Kappa, patterns (subsets of a mixture on which rules can operate) can be broken down into components (a connected set of agents). Agents are typed objects with named sites, each of which has an internal state and possibly a binding partner – the site of another agent. All of these classes of objects can be constructed from Kappa strings using the <code class="docutils literal notranslate"><span class="pre">from_kappa</span></code> classmethod.</p>
@@ -140,13 +140,50 @@ Mixture as a Kappa string:
 #AB embeddings (cached): 2
 </pre></div></div>
 </div>
+<p>A <code class="docutils literal notranslate"><span class="pre">ComponentMixture</span></code> is a specialized mixture that explicitly tracks connected components. This allows for efficient component-level queries, especially important for applying rules that require information about the component contexts of patterns, such as rules with different unimolecular and bimolecular rates. ComponentMixtures maintain the same interface as regular mixtures but add component-specific functionality.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComponentMixture</span>
+
+<span class="n">comp_mixture</span> <span class="o">=</span> <span class="n">ComponentMixture</span><span class="p">()</span>
+<span class="n">comp_mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;A(x[.])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">comp_mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;A(x[1]), B(x[1])&quot;</span><span class="p">)</span>
+
+<span class="c1"># Iterate over all components</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Components in mixture:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">comp_mixture</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span>
+
+<span class="c1"># Query embeddings within a specific component</span>
+<span class="n">comp_mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+<span class="n">mixture_component</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">comp_mixture</span><span class="o">.</span><span class="n">components</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">embeddings_in_comp</span> <span class="o">=</span> <span class="n">comp_mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">,</span> <span class="n">mixture_component</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Embeddings in the AB complex: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings_in_comp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Components in mixture:
+A(x[.])
+A(x[.])
+B(x[1]), A(x[1])
+
+Embeddings in the AB complex: 1
+</pre></div></div>
+</div>
 </section>
 <section id="Rules">
 <h2>Rules<a class="headerlink" href="#Rules" title="Link to this heading">¶</a></h2>
 <p>Rules transform agents matched by their left-hand side into those specified by the right-hand side. Specifically, <code class="docutils literal notranslate"><span class="pre">rate(system)</span></code> evaluates the stochastic rate (possibly using variables), <code class="docutils literal notranslate"><span class="pre">n_embeddings(mixture)</span></code> counts applicable embeddings, and <code class="docutils literal notranslate"><span class="pre">select(mixture)</span></code> samples a specific embedding and returns a MixtureUpdate, which a mixture can then take to efficiently apply the corresponding update.</p>
 <p>Let’s add a rule to bind <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> into <code class="docutils literal notranslate"><span class="pre">AB</span></code> and see how the mixture applies it.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">KappaRule</span>
@@ -176,6 +213,38 @@ AB count before one binding event: 2
 AB count after one binding event: 3
 </pre></div></div>
 </div>
+</section>
+<section id="Expressions">
+<h2>Expressions<a class="headerlink" href="#Expressions" title="Link to this heading">¶</a></h2>
+<p>Expressions in PyKappa represent algebraic formulas that can include literals, variables, operators, and component patterns. They are used for rule rates, observables, and variables. Expressions can be parsed from Kappa strings and evaluated in the context of a system.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.algebra</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
+
+<span class="n">literal_expr</span> <span class="o">=</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="s2">&quot;42&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Literal expression value:&quot;</span><span class="p">,</span> <span class="n">literal_expr</span><span class="o">.</span><span class="n">evaluate</span><span class="p">())</span>
+
+<span class="n">math_expr</span> <span class="o">=</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="s2">&quot;(2 + 3) * 4&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Math expression value:&quot;</span><span class="p">,</span> <span class="n">math_expr</span><span class="o">.</span><span class="n">evaluate</span><span class="p">())</span>
+
+<span class="n">pattern_expr</span> <span class="o">=</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="s2">&quot;|A(x[1]), B(x[1])|&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pattern expression:&quot;</span><span class="p">,</span> <span class="n">pattern_expr</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Literal expression value: 42
+Math expression value: 20
+Pattern expression: |A(x[1]), B(x[1])|
+</pre></div></div>
+</div>
+<p>The last expression represents the number of AB complexes; it can be evaluated given a system as <code class="docutils literal notranslate"><span class="pre">pattern_expr.evaluate(system)</span></code>.</p>
 </section>
 <section id="Systems">
 <h2>Systems<a class="headerlink" href="#Systems" title="Link to this heading">¶</a></h2>
@@ -218,6 +287,7 @@ AB count after one binding event: 3
 <li class="toctree-l2"><a class="reference internal" href="#Patterns">Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Mixtures">Mixtures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Rules">Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Expressions">Expressions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Systems">Systems</a></li>
 </ul>
 </li>
@@ -250,7 +320,7 @@ AB count after one binding event: 3
       &#169;2025, PyKappa Developers.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
