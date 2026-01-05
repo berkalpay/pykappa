@@ -7,6 +7,7 @@ from collections import defaultdict
 from functools import cached_property
 from typing import Optional, Iterable, Self
 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.figure
@@ -602,6 +603,39 @@ class Monitor:
             DataFrame with time and observable columns.
         """
         return pd.DataFrame(self.history)
+
+    def equilibrated(
+        self,
+        observable_name: str,
+        tail_fraction: float = 0.1,
+        tolerance: float = 0.01,
+    ) -> bool:
+        """
+        Check if an observable has equilibrated based on whether the slope of
+        recent values is sufficiently small relative to the mean.
+
+        Args:
+            observable_name: Name of the observable to check.
+            tail_fraction: Fraction of the history to consider.
+            tolerance: Maximum allowed fraction slope deviation from the mean.
+
+        Returns:
+            True if the observable seems to have equilibrated, False otherwise.
+
+        Raises:
+            AssertionError: If there are not enough measurements to assess equilibration.
+        """
+        window_len = int(tail_fraction * len(self))
+        assert (
+            len(self) >= window_len and window_len >= 2
+        ), f"Not enough measurements ({window_len}) to assess equilibration for {observable_name}"
+
+        times = np.asarray(self.history["time"][-window_len:], dtype=float)
+        values = np.asarray(self.history[observable_name][-window_len:], dtype=float)
+        slope, _ = np.polyfit(times, values, deg=1)
+
+        mean = np.mean(values)
+        return (abs(slope) - mean) / mean <= tolerance
 
     def plot(self, combined: bool = False) -> matplotlib.figure.Figure:
         """Make a plot of all observables over time.
