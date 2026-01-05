@@ -48,6 +48,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Self</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.figure</span>
@@ -87,17 +88,18 @@
 <div class="viewcode-block" id="System.read_ka">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.read_ka">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">read_ka</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_ka</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read and parse a Kappa .ka file to create a System.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            filepath: Path to the Kappa file.</span>
+<span class="sd">            seed: Random seed for reproducibility.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A new System instance parsed from the file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="System.from_ka">
@@ -640,6 +642,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">system</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="p">[]}</span> <span class="o">|</span> <span class="p">{</span><span class="n">obs_name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">obs_name</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">observables</span><span class="p">}</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The number of records.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
+
 <div class="viewcode-block" id="Monitor.update">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -685,6 +691,42 @@
 <span class="sd">            DataFrame with time and observable columns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Monitor.equilibrated">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor.equilibrated">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">equilibrated</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">observable_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">tail_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if an observable has equilibrated based on whether the slope of</span>
+<span class="sd">        recent values is sufficiently small relative to the mean.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            observable_name: Name of the observable to check.</span>
+<span class="sd">            tail_fraction: Fraction of the history to consider.</span>
+<span class="sd">            tolerance: Maximum allowed fraction slope deviation from the mean.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if the observable seems to have equilibrated, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If there are not enough measurements to assess equilibration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">window_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tail_fraction</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">window_len</span> <span class="ow">and</span> <span class="n">window_len</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Not enough measurements (</span><span class="si">{</span><span class="n">window_len</span><span class="si">}</span><span class="s2">) to assess equilibration for </span><span class="si">{</span><span class="n">observable_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">][</span><span class="o">-</span><span class="n">window_len</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">observable_name</span><span class="p">][</span><span class="o">-</span><span class="n">window_len</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">slope</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">mean</span> <span class="o">&lt;=</span> <span class="n">tolerance</span></div>
+
 
 <div class="viewcode-block" id="Monitor.plot">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor.plot">[docs]</a>
