@@ -70,12 +70,12 @@
 <span class="sd">    %obs: &#39;LacY&#39; |Y()|</span>
 <span class="sd">    %obs: &#39;Free Lac operon&#39; |O(i[.])|</span>
 
-<span class="sd">    I(o[.]), O(i[.]) &lt;-&gt; I(o[1]), O(i[1]) @ 1, 0.1  // Repress the lac operon</span>
-<span class="sd">    Y(), L(loc{out}) -&gt; Y(), L(loc{in}) @ 0.01  // Transport lactose into the cell</span>
-<span class="sd">    Z(l[.]), L(loc{in}) -&gt; Z(l[.]), A(z[.], i[.]) @ 1  // Convert lactose into allolactose</span>
-<span class="sd">    A(i[.]), I(o[.]) &lt;-&gt; A(i[1]), I(o[1]) @ 1, 0.1  // Deactivate the repressor by allolactose</span>
-<span class="sd">    O(i[.]), ., . -&gt; O(i[.]), Z(l[.]), Y() @ 1 // Express the lac operon</span>
-<span class="sd">    L(loc{in}) -&gt; E() @ 1  // Metabolize lactose</span>
+<span class="sd">    I(o[.]), O(i[.]) &lt;-&gt; I(o[1]), O(i[1]) @ 1, 0.1      // Repress the lac operon</span>
+<span class="sd">    Y(), L(loc{out}) -&gt; Y(), L(loc{in}) @ 0.01          // Transport lactose into the cell</span>
+<span class="sd">    Z(l[.]), L(loc{in}) -&gt; Z(l[.]), A(z[.], i[.]) @ 1   // Convert lactose into allolactose</span>
+<span class="sd">    A(i[.]), I(o[.]) &lt;-&gt; A(i[1]), I(o[1]) @ 1, 0.1      // Deactivate the repressor by allolactose</span>
+<span class="sd">    O(i[.]), ., . -&gt; O(i[.]), Z(l[.]), Y() @ 1          // Express the lac operon</span>
+<span class="sd">    L(loc{in}) -&gt; E() @ 1                               // Metabolize lactose</span>
 
 <span class="sd">    // Degradation</span>
 <span class="sd">    A() -&gt; . @ 0.1</span>
