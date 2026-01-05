@@ -42,17 +42,18 @@ class System:
     rng: random.Random
 
     @classmethod
-    def read_ka(cls, filepath: str) -> Self:
+    def read_ka(cls, filepath: str, seed: Optional[int] = None) -> Self:
         """Read and parse a Kappa .ka file to create a System.
 
         Args:
             filepath: Path to the Kappa file.
+            seed: Random seed for reproducibility.
 
         Returns:
             A new System instance parsed from the file.
         """
         with open(filepath) as f:
-            return cls.from_ka(f.read())
+            return cls.from_ka(f.read(), seed=seed)
 
     @classmethod
     def from_ka(cls, ka_str: str, seed: Optional[int] = None) -> Self:
