@@ -559,6 +559,10 @@ class Monitor:
         self.system = system
         self.history = {"time": []} | {obs_name: [] for obs_name in system.observables}
 
+    def __len__(self) -> int:
+        """The number of records."""
+        return len(self.history["time"])
+
     def update(self) -> None:
         """Record current time and observable values."""
         self.history["time"].append(self.system.time)
