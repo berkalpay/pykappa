@@ -609,7 +609,9 @@ class Monitor:
             plt.ylabel("Observable")
             plt.margins(0, 0)
         else:
-            fig, axs = plt.subplots(len(self.system.observables), 1, sharex=True)
+            fig, axs = plt.subplots(
+                len(self.system.observables), 1, sharex=True, layout="constrained"
+            )
             if len(self.system.observables) == 1:
                 axs = [axs]
             for i, obs_name in enumerate(self.system.observables):
