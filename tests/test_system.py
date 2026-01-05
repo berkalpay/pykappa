@@ -214,3 +214,55 @@ def test_system_manipulation():
     system.add_rule("C() -> B() @ 1000")
     while system.reactivity:
         assert system["B"] == 12 and system["C"] == 0
+
+
+def test_reproducibility_from_initialization():
+    """Test that the same system specification can be used to generate reprodicible behavior."""
+
+    seed = 42
+    kwargs = {
+        "mixture": {"A(x[.])": 100, "B(x[.])": 100},
+        "rules": [
+            "A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 0.1",
+            "A(x[1]), B(x[1]) -> A(x[.]), B(x[.]) @ 1.0",
+        ],
+        "observables": {"A_free": "|A(x[.])|"},
+        "seed": seed,
+    }
+    system1 = System.from_kappa(**kwargs)
+    system2 = System.from_kappa(**kwargs)
+    ka_str = """
+        %init: 100 A(x[.])
+        %init: 100 B(x[.])
+
+        %obs: 'A_free' |A(x[.])|
+
+        A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 0.1
+        A(x[1]), B(x[1]) -> A(x[.]), B(x[.]) @ 1.0
+        """
+    system3 = System.from_ka(ka_str, seed=seed)
+    system_different = System.from_ka(ka_str, seed=1)
+
+    diverged = False
+    for _ in range(100):
+        # Systems with same seed should match
+        assert system1.time == system2.time == system3.time
+        assert system1["A_free"] == system2["A_free"] == system3["A_free"]
+
+        # Check if system with different seed has diverged
+        if (
+            system1.time != system_different.time
+            or system1["A_free"] != system_different["A_free"]
+        ):
+            diverged = True
+
+        system1.update()
+        random.seed(0)  # Make sure external random operations are irrelevant
+        random.random()
+        system2.update()
+        system3.update()
+        system_different.update()
+
+    assert (
+        diverged
+    ), "Systems with different seeds should produce different trajectories"

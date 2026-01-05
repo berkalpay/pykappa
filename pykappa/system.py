@@ -29,6 +29,7 @@ class System:
         monitor: Optional Monitor object for tracking simulation history.
         time: Current simulation time.
         tallies: Dictionary tracking rule application counts.
+        rng: Random number generator for reproducibility of updates.
     """
 
     mixture: Mixture
@@ -38,6 +39,7 @@ class System:
     monitor: Optional["Monitor"]
     time: float
     tallies: defaultdict[str, dict[str, int]]
+    rng: random.Random
 
     @classmethod
     def read_ka(cls, filepath: str) -> Self:
@@ -53,11 +55,12 @@ class System:
             return cls.from_ka(f.read())
 
     @classmethod
-    def from_ka(cls, ka_str: str) -> Self:
+    def from_ka(cls, ka_str: str, seed: Optional[int] = None) -> Self:
         """Create a System from a Kappa (.ka style) string.
 
         Args:
             ka_str: Kappa language string containing a system definition.
+            seed: Random seed for reproducibility.
 
         Returns:
             A new System instance parsed from the string.
@@ -146,7 +149,7 @@ class System:
             else:
                 raise TypeError(f"Unsupported input type: {tag}")
 
-        system = cls(None, rules, observables, variables)
+        system = cls(None, rules, observables, variables, seed=seed)
         for init in inits:
             system.mixture.instantiate(init[1], int(init[0].evaluate(system)))
         return system
@@ -212,6 +215,7 @@ class System:
         observables: Optional[dict[str, Expression]] = None,
         variables: Optional[dict[str, Expression]] = None,
         monitor: bool = True,
+        seed: Optional[int] = None,
     ):
         """Initialize a new System.
 
@@ -221,7 +225,10 @@ class System:
             observables: Dictionary of observable expressions.
             variables: Dictionary of variable expressions.
             monitor: Whether to enable monitoring of simulation history.
+            seed: Random seed for reproducibility.
         """
+        self.rng = random.Random() if seed is None else random.Random(seed)
+
         self.rules = (
             {} if rules is None else {f"r{i}": rule for i, rule in enumerate(rules)}
         )
@@ -436,7 +443,7 @@ class System:
             RuntimeWarning: If system has no reactivity (infinite wait time).
         """
         try:
-            self.time += random.expovariate(self.reactivity)
+            self.time += self.rng.expovariate(self.reactivity)
         except ZeroDivisionError:
             warnings.warn(
                 "system has no reactivity: infinite wait time", RuntimeWarning
@@ -449,7 +456,7 @@ class System:
             Selected rule, or None if no rules have positive reactivity.
         """
         try:
-            return random.choices(
+            return self.rng.choices(
                 list(self.rules.values()), weights=self.rule_reactivities
             )[0]
         except ValueError:
