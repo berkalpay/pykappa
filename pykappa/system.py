@@ -560,6 +560,50 @@ class System:
             for obs_name in self.observables
         )
 
+    def update_until_equilibrated(
+        self,
+        max_time: Optional[float] = None,
+        max_updates: Optional[int] = None,
+        check_interval: int = 100,
+        **equilibration_kwargs,
+    ) -> bool:
+        """Run simulation until all observables have equilibrated.
+
+        Args:
+            max_time: Maximum simulation time (None for no limit).
+            max_updates: Maximum number of updates (None for no limit).
+            check_interval: Number of updates between equilibration checks.
+            **equilibration_kwargs: Keyword arguments passed to equilibrated
+                (tail_fraction, tolerance).
+
+        Returns:
+            True if equilibrated, False if limits were reached first.
+
+        Raises:
+            RuntimeError: If monitoring is not enabled.
+        """
+        if self.monitor is None:
+            raise RuntimeError("Monitoring must be enabled to check equilibration")
+
+        n_updates = 0
+        start_time = self.time
+
+        while True:
+            for _ in range(check_interval):
+                if max_time is not None and self.time - start_time >= max_time:
+                    return False
+                if max_updates is not None and n_updates >= max_updates:
+                    return False
+
+                self.update()
+                n_updates += 1
+
+            try:
+                if self.equilibrated(**equilibration_kwargs):
+                    return True
+            except AssertionError:
+                pass  # Not enough data yet
+
 
 class Monitor:
     """Records the history of the values of observables in a system.

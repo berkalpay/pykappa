@@ -289,3 +289,24 @@ def test_equilibrated():
     for _ in range(10**4):
         system.update()
     assert system.monitor.equilibrated("AB")
+
+
+def test_update_until_equilibrated():
+    system = System.from_ka(
+        """
+        %init: 1000 A(x[.])
+        %init: 1000 B(x[.])
+
+        %obs: 'AB' |A(x[1]), B(x[1])|
+        %obs: 'A_free' |A(x[.])|
+
+        A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0
+        """
+    )
+
+    for _ in range(100):
+        system.update()
+    assert not system.equilibrated()
+
+    assert system.update_until_equilibrated(max_updates=10**4, check_interval=100)
+    assert system.equilibrated()
