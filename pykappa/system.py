@@ -539,6 +539,27 @@ class System:
         if self.monitor:
             self.monitor.update()
 
+    def equilibrated(self, **kwargs) -> bool:
+        """Check if all observables have equilibrated.
+
+        Args:
+            **kwargs: Keyword arguments passed to Monitor.equilibrated
+                (tail_fraction, tolerance).
+
+        Returns:
+            True if all observables have equilibrated, False otherwise.
+
+        Raises:
+            RuntimeError: If monitoring is not enabled.
+        """
+        if self.monitor is None:
+            raise RuntimeError("Monitoring must be enabled to check equilibration")
+
+        return all(
+            self.monitor.equilibrated(obs_name, **kwargs)
+            for obs_name in self.observables
+        )
+
 
 class Monitor:
     """Records the history of the values of observables in a system.
