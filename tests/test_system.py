@@ -309,4 +309,4 @@ def test_update_until_equilibrated():
     assert not system.equilibrated()
 
     assert system.update_until_equilibrated(max_updates=10**4, check_interval=100)
-    assert system.equilibrated()
+    assert system.monitor.equilibrated()

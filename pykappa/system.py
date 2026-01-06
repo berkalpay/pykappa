@@ -539,27 +539,6 @@ class System:
         if self.monitor:
             self.monitor.update()
 
-    def equilibrated(self, **kwargs) -> bool:
-        """Check if all observables have equilibrated.
-
-        Args:
-            **kwargs: Keyword arguments passed to Monitor.equilibrated
-                (tail_fraction, tolerance).
-
-        Returns:
-            True if all observables have equilibrated, False otherwise.
-
-        Raises:
-            RuntimeError: If monitoring is not enabled.
-        """
-        if self.monitor is None:
-            raise RuntimeError("Monitoring must be enabled to check equilibration")
-
-        return all(
-            self.monitor.equilibrated(obs_name, **kwargs)
-            for obs_name in self.observables
-        )
-
     def update_until_equilibrated(
         self,
         max_time: Optional[float] = None,
@@ -599,7 +578,7 @@ class System:
                 n_updates += 1
 
             try:
-                if self.equilibrated(**equilibration_kwargs):
+                if self.monitor.equilibrated(**equilibration_kwargs):
                     return True
             except AssertionError:
                 pass  # Not enough data yet
@@ -671,25 +650,31 @@ class Monitor:
 
     def equilibrated(
         self,
-        observable_name: str,
+        observable_name: Optional[str] = None,
         tail_fraction: float = 0.1,
         tolerance: float = 0.01,
     ) -> bool:
         """
-        Check if an observable has equilibrated based on whether the slope of
-        recent values is sufficiently small relative to the mean.
+        Check if an observable (or all observables) has equilibrated based on
+        whether the slope of recent values is sufficiently small relative to the mean.
 
         Args:
-            observable_name: Name of the observable to check.
+            observable_name: Name of the observable to check. If None, checks all observables.
             tail_fraction: Fraction of the history to consider.
             tolerance: Maximum allowed fraction slope deviation from the mean.
 
         Returns:
-            True if the observable seems to have equilibrated, False otherwise.
+            True if the observable(s) seem to have equilibrated, False otherwise.
 
         Raises:
             AssertionError: If there are not enough measurements to assess equilibration.
         """
+        if observable_name is None:
+            return all(
+                self.equilibrated(obs_name, tail_fraction, tolerance)
+                for obs_name in self.system.observables
+            )
+
         window_len = int(tail_fraction * len(self))
         assert (
             len(self) >= window_len and window_len >= 2
