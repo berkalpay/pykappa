@@ -1,6 +1,6 @@
 [project]
 name = "pykappa"
-version = "0.1.5"
+version = "0.1.6"
 description = "Work with Kappa rule-based models in Python"
 readme = "README.md"
 requires-python = ">=3.12"
