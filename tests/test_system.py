@@ -306,7 +306,7 @@ def test_update_until_equilibrated():
 
     for _ in range(100):
         system.update()
-    assert not system.equilibrated()
+    assert not system.monitor.equilibrated()
 
     assert system.update_until_equilibrated(max_updates=10**4, check_interval=100)
     assert system.monitor.equilibrated()
