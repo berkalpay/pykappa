@@ -648,6 +648,32 @@ class Monitor:
         """
         return pd.DataFrame(self.history)
 
+    def tail_mean(
+        self,
+        observable_name: str,
+        tail_fraction: float = 0.1,
+    ) -> float:
+        """
+        Calculate the average value of an observable over a fraction of the tail.
+
+        Args:
+            observable_name: Name of the observable to measure.
+            tail_fraction: Fraction of the history to consider (from the end).
+
+        Returns:
+            Mean value of the observable over the tail window.
+
+        Raises:
+            AssertionError: If there are not enough measurements.
+        """
+        window_len = int(tail_fraction * len(self))
+        assert (
+            len(self) >= window_len and window_len >= 1
+        ), f"Not enough measurements ({len(self)}) to calculate tail mean for {observable_name}"
+
+        values = np.asarray(self.history[observable_name][-window_len:], dtype=float)
+        return float(np.mean(values))
+
     def equilibrated(
         self,
         observable_name: Optional[str] = None,
