@@ -310,3 +310,24 @@ def test_update_until_equilibrated():
 
     assert system.update_until_equilibrated(max_updates=10**4, check_interval=100)
     assert system.monitor.equilibrated()
+
+
+def test_uniqueness_and_persistence_of_agent_ids():
+    system = System.from_ka(
+        """
+        %init: 50 A(x{u}[.])
+        %init: 50 B(x{u}[.])
+
+        A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1, 1
+        A(x{u}) <-> A(x{p}) @ 1, 1
+        """
+    )
+
+    initial_ids = {agent.id for agent in system.mixture.agents}
+    assert len(initial_ids) == 100
+
+    for _ in range(100):
+        system.update()
+
+    current_ids = {agent.id for agent in system.mixture.agents}
+    assert initial_ids == current_ids
