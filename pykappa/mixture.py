@@ -209,10 +209,6 @@ class Mixture:
             for e in new_embeddings:
                 self._embeddings[component_pattern].add(e)
 
-    def _update_embeddings(self) -> None:
-        for component_pattern in self._embeddings:
-            self.track_component(component_pattern)
-
     def _add_agent(self, agent: Agent) -> None:
         """Add an agent to the mixture.
 
@@ -331,10 +327,6 @@ class ComponentMixture(Mixture):
             update: MixtureUpdate specifying changes to apply.
         """
         super().apply_update(update)
-
-    def _update_embeddings(self) -> None:
-        for component_pattern in self._embeddings:
-            self.track_component(component_pattern)
 
     def _add_agent(self, agent: Agent) -> None:
         """Add an agent as a new single-agent component.
