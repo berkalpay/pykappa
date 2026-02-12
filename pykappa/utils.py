@@ -147,89 +147,76 @@ class IndexedSet(set[T], Generic[T]):
     ```
     """
 
-    properties: dict[str, Property]
-    indices: dict[str, defaultdict[Hashable, Self]]
-
     _item_to_pos: dict[T, int]
     _item_list: list[T]
+    properties: dict[str, Property]
+    indices: dict[str, defaultdict[Hashable, Self]]
 
     def __init__(self, iterable: Iterable[T] = []):
         iterable = list(iterable)
         super().__init__(iterable)
+
         self._item_list = iterable
         self._item_to_pos = {item: i for (i, item) in enumerate(iterable)}
-
         self.properties = {}
         self.indices = {}
+
+    def __getitem__(self, i):
+        assert 0 <= i < len(self)
+        return self._item_list[i]
 
     def add(self, item: T):
         if item in self:
             return
         super().add(item)
 
-        # Update integer index
         self._item_list.append(item)
         self._item_to_pos[item] = len(self._item_list) - 1
-
-        # Update property indices
-        for prop_name in self.properties:
-            prop = self.properties[prop_name]
-            for val in prop(item):
-                if prop.is_unique:
-                    assert not self.indices[prop_name][val]
-                self.indices[prop_name][val].add(item)
+        self._update_indices_for_item(item, adding=True)
 
     def remove(self, item: T):
         assert item in self
         super().remove(item)
 
-        # Update integer index
         pos = self._item_to_pos.pop(item)
         last_item = self._item_list.pop()
-        if pos != len(self._item_list):
+        if pos < len(self._item_list):
             self._item_list[pos] = last_item
             self._item_to_pos[last_item] = pos
 
-        # Update property indices
-        for prop_name in self.properties:
-            prop = self.properties[prop_name]
+        self._update_indices_for_item(item, adding=False)
+
+    def _update_indices_for_item(self, item: T, adding: bool):
+        """Update property indices when adding or removing an item."""
+        for prop_name, prop in self.properties.items():
             for val in prop(item):
-                self.indices[prop_name][val].remove(item)
-                # If the index entry is now empty, delete it
-                if not self.indices[prop_name][val]:
-                    del self.indices[prop_name][val]
+                index = self.indices[prop_name][val]
+
+                if adding:
+                    if prop.is_unique:
+                        assert not index
+                    index.add(item)
+                else:
+                    index.remove(item)
+                    if not index:
+                        del self.indices[prop_name][val]
 
     def lookup(self, name: str, value: Any) -> T | Iterable[T]:
-        prop = self.properties[name]
         matches = self.indices[name][value]
-
-        if prop.is_unique:
-            assert len(matches) == 1
-            return next(iter(matches))
-        else:
-            return matches
+        return next(iter(matches)) if self.properties[name].is_unique else matches
 
     def remove_by(self, prop_name: str, value: Any):
-        """
-        Remove all set members whose property `prop_name` matches or contains `value`.
-        """
-        if value not in self.indices[prop_name]:
-            return
-        matches = list(self.indices[prop_name][value])
-        for match in matches:
-            assert match in self
-            self.remove(match)
+        """Remove all set members whose property `prop_name` matches `value`."""
+        if value in self.indices[prop_name]:
+            for match in list(self.indices[prop_name][value]):
+                assert match in self
+                self.remove(match)
 
     def create_index(self, name: str, prop: Property):
         """
-        Given a function which maps a set member to an `Any`-typed value, create
-        a reverse-index mapping a property value to the set of the members of `self`
-        with that property. This index is updated when adding new members or removing
-        existing ones, but please note that if you mutate the internal state of an
-        existing set member, this object will not reflect those updates unless you
-        take the care to update the indices manually.
+        By the given property, create an index that's updated when adding and removing members.
 
-        NOTE: mutating set members outside of interface calls can invalidate indices.
+        NOTE: Mutating set members outside of interface calls can invalidate indices.
         """
         assert name not in self.properties
         self.properties[name] = prop
@@ -240,7 +227,3 @@ class IndexedSet(set[T], Generic[T]):
                 if prop.is_unique:
                     assert not self.indices[name][val]
                 self.indices[name][val].add(el)
-
-    def __getitem__(self, i):
-        assert 0 <= i < len(self)
-        return self._item_list[i]
