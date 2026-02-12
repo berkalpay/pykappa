@@ -398,7 +398,7 @@ class Component(Counted):
             )
 
         self.agents = IndexedSet(agents)  # TODO: order by graph traversal
-        self.agents.create_index("type", Property(lambda a: a.type))
+        self.agents.create_index("type", Property(lambda a: [a.type]))
         self.n_copies = n_copies
 
     def __iter__(self):

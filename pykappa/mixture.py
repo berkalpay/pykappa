@@ -68,7 +68,7 @@ class Mixture:
         self._embeddings = {}
         self._max_embedding_width = 0
 
-        self.agents.create_index("type", Property(lambda a: a.type))
+        self.agents.create_index("type", Property(lambda a: [a.type]))
 
         if patterns is not None:
             for pattern in patterns:
@@ -177,9 +177,7 @@ class Mixture:
         """
         self._max_embedding_width = max(component.diameter, self._max_embedding_width)
         embeddings = IndexedSet(component.embeddings(self))
-        embeddings.create_index(
-            "agent", Property(lambda e: iter(e.values()), single_value=False)
-        )
+        embeddings.create_index("agent", Property(lambda e: iter(e.values())))
         self._embeddings[component] = embeddings
 
     def apply_update(self, update: "MixtureUpdate") -> None:
@@ -205,7 +203,7 @@ class Mixture:
         update_region = neighborhood(update.touched_after, self._max_embedding_width)
 
         update_region = IndexedSet(update_region)
-        update_region.create_index("type", Property(lambda a: a.type))
+        update_region.create_index("type", Property(lambda a: [a.type]))
         for component_pattern in self._embeddings:
             new_embeddings = component_pattern.embeddings(update_region)
             for e in new_embeddings:
@@ -296,7 +294,7 @@ class ComponentMixture(Mixture):
         self.components = IndexedSet()
         self.components.create_index(
             "agent",
-            Property(lambda c: c.agents, single_value=False),
+            Property(lambda c: c.agents),
         )
         super().__init__(patterns)
 
@@ -327,7 +325,7 @@ class ComponentMixture(Mixture):
         self._embeddings[component].create_index(
             "component",
             Property(
-                lambda e: self.components.lookup_one("agent", next(iter(e.values())))
+                lambda e: [self.components.lookup_one("agent", next(iter(e.values())))]
             ),
         )
 

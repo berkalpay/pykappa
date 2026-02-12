@@ -92,21 +92,13 @@ class Property:
     Args:
         fn: A function taking a set member and returning either a single property value
             or an iterable of values.
-        single_value: If True (default), treats the return value of `fn` as a single property.
-                      If False, treats it as multiple property values (an iterable).
     """
 
-    def __init__(
-        self,
-        fn: Callable[[T], Hashable | Iterable[Hashable]],
-        single_value: bool = True,
-    ):
+    def __init__(self, fn: Callable[[T], Iterable[Hashable]]):
         self.fn = fn
-        self.single_value = single_value
 
     def __call__(self, item: T) -> Iterable[Hashable]:
-        val = self.fn(item)
-        return [val] if self.single_value else val
+        return self.fn(item)
 
 
 class IndexedSet(set[T], Generic[T]):
@@ -129,8 +121,8 @@ class IndexedSet(set[T], Generic[T]):
         members: list[str]
 
     teams: IndexedSet[SportsTeam] = IndexedSet()
-    teams.create_index("name", Property(lambda team: team.name))
-    teams.create_index("color", Property(lambda team: team.jersey_color))
+    teams.create_index("name", Property(lambda team: [team.name]))
+    teams.create_index("color", Property(lambda team: [team.jersey_color]))
 
     [...] # populate the set with teams
 
