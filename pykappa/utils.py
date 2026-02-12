@@ -117,13 +117,8 @@ class IndexedSet(set[T], Generic[T]):
 
     Credit https://stackoverflow.com/a/15993515 for the integer indexing logic.
 
-    If you know for some property that you should only get a single
-    set member back when using `lookup`, mark that property as unique
-    when you create it.
-
-    NOTE: although this class is indexable due to the implementation
-    of `__getitem__`, member ordering is not stable across insertions
-    and deletions.
+    NOTE: Although this class is indexable, member ordering is not stable
+    across insertions and deletions.
 
     Example usage:
     ```
@@ -134,13 +129,13 @@ class IndexedSet(set[T], Generic[T]):
         members: list[str]
 
     teams: IndexedSet[SportsTeam] = IndexedSet()
-    teams.create_index("name", Property(lambda team: team.name, is_unique=True))
+    teams.create_index("name", Property(lambda team: team.name))
     teams.create_index("color", Property(lambda team: team.jersey_color))
 
     [...] # populate the set with teams
 
-    teams.lookup("name", "Manchester") # Returns the team whose name is "Manchester"
-    teams.lookup("color", "blue")    # Returns all teams with blue jerseys
+    teams.lookup_one("name", "Manchester") # Returns the team whose name is "Manchester"
+    teams.lookup("color", "blue") # Returns all teams with blue jerseys
     ```
     """
 
