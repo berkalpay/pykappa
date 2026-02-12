@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Iterable, Iterator, Self
 
 from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
-from pykappa.utils import SetProperty, Property, IndexedSet
+from pykappa.utils import Property, IndexedSet
 
 
 @dataclass(frozen=True)
@@ -177,7 +177,9 @@ class Mixture:
         """
         self._max_embedding_width = max(component.diameter, self._max_embedding_width)
         embeddings = IndexedSet(component.embeddings(self))
-        embeddings.create_index("agent", SetProperty(lambda e: iter(e.values())))
+        embeddings.create_index(
+            "agent", Property(lambda e: iter(e.values()), single_value=False)
+        )
         self._embeddings[component] = embeddings
 
     def apply_update(self, update: "MixtureUpdate") -> None:
@@ -293,7 +295,8 @@ class ComponentMixture(Mixture):
         """
         self.components = IndexedSet()
         self.components.create_index(
-            "agent", SetProperty(lambda c: c.agents, is_unique=True)
+            "agent",
+            Property(lambda c: c.agents, is_unique=True, single_value=False),
         )
         super().__init__(patterns)
 

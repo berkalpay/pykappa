@@ -85,49 +85,31 @@ class Counted:
 T = TypeVar("T")  # Member type of `IndexedSet`
 
 
-class SetProperty:
+class Property:
     """
-    This class should be initialized with a function or lambda which
-    takes a set member as input, and returns a collection or iterable of
-    values associated with that member that you want to index by.
+    Defines how to extract a property value (or values) from a set member for indexing.
 
-    Example initialization:
-    ```
-    @dataclass
-    class SportsTeam:
-        name: str
-        members: list[str]
-
-    members_alt = SetProperty(lambda team: team.members) # If someone can belong to multiple teams (default)
-    ```
+    Args:
+        fn: A function taking a set member and returning either a single property value
+            or an iterable of values.
+        is_unique: If True, asserts that each property value maps to exactly one set member.
+        single_value: If True (default), treats the return value of `fn` as a single property.
+                      If False, treats it as multiple property values (an iterable).
     """
 
-    def __init__(self, fn: Callable[[T], Iterable[Hashable]], is_unique=False):
+    def __init__(
+        self,
+        fn: Callable[[T], Hashable | Iterable[Hashable]],
+        is_unique: bool = False,
+        single_value: bool = True,
+    ):
         self.fn = fn
         self.is_unique = is_unique
+        self.single_value = single_value
 
     def __call__(self, item: T) -> Iterable[Hashable]:
-        return self.fn(item)
-
-
-class Property(SetProperty):
-    """
-    This class should be initialized with a function or lambda which
-    takes a set member as input, and returns a single object which is
-    the corresponding property value of a set member.
-
-    An example of initializing a `Property`
-    ```
-    @dataclass
-    class Fruit:
-        color: str
-
-    my_property = Property(lambda fruit: fruit.color) # Equivalent using a lambda function
-    ```
-    """
-
-    def __call__(self, item: T) -> Iterable[Hashable]:
-        return [self.fn(item)]
+        val = self.fn(item)
+        return [val] if self.single_value else val
 
 
 class IndexedSet(set[T], Generic[T]):
@@ -165,7 +147,7 @@ class IndexedSet(set[T], Generic[T]):
     ```
     """
 
-    properties: dict[str, SetProperty]
+    properties: dict[str, Property]
     indices: dict[str, defaultdict[Hashable, Self]]
 
     _item_to_pos: dict[T, int]
@@ -238,7 +220,7 @@ class IndexedSet(set[T], Generic[T]):
             assert match in self
             self.remove(match)
 
-    def create_index(self, name: str, prop: SetProperty):
+    def create_index(self, name: str, prop: Property):
         """
         Given a function which maps a set member to an `Any`-typed value, create
         a reverse-index mapping a property value to the set of the members of `self`
