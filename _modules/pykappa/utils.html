@@ -139,60 +139,10 @@
 
 
 
-<span class="c1"># --- Indexed sets ---</span>
-
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>  <span class="c1"># Member type of `IndexedSet`</span>
-
-
-<div class="viewcode-block" id="SetProperty">
-<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.SetProperty">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SetProperty</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class should be initialized with a function or lambda which</span>
-<span class="sd">    takes a set member as input, and returns a collection or iterable of</span>
-<span class="sd">    values associated with that member that you want to index by.</span>
-
-<span class="sd">    Example initialization:</span>
-<span class="sd">    ```</span>
-<span class="sd">    @dataclass</span>
-<span class="sd">    class SportsTeam:</span>
-<span class="sd">        name: str</span>
-<span class="sd">        members: list[str]</span>
-
-<span class="sd">    members_alt = SetProperty(lambda team: team.members) # If someone can belong to multiple teams (default)</span>
-<span class="sd">    ```</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Hashable</span><span class="p">]],</span> <span class="n">is_unique</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_unique</span> <span class="o">=</span> <span class="n">is_unique</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Hashable</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="Property">
-<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.Property">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Property</span><span class="p">(</span><span class="n">SetProperty</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class should be initialized with a function or lambda which</span>
-<span class="sd">    takes a set member as input, and returns a single object which is</span>
-<span class="sd">    the corresponding property value of a set member.</span>
-
-<span class="sd">    An example of initializing a `Property`</span>
-<span class="sd">    ```</span>
-<span class="sd">    @dataclass</span>
-<span class="sd">    class Fruit:</span>
-<span class="sd">        color: str</span>
-
-<span class="sd">    my_property = Property(lambda fruit: fruit.color) # Equivalent using a lambda function</span>
-<span class="sd">    ```</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Hashable</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span></div>
-
+<span class="n">Property</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Hashable</span><span class="p">]</span>
+<span class="p">]</span>  <span class="c1"># Callable that returns the property values of an item</span>
 
 
 <div class="viewcode-block" id="IndexedSet">
@@ -205,13 +155,8 @@
 
 <span class="sd">    Credit https://stackoverflow.com/a/15993515 for the integer indexing logic.</span>
 
-<span class="sd">    If you know for some property that you should only get a single</span>
-<span class="sd">    set member back when using `lookup`, mark that property as unique</span>
-<span class="sd">    when you create it.</span>
-
-<span class="sd">    NOTE: although this class is indexable due to the implementation</span>
-<span class="sd">    of `__getitem__`, member ordering is not stable across insertions</span>
-<span class="sd">    and deletions.</span>
+<span class="sd">    NOTE: Although this class is indexable, member ordering is not stable</span>
+<span class="sd">    across insertions and deletions.</span>
 
 <span class="sd">    Example usage:</span>
 <span class="sd">    ```</span>
@@ -222,30 +167,54 @@
 <span class="sd">        members: list[str]</span>
 
 <span class="sd">    teams: IndexedSet[SportsTeam] = IndexedSet()</span>
-<span class="sd">    teams.create_index(&quot;name&quot;, Property(lambda team: team.name, is_unique=True))</span>
-<span class="sd">    teams.create_index(&quot;color&quot;, Property(lambda team: team.jersey_color))</span>
+<span class="sd">    teams.create_index(&quot;name&quot;, lambda team: [team.name])</span>
+<span class="sd">    teams.create_index(&quot;color&quot;, lambda team: [team.jersey_color])</span>
 
 <span class="sd">    [...] # populate the set with teams</span>
 
-<span class="sd">    teams.lookup(&quot;name&quot;, &quot;Manchester&quot;) # Returns the team whose name is &quot;Manchester&quot;</span>
-<span class="sd">    teams.lookup(&quot;color&quot;, &quot;blue&quot;)    # Returns all teams with blue jerseys</span>
+<span class="sd">    teams.lookup_one(&quot;name&quot;, &quot;Manchester&quot;) # Returns the team whose name is &quot;Manchester&quot;</span>
+<span class="sd">    teams.lookup(&quot;color&quot;, &quot;blue&quot;) # Returns all teams with blue jerseys</span>
 <span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SetProperty</span><span class="p">]</span>
-    <span class="n">indices</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="n">Self</span><span class="p">]]</span>
-
     <span class="n">_item_to_pos</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="n">_item_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+    <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Property</span><span class="p">]</span>
+    <span class="n">indices</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">defaultdict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="n">Self</span><span class="p">]]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]):</span>
         <span class="n">iterable</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span> <span class="o">=</span> <span class="n">iterable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_item_to_pos</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">iterable</span><span class="p">)}</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<div class="viewcode-block" id="IndexedSet.create_index">
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.create_index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prop</span><span class="p">:</span> <span class="n">Property</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        By the given property, create an index that&#39;s updated when adding and removing members.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the index</span>
+<span class="sd">            prop: A callable that returns an iterable of hashable values of the item</span>
+
+<span class="sd">        NOTE: Mutating set members outside of interface calls can invalidate indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">IndexedSet</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">prop</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">el</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="IndexedSet.add">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.add">[docs]</a>
@@ -254,17 +223,9 @@
             <span class="k">return</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
-        <span class="c1"># Update integer index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_item_to_pos</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-
-        <span class="c1"># Update property indices</span>
-        <span class="k">for</span> <span class="n">prop_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-            <span class="n">prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">prop_name</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">prop</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">is_unique</span><span class="p">:</span>
-                    <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_indices_for_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">adding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="IndexedSet.remove">
@@ -273,77 +234,53 @@
         <span class="k">assert</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
-        <span class="c1"># Update integer index</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item_to_pos</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="n">last_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">pos</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">last_item</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_item_to_pos</span><span class="p">[</span><span class="n">last_item</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span>
 
-        <span class="c1"># Update property indices</span>
-        <span class="k">for</span> <span class="n">prop_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-            <span class="n">prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">prop_name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_indices_for_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">adding</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_indices_for_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">adding</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update property indices when adding or removing an item.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">prop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">prop</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-                <span class="c1"># If the index entry is now empty, delete it</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">val</span><span class="p">]:</span>
-                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span></div>
+                <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span>
 
-
-<div class="viewcode-block" id="IndexedSet.lookup">
-<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.lookup">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-        <span class="n">prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">value</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">is_unique</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">matches</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">matches</span></div>
-
+                <span class="k">if</span> <span class="n">adding</span><span class="p">:</span>
+                    <span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">index</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span>
 
 <div class="viewcode-block" id="IndexedSet.remove_by">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.remove_by">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Remove all set members whose property `prop_name` matches or contains `value`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">]:</span>
-            <span class="k">return</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">value</span><span class="p">])</span>
-        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">match</span> <span class="ow">in</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">match</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove all set members whose given property matches `value`.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">prop_name</span><span class="p">][</span><span class="n">value</span><span class="p">]):</span>
+                <span class="k">assert</span> <span class="n">match</span> <span class="ow">in</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">match</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="IndexedSet.create_index">
-<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.create_index">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prop</span><span class="p">:</span> <span class="n">SetProperty</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Given a function which maps a set member to an `Any`-typed value, create</span>
-<span class="sd">        a reverse-index mapping a property value to the set of the members of `self`</span>
-<span class="sd">        with that property. This index is updated when adding new members or removing</span>
-<span class="sd">        existing ones, but please note that if you mutate the internal state of an</span>
-<span class="sd">        existing set member, this object will not reflect those updates unless you</span>
-<span class="sd">        take the care to update the indices manually.</span>
-
-<span class="sd">        NOTE: mutating set members outside of interface calls can invalidate indices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">IndexedSet</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">prop</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">is_unique</span><span class="p">:</span>
-                    <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">el</span><span class="p">)</span></div>
+<div class="viewcode-block" id="IndexedSet.lookup">
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.lookup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an IndexedSet of all matching items.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">value</span><span class="p">]</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
+<div class="viewcode-block" id="IndexedSet.lookup_one">
+<a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.lookup_one">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lookup_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a single matching item. Raises if not exactly one match.&quot;&quot;&quot;</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">value</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">matches</span><span class="p">))</span></div>
+</div>
 
 </pre></div>
 

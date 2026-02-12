@@ -468,7 +468,7 @@
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span>  <span class="c1"># TODO: order by graph traversal</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">Property</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_copies</span> <span class="o">=</span> <span class="n">n_copies</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

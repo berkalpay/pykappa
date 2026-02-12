@@ -18,6 +18,4 @@
       Counted
       IndexedSet
       OrderedSet
-      Property
-      SetProperty
    
