@@ -134,6 +134,24 @@ class IndexedSet(set[T], Generic[T]):
         assert 0 <= i < len(self)
         return self._item_list[i]
 
+    def create_index(self, name: str, prop: Property):
+        """
+        By the given property, create an index that's updated when adding and removing members.
+
+        Args:
+            name: Name of the index
+            prop: A callable that returns an iterable of hashable values of the item
+
+        NOTE: Mutating set members outside of interface calls can invalidate indices.
+        """
+        assert name not in self.properties
+        self.properties[name] = prop
+        self.indices[name] = defaultdict(IndexedSet)
+
+        for el in self:
+            for val in prop(el):
+                self.indices[name][val].add(el)
+
     def add(self, item: T):
         if item in self:
             return
@@ -168,6 +186,13 @@ class IndexedSet(set[T], Generic[T]):
                     if not index:
                         del self.indices[prop_name][val]
 
+    def remove_by(self, prop_name: str, value: Any):
+        """Remove all set members whose given property matches `value`."""
+        if value in self.indices[prop_name]:
+            for match in list(self.indices[prop_name][value]):
+                assert match in self
+                self.remove(match)
+
     def lookup(self, name: str, value: Any) -> Self:
         """Returns an IndexedSet of all matching items."""
         return self.indices[name][value]
@@ -177,28 +202,3 @@ class IndexedSet(set[T], Generic[T]):
         matches = self.indices[name][value]
         assert len(matches) == 1
         return next(iter(matches))
-
-    def remove_by(self, prop_name: str, value: Any):
-        """Remove all set members whose given property matches `value`."""
-        if value in self.indices[prop_name]:
-            for match in list(self.indices[prop_name][value]):
-                assert match in self
-                self.remove(match)
-
-    def create_index(self, name: str, prop: Property):
-        """
-        By the given property, create an index that's updated when adding and removing members.
-
-        Args:
-            name: Name of the index
-            prop: A callable that returns an iterable of hashable values of the item
-
-        NOTE: Mutating set members outside of interface calls can invalidate indices.
-        """
-        assert name not in self.properties
-        self.properties[name] = prop
-        self.indices[name] = defaultdict(IndexedSet)
-
-        for el in self:
-            for val in prop(el):
-                self.indices[name][val].add(el)
