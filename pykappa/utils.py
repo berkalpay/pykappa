@@ -80,25 +80,10 @@ class Counted:
         return hash(self) == hash(other)
 
 
-# --- Indexed sets ---
-
 T = TypeVar("T")  # Member type of `IndexedSet`
-
-
-class Property:
-    """
-    Defines how to extract a property value (or values) from a set member for indexing.
-
-    Args:
-        fn: A function taking a set member and returning either a single property value
-            or an iterable of values.
-    """
-
-    def __init__(self, fn: Callable[[T], Iterable[Hashable]]):
-        self.fn = fn
-
-    def __call__(self, item: T) -> Iterable[Hashable]:
-        return self.fn(item)
+Property = Callable[
+    [T], Iterable[Hashable]
+]  # Callable that returns the property values of an item
 
 
 class IndexedSet(set[T], Generic[T]):
@@ -121,8 +106,8 @@ class IndexedSet(set[T], Generic[T]):
         members: list[str]
 
     teams: IndexedSet[SportsTeam] = IndexedSet()
-    teams.create_index("name", Property(lambda team: [team.name]))
-    teams.create_index("color", Property(lambda team: [team.jersey_color]))
+    teams.create_index("name", lambda team: [team.name])
+    teams.create_index("color", lambda team: [team.jersey_color])
 
     [...] # populate the set with teams
 
@@ -194,7 +179,7 @@ class IndexedSet(set[T], Generic[T]):
         return next(iter(matches))
 
     def remove_by(self, prop_name: str, value: Any):
-        """Remove all set members whose property `prop_name` matches `value`."""
+        """Remove all set members whose given property matches `value`."""
         if value in self.indices[prop_name]:
             for match in list(self.indices[prop_name][value]):
                 assert match in self
@@ -203,6 +188,10 @@ class IndexedSet(set[T], Generic[T]):
     def create_index(self, name: str, prop: Property):
         """
         By the given property, create an index that's updated when adding and removing members.
+
+        Args:
+            name: Name of the index
+            prop: A callable that returns an iterable of hashable values of the item
 
         NOTE: Mutating set members outside of interface calls can invalidate indices.
         """

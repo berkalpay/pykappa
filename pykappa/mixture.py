@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Iterable, Iterator, Self
 
 from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
-from pykappa.utils import Property, IndexedSet
+from pykappa.utils import IndexedSet
 
 
 @dataclass(frozen=True)
@@ -68,7 +68,7 @@ class Mixture:
         self._embeddings = {}
         self._max_embedding_width = 0
 
-        self.agents.create_index("type", Property(lambda a: [a.type]))
+        self.agents.create_index("type", lambda a: [a.type])
 
         if patterns is not None:
             for pattern in patterns:
@@ -177,7 +177,7 @@ class Mixture:
         """
         self._max_embedding_width = max(component.diameter, self._max_embedding_width)
         embeddings = IndexedSet(component.embeddings(self))
-        embeddings.create_index("agent", Property(lambda e: iter(e.values())))
+        embeddings.create_index("agent", lambda e: iter(e.values()))
         self._embeddings[component] = embeddings
 
     def apply_update(self, update: "MixtureUpdate") -> None:
@@ -203,7 +203,7 @@ class Mixture:
         update_region = neighborhood(update.touched_after, self._max_embedding_width)
 
         update_region = IndexedSet(update_region)
-        update_region.create_index("type", Property(lambda a: [a.type]))
+        update_region.create_index("type", lambda a: [a.type])
         for component_pattern in self._embeddings:
             new_embeddings = component_pattern.embeddings(update_region)
             for e in new_embeddings:
@@ -292,10 +292,7 @@ class ComponentMixture(Mixture):
             patterns: Optional collection of patterns to instantiate.
         """
         self.components = IndexedSet()
-        self.components.create_index(
-            "agent",
-            Property(lambda c: c.agents),
-        )
+        self.components.create_index("agent", lambda c: c.agents)
         super().__init__(patterns)
 
     def __iter__(self) -> Iterator[Component]:
@@ -324,9 +321,7 @@ class ComponentMixture(Mixture):
         super().track_component(component)
         self._embeddings[component].create_index(
             "component",
-            Property(
-                lambda e: [self.components.lookup_one("agent", next(iter(e.values())))]
-            ),
+            lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
         )
 
     def apply_update(self, update: "MixtureUpdate") -> None:
