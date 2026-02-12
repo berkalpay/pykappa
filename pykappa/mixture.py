@@ -296,7 +296,7 @@ class ComponentMixture(Mixture):
         self.components = IndexedSet()
         self.components.create_index(
             "agent",
-            Property(lambda c: c.agents, is_unique=True, single_value=False),
+            Property(lambda c: c.agents, single_value=False),
         )
         super().__init__(patterns)
 
@@ -326,7 +326,9 @@ class ComponentMixture(Mixture):
         super().track_component(component)
         self._embeddings[component].create_index(
             "component",
-            Property(lambda e: self.components.lookup("agent", next(iter(e.values())))),
+            Property(
+                lambda e: self.components.lookup_one("agent", next(iter(e.values())))
+            ),
         )
 
     def apply_update(self, update: "MixtureUpdate") -> None:
@@ -361,8 +363,7 @@ class ComponentMixture(Mixture):
             AssertionError: If agent is part of a multi-agent component.
         """
         super()._remove_agent(agent)
-        component = self.components.lookup("agent", agent)
-        assert len(component) == 1
+        component = self.components.lookup_one("agent", agent)
         self.components.remove(component)
 
     def _add_edge(self, edge: Edge) -> None:
@@ -375,8 +376,8 @@ class ComponentMixture(Mixture):
 
         # If the agents are in different components, merge the components
         # TODO: incremental mincut
-        component1 = self.components.lookup("agent", edge.site1.agent)
-        component2 = self.components.lookup("agent", edge.site2.agent)
+        component1 = self.components.lookup_one("agent", edge.site1.agent)
+        component2 = self.components.lookup_one("agent", edge.site2.agent)
         if component1 == component2:
             return
 
@@ -404,7 +405,7 @@ class ComponentMixture(Mixture):
             # cached property evaluations
             for e in relocated[tracked]:
                 assert (
-                    self.components.lookup("agent", next(iter(e.values())))
+                    self.components.lookup_one("agent", next(iter(e.values())))
                     == component1
                 )
                 self._embeddings[tracked].add(e)
@@ -419,8 +420,8 @@ class ComponentMixture(Mixture):
 
         agent1: Agent = edge.site1.agent
         agent2: Agent = edge.site2.agent
-        old_component = self.components.lookup("agent", agent1)
-        assert old_component == self.components.lookup("agent", agent2)
+        old_component = self.components.lookup_one("agent", agent1)
+        assert old_component == self.components.lookup_one("agent", agent2)
 
         # Create a new component if the old one got disconnected
         maybe_new_component = Component(agent1.depth_first_traversal)
@@ -449,7 +450,7 @@ class ComponentMixture(Mixture):
             # TODO: refactor when we can register IndexedSet item updates, including
             # cached property evaluations
             for e in relocated[tracked]:
-                assert self.components.lookup("agent", next(iter(e.values()))) in [
+                assert self.components.lookup_one("agent", next(iter(e.values()))) in [
                     new_component1,
                     new_component2,
                 ]

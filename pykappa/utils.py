@@ -92,7 +92,6 @@ class Property:
     Args:
         fn: A function taking a set member and returning either a single property value
             or an iterable of values.
-        is_unique: If True, asserts that each property value maps to exactly one set member.
         single_value: If True (default), treats the return value of `fn` as a single property.
                       If False, treats it as multiple property values (an iterable).
     """
@@ -100,11 +99,9 @@ class Property:
     def __init__(
         self,
         fn: Callable[[T], Hashable | Iterable[Hashable]],
-        is_unique: bool = False,
         single_value: bool = True,
     ):
         self.fn = fn
-        self.is_unique = is_unique
         self.single_value = single_value
 
     def __call__(self, item: T) -> Iterable[Hashable]:
@@ -193,17 +190,21 @@ class IndexedSet(set[T], Generic[T]):
                 index = self.indices[prop_name][val]
 
                 if adding:
-                    if prop.is_unique:
-                        assert not index
                     index.add(item)
                 else:
                     index.remove(item)
                     if not index:
                         del self.indices[prop_name][val]
 
-    def lookup(self, name: str, value: Any) -> T | Iterable[T]:
+    def lookup(self, name: str, value: Any) -> Self:
+        """Returns an IndexedSet of all matching items."""
+        return self.indices[name][value]
+
+    def lookup_one(self, name: str, value: Any) -> T:
+        """Returns a single matching item. Raises if not exactly one match."""
         matches = self.indices[name][value]
-        return next(iter(matches)) if self.properties[name].is_unique else matches
+        assert len(matches) == 1
+        return next(iter(matches))
 
     def remove_by(self, prop_name: str, value: Any):
         """Remove all set members whose property `prop_name` matches `value`."""
@@ -224,6 +225,4 @@ class IndexedSet(set[T], Generic[T]):
 
         for el in self:
             for val in prop(el):
-                if prop.is_unique:
-                    assert not self.indices[name][val]
                 self.indices[name][val].add(el)
