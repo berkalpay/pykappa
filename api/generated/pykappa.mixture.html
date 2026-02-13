@@ -91,20 +91,6 @@
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.ComponentMixture.apply_update">
-<span class="sig-name descname"><span class="pre">apply_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#ComponentMixture.apply_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.ComponentMixture.apply_update" title="Link to this definition">¶</a></dt>
-<dd><p>Apply a collection of changes to the mixture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>update</strong> (<a class="reference internal" href="#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a>) – MixtureUpdate specifying changes to apply.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id0">
 <span class="sig-name descname"><span class="pre">components</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><span class="pre">IndexedSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><span class="pre">Component</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
@@ -590,15 +576,12 @@ by subgraph isomorphism, i.e. not accounting for symmetries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>agents</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>) – Starting agents for the neighborhood.</p></li>
-<li><p><strong>radius</strong> (<em>int</em>) – Maximum distance to include.</p></li>
+<li><p><strong>agents</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
+<li><p><strong>radius</strong> (<em>int</em>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Set of all agents within the specified radius.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>set[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>]</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>set[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
