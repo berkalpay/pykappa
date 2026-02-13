@@ -38,13 +38,13 @@ class Mixture:
 
     Attributes:
         agents: Indexed set of all agents in the mixture.
-        components: Indexed set of components if enabled, else None.
+        _components: Indexed set of components if enabled, else None.
         _embeddings: Cache of embeddings for tracked components.
         _max_embedding_width: Maximum diameter of tracked components.
     """
 
     agents: IndexedSet[Agent]
-    components: Optional[IndexedSet[Component]]
+    _components: Optional[IndexedSet[Component]]
     _embeddings: dict[Component, IndexedSet[Embedding]]
     _max_embedding_width: int
 
@@ -74,7 +74,7 @@ class Mixture:
             patterns: Optional collection of patterns to instantiate.
         """
         self.agents = IndexedSet()
-        self.components = None
+        self._components = None
         self._embeddings = {}
         self._max_embedding_width = 0
 
@@ -88,15 +88,30 @@ class Mixture:
                 self.instantiate(pattern)
 
     def __iter__(self) -> Iterator[Component]:
-        if self.component_tracking:
-            yield from self.components
-            return
-        yield from self.get_components()
+        yield from self.components
 
     @property
     def component_tracking(self) -> bool:
         """Whether connected components are being tracked."""
-        return self.components is not None
+        return self._components is not None
+
+    @property
+    def components(self) -> IndexedSet[Component]:
+        if self.component_tracking:
+            return self._components
+        else:
+            # Find connected components among the existing agents
+            components = IndexedSet()
+            unassigned = set(self.agents)
+
+            while unassigned:
+                seed = next(iter(unassigned))
+                component_agents = set(seed.depth_first_traversal)
+                component_agents.intersection_update(self.agents)
+                components.add(Component(component_agents))
+                unassigned.difference_update(component_agents)
+
+            return components
 
     @property
     def kappa_str(self) -> str:
@@ -112,26 +127,12 @@ class Mixture:
             ).items()
         )
 
-    def get_components(self) -> set[Component]:
-        """Find connected components among the existing agents."""
-        components = set()
-        unassigned = set(self.agents)
-
-        while unassigned:
-            seed = next(iter(unassigned))
-            component_agents = set(seed.depth_first_traversal)
-            component_agents.intersection_update(self.agents)
-            components.add(Component(component_agents))
-            unassigned.difference_update(component_agents)
-
-        return components
-
     def enable_component_tracking(self) -> None:
         """Turn on connected-component tracking for this mixture."""
         if self.component_tracking:
             return
-        self.components = IndexedSet(self.get_components())
-        self.components.create_index("agent", lambda c: c.agents)
+        self._components = IndexedSet(self.components)
+        self._components.create_index("agent", lambda c: c.agents)
 
         # If embeddings are already tracked, add a component index to them
         for embset in self._embeddings.values():
