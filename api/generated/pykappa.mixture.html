@@ -359,8 +359,8 @@ by subgraph isomorphism, i.e. not accounting for symmetries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>agents_to_add</strong> (<em>list</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
-<li><p><strong>agents_to_remove</strong> (<em>list</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
+<li><p><strong>agents_to_add</strong> (<em>set</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
+<li><p><strong>agents_to_remove</strong> (<em>set</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
 <li><p><strong>edges_to_add</strong> (<em>set</em><em>[</em><a class="reference internal" href="#pykappa.mixture.Edge" title="pykappa.mixture.Edge"><em>Edge</em></a><em>]</em>)</p></li>
 <li><p><strong>edges_to_remove</strong> (<em>set</em><em>[</em><a class="reference internal" href="#pykappa.mixture.Edge" title="pykappa.mixture.Edge"><em>Edge</em></a><em>]</em>)</p></li>
 <li><p><strong>agents_changed</strong> (<em>set</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
@@ -373,7 +373,7 @@ by subgraph isomorphism, i.e. not accounting for symmetries.</p>
 <dd><p>Agents to be added to the mixture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent">pykappa.pattern.Agent</a>]</p>
+<dd class="field-odd"><p>set[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent">pykappa.pattern.Agent</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -384,7 +384,7 @@ by subgraph isomorphism, i.e. not accounting for symmetries.</p>
 <dd><p>Agents to be removed from the mixture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent">pykappa.pattern.Agent</a>]</p>
+<dd class="field-odd"><p>set[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent">pykappa.pattern.Agent</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -429,12 +429,12 @@ by subgraph isomorphism, i.e. not accounting for symmetries.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">agents_to_add</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">agents_to_add</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">agents_to_remove</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">agents_to_remove</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

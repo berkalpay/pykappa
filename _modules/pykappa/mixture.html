@@ -41,6 +41,7 @@
   <h1>Source code for pykappa.mixture</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Self</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Embedding</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">IndexedSet</span>
@@ -419,56 +420,50 @@
         <span class="n">component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="n">Edge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an edge, potentially merging components.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            edge: Edge to add between sites.</span>
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_relocate_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Temporarily evacuate embeddings tied to `component` and restore</span>
+<span class="sd">        against the new component structure afterward.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
-
-        <span class="c1"># If the agents are in different components, merge the components</span>
-        <span class="c1"># TODO: incremental mincut</span>
-        <span class="n">component1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
-        <span class="n">component2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site2</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">component1</span> <span class="o">==</span> <span class="n">component2</span><span class="p">:</span>
-            <span class="k">return</span>
-
-        <span class="c1"># Ensure `component2` is the smaller of the 2</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">component2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">component1</span><span class="p">):</span>
-            <span class="n">component1</span><span class="p">,</span> <span class="n">component2</span> <span class="o">=</span> <span class="n">component2</span><span class="p">,</span> <span class="n">component1</span>
-
-        <span class="n">relocated</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Embedding</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Evacuate embeddings</span>
+        <span class="n">relocated</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
             <span class="n">relocated</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;component&quot;</span><span class="p">,</span> <span class="n">component2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;component&quot;</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">relocated</span><span class="p">[</span><span class="n">tracked</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">component2</span><span class="p">)</span>  <span class="c1"># NOTE: invokes a redundant linear time pass</span>
-        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">component2</span><span class="p">:</span>
-            <span class="n">component1</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
-            <span class="c1"># TODO: better semantics for this type of operation</span>
-            <span class="c1">#       Operate on diffs to set property.. ?</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="n">agent</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">component1</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+        <span class="k">finally</span><span class="p">:</span>  <span class="c1"># Restore embeddings against the new structure</span>
+            <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">relocated</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tracked</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
-            <span class="c1"># TODO: refactor when we can register IndexedSet item updates, including</span>
-            <span class="c1"># cached property evaluations</span>
-            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">relocated</span><span class="p">[</span><span class="n">tracked</span><span class="p">]:</span>
-                <span class="k">assert</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span>
-                    <span class="o">==</span> <span class="n">component1</span>
-                <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="n">Edge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an edge, potentially merging components.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+
+        <span class="n">component1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">component2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site2</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">component1</span> <span class="o">==</span> <span class="n">component2</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># The edge is within a single component, do nothing</span>
+
+        <span class="c1"># Ensure `component2` is the smaller one</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">component2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">component1</span><span class="p">):</span>
+            <span class="n">component1</span><span class="p">,</span> <span class="n">component2</span> <span class="o">=</span> <span class="n">component2</span><span class="p">,</span> <span class="n">component1</span>
+
+        <span class="c1"># Merge the components</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_relocate_embeddings</span><span class="p">(</span><span class="n">component2</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">component2</span><span class="p">)</span>  <span class="c1"># NOTE: redundant linear time pass</span>
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">component2</span><span class="p">:</span>
+                <span class="n">component1</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="n">agent</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">component1</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_remove_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="n">Edge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an edge, potentially splitting components.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            edge: Edge to remove.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an edge, potentially splitting components.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_remove_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
 
         <span class="n">agent1</span><span class="p">:</span> <span class="n">Agent</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span>
@@ -478,36 +473,17 @@
 
         <span class="c1"># Create a new component if the old one got disconnected</span>
         <span class="n">maybe_new_component</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">agent1</span><span class="o">.</span><span class="n">depth_first_traversal</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">agent2</span> <span class="ow">in</span> <span class="n">maybe_new_component</span><span class="p">:</span>
             <span class="k">return</span>  <span class="c1"># The old component is still connected, do nothing</span>
-
         <span class="n">new_component1</span> <span class="o">=</span> <span class="n">maybe_new_component</span>
         <span class="n">new_component2</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">agent2</span><span class="o">.</span><span class="n">depth_first_traversal</span><span class="p">)</span>
 
-        <span class="n">relocated</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Embedding</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
-            <span class="n">relocated</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;component&quot;</span><span class="p">,</span> <span class="n">old_component</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">relocated</span><span class="p">[</span><span class="n">tracked</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-
-        <span class="c1"># TODO: need to do manual updates to the indices in `components`</span>
-        <span class="c1"># to do this more efficiently</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">old_component</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_component1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_component2</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
-            <span class="c1"># TODO: refactor when we can register IndexedSet item updates, including</span>
-            <span class="c1"># cached property evaluations</span>
-            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">relocated</span><span class="p">[</span><span class="n">tracked</span><span class="p">]:</span>
-                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span> <span class="ow">in</span> <span class="p">[</span>
-                    <span class="n">new_component1</span><span class="p">,</span>
-                    <span class="n">new_component2</span><span class="p">,</span>
-                <span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+        <span class="c1"># Split the component</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_relocate_embeddings</span><span class="p">(</span><span class="n">old_component</span><span class="p">):</span>
+            <span class="c1"># TODO: manually update indices in `components` for speed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">old_component</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_component1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_component2</span><span class="p">)</span></div>
 
 
 
@@ -525,11 +501,11 @@
 <span class="sd">        agents_changed: Agents with internal state changes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">agents_to_add</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">agents_to_remove</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">agents_to_add</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">agents_to_remove</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
     <span class="n">edges_to_add</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Edge</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
     <span class="n">edges_to_remove</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Edge</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
-    <span class="n">agents_changed</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>  <span class="c1"># Agents changed internally</span>
+    <span class="n">agents_changed</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MixtureUpdate.create_agent">
 <a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.MixtureUpdate.create_agent">[docs]</a>
@@ -546,7 +522,7 @@
 <span class="sd">            New agent with empty sites.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">new_agent</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">detached</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_add</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_agent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_add</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_agent</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_agent</span></div>
 
 
@@ -558,7 +534,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            agent: Agent to remove.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">site</span><span class="o">.</span><span class="n">coupled</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">edges_to_remove</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">partner</span><span class="p">))</span></div>
@@ -621,7 +597,7 @@
 
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_to_remove</span><span class="p">:</span>
             <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site2</span><span class="o">.</span><span class="n">agent</span>
-            <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="p">:</span>  <span class="c1"># TODO make agents_to_remove a set</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="p">:</span>
                 <span class="n">touched</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">b</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="p">:</span>
                 <span class="n">touched</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
@@ -643,7 +619,7 @@
 
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_to_add</span><span class="p">:</span>
             <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site2</span><span class="o">.</span><span class="n">agent</span>
-            <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_add</span><span class="p">:</span>  <span class="c1"># TODO make agents_to_add a set</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_add</span><span class="p">:</span>
                 <span class="n">touched</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">b</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_to_add</span><span class="p">:</span>
                 <span class="n">touched</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
