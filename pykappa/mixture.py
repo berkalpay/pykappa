@@ -320,14 +320,6 @@ class ComponentMixture(Mixture):
             lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
         )
 
-    def apply_update(self, update: "MixtureUpdate") -> None:
-        """Apply a collection of changes to the mixture.
-
-        Args:
-            update: MixtureUpdate specifying changes to apply.
-        """
-        super().apply_update(update)
-
     def _add_agent(self, agent: Agent) -> None:
         """Add an agent as a new single-agent component.
 
