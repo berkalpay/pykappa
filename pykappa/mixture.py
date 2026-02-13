@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Optional, Iterable, Iterator, Self
+from contextlib import contextmanager
 
 from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
 from pykappa.utils import IndexedSet
@@ -343,56 +344,50 @@ class ComponentMixture(Mixture):
         component = self.components.lookup_one("agent", agent)
         self.components.remove(component)
 
-    def _add_edge(self, edge: Edge) -> None:
-        """Add an edge, potentially merging components.
-
-        Args:
-            edge: Edge to add between sites.
+    @contextmanager
+    def _relocate_embeddings(self, component: Component):
         """
-        super()._add_edge(edge)
-
-        # If the agents are in different components, merge the components
-        # TODO: incremental mincut
-        component1 = self.components.lookup_one("agent", edge.site1.agent)
-        component2 = self.components.lookup_one("agent", edge.site2.agent)
-        if component1 == component2:
-            return
-
-        # Ensure `component2` is the smaller of the 2
-        if len(component2) > len(component1):
-            component1, component2 = component2, component1
-
-        relocated: dict[Component, list[Embedding]] = {}
+        Temporarily evacuate embeddings tied to `component` and restore
+        against the new component structure afterward.
+        """
+        # Evacuate embeddings
+        relocated = {}
         for tracked in self._embeddings:
             relocated[tracked] = list(
-                self._embeddings[tracked].lookup("component", component2)
+                self._embeddings[tracked].lookup("component", component)
             )
             for e in relocated[tracked]:
                 self._embeddings[tracked].remove(e)
 
-        self.components.remove(component2)  # NOTE: invokes a redundant linear time pass
-        for agent in component2:
-            component1.add(agent)
-            # TODO: better semantics for this type of operation
-            #       Operate on diffs to set property.. ?
-            self.components.indices["agent"][agent] = [component1]
+        try:
+            yield
+        finally:  # Restore embeddings against the new structure
+            for tracked in self._embeddings:
+                for e in relocated.get(tracked, []):
+                    self._embeddings[tracked].add(e)
 
-        for tracked in self._embeddings:
-            # TODO: refactor when we can register IndexedSet item updates, including
-            # cached property evaluations
-            for e in relocated[tracked]:
-                assert (
-                    self.components.lookup_one("agent", next(iter(e.values())))
-                    == component1
-                )
-                self._embeddings[tracked].add(e)
+    def _add_edge(self, edge: Edge) -> None:
+        """Add an edge, potentially merging components."""
+        super()._add_edge(edge)
+
+        component1 = self.components.lookup_one("agent", edge.site1.agent)
+        component2 = self.components.lookup_one("agent", edge.site2.agent)
+        if component1 == component2:
+            return  # The edge is within a single component, do nothing
+
+        # Ensure `component2` is the smaller one
+        if len(component2) > len(component1):
+            component1, component2 = component2, component1
+
+        # Merge the components
+        with self._relocate_embeddings(component2):
+            self.components.remove(component2)  # NOTE: redundant linear time pass
+            for agent in component2:
+                component1.add(agent)
+                self.components.indices["agent"][agent] = [component1]
 
     def _remove_edge(self, edge: Edge) -> None:
-        """Remove an edge, potentially splitting components.
-
-        Args:
-            edge: Edge to remove.
-        """
+        """Remove an edge, potentially splitting components."""
         super()._remove_edge(edge)
 
         agent1: Agent = edge.site1.agent
@@ -402,36 +397,17 @@ class ComponentMixture(Mixture):
 
         # Create a new component if the old one got disconnected
         maybe_new_component = Component(agent1.depth_first_traversal)
-
         if agent2 in maybe_new_component:
             return  # The old component is still connected, do nothing
-
         new_component1 = maybe_new_component
         new_component2 = Component(agent2.depth_first_traversal)
 
-        relocated: dict[Component, list[Embedding]] = {}
-        for tracked in self._embeddings:
-            relocated[tracked] = list(
-                self._embeddings[tracked].lookup("component", old_component)
-            )
-            for e in relocated[tracked]:
-                self._embeddings[tracked].remove(e)
-
-        # TODO: need to do manual updates to the indices in `components`
-        # to do this more efficiently
-        self.components.remove(old_component)
-        self.components.add(new_component1)
-        self.components.add(new_component2)
-
-        for tracked in self._embeddings:
-            # TODO: refactor when we can register IndexedSet item updates, including
-            # cached property evaluations
-            for e in relocated[tracked]:
-                assert self.components.lookup_one("agent", next(iter(e.values()))) in [
-                    new_component1,
-                    new_component2,
-                ]
-                self._embeddings[tracked].add(e)
+        # Split the component
+        with self._relocate_embeddings(old_component):
+            # TODO: manually update indices in `components` for speed
+            self.components.remove(old_component)
+            self.components.add(new_component1)
+            self.components.add(new_component2)
 
 
 @dataclass
