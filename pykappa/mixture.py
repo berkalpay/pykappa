@@ -558,26 +558,21 @@ class MixtureUpdate:
 
 
 def neighborhood(agents: Iterable[Agent], radius: int) -> set[Agent]:
-    """Get all agents within a distance radius of the given agents.
-
-    Args:
-        agents: Starting agents for the neighborhood.
-        radius: Maximum distance to include.
-
-    Returns:
-        Set of all agents within the specified radius.
-    """
-    frontier = agents
+    """Get all agents within a distance radius of the given agents."""
+    frontier = set(agents)
     seen = set(frontier)
+
     for _ in range(radius):
-        new_frontier = set()
+        next_frontier = set()
         for cur in frontier:
             for n in cur.neighbors:
-                seen.add(n)
                 if n not in seen:
-                    new_frontier.add(n)
+                    seen.add(n)
+                    next_frontier.add(n)
+        frontier = next_frontier
+        if not frontier:
+            break
 
-        frontier = new_frontier
     return seen
 
 

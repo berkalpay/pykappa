@@ -1,7 +1,19 @@
 import pytest
 
-from pykappa.pattern import Pattern
-from pykappa.mixture import ComponentMixture
+from pykappa.pattern import Pattern, Component
+from pykappa.mixture import ComponentMixture, neighborhood
+
+
+def test_neighborhood_requires_frontier_growth_for_radius_gt_1():
+    # Chain A - B - C. From A, radius=2 must reach C.
+    comp = Component.from_kappa("A(x[1]), B(x[1], y[2]), C(y[2])")
+    a = next(agent for agent in comp if agent.type == "A")
+
+    types_r1 = {ag.type for ag in neighborhood([a], radius=1)}
+    assert types_r1 == {"A", "B"}
+
+    types_r2 = {ag.type for ag in neighborhood([a], radius=2)}
+    assert types_r2 == {"A", "B", "C"}
 
 
 @pytest.mark.parametrize(
