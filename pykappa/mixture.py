@@ -446,11 +446,11 @@ class MixtureUpdate:
         agents_changed: Agents with internal state changes.
     """
 
-    agents_to_add: list[Agent] = field(default_factory=list)
-    agents_to_remove: list[Agent] = field(default_factory=list)
+    agents_to_add: set[Agent] = field(default_factory=set)
+    agents_to_remove: set[Agent] = field(default_factory=set)
     edges_to_add: set[Edge] = field(default_factory=set)
     edges_to_remove: set[Edge] = field(default_factory=set)
-    agents_changed: set[Agent] = field(default_factory=set)  # Agents changed internally
+    agents_changed: set[Agent] = field(default_factory=set)
 
     def create_agent(self, agent: Agent) -> Agent:
         """Create a new agent based on a template.
@@ -465,7 +465,7 @@ class MixtureUpdate:
             New agent with empty sites.
         """
         new_agent = agent.detached()
-        self.agents_to_add.append(new_agent)
+        self.agents_to_add.add(new_agent)
         return new_agent
 
     def remove_agent(self, agent: Agent) -> None:
@@ -474,7 +474,7 @@ class MixtureUpdate:
         Args:
             agent: Agent to remove.
         """
-        self.agents_to_remove.append(agent)
+        self.agents_to_remove.add(agent)
         for site in agent:
             if site.coupled:
                 self.edges_to_remove.add(Edge(site, site.partner))
@@ -527,7 +527,7 @@ class MixtureUpdate:
 
         for edge in self.edges_to_remove:
             a, b = edge.site1.agent, edge.site2.agent
-            if a not in self.agents_to_remove:  # TODO make agents_to_remove a set
+            if a not in self.agents_to_remove:
                 touched.add(a)
             if b not in self.agents_to_remove:
                 touched.add(b)
@@ -549,7 +549,7 @@ class MixtureUpdate:
 
         for edge in self.edges_to_add:
             a, b = edge.site1.agent, edge.site2.agent
-            if a not in self.agents_to_add:  # TODO make agents_to_add a set
+            if a not in self.agents_to_add:
                 touched.add(a)
             if b not in self.agents_to_add:
                 touched.add(b)
