@@ -6,7 +6,7 @@ from functools import cached_property
 from copy import deepcopy
 
 from pykappa.pattern import Pattern, Component, Agent, Site
-from pykappa.mixture import Mixture, ComponentMixture, MixtureUpdate
+from pykappa.mixture import Mixture, MixtureUpdate
 from pykappa.algebra import Expression
 from pykappa.utils import rejection_sample
 
@@ -255,7 +255,7 @@ class KappaRule(Rule):
             len(mixture.embeddings(component)) for component in self.left.components
         )
 
-    def select(self, mixture: ComponentMixture) -> Optional[MixtureUpdate]:
+    def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
         """Select agents in the mixture and specify the update.
 
         Note:
@@ -287,7 +287,7 @@ class KappaRule(Rule):
         return self._produce_update(rule_embedding, mixture)
 
     def _produce_update(
-        self, selection_map: dict[Agent, Agent], mixture: ComponentMixture
+        self, selection_map: dict[Agent, Agent], mixture: Mixture
     ) -> MixtureUpdate:
         """Produce an update specification from selected agents.
 
@@ -381,7 +381,7 @@ class KappaRuleUnimolecular(KappaRule):
         """
         return f"{self.left.kappa_str} -> {self.right.kappa_str} @ 0 {{{self.stochastic_rate.kappa_str}}}"
 
-    def n_embeddings(self, mixture: ComponentMixture) -> int:
+    def n_embeddings(self, mixture: Mixture) -> int:
         """Count embeddings in the mixture.
 
         Args:
@@ -401,7 +401,7 @@ class KappaRuleUnimolecular(KappaRule):
             count += weight
         return count
 
-    def select(self, mixture: ComponentMixture) -> Optional[MixtureUpdate]:
+    def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
         """Select agents in the mixture and specify the update.
 
         Note:
@@ -459,7 +459,7 @@ class KappaRuleBimolecular(KappaRule):
         """
         return super().kappa_str + "{0}"
 
-    def n_embeddings(self, mixture: ComponentMixture) -> int:
+    def n_embeddings(self, mixture: Mixture) -> int:
         """Count embeddings in the mixture.
 
         Args:
@@ -485,7 +485,7 @@ class KappaRuleBimolecular(KappaRule):
 
         return count
 
-    def select(self, mixture: ComponentMixture) -> Optional[MixtureUpdate]:
+    def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
         """Select agents in the mixture and specify the update.
 
         Note:
