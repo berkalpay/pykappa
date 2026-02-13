@@ -1,7 +1,7 @@
 import pytest
 
 from pykappa.pattern import Pattern, Component
-from pykappa.mixture import ComponentMixture, neighborhood
+from pykappa.mixture import Mixture, neighborhood
 
 
 def test_neighborhood_requires_frontier_growth_for_radius_gt_1():
@@ -27,7 +27,7 @@ def test_neighborhood_requires_frontier_growth_for_radius_gt_1():
 )
 def test_instantiate_pattern_one_component(test_str):
     pattern = Pattern.from_kappa(test_str)
-    mixture = ComponentMixture([pattern])
+    mixture = Mixture([pattern], track_components=True)
     assert pattern.components.pop().isomorphic(mixture.components.pop())
 
 
@@ -56,7 +56,7 @@ def test_find_embeddings_one_component(test_case):
     mixture_pattern_str, n_copies, match_pattern_str, n_embeddings_expected = test_case
     mixture_pattern = Pattern.from_kappa(mixture_pattern_str)
 
-    mixture = ComponentMixture()
+    mixture = Mixture()
     for _ in range(n):
         mixture.instantiate(mixture_pattern, n_copies)
 

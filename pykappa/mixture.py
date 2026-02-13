@@ -34,13 +34,17 @@ class Edge:
 class Mixture:
     """A collection of agents and their connections.
 
+    Optionally tracks connected components, enabled via `enable_component_tracking()`.
+
     Attributes:
         agents: Indexed set of all agents in the mixture.
+        components: Indexed set of components if enabled, else None.
         _embeddings: Cache of embeddings for tracked components.
         _max_embedding_width: Maximum diameter of tracked components.
     """
 
     agents: IndexedSet[Agent]
+    components: Optional[IndexedSet[Component]]
     _embeddings: dict[Component, IndexedSet[Embedding]]
     _max_embedding_width: int
 
@@ -59,24 +63,40 @@ class Mixture:
             real_patterns.extend([Pattern.from_kappa(pattern)] * count)
         return cls(real_patterns)
 
-    def __init__(self, patterns: Optional[Iterable[Pattern]] = None):
+    def __init__(
+        self,
+        patterns: Optional[Iterable[Pattern]] = None,
+        track_components: bool = False,
+    ):
         """Initialize a new mixture.
 
         Args:
             patterns: Optional collection of patterns to instantiate.
         """
         self.agents = IndexedSet()
+        self.components = None
         self._embeddings = {}
         self._max_embedding_width = 0
 
         self.agents.create_index("type", lambda a: [a.type])
+
+        if track_components:
+            self.enable_component_tracking()
 
         if patterns is not None:
             for pattern in patterns:
                 self.instantiate(pattern)
 
     def __iter__(self) -> Iterator[Component]:
-        yield from ComponentMixture([Pattern(list(self.agents))])
+        if self.component_tracking:
+            yield from self.components
+            return
+        yield from self.get_components()
+
+    @property
+    def component_tracking(self) -> bool:
+        """Whether connected components are being tracked."""
+        return self.components is not None
 
     @property
     def kappa_str(self) -> str:
@@ -91,6 +111,34 @@ class Mixture:
                 list(component for component in self)
             ).items()
         )
+
+    def get_components(self) -> set[Component]:
+        """Find connected components among the existing agents."""
+        components = set()
+        unassigned = set(self.agents)
+
+        while unassigned:
+            seed = next(iter(unassigned))
+            component_agents = set(seed.depth_first_traversal)
+            component_agents.intersection_update(self.agents)
+            components.add(Component(component_agents))
+            unassigned.difference_update(component_agents)
+
+        return components
+
+    def enable_component_tracking(self) -> None:
+        """Turn on connected-component tracking for this mixture."""
+        if self.component_tracking:
+            return
+        self.components = IndexedSet(self.get_components())
+        self.components.create_index("agent", lambda c: c.agents)
+
+        # If embeddings are already tracked, add a component index to them
+        for embset in self._embeddings.values():
+            embset.create_index(
+                "component",
+                lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
+            )
 
     def instantiate(self, pattern: Pattern | str, n_copies: int = 1) -> None:
         """Add instances of a pattern to the mixture.
@@ -170,23 +218,29 @@ class Mixture:
             )
             raise
 
-    def track_component(self, component: Component):
-        """Start tracking embeddings of a component.
+    def embeddings_in_component(
+        self, match_pattern: Component, mixture_component: Component
+    ) -> list[dict[Agent, Agent]]:
+        """Get embeddings of a pattern within a specific component."""
+        if not self.component_tracking:
+            raise RuntimeError("Component tracking is not enabled.")
+        return self._embeddings[match_pattern].lookup("component", mixture_component)
 
-        Args:
-            component: Component pattern to track.
-        """
+    def track_component(self, component: Component):
+        """Start tracking embeddings of a component."""
         self._max_embedding_width = max(component.diameter, self._max_embedding_width)
         embeddings = IndexedSet(component.embeddings(self))
         embeddings.create_index("agent", lambda e: iter(e.values()))
         self._embeddings[component] = embeddings
 
-    def apply_update(self, update: "MixtureUpdate") -> None:
-        """Apply a collection of changes to the mixture.
+        if self.component_tracking:
+            embeddings.create_index(
+                "component",
+                lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
+            )
 
-        Args:
-            update: MixtureUpdate specifying changes to apply.
-        """
+    def apply_update(self, update: "MixtureUpdate") -> None:
+        """Apply a collection of changes to the mixture."""
         for agent in update.touched_before:
             for tracked in self._embeddings:
                 self._embeddings[tracked].remove_by("agent", agent)
@@ -199,7 +253,6 @@ class Mixture:
             self._add_agent(agent)
         for edge in update.edges_to_add:
             self._add_edge(edge)
-        # NOTE: the current implementation doesn't directly mutate agent type
 
         update_region = neighborhood(update.touched_after, self._max_embedding_width)
 
@@ -224,9 +277,12 @@ class Mixture:
         Raises:
             AssertionError: If agent has bound sites or isn't instantiable.
         """
-        assert all(site.partner == "." for site in agent)  # Check all sites are unbound
+        assert all(site.partner == "." for site in agent)
         assert agent.instantiable
         self.agents.add(agent)
+
+        if self.component_tracking:
+            self.components.add(Component([agent]))
 
     def _remove_agent(self, agent: Agent) -> None:
         """Remove an agent from the mixture.
@@ -240,115 +296,19 @@ class Mixture:
         Raises:
             AssertionError: If agent has bound sites.
         """
-        assert all(site.partner == "." for site in agent)  # Check all sites are unbound
+        assert all(site.partner == "." for site in agent)
         self.agents.remove(agent)
 
-    def _add_edge(self, edge: Edge) -> None:
-        """Add a bond between two sites.
-
-        Args:
-            edge: Edge specifying the bond to create.
-
-        Raises:
-            AssertionError: If either agent is not in the mixture.
-        """
-        assert edge.site1.agent in self.agents
-        assert edge.site2.agent in self.agents
-        edge.site1.partner = edge.site2
-        edge.site2.partner = edge.site1
-
-    def _remove_edge(self, edge: Edge) -> None:
-        """Remove a bond between two sites.
-
-        Args:
-            edge: Edge specifying the bond to remove.
-
-        Raises:
-            AssertionError: If the edge doesn't exist.
-        """
-        assert edge.site1.partner == edge.site2
-        assert edge.site2.partner == edge.site1
-        edge.site1.partner = "."
-        edge.site2.partner = "."
-
-
-@dataclass
-class ComponentMixture(Mixture):
-    """A mixture that explicitly tracks connected components.
-
-    Attributes:
-        components: Indexed set of all components in the mixture.
-    """
-
-    components: IndexedSet[Component]
-
-    def __init__(self, patterns: Optional[Iterable[Pattern]] = None):
-        """Initialize a component-tracking mixture.
-
-        Args:
-            patterns: Optional collection of patterns to instantiate.
-        """
-        self.components = IndexedSet()
-        self.components.create_index("agent", lambda c: c.agents)
-        super().__init__(patterns)
-
-    def __iter__(self) -> Iterator[Component]:
-        yield from self.components
-
-    def embeddings_in_component(
-        self, match_pattern: Component, mixture_component: Component
-    ) -> list[dict[Agent, Agent]]:
-        """Get embeddings of a pattern within a specific component.
-
-        Args:
-            match_pattern: Pattern to find embeddings for.
-            mixture_component: Component to search within.
-
-        Returns:
-            List of embeddings within the specified component.
-        """
-        return self._embeddings[match_pattern].lookup("component", mixture_component)
-
-    def track_component(self, component: Component):
-        """Start tracking embeddings of a component pattern.
-
-        Args:
-            component: Component pattern to track.
-        """
-        super().track_component(component)
-        self._embeddings[component].create_index(
-            "component",
-            lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
-        )
-
-    def _add_agent(self, agent: Agent) -> None:
-        """Add an agent as a new single-agent component.
-
-        Args:
-            agent: Agent to add.
-        """
-        super()._add_agent(agent)
-        component = Component([agent])
-        self.components.add(component)
-
-    def _remove_agent(self, agent: Agent) -> None:
-        """Remove an agent and its component.
-
-        Args:
-            agent: Agent to remove.
-
-        Raises:
-            AssertionError: If agent is part of a multi-agent component.
-        """
-        super()._remove_agent(agent)
-        component = self.components.lookup_one("agent", agent)
-        self.components.remove(component)
+        if self.component_tracking:
+            component = self.components.lookup_one("agent", agent)
+            self.components.remove(component)
 
     @contextmanager
     def _relocate_embeddings(self, component: Component):
         """
         Temporarily evacuate embeddings tied to `component` and restore
-        against the new component structure afterward.
+        against the new component structure afterward. (Only relevant
+        when tracking components.)
         """
         # Evacuate embeddings
         relocated = {}
@@ -367,8 +327,21 @@ class ComponentMixture(Mixture):
                     self._embeddings[tracked].add(e)
 
     def _add_edge(self, edge: Edge) -> None:
-        """Add an edge, potentially merging components."""
-        super()._add_edge(edge)
+        """Add a bond between two sites.
+
+        Args:
+            edge: Edge specifying the bond to create.
+
+        Raises:
+            AssertionError: If either agent is not in the mixture.
+        """
+        assert edge.site1.agent in self.agents
+        assert edge.site2.agent in self.agents
+        edge.site1.partner = edge.site2
+        edge.site2.partner = edge.site1
+
+        if not self.component_tracking:
+            return
 
         component1 = self.components.lookup_one("agent", edge.site1.agent)
         component2 = self.components.lookup_one("agent", edge.site2.agent)
@@ -387,8 +360,21 @@ class ComponentMixture(Mixture):
                 self.components.indices["agent"][agent] = [component1]
 
     def _remove_edge(self, edge: Edge) -> None:
-        """Remove an edge, potentially splitting components."""
-        super()._remove_edge(edge)
+        """Remove a bond between two sites.
+
+        Args:
+            edge: Edge specifying the bond to remove.
+
+        Raises:
+            AssertionError: If the edge doesn't exist.
+        """
+        assert edge.site1.partner == edge.site2
+        assert edge.site2.partner == edge.site1
+        edge.site1.partner = "."
+        edge.site2.partner = "."
+
+        if not self.component_tracking:
+            return
 
         agent1: Agent = edge.site1.agent
         agent2: Agent = edge.site2.agent
