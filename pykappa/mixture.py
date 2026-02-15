@@ -12,10 +12,6 @@ class Edge:
 
     Note:
         Edge(x, y) is the same as Edge(y, x).
-
-    Attributes:
-        site1: First site in the bond.
-        site2: Second site in the bond.
     """
 
     site1: Site
@@ -72,6 +68,7 @@ class Mixture:
 
         Args:
             patterns: Optional collection of patterns to instantiate.
+            track_components: Whether to enable connected component tracking from the start.
         """
         self.agents = IndexedSet()
         self._components = None
@@ -115,10 +112,8 @@ class Mixture:
 
     @property
     def kappa_str(self) -> str:
-        """The mixture representation in Kappa format.
-
-        Returns:
-            Kappa string with %init declarations for each component type.
+        """The mixture representation in Kappa format, with %init
+        declarations for each component type.
         """
         return "\n".join(
             f"%init: {len(components)} {group.kappa_str}"
@@ -162,11 +157,7 @@ class Mixture:
                 self.add(component)
 
     def add(self, component: Component) -> None:
-        """Add a component to the mixture.
-
-        Args:
-            component: Component to add with its agents and connections.
-        """
+        """Add a component to the mixture."""
         component_ordered = list(component.agents)
         new_agents = [agent.detached() for agent in component_ordered]
         new_edges = set()
@@ -185,11 +176,7 @@ class Mixture:
         self.apply_update(update)
 
     def remove(self, component: Component) -> None:
-        """Remove a component from the mixture.
-
-        Args:
-            component: Component to remove.
-        """
+        """Remove a component from the mixture."""
         update = MixtureUpdate()
         for agent in component:
             update.remove_agent(agent)
@@ -201,12 +188,6 @@ class Mixture:
         Notes:
             Returns the number of matches directly returned
             by subgraph isomorphism, i.e. not accounting for symmetries.
-
-        Args:
-            component: Component to get embeddings for.
-
-        Returns:
-            Set of embeddings for the component.
 
         Raises:
             KeyError: If component is not being tracked.
@@ -268,12 +249,9 @@ class Mixture:
         """Add an agent to the mixture.
 
         Note:
+            The provided agent should not have any bound sites.
             Calling these private functions isn't guaranteed to keep indexes
             up to date, which is why they shouldn't be used externally.
-            The provided agent should not have any bound sites.
-
-        Args:
-            agent: Agent to add (should have empty sites).
 
         Raises:
             AssertionError: If agent has bound sites or isn't instantiable.
@@ -290,9 +268,6 @@ class Mixture:
 
         Note:
             Any bonds associated with agent must be removed first.
-
-        Args:
-            agent: Agent to remove (should have empty sites).
 
         Raises:
             AssertionError: If agent has bound sites.
@@ -330,9 +305,6 @@ class Mixture:
     def _add_edge(self, edge: Edge) -> None:
         """Add a bond between two sites.
 
-        Args:
-            edge: Edge specifying the bond to create.
-
         Raises:
             AssertionError: If either agent is not in the mixture.
         """
@@ -362,9 +334,6 @@ class Mixture:
 
     def _remove_edge(self, edge: Edge) -> None:
         """Remove a bond between two sites.
-
-        Args:
-            edge: Edge specifying the bond to remove.
 
         Raises:
             AssertionError: If the edge doesn't exist.
@@ -421,9 +390,6 @@ class MixtureUpdate:
         Note:
             Sites in the created agent will be emptied.
 
-        Args:
-            agent: Template agent to base the new agent on.
-
         Returns:
             New agent with empty sites.
         """
@@ -443,13 +409,8 @@ class MixtureUpdate:
                 self.edges_to_remove.add(Edge(site, site.partner))
 
     def connect_sites(self, site1: Site, site2: Site) -> None:
-        """Specify to create an edge between two sites.
-
-        If the sites are bound to other sites, indicates to remove those edges.
-
-        Args:
-            site1: First site to connect.
-            site2: Second site to connect.
+        """Specify to create an edge between two sites. If the sites
+        are bound to other sites, indicates to remove those edges.
         """
         if site1.coupled and site1.partner != site2:
             self.disconnect_site(site1)
@@ -459,11 +420,7 @@ class MixtureUpdate:
             self.edges_to_add.add(Edge(site1, site2))
 
     def disconnect_site(self, site: Site) -> None:
-        """Specify that a site should be unbound.
-
-        Args:
-            site: Site to disconnect from its partner.
-        """
+        """Specify that a site should be unbound."""
         if site.coupled:
             self.edges_to_remove.add(Edge(site, site.partner))
 
@@ -477,11 +434,7 @@ class MixtureUpdate:
 
     @property
     def touched_after(self) -> set[Agent]:
-        """The agents that will be changed or added after this update.
-
-        Returns:
-            Set of agents affected by the update.
-        """
+        """The agents that will be changed or added after this update."""
         touched = self.agents_changed | set(self.agents_to_add)
 
         for edge in self.edges_to_add:
@@ -499,11 +452,7 @@ class MixtureUpdate:
 
     @property
     def touched_before(self) -> set[Agent]:
-        """The agents that will be changed or removed by this update.
-
-        Returns:
-            Set of agents affected before the update is applied.
-        """
+        """The agents that will be changed or removed by this update."""
         touched = self.agents_changed | set(self.agents_to_remove)
 
         for edge in self.edges_to_remove:
@@ -541,9 +490,6 @@ def neighborhood(agents: Iterable[Agent], radius: int) -> set[Agent]:
 
 def grouped(components: Iterable[Component]) -> dict[Component, list[Component]]:
     """Group components by isomorphism.
-
-    Args:
-        components: Components to group.
 
     Returns:
         Dictionary mapping representative components to lists of isomorphic components.
