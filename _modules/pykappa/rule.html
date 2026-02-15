@@ -47,7 +47,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Site</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span><span class="p">,</span> <span class="n">ComponentMixture</span><span class="p">,</span> <span class="n">MixtureUpdate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span><span class="p">,</span> <span class="n">MixtureUpdate</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.algebra</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rejection_sample</span>
 
@@ -333,7 +333,7 @@
 
 <div class="viewcode-block" id="KappaRule.select">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.select">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">ComponentMixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents in the mixture and specify the update.</span>
 
 <span class="sd">        Note:</span>
@@ -366,7 +366,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_produce_update</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">selection_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">],</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">ComponentMixture</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">selection_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">],</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MixtureUpdate</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Produce an update specification from selected agents.</span>
 
@@ -465,7 +465,7 @@
 
 <div class="viewcode-block" id="KappaRuleUnimolecular.n_embeddings">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleUnimolecular.n_embeddings">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">ComponentMixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Count embeddings in the mixture.</span>
 
 <span class="sd">        Args:</span>
@@ -488,7 +488,7 @@
 
 <div class="viewcode-block" id="KappaRuleUnimolecular.select">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleUnimolecular.select">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">ComponentMixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents in the mixture and specify the update.</span>
 
 <span class="sd">        Note:</span>
@@ -552,7 +552,7 @@
 
 <div class="viewcode-block" id="KappaRuleBimolecular.n_embeddings">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleBimolecular.n_embeddings">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">ComponentMixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Count embeddings in the mixture.</span>
 
 <span class="sd">        Args:</span>
@@ -581,7 +581,7 @@
 
 <div class="viewcode-block" id="KappaRuleBimolecular.select">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleBimolecular.select">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">ComponentMixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents in the mixture and specify the update.</span>
 
 <span class="sd">        Note:</span>

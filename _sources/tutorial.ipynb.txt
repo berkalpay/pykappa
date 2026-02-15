@@ -110,9 +110,9 @@
       "cell_type": "markdown",
       "metadata": {},
       "source": [
-        "A `ComponentMixture` is a specialized mixture that explicitly tracks connected components.\n",
-        "This allows for efficient component-level queries, especially important for applying rules that require information about the component contexts of patterns, such as rules with different unimolecular and bimolecular rates.\n",
-        "ComponentMixtures maintain the same interface as regular mixtures but add component-specific functionality."
+        "By default, the mixture is unaware of the components of which it is composed: it has an agent-level view that is sufficient for simulation of basic rule applications.\n",
+        "Some types of rules, such as those with distinct unimolecular and bimolecular rates, require component-level information, in which case component-tracking will be automatically enabled at system initialization.\n",
+        "Enabling component-tracking also allows for efficient component-level queries."
       ]
     },
     {
@@ -121,9 +121,7 @@
       "metadata": {},
       "outputs": [],
       "source": [
-        "from pykappa.mixture import ComponentMixture\n",
-        "\n",
-        "comp_mixture = ComponentMixture()\n",
+        "comp_mixture = Mixture(track_components=True)\n",
         "comp_mixture.instantiate(\"A(x[.])\", n_copies=2)\n",
         "comp_mixture.instantiate(\"A(x[1]), B(x[1])\")\n",
         "\n",
@@ -134,7 +132,7 @@
         "\n",
         "# Query embeddings within a specific component\n",
         "comp_mixture.track_component(complex)\n",
-        "mixture_component = list(comp_mixture.components)[-1]\n",
+        "mixture_component = next(c for c in comp_mixture.components if len(c.agents) == 2)\n",
         "embeddings_in_comp = comp_mixture.embeddings_in_component(complex, mixture_component)\n",
         "print(f\"\\nEmbeddings in the AB complex: {len(embeddings_in_comp)}\")"
       ]

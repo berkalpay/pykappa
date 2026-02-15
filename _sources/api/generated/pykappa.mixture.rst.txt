@@ -15,7 +15,6 @@
 
    .. autosummary::
    
-      ComponentMixture
       Edge
       Mixture
       MixtureUpdate
