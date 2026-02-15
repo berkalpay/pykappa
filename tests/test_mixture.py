@@ -48,9 +48,7 @@ def test_instantiate_pattern_one_component(test_str):
     ],
 )
 def test_find_embeddings_one_component(test_case):
-    """
-    Test embeddings of patterns consisting of a single component
-    """
+    """Test embeddings of patterns consisting of a single component."""
     n = 1000
 
     mixture_pattern_str, n_copies, match_pattern_str, n_embeddings_expected = test_case
@@ -65,3 +63,15 @@ def test_find_embeddings_one_component(test_case):
 
     embeddings = list(match_pattern.components[0].embeddings(mixture))
     assert len(embeddings) == n_embeddings_expected * n
+
+
+def test_embeddings_in_component():
+    mixture = Mixture(track_components=True)
+    mixture.instantiate("A(x[.])", n_copies=2)
+    mixture.instantiate("A(x[1]), B(x[1])")
+
+    complex = Pattern.from_kappa("A(x[1]), B(x[1])").components[0]
+    mixture.track_component(complex)
+    mixture_component = next(c for c in mixture.components if len(c.agents) == 2)
+    embeddings_in_comp = mixture.embeddings_in_component(complex, mixture_component)
+    assert len(embeddings_in_comp) == 1
