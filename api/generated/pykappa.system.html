@@ -131,17 +131,14 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <span class="sig-name descname"><span class="pre">measure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observable_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/system.html#Monitor.measure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.system.Monitor.measure" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of an observable at a specific time.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>observable_name</strong> (<em>str</em>) – Name of the observable to measure.</p></li>
-<li><p><strong>time</strong> (<em>float</em><em> | </em><em>None</em>) – Time at which to measure. If None, uses latest time.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Value of the observable at the specified time.</p>
-</dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>AssertionError</strong> – If simulation hasn’t reached the specified time.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>observable_name</strong> (<em>str</em>)</p></li>
+<li><p><strong>time</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -334,7 +331,7 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dd><p>Apply a rule to the mixture and update tallies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rule</strong> (<a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a>) – Rule to apply to the current mixture.</p>
+<dd class="field-odd"><p><strong>rule</strong> (<a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -431,11 +428,6 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dt class="sig sig-object py" id="pykappa.system.System.reactivity">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reactivity</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#pykappa.system.System.reactivity" title="Link to this definition">¶</a></dt>
 <dd><p>The total reactivity of the system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Sum of all rule reactivities.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -463,14 +455,14 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <span class="sig-name descname"><span class="pre">remove_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/system.html#System.remove_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.system.System.remove_rule" title="Link to this definition">¶</a></dt>
 <dd><p>Remove a rule by setting its rate to zero.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the rule to remove.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
 <li><p><strong>AssertionError</strong> – If the rule already has zero rate.</p></li>
 <li><p><strong>KeyError</strong> – If no rule with the given name exists.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>name</strong> (<em>str</em>)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -487,11 +479,6 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dt class="sig sig-object py" id="pykappa.system.System.rule_reactivities">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">rule_reactivities</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.rule_reactivities" title="Link to this definition">¶</a></dt>
 <dd><p>The reactivity of each rule in the system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of reactivities corresponding to system rules.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -505,7 +492,7 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dd><p>Set the system’s mixture and update tracking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – New mixture to set for the system.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -535,7 +522,7 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dd><p>Write system information to a Kappa file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – Path where to write the Kappa file.</p>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -590,11 +577,11 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 Some features may not be compatible between PyKappa and KaSim.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>time</strong> (<em>float</em>) – Additional time units to simulate.</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If KaSim is not found in PATH.</p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>AssertionError</strong> – If KaSim is not found in PATH.</p>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>time</strong> (<em>float</em>)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>

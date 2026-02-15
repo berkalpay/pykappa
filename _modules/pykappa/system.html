@@ -384,11 +384,7 @@
 <div class="viewcode-block" id="System.to_ka">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.to_ka">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_ka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write system information to a Kappa file.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            filepath: Path where to write the Kappa file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write system information to a Kappa file.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span></div>
 
@@ -396,11 +392,7 @@
 <div class="viewcode-block" id="System.set_mixture">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.set_mixture">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_mixture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the system&#39;s mixture and update tracking.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            mixture: New mixture to set for the system.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the system&#39;s mixture and update tracking.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span> <span class="o">=</span> <span class="n">mixture</span>
         <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_track_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
@@ -443,9 +435,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a rule by setting its rate to zero.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            name: Name of the rule to remove.</span>
-
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If the rule already has zero rate.</span>
 <span class="sd">            KeyError: If no rule with the given name exists.</span>
@@ -459,11 +448,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_track_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Track components mentioned in the left hand side of a Rule.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            rule: Rule whose components should be tracked.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Track components mentioned in the left hand side of a Rule.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
                 <span class="c1"># TODO: For efficiency check for isomorphism with already-tracked components</span>
@@ -480,20 +465,12 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">rule_reactivities</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The reactivity of each rule in the system.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List of reactivities corresponding to system rules.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The reactivity of each rule in the system.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">rule</span><span class="o">.</span><span class="n">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The total reactivity of the system.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Sum of all rule reactivities.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The total reactivity of the system.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_reactivities</span><span class="p">)</span>
 
 <div class="viewcode-block" id="System.wait">
@@ -532,11 +509,7 @@
 <div class="viewcode-block" id="System.apply_rule">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.apply_rule">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply a rule to the mixture and update tallies.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            rule: Rule to apply to the current mixture.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply a rule to the mixture and update tallies.&quot;&quot;&quot;</span>
         <span class="n">update</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">update</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tallies</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)][</span><span class="s2">&quot;applied&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -576,9 +549,6 @@
 <span class="sd">        Note:</span>
 <span class="sd">            KaSim must be installed and in the PATH.</span>
 <span class="sd">            Some features may not be compatible between PyKappa and KaSim.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            time: Additional time units to simulate.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If KaSim is not found in PATH.</span>
@@ -702,13 +672,6 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.Monitor.measure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observable_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of an observable at a specific time.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            observable_name: Name of the observable to measure.</span>
-<span class="sd">            time: Time at which to measure. If None, uses latest time.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Value of the observable at the specified time.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If simulation hasn&#39;t reached the specified time.</span>
