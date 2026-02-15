@@ -235,14 +235,12 @@ class System:
             {} if rules is None else {f"r{i}": rule for i, rule in enumerate(rules)}
         )
 
-        patterns = [] if mixture is None else [Pattern(list(mixture.agents))]
-        mixture = Mixture(
-            patterns,
-            track_components=any(
-                type(rule) in [KappaRuleUnimolecular, KappaRuleBimolecular]
-                for rule in self.rules.values()
-            ),
-        )
+        mixture = Mixture() if mixture is None else mixture
+        if any(
+            type(rule) in [KappaRuleUnimolecular, KappaRuleBimolecular]
+            for rule in self.rules.values()
+        ):
+            mixture.enable_component_tracking()
 
         self.observables = {} if observables is None else observables
         self.variables = {} if variables is None else variables
