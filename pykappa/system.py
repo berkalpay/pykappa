@@ -330,20 +330,12 @@ class System:
         return kappa_str
 
     def to_ka(self, filepath: str) -> None:
-        """Write system information to a Kappa file.
-
-        Args:
-            filepath: Path where to write the Kappa file.
-        """
+        """Write system information to a Kappa file."""
         with open(filepath, "w") as f:
             f.write(self.kappa_str)
 
     def set_mixture(self, mixture: Mixture) -> None:
-        """Set the system's mixture and update tracking.
-
-        Args:
-            mixture: New mixture to set for the system.
-        """
+        """Set the system's mixture and update tracking."""
         self.mixture = mixture
         for rule in self.rules.values():
             self._track_rule(rule)
@@ -380,9 +372,6 @@ class System:
     def remove_rule(self, name: str) -> None:
         """Remove a rule by setting its rate to zero.
 
-        Args:
-            name: Name of the rule to remove.
-
         Raises:
             AssertionError: If the rule already has zero rate.
             KeyError: If no rule with the given name exists.
@@ -395,11 +384,7 @@ class System:
             raise e
 
     def _track_rule(self, rule: Rule) -> None:
-        """Track components mentioned in the left hand side of a Rule.
-
-        Args:
-            rule: Rule whose components should be tracked.
-        """
+        """Track components mentioned in the left hand side of a Rule."""
         if isinstance(rule, KappaRule):
             for component in rule.left.components:
                 # TODO: For efficiency check for isomorphism with already-tracked components
@@ -416,20 +401,12 @@ class System:
 
     @cached_property
     def rule_reactivities(self) -> list[float]:
-        """The reactivity of each rule in the system.
-
-        Returns:
-            List of reactivities corresponding to system rules.
-        """
+        """The reactivity of each rule in the system."""
         return [rule.reactivity(self) for rule in self.rules.values()]
 
     @property
     def reactivity(self) -> float:
-        """The total reactivity of the system.
-
-        Returns:
-            Sum of all rule reactivities.
-        """
+        """The total reactivity of the system."""
         return sum(self.rule_reactivities)
 
     def wait(self) -> None:
@@ -460,11 +437,7 @@ class System:
             return None
 
     def apply_rule(self, rule: Rule) -> None:
-        """Apply a rule to the mixture and update tallies.
-
-        Args:
-            rule: Rule to apply to the current mixture.
-        """
+        """Apply a rule to the mixture and update tallies."""
         update = rule.select(self.mixture)
         if update is not None:
             self.tallies[str(rule)]["applied"] += 1
@@ -498,9 +471,6 @@ class System:
         Note:
             KaSim must be installed and in the PATH.
             Some features may not be compatible between PyKappa and KaSim.
-
-        Args:
-            time: Additional time units to simulate.
 
         Raises:
             AssertionError: If KaSim is not found in PATH.
@@ -612,13 +582,6 @@ class Monitor:
 
     def measure(self, observable_name: str, time: Optional[float] = None):
         """Get the value of an observable at a specific time.
-
-        Args:
-            observable_name: Name of the observable to measure.
-            time: Time at which to measure. If None, uses latest time.
-
-        Returns:
-            Value of the observable at the specified time.
 
         Raises:
             AssertionError: If simulation hasn't reached the specified time.
