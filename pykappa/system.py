@@ -372,6 +372,10 @@ class System:
 
         if isinstance(rule, str):
             rule = KappaRule.from_kappa(rule)
+
+        if type(rule) in [KappaRuleUnimolecular, KappaRuleBimolecular]:
+            self.mixture.enable_component_tracking()
+
         self._track_rule(rule)
         self.rules[name] = rule
 
