@@ -221,7 +221,7 @@ class Mixture:
 
     def embeddings_in_component(
         self, match_pattern: Component, mixture_component: Component
-    ) -> list[dict[Agent, Agent]]:
+    ) -> IndexedSet[Embedding]:
         """Get embeddings of a pattern within a specific component."""
         if not self.component_tracking:
             raise RuntimeError("Component tracking is not enabled.")
