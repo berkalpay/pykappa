@@ -3,7 +3,7 @@ from lark import Lark, ParseTree, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, SiteType
 from pykappa.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
-from pykappa.algebra import Expression
+from pykappa.expression import Expression
 
 
 class KappaParser:
@@ -241,6 +241,10 @@ class KappaTransformer(Transformer):
 class ExpressionTransformer(Transformer):
     """Transforms a Lark ParseTree into an Expression object."""
 
+    @classmethod
+    def from_tree(cls, tree: Tree) -> Expression:
+        return cls().transform(tree)
+
     def algebraic_expression(self, children):
         if len(children) == 1:
             return children[0]
@@ -317,7 +321,3 @@ class ExpressionTransformer(Transformer):
 
     def FALSE(self, token):
         return Expression("boolean_literal", value=False)
-
-
-def parse_tree_to_expression(tree: Tree) -> Expression:
-    return ExpressionTransformer().transform(tree)

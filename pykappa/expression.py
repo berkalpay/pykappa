@@ -60,13 +60,13 @@ class Expression:
         Raises:
             AssertionError: If the string doesn't represent a valid expression.
         """
-        from pykappa.grammar import kappa_parser, parse_tree_to_expression
+        from pykappa.parsing import kappa_parser, ExpressionTransformer
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"
         expr_tree = input_tree.children[0]
         assert expr_tree.data in ["!algebraic_expression", "algebraic_expression"]
-        return parse_tree_to_expression(expr_tree)
+        return ExpressionTransformer.from_tree(expr_tree)
 
     def __init__(self, type, **attrs):
         self.type = type

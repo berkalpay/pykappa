@@ -63,8 +63,8 @@ class System:
         """
         from pykappa.parsing import (
             kappa_parser,
-            parse_tree_to_expression,
             KappaTransformer,
+            ExpressionTransformer,
         )
 
         input_tree = kappa_parser.parse(ka_str)
@@ -90,7 +90,7 @@ class System:
 
                 expr_tree = child.children[1]
                 assert expr_tree.data == "algebraic_expression"
-                value = parse_tree_to_expression(expr_tree)
+                value = ExpressionTransformer.from_tree(expr_tree)
 
                 variables[name] = value
 
@@ -104,7 +104,7 @@ class System:
 
                 expr_tree = child.children[1]
                 assert expr_tree.data == "algebraic_expression"
-                value = parse_tree_to_expression(expr_tree)
+                value = ExpressionTransformer.from_tree(expr_tree)
 
                 observables[name] = value
 
@@ -114,7 +114,7 @@ class System:
             elif tag == "init_declaration":
                 expr_tree = child.children[0]
                 assert expr_tree.data == "algebraic_expression"
-                amount = parse_tree_to_expression(expr_tree)
+                amount = ExpressionTransformer.from_tree(expr_tree)
 
                 pattern_tree = child.children[1]
                 if pattern_tree.data == "declared_token_name":
