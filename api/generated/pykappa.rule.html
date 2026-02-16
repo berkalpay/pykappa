@@ -119,17 +119,14 @@
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRule.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRule.from_kappa" title="Link to this definition">¶</a></dt>
 <dd><p>Parse a single Kappa rule from string.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>kappa_str</strong> (<em>str</em>) – Kappa rule string.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Parsed rule.</p>
-</dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>AssertionError</strong> – If the string represents more than one rule.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Self</em></p>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>kappa_str</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Self</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -138,11 +135,6 @@
 <dt class="sig sig-object py" id="pykappa.rule.KappaRule.kappa_str">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.rule.KappaRule.kappa_str" title="Link to this definition">¶</a></dt>
 <dd><p>The rule representation in Kappa format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Kappa string representation of the rule.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -160,13 +152,10 @@
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>kappa_str</strong> (<em>str</em>) – Kappa rule string.</p>
+<dd class="field-odd"><p><strong>kappa_str</strong> (<em>str</em>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of parsed rules.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<em>Self</em>]</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<em>Self</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,13 +171,10 @@ applies this correction when calculating rule reactivities.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Number of ways to embed all rule components.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,11 +188,6 @@ For example, if a rule looks like “l1(…), l2(…) -&gt; r1(…), r2(…)”,
 this method draws artifical edges between l1 and r1, and between l2 and r2,
 then returns the number of symmetries of the resulting graph by counting
 how many ways it can be mapped onto itself.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of symmetries exhibited by the rule.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -215,13 +196,10 @@ how many ways it can be mapped onto itself.</p>
 <dd><p>Evaluate the stochastic rate expression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>) – System containing variables for rate evaluation.</p>
+<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Evaluated rate value.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -229,17 +207,15 @@ how many ways it can be mapped onto itself.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRule.reactivity">
 <span class="sig-name descname"><span class="pre">reactivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRule.reactivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRule.reactivity" title="Link to this definition">¶</a></dt>
-<dd><p>Calculate the total reactivity of this rule in the given system.</p>
+<dd><p>Calculate the total reactivity of this rule in the given system,
+i.e. the number of embeddings times the reaction rate, accounting
+for rule symmetry.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>) – System containing the mixture and parameters.</p>
+<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Product of number of embeddings and reaction rate, accounting
-for rule symmetry.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -252,7 +228,8 @@ for rule symmetry.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRule.select">
 <span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRule.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRule.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update.</p>
+<dd><p>Select agents in the mixture and specify the update (or None
+for invalid match).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Can change the internal states of agents in the mixture but
@@ -260,13 +237,10 @@ records everything else in the MixtureUpdate.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>MixtureUpdate specifying the transformation, or None for invalid match.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -301,26 +275,18 @@ records everything else in the MixtureUpdate.</p>
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleBimolecular.kappa_str">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.rule.KappaRuleBimolecular.kappa_str" title="Link to this definition">¶</a></dt>
 <dd><p>The rule representation in Kappa format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Kappa string representation with bimolecular rate syntax.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleBimolecular.n_embeddings">
 <span class="sig-name descname"><span class="pre">n_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRuleBimolecular.n_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRuleBimolecular.n_embeddings" title="Link to this definition">¶</a></dt>
-<dd><p>Count embeddings in the mixture.</p>
+<dd><p>Count the total number of embeddings in the mixture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Total number of valid bimolecular embeddings.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -328,7 +294,8 @@ records everything else in the MixtureUpdate.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleBimolecular.select">
 <span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRuleBimolecular.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRuleBimolecular.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update.</p>
+<dd><p>Select agents in the mixture and specify the update (or None
+for invalid match).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>n_embeddings must be called before this method so that the
@@ -336,13 +303,10 @@ component_weights cache is up-to-date.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>MixtureUpdate specifying the transformation, or None for invalid match.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -372,26 +336,18 @@ component_weights cache is up-to-date.</p>
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleUnimolecular.kappa_str">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.rule.KappaRuleUnimolecular.kappa_str" title="Link to this definition">¶</a></dt>
 <dd><p>Get the rule representation in Kappa format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Kappa string representation with unimolecular rate syntax.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleUnimolecular.n_embeddings">
 <span class="sig-name descname"><span class="pre">n_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRuleUnimolecular.n_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRuleUnimolecular.n_embeddings" title="Link to this definition">¶</a></dt>
-<dd><p>Count embeddings in the mixture.</p>
+<dd><p>Count the total number of embeddings in the mixture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Total number of valid embeddings across all components.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -399,7 +355,8 @@ component_weights cache is up-to-date.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleUnimolecular.select">
 <span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRuleUnimolecular.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRuleUnimolecular.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update.</p>
+<dd><p>Select agents in the mixture and specify the update (or None
+for invalid match).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>n_embeddings must be called before this method so that the
@@ -407,13 +364,10 @@ component_weights cache is up-to-date.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>MixtureUpdate specifying the transformation, or None for invalid match.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -430,13 +384,10 @@ component_weights cache is up-to-date.</p>
 <dd><p>Count the number of ways this rule can be applied to the mixture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Number of valid embeddings for this rule.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -447,13 +398,10 @@ component_weights cache is up-to-date.</p>
 <dd><p>Get the stochastic rate of the rule.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>) – System containing parameters for rate evaluation.</p>
+<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Stochastic rate constant.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -464,13 +412,10 @@ component_weights cache is up-to-date.</p>
 <dd><p>Calculate the total reactivity of this rule in the given system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>) – System containing the mixture and parameters.</p>
+<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Product of number of embeddings and reaction rate.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -478,7 +423,8 @@ component_weights cache is up-to-date.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.Rule.select">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update.</p>
+<dd><p>Select agents in the mixture and specify the update (or None for null
+event).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Don’t modify anything in mixture directly except for changing
@@ -486,13 +432,10 @@ internal sites of agents. A null event is represented by returning None.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>) – Current mixture state.</p>
+<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>MixtureUpdate specifying the transformation, or None for null event.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -511,11 +454,8 @@ internal sites of agents. A null event is represented by returning None.</p>
 <li><p><strong>molecularity</strong> (<em>int</em>) – Number of reactants.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Stochastic rate constant.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
