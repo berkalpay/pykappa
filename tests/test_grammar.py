@@ -2,7 +2,7 @@ import pytest
 import math
 from pathlib import Path
 
-from pykappa.grammar import kappa_parser
+from pykappa.parsing import kappa_parser
 from pykappa.pattern import Pattern
 from pykappa.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
 from pykappa.system import System

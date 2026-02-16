@@ -61,7 +61,7 @@ class System:
             ka_str: Kappa language string containing a system definition.
             seed: Random seed for reproducibility.
         """
-        from pykappa.grammar import (
+        from pykappa.parsing import (
             kappa_parser,
             parse_tree_to_expression,
             KappaTransformer,
