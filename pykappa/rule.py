@@ -31,9 +31,6 @@ def kinetic_to_stochastic_on_rate(
         k_on: Kinetic on-rate constant.
         volume: Reaction volume.
         molecularity: Number of reactants.
-
-    Returns:
-        Stochastic rate constant.
     """
     return k_on / (AVOGADRO * volume ** (molecularity - 1))
 
@@ -42,53 +39,27 @@ class Rule(ABC):
     """Abstract base class for all rule types."""
 
     def reactivity(self, system: "System") -> float:
-        """Calculate the total reactivity of this rule in the given system.
-
-        Args:
-            system: System containing the mixture and parameters.
-
-        Returns:
-            Product of number of embeddings and reaction rate.
-        """
+        """Calculate the total reactivity of this rule in the given system."""
         return self.n_embeddings(system.mixture) * self.rate(system)
 
     @abstractmethod
     def rate(self, system: "System") -> float:
-        """Get the stochastic rate of the rule.
-
-        Args:
-            system: System containing parameters for rate evaluation.
-
-        Returns:
-            Stochastic rate constant.
-        """
+        """Get the stochastic rate of the rule."""
         pass
 
     @abstractmethod
     def n_embeddings(self, mixture: Mixture) -> int:
-        """Count the number of ways this rule can be applied to the mixture.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            Number of valid embeddings for this rule.
-        """
+        """Count the number of ways this rule can be applied to the mixture."""
         pass
 
     @abstractmethod
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update.
+        """Select agents in the mixture and specify the update (or None for null
+        event).
 
         Note:
             Don't modify anything in mixture directly except for changing
             internal sites of agents. A null event is represented by returning None.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            MixtureUpdate specifying the transformation, or None for null event.
         """
         pass
 
@@ -112,12 +83,6 @@ class KappaRule(Rule):
 
         Note:
             Forward-reverse rules (with "<->") represent two rules.
-
-        Args:
-            kappa_str: Kappa rule string.
-
-        Returns:
-            List of parsed rules.
         """
         from pykappa.grammar import kappa_parser, RuleBuilder
 
@@ -129,12 +94,6 @@ class KappaRule(Rule):
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
         """Parse a single Kappa rule from string.
-
-        Args:
-            kappa_str: Kappa rule string.
-
-        Returns:
-            Parsed rule.
 
         Raises:
             AssertionError: If the string represents more than one rule.
@@ -171,22 +130,13 @@ class KappaRule(Rule):
 
     @property
     def kappa_str(self) -> str:
-        """The rule representation in Kappa format.
-
-        Returns:
-            Kappa string representation of the rule.
-        """
+        """The rule representation in Kappa format."""
         return f"{self.left.kappa_str} -> {self.right.kappa_str} @ {self.stochastic_rate.kappa_str}"
 
     def reactivity(self, system: "System") -> float:
-        """Calculate the total reactivity of this rule in the given system.
-
-        Args:
-            system: System containing the mixture and parameters.
-
-        Returns:
-            Product of number of embeddings and reaction rate, accounting
-            for rule symmetry.
+        """Calculate the total reactivity of this rule in the given system,
+        i.e. the number of embeddings times the reaction rate, accounting
+        for rule symmetry.
         """
         n_embeddings = self.n_embeddings(system.mixture)
         n_symmetries = self.n_symmetries
@@ -202,9 +152,6 @@ class KappaRule(Rule):
         this method draws artifical edges between l1 and r1, and between l2 and r2,
         then returns the number of symmetries of the resulting graph by counting
         how many ways it can be mapped onto itself.
-
-        Returns:
-            The number of symmetries exhibited by the rule.
         """
         left_agents = deepcopy(self.left.agents)
         right_agents = deepcopy(self.right.agents)
@@ -228,14 +175,7 @@ class KappaRule(Rule):
         return pattern.n_isomorphisms(pattern)
 
     def rate(self, system: "System") -> float:
-        """Evaluate the stochastic rate expression.
-
-        Args:
-            system: System containing variables for rate evaluation.
-
-        Returns:
-            Evaluated rate value.
-        """
+        """Evaluate the stochastic rate expression."""
         return self.stochastic_rate.evaluate(system)
 
     def n_embeddings(self, mixture: Mixture) -> int:
@@ -244,29 +184,18 @@ class KappaRule(Rule):
         Note:
             This doesn't do any symmetry correction, though `System`
             applies this correction when calculating rule reactivities.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            Number of ways to embed all rule components.
         """
         return prod(
             len(mixture.embeddings(component)) for component in self.left.components
         )
 
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update.
+        """Select agents in the mixture and specify the update (or None
+        for invalid match).
 
         Note:
             Can change the internal states of agents in the mixture but
             records everything else in the MixtureUpdate.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            MixtureUpdate specifying the transformation, or None for invalid match.
         """
         rule_embedding: dict[Agent, Agent] = {}
 
@@ -291,15 +220,9 @@ class KappaRule(Rule):
     ) -> MixtureUpdate:
         """Produce an update specification from selected agents.
 
-        Takes the agents that have been chosen to be transformed by this rule,
-        and specifies an update to the mixture without actually applying it.
-
         Args:
             selection_map: Mapping from rule agents to mixture agents.
             mixture: Current mixture state.
-
-        Returns:
-            MixtureUpdate specifying the transformation.
         """
         selection = [
             None if agent is None else selection_map[agent]
@@ -374,22 +297,11 @@ class KappaRuleUnimolecular(KappaRule):
 
     @property
     def kappa_str(self) -> str:
-        """Get the rule representation in Kappa format.
-
-        Returns:
-            Kappa string representation with unimolecular rate syntax.
-        """
+        """Get the rule representation in Kappa format."""
         return f"{self.left.kappa_str} -> {self.right.kappa_str} @ 0 {{{self.stochastic_rate.kappa_str}}}"
 
     def n_embeddings(self, mixture: Mixture) -> int:
-        """Count embeddings in the mixture.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            Total number of valid embeddings across all components.
-        """
+        """Count the total number of embeddings in the mixture."""
         count = 0
         self.component_weights = {}
         for component in mixture.components:
@@ -402,17 +314,12 @@ class KappaRuleUnimolecular(KappaRule):
         return count
 
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update.
+        """Select agents in the mixture and specify the update (or None
+        for invalid match).
 
         Note:
             n_embeddings must be called before this method so that the
             component_weights cache is up-to-date.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            MixtureUpdate specifying the transformation, or None for invalid match.
         """
         components_ordered = list(self.component_weights)
         weights = [self.component_weights[c] for c in components_ordered]
@@ -452,22 +359,11 @@ class KappaRuleBimolecular(KappaRule):
 
     @property
     def kappa_str(self) -> str:
-        """The rule representation in Kappa format.
-
-        Returns:
-            Kappa string representation with bimolecular rate syntax.
-        """
+        """The rule representation in Kappa format."""
         return super().kappa_str + "{0}"
 
     def n_embeddings(self, mixture: Mixture) -> int:
-        """Count embeddings in the mixture.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            Total number of valid bimolecular embeddings.
-        """
+        """Count the total number of embeddings in the mixture."""
         count = 0
         self.component_weights = {}
 
@@ -486,17 +382,12 @@ class KappaRuleBimolecular(KappaRule):
         return count
 
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update.
+        """Select agents in the mixture and specify the update (or None
+        for invalid match).
 
         Note:
             n_embeddings must be called before this method so that the
             component_weights cache is up-to-date.
-
-        Args:
-            mixture: Current mixture state.
-
-        Returns:
-            MixtureUpdate specifying the transformation, or None for invalid match.
         """
         components_ordered = list(self.component_weights.keys())
         weights = [self.component_weights[c] for c in components_ordered]
