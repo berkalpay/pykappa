@@ -26,7 +26,6 @@ class Edge:
         return hash(frozenset((self.site1, self.site2)))
 
 
-@dataclass
 class Mixture:
     """A collection of agents and their connections.
 
