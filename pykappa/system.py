@@ -15,7 +15,7 @@ import matplotlib.figure
 from pykappa.mixture import Mixture
 from pykappa.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
 from pykappa.pattern import Component, Pattern
-from pykappa.algebra import Expression
+from pykappa.expression import Expression
 from pykappa.utils import str_table
 
 

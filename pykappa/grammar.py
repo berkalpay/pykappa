@@ -3,7 +3,7 @@ from lark import Lark, ParseTree, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, SiteType
 from pykappa.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
-from pykappa.algebra import Expression
+from pykappa.expression import Expression
 
 
 class KappaParser:
