@@ -239,11 +239,7 @@ class System:
         self.time = 0
 
         self.tallies = defaultdict(lambda: {"applied": 0, "failed": 0})
-        if monitor:
-            self.monitor = Monitor(self)
-            self.monitor.update()
-        else:
-            self.monitor = None
+        self.monitor = Monitor(self) if monitor else None
 
     def __str__(self):
         return self.kappa_str
@@ -442,11 +438,14 @@ class System:
 
     def update(self) -> None:
         """Perform one simulation step."""
+        if self.monitor is not None and not self.monitor.history["time"]:
+            self.monitor.update()  # Record initial state
+
         self._warn_about_rule_symmetries()
         self.wait()
         if (rule := self.choose_rule()) is not None:
             self.apply_rule(rule)
-        if self.monitor:
+        if self.monitor is not None:
             self.monitor.update()
 
     def update_via_kasim(self, time: float) -> None:
@@ -566,15 +565,14 @@ class Monitor:
         Raises:
             AssertionError: If simulation hasn't reached the specified time.
         """
+        import bisect
+
         times: list[int] = list(self.history["time"])
         if time is None:
             time = times[-1]
         assert time <= max(times), "Simulation hasn't reached time {time}"
 
-        i = 0
-        while times[i] < time:
-            i += 1
-        return self.history[observable_name][i]
+        return self.history[observable_name][bisect.bisect_right(times, time) - 1]
 
     @property
     def dataframe(self) -> pd.DataFrame:

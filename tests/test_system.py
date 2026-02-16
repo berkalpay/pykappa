@@ -331,3 +331,22 @@ def test_uniqueness_and_persistence_of_agent_ids():
 
     current_ids = {agent.id for agent in system.mixture.agents}
     assert initial_ids == current_ids
+
+
+def test_monitor_measure():
+    """Test that Monitor.measure() retrieves observable values at specific times."""
+    system = System.from_ka(
+        """
+        %init: 100 A(x[.])
+        %obs: 'A' |A(x[.])|
+        A(x[.]), A(x[.]) -> A(x[1]), A(x[1]) @ 1.0
+        """,
+        seed=42,
+    )
+
+    system.update()
+    system.update()
+
+    first_time = system.monitor.history["time"][0]
+    assert system.monitor.measure("A", first_time) == 100
+    assert system.monitor.measure("A") == system["A"]
