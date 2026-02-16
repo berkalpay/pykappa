@@ -88,6 +88,18 @@ class Mixture:
         yield from self.components
 
     @property
+    def kappa_str(self) -> str:
+        """The mixture representation in Kappa format, with %init
+        declarations for each component type.
+        """
+        return "\n".join(
+            f"%init: {len(components)} {group.kappa_str}"
+            for group, components in grouped(
+                list(component for component in self)
+            ).items()
+        )
+
+    @property
     def component_tracking(self) -> bool:
         """Whether connected components are being tracked."""
         return self._components is not None
@@ -109,18 +121,6 @@ class Mixture:
                 unassigned.difference_update(component_agents)
 
             return components
-
-    @property
-    def kappa_str(self) -> str:
-        """The mixture representation in Kappa format, with %init
-        declarations for each component type.
-        """
-        return "\n".join(
-            f"%init: {len(components)} {group.kappa_str}"
-            for group, components in grouped(
-                list(component for component in self)
-            ).items()
-        )
 
     def enable_component_tracking(self) -> None:
         """Turn on connected-component tracking for this mixture."""
@@ -279,29 +279,6 @@ class Mixture:
             component = self.components.lookup_one("agent", agent)
             self.components.remove(component)
 
-    @contextmanager
-    def _relocate_embeddings(self, component: Component):
-        """
-        Temporarily evacuate embeddings tied to `component` and restore
-        against the new component structure afterward. (Only relevant
-        when tracking components.)
-        """
-        # Evacuate embeddings
-        relocated = {}
-        for tracked in self._embeddings:
-            relocated[tracked] = list(
-                self._embeddings[tracked].lookup("component", component)
-            )
-            for e in relocated[tracked]:
-                self._embeddings[tracked].remove(e)
-
-        try:
-            yield
-        finally:  # Restore embeddings against the new structure
-            for tracked in self._embeddings:
-                for e in relocated.get(tracked, []):
-                    self._embeddings[tracked].add(e)
-
     def _add_edge(self, edge: Edge) -> None:
         """Add a bond between two sites.
 
@@ -364,6 +341,29 @@ class Mixture:
             self.components.remove(old_component)
             self.components.add(new_component1)
             self.components.add(new_component2)
+
+    @contextmanager
+    def _relocate_embeddings(self, component: Component):
+        """
+        Temporarily evacuate embeddings tied to `component` and restore
+        against the new component structure afterward. (Only relevant
+        when tracking components.)
+        """
+        # Evacuate embeddings
+        relocated = {}
+        for tracked in self._embeddings:
+            relocated[tracked] = list(
+                self._embeddings[tracked].lookup("component", component)
+            )
+            for e in relocated[tracked]:
+                self._embeddings[tracked].remove(e)
+
+        try:
+            yield
+        finally:  # Restore embeddings against the new structure
+            for tracked in self._embeddings:
+                for e in relocated.get(tracked, []):
+                    self._embeddings[tracked].add(e)
 
 
 @dataclass
@@ -433,24 +433,6 @@ class MixtureUpdate:
         self.agents_changed.add(agent)
 
     @property
-    def touched_after(self) -> set[Agent]:
-        """The agents that will be changed or added after this update."""
-        touched = self.agents_changed | set(self.agents_to_add)
-
-        for edge in self.edges_to_add:
-            touched.add(edge.site1.agent)
-            touched.add(edge.site2.agent)
-
-        for edge in self.edges_to_remove:
-            a, b = edge.site1.agent, edge.site2.agent
-            if a not in self.agents_to_remove:
-                touched.add(a)
-            if b not in self.agents_to_remove:
-                touched.add(b)
-
-        return touched
-
-    @property
     def touched_before(self) -> set[Agent]:
         """The agents that will be changed or removed by this update."""
         touched = self.agents_changed | set(self.agents_to_remove)
@@ -464,6 +446,24 @@ class MixtureUpdate:
             if a not in self.agents_to_add:
                 touched.add(a)
             if b not in self.agents_to_add:
+                touched.add(b)
+
+        return touched
+
+    @property
+    def touched_after(self) -> set[Agent]:
+        """The agents that will be changed or added after this update."""
+        touched = self.agents_changed | set(self.agents_to_add)
+
+        for edge in self.edges_to_add:
+            touched.add(edge.site1.agent)
+            touched.add(edge.site2.agent)
+
+        for edge in self.edges_to_remove:
+            a, b = edge.site1.agent, edge.site2.agent
+            if a not in self.agents_to_remove:
+                touched.add(a)
+            if b not in self.agents_to_remove:
                 touched.add(b)
 
         return touched
