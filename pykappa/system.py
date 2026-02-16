@@ -335,9 +335,9 @@ class System:
             AssertionError: If a rule with the given name already exists.
         """
         if name is None:
-            name = f"r{len(self.rules)}"
-            while name in self.rules:
-                name = f"r{int(name[1:]) + 1}"
+            i = 0
+            while (name := f"r{i}") in self.rules:
+                i += 1
         assert name not in self.rules, "Rule {name} already exists in the system"
 
         if isinstance(rule, str):
