@@ -194,7 +194,7 @@
       "metadata": {},
       "outputs": [],
       "source": [
-        "from pykappa.algebra import Expression\n",
+        "from pykappa.expression import Expression\n",
         "\n",
         "literal_expr = Expression.from_kappa(\"42\")\n",
         "print(\"Literal expression value:\", literal_expr.evaluate())\n",
