@@ -44,7 +44,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">permutations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counted</span><span class="p">,</span> <span class="n">IndexedSet</span><span class="p">,</span> <span class="n">Property</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counted</span><span class="p">,</span> <span class="n">IndexedSet</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span>
@@ -100,29 +100,17 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The site representation in Kappa format.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Kappa string representation of the site.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The site representation in Kappa format.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_partner_str</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_state_str</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">undetermined</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site is in a state equivalent to leaving it unnamed in an agent.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if the site is undetermined.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site is in a state equivalent to leaving it unnamed in an agent.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;?&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">partner</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">underspecified</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a concrete Site can be created from this pattern.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if the site specification is incomplete.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a concrete Site can be created from this pattern.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span>
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">partner</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
@@ -131,20 +119,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">stated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site has a specific internal state.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if the site has a determined state.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site has a specific internal state.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">bound</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site is bound.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if the site is bound to something.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site is bound.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">partner</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span>
             <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">,</span> <span class="n">SiteType</span><span class="p">)</span>
@@ -153,24 +133,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">coupled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site is coupled to a specific other site.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if the site has a direct partner reference.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site is coupled to a specific other site.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">,</span> <span class="n">Site</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Site.embeds_in">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Site.embeds_in">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">embeds_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether self as a pattern matches other as a concrete site.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            other: Concrete site to match against.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if this site pattern matches the concrete site.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether self as a pattern matches other as a concrete site.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bound</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">coupled</span>
         <span class="p">):</span>
@@ -211,12 +180,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">from_kappa</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">kappa_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a single agent from a Kappa string.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            kappa_str: Kappa string describing a single agent.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Parsed Agent object.</span>
-
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If the string doesn&#39;t describe exactly one agent.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -236,12 +199,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sites</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Site</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize an agent with type and sites.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            type: Type name of the agent.</span>
-<span class="sd">            sites: Collection of sites belonging to this agent.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize an agent with given type and sites.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="p">{</span><span class="n">site</span><span class="o">.</span><span class="n">label</span><span class="p">:</span> <span class="n">site</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">}</span>
@@ -250,14 +208,7 @@
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">sites</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Site</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a site by its label.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            key: Label of the site to retrieve.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Site with the given label.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a site by its label.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -265,47 +216,27 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The agent representation in Kappa format.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Kappa string representation of the agent.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The agent representation in Kappa format.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">kappa_str</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sites</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Site</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;All sites of this agent.</span>
-
-<span class="sd">        Yields:</span>
-<span class="sd">            Sites belonging to this agent.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;All sites of this agent.&quot;&quot;&quot;</span>
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">underspecified</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a concrete Agent can be created from this pattern.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if any site is underspecified.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a concrete Agent can be created from this pattern.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">underspecified</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The agents directly connected to this one.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List of neighboring agents.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The agents directly connected to this one.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">site</span><span class="o">.</span><span class="n">partner</span><span class="o">.</span><span class="n">agent</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">site</span><span class="o">.</span><span class="n">coupled</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">depth_first_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform depth-first traversal starting from this agent.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List of agents in depth-first order.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform depth-first traversal starting from this agent.&quot;&quot;&quot;</span>
         <span class="n">visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">traversal</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">stack</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
@@ -318,21 +249,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">instantiable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this agent pattern can be instantiated.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if all sites are sufficiently specified.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this agent pattern can be instantiated.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">underspecified</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Agent.detached">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Agent.detached">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">detached</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a clone with all sites emptied of partners.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            New agent with same type and states but no connections.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a clone with all sites emptied of partners.&quot;&quot;&quot;</span>
         <span class="n">detached</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">[</span><span class="n">Site</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
         <span class="p">)</span>
@@ -348,12 +271,6 @@
 
 <span class="sd">        Note:</span>
 <span class="sd">            Doesn&#39;t assume agents of the same type will have the same site signatures.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            other: Agent to compare against.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if agents are locally isomorphic.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -376,14 +293,7 @@
 <div class="viewcode-block" id="Agent.embeds_in">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Agent.embeds_in">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">embeds_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether self as a pattern matches other as a concrete agent.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            other: Concrete agent to match against.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if this agent pattern matches the concrete agent.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether self as a pattern matches other as a concrete agent.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
@@ -419,10 +329,6 @@
 
 <span class="sd">    Note:</span>
 <span class="sd">        Connectedness is not guaranteed statically and must be enforced.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        agents: Indexed set of agents in this component.</span>
-<span class="sd">        n_copies: Number of copies of this component (usually 1).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">agents</span><span class="p">:</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span>
@@ -434,12 +340,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">from_kappa</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">kappa_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a single component from a Kappa string.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            kappa_str: Kappa string describing a connected component.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Parsed Component object.</span>
-
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If the pattern doesn&#39;t represent exactly one component.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -450,10 +350,6 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Agent</span><span class="p">],</span> <span class="n">n_copies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a component with agents.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            agents: List of agents in this component.</span>
-<span class="sd">            n_copies: Number of copies of this component.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If agents list is empty or n_copies &lt; 1.</span>
@@ -482,35 +378,20 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The component representation in Kappa format.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Kappa string representation of the component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The component representation in Kappa format.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Pattern</span><span class="o">.</span><span class="n">agents_to_kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Component.add">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Component.add">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an agent to this component.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            agent: Agent to add to the component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an agent to this component.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Component.isomorphic">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Component.isomorphic">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">isomorphic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if two components are isomorphic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            other: Component to compare against.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if an isomorphism exists between the components.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if two components are isomorphic.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isomorphisms</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
 
@@ -524,9 +405,6 @@
 <span class="sd">        Args:</span>
 <span class="sd">            other: Target to find embeddings in.</span>
 <span class="sd">            exact: If True, finds isomorphisms instead of embeddings.</span>
-
-<span class="sd">        Yields:</span>
-<span class="sd">            Valid embeddings from self to other.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;agents&quot;</span><span class="p">):</span>
             <span class="n">other</span><span class="p">:</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">agents</span>
@@ -597,12 +475,6 @@
 <span class="sd">        Note:</span>
 <span class="sd">            Handles isomorphism generally, between instantiated components</span>
 <span class="sd">            in a mixture and potentially between rule patterns.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            other: Component or mixture to find isomorphisms with.</span>
-
-<span class="sd">        Yields:</span>
-<span class="sd">            Valid isomorphisms between the components.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">agents</span><span class="p">):</span>
             <span class="k">return</span>
@@ -611,25 +483,19 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_automorphisms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of automorphisms of the component.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of automorphisms (i.e. isomorphisms onto itself)</span>
+<span class="sd">        of the component.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This uses a cached result, and thus should only be used</span>
 <span class="sd">            for static components, i.e. the ones in rules and observables.</span>
 <span class="sd">            Do not use this for components in a mixture that can change.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            The number of isomorphisms of the component onto itself.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isomorphisms</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the maximum minimum shortest path between any two agents.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Diameter of the component graph.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the maximum minimum shortest path between any two agents.&quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">bfs_depth</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
             <span class="n">frontier</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
@@ -735,11 +601,7 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">components</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Component</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The connected components in this pattern.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List of Component objects representing connected parts.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The connected components in this pattern.&quot;&quot;&quot;</span>
         <span class="n">unseen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">components</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="n">unseen</span><span class="p">:</span>
@@ -752,14 +614,7 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Pattern.agents_to_kappa_str">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">agents_to_kappa_str</span><span class="p">(</span><span class="n">agents</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Agent</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a collection of agents to Kappa string representation.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            agents: Collection of agents to convert.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Kappa string representation of the agents.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a collection of agents to Kappa string representation.&quot;&quot;&quot;</span>
         <span class="n">bond_num_counter</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">bond_nums</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Site</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="n">agent_strs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -784,20 +639,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The pattern representation in Kappa format.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Kappa string representation of the pattern.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The pattern representation in Kappa format.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">agents_to_kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">underspecified</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if any agents in the pattern are underspecified.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            True if any agent is None or underspecified.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if any agents in the pattern are underspecified.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">agent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">agent</span><span class="o">.</span><span class="n">underspecified</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Pattern.n_isomorphisms">
@@ -807,12 +654,6 @@
 
 <span class="sd">        Note:</span>
 <span class="sd">            Runtime is exponential in the number of components; use with caution.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            other: `Pattern` to count isomorphisms with.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            The number of isomorphisms between the patterns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">components</span><span class="p">):</span>
             <span class="k">return</span> <span class="mi">0</span>

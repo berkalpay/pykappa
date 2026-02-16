@@ -46,7 +46,7 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.utils.rejection_sample" title="pykappa.utils.rejection_sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rejection_sample</span></code></a>(population, excluded[, ...])</p></td>
-<td><p></p></td>
+<td><p>Randomly sample an element from <cite>population</cite> that is not in <cite>excluded</cite>, using rejection sampling.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pykappa.utils.str_table" title="pykappa.utils.str_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str_table</span></code></a>(rows[, header])</p></td>
 <td><p>Format rows into a table with aligned columns.</p></td>
@@ -57,7 +57,7 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.utils.Counted" title="pykappa.utils.Counted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Counted</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>A simple class that assigns a unique integer ID to each instance, starting from 0.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IndexedSet</span></code></a>([iterable])</p></td>
 <td><p>A subclass of the built-in <cite>set</cite>, with support for indexing by arbitrary properties of set members, as well as integer indexing to allow for random sampling.</p></td>
@@ -70,7 +70,8 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.utils.Counted">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.utils.</span></span><span class="sig-name descname"><span class="pre">Counted</span></span><a class="reference internal" href="../../_modules/pykappa/utils.html#Counted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.utils.Counted" title="Link to this definition">¶</a></dt>
-<dd><dl class="py attribute">
+<dd><p>A simple class that assigns a unique integer ID to each instance, starting from 0.</p>
+<dl class="py attribute">
 <dt class="sig sig-object py" id="pykappa.utils.Counted.counter">
 <span class="sig-name descname"><span class="pre">counter</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pykappa.utils.Counted.counter" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -245,7 +246,8 @@ teams.lookup(“color”, “blue”) # Returns all teams with blue jerseys
 <dl class="py function">
 <dt class="sig sig-object py" id="pykappa.utils.rejection_sample">
 <span class="sig-prename descclassname"><span class="pre">pykappa.utils.</span></span><span class="sig-name descname"><span class="pre">rejection_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/utils.html#rejection_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.utils.rejection_sample" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Randomly sample an element from <cite>population</cite> that is not in <cite>excluded</cite>, using rejection sampling.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>population</strong> (<em>Iterable</em>)</p></li>
@@ -267,11 +269,8 @@ teams.lookup(“color”, “blue”) # Returns all teams with blue jerseys
 <li><p><strong>header</strong> (<em>list</em><em> | </em><em>None</em>) – Optional header row</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Formatted table string</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
