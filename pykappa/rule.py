@@ -84,12 +84,12 @@ class KappaRule(Rule):
         Note:
             Forward-reverse rules (with "<->") represent two rules.
         """
-        from pykappa.grammar import kappa_parser, RuleBuilder
+        from pykappa.grammar import kappa_parser, KappaTransformer
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"
         rule_tree = input_tree.children[0]
-        return RuleBuilder(rule_tree).objects
+        return KappaTransformer().transform(rule_tree)
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:

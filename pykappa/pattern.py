@@ -132,7 +132,7 @@ class Agent(Counted):
         Raises:
             AssertionError: If the string doesn't describe exactly one agent.
         """
-        from pykappa.grammar import kappa_parser, AgentBuilder
+        from pykappa.grammar import kappa_parser, KappaTransformer
 
         # Check pattern describes only a single agent
         input_tree = kappa_parser.parse(kappa_str)
@@ -144,7 +144,7 @@ class Agent(Counted):
             len(pattern_tree.children) == 1
         ), "Zero or more than one agent patterns were specified."
         agent_tree = pattern_tree.children[0]
-        return AgentBuilder(agent_tree).object
+        return KappaTransformer().transform(agent_tree)
 
     def __init__(self, type: str, sites: Iterable[Site]):
         """Initialize an agent with given type and sites."""
@@ -458,7 +458,7 @@ class Pattern:
         Raises:
             AssertionError: If the string doesn't describe exactly one pattern.
         """
-        from pykappa.grammar import kappa_parser, PatternBuilder
+        from pykappa.grammar import kappa_parser, KappaTransformer
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"
@@ -467,7 +467,7 @@ class Pattern:
         ), "Zero or more than one patterns were specified."
         assert len(input_tree.children) == 1
         pattern_tree = input_tree.children[0]
-        return PatternBuilder(pattern_tree).object
+        return KappaTransformer().transform(pattern_tree)
 
     def __init__(self, agents: list[Optional[Agent]]):
         """Compile a pattern from a list of Agents.

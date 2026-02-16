@@ -64,8 +64,7 @@ class System:
         from pykappa.grammar import (
             kappa_parser,
             parse_tree_to_expression,
-            PatternBuilder,
-            RuleBuilder,
+            KappaTransformer,
         )
 
         input_tree = kappa_parser.parse(ka_str)
@@ -81,7 +80,7 @@ class System:
             tag = child.data
 
             if tag in ["f_rule", "fr_rule", "ambi_rule", "ambi_fr_rule"]:
-                new_rules = RuleBuilder(child).objects
+                new_rules = KappaTransformer().transform(child)
                 rules.extend(new_rules)
 
             elif tag == "variable_declaration":
@@ -121,7 +120,7 @@ class System:
                 if pattern_tree.data == "declared_token_name":
                     raise NotImplementedError
                 assert pattern_tree.data == "pattern"
-                pattern = PatternBuilder(pattern_tree).object
+                pattern = KappaTransformer().transform(pattern_tree)
 
                 inits.append((amount, pattern))
 
