@@ -36,12 +36,6 @@ string_to_operator = {
 def parse_operator(kappa_operator: str) -> Callable:
     """Convert a Kappa string operator to a Python function.
 
-    Args:
-        kappa_operator: Kappa language operator string.
-
-    Returns:
-        Python function counterpart.
-
     Raises:
         ValueError: If the operator is not recognized.
     """
@@ -63,12 +57,6 @@ class Expression:
     def from_kappa(cls, kappa_str: str) -> Self:
         """Parse an Expression from a Kappa string.
 
-        Args:
-            kappa_str: Kappa expression string.
-
-        Returns:
-            Parsed Expression object.
-
         Raises:
             AssertionError: If the string doesn't represent a valid expression.
         """
@@ -87,9 +75,6 @@ class Expression:
     @property
     def kappa_str(self) -> str:
         """Get the expression representation in Kappa format.
-
-        Returns:
-            Kappa string representation of the expression.
 
         Raises:
             ValueError: If expression type is not supported for string conversion.
@@ -150,9 +135,6 @@ class Expression:
 
         Args:
             system: System context for variable evaluation (required for variables).
-
-        Returns:
-            Result of evaluating the expression.
 
         Raises:
             ValueError: If evaluation fails due to missing context or unsupported type.

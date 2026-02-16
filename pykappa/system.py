@@ -49,9 +49,6 @@ class System:
         Args:
             filepath: Path to the Kappa file.
             seed: Random seed for reproducibility.
-
-        Returns:
-            A new System instance parsed from the file.
         """
         with open(filepath) as f:
             return cls.from_ka(f.read(), seed=seed)
@@ -63,9 +60,6 @@ class System:
         Args:
             ka_str: Kappa language string containing a system definition.
             seed: Random seed for reproducibility.
-
-        Returns:
-            A new System instance parsed from the string.
         """
         from pykappa.grammar import (
             kappa_parser,
@@ -175,9 +169,6 @@ class System:
             variables: Dictionary mapping variable names to expressions.
             *args: Additional arguments passed to System constructor.
             **kwargs: Additional keyword arguments passed to System constructor.
-
-        Returns:
-            A new System instance.
         """
         real_rules = []
         if rules is not None:
@@ -260,12 +251,6 @@ class System:
 
     def __getitem__(self, name: str) -> int | float:
         """Get the value of an observable or variable.
-
-        Args:
-            name: Name of the observable or variable.
-
-        Returns:
-            Current value of the named expression.
 
         Raises:
             KeyError: If name doesn't correspond to any observable or variable.
@@ -560,11 +545,7 @@ class Monitor:
     history: dict[str, list[Optional[float]]]
 
     def __init__(self, system: System):
-        """Initialize a monitor for the given system.
-
-        Args:
-            system: System to monitor.
-        """
+        """Initialize a monitor for the given system."""
         self.system = system
         self.history = {"time": []} | {obs_name: [] for obs_name in system.observables}
 
@@ -617,9 +598,6 @@ class Monitor:
             observable_name: Name of the observable to measure.
             tail_fraction: Fraction of the history to consider (from the end).
 
-        Returns:
-            Mean value of the observable over the tail window.
-
         Raises:
             AssertionError: If there are not enough measurements.
         """
@@ -645,9 +623,6 @@ class Monitor:
             observable_name: Name of the observable to check. If None, checks all observables.
             tail_fraction: Fraction of the history to consider.
             tolerance: Maximum allowed fraction slope deviation from the mean.
-
-        Returns:
-            True if the observable(s) seem to have equilibrated, False otherwise.
 
         Raises:
             AssertionError: If there are not enough measurements to assess equilibration.
@@ -675,9 +650,6 @@ class Monitor:
 
         Args:
             combined: Whether to plot all observables on the same axes.
-
-        Returns:
-            Matplotlib figure showing trajectories of observables.
         """
         if combined:
             fig, ax = plt.subplots()

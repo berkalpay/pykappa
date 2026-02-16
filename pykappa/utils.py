@@ -10,9 +10,6 @@ def str_table(rows: list[list], header: Optional[list] = None) -> str:
     Args:
         rows: List of data rows
         header: Optional header row
-
-    Returns:
-        Formatted table string
     """
     all_rows = [header] + rows if header else rows
 
@@ -31,6 +28,7 @@ def str_table(rows: list[list], header: Optional[list] = None) -> str:
 
 
 def rejection_sample(population: Iterable, excluded: Iterable, max_attempts: int = 100):
+    """Randomly sample an element from `population` that is not in `excluded`, using rejection sampling."""
     population = list(population)
     if not population:
         raise ValueError("Sequence is empty")
@@ -67,6 +65,8 @@ class OrderedSet[T]:
 
 
 class Counted:
+    """A simple class that assigns a unique integer ID to each instance, starting from 0."""
+
     counter = 0
 
     def __init__(self):

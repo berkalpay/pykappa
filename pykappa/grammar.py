@@ -407,8 +407,5 @@ def parse_tree_to_expression(tree: Tree) -> Expression:
 
     Args:
         tree: Lark ParseTree rooted at algebraic_expression.
-
-    Returns:
-        Expression object representing the parsed expression.
     """
     return LarkTreetoExpression().transform(tree)
