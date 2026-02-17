@@ -171,7 +171,7 @@ class Mixture:
                     new_partner = new_agents[i_partner][partner.label]
                     new_edges.add(Edge(new_site, new_partner))
 
-        update = MixtureUpdate(agents_to_add=new_agents, edges_to_add=new_edges)
+        update = MixtureUpdate(agents_to_add=set(new_agents), edges_to_add=new_edges)
         self.apply_update(update)
 
     def remove(self, component: Component) -> None:
