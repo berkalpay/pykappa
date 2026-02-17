@@ -228,8 +228,7 @@ for rule symmetry.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRule.select">
 <span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRule.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRule.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update (or None
-for invalid match).</p>
+<dd><p>Select agents and specify the update (or None for invalid match).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Can change the internal states of agents in the mixture but
@@ -294,8 +293,7 @@ records everything else in the MixtureUpdate.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleBimolecular.select">
 <span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRuleBimolecular.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRuleBimolecular.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update (or None
-for invalid match).</p>
+<dd><p>Select agents and specify the update (or None for invalid match).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>n_embeddings must be called before this method so that the
@@ -355,8 +353,7 @@ component_weights cache is up-to-date.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.KappaRuleUnimolecular.select">
 <span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#KappaRuleUnimolecular.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.KappaRuleUnimolecular.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update (or None
-for invalid match).</p>
+<dd><p>Select agents and specify the update (or None for invalid match).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>n_embeddings must be called before this method so that the
@@ -423,13 +420,7 @@ component_weights cache is up-to-date.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.Rule.select">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule.select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule.select" title="Link to this definition">¶</a></dt>
-<dd><p>Select agents in the mixture and specify the update (or None for null
-event).</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Don’t modify anything in mixture directly except for changing
-internal sites of agents. A null event is represented by returning None.</p>
-</div>
+<dd><p>Select agents and specify the update (or None for null event).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>

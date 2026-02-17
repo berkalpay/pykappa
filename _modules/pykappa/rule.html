@@ -111,13 +111,7 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.select">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents in the mixture and specify the update (or None for null</span>
-<span class="sd">        event).</span>
-
-<span class="sd">        Note:</span>
-<span class="sd">            Don&#39;t modify anything in mixture directly except for changing</span>
-<span class="sd">            internal sites of agents. A null event is represented by returning None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for null event).&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 </div>
 
@@ -268,8 +262,7 @@
 <div class="viewcode-block" id="KappaRule.select">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.select">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents in the mixture and specify the update (or None</span>
-<span class="sd">        for invalid match).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Can change the internal states of agents in the mixture but</span>
@@ -401,8 +394,7 @@
 <div class="viewcode-block" id="KappaRuleUnimolecular.select">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleUnimolecular.select">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents in the mixture and specify the update (or None</span>
-<span class="sd">        for invalid match).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            n_embeddings must be called before this method so that the</span>
@@ -478,8 +470,7 @@
 <div class="viewcode-block" id="KappaRuleBimolecular.select">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleBimolecular.select">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents in the mixture and specify the update (or None</span>
-<span class="sd">        for invalid match).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            n_embeddings must be called before this method so that the</span>

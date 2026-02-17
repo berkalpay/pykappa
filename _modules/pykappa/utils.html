@@ -48,12 +48,7 @@
 <div class="viewcode-block" id="str_table">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.str_table">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">str_table</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">header</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format rows into a table with aligned columns.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        rows: List of data rows</span>
-<span class="sd">        header: Optional header row</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format rows into a table with aligned columns.&quot;&quot;&quot;</span>
     <span class="n">all_rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">+</span> <span class="n">rows</span> <span class="k">if</span> <span class="n">header</span> <span class="k">else</span> <span class="n">rows</span>
 
     <span class="n">num_cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_rows</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -74,7 +69,7 @@
 <div class="viewcode-block" id="rejection_sample">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.rejection_sample">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rejection_sample</span><span class="p">(</span><span class="n">population</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">excluded</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">max_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Randomly sample an element from `population` that is not in `excluded`, using rejection sampling.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Randomly sample an element from `population` that is not in `excluded`.&quot;&quot;&quot;</span>
     <span class="n">population</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">population</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sequence is empty&quot;</span><span class="p">)</span>
@@ -123,7 +118,7 @@
 <div class="viewcode-block" id="Counted">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.Counted">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Counted</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A simple class that assigns a unique integer ID to each instance, starting from 0.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assigns a unique integer ID to each instance, starting from 0.&quot;&quot;&quot;</span>
 
     <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -149,14 +144,12 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">IndexedSet</span><span class="p">(</span><span class="nb">set</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A subclass of the built-in `set`, with support for indexing</span>
-<span class="sd">    by arbitrary properties of set members, as well as integer</span>
-<span class="sd">    indexing to allow for random sampling.</span>
+<span class="sd">    A subclass of the built-in `set`, with support for indexing by arbitrary</span>
+<span class="sd">    properties of set members and integer indexing to enable random sampling.</span>
 
 <span class="sd">    Credit https://stackoverflow.com/a/15993515 for the integer indexing logic.</span>
 
-<span class="sd">    NOTE: Although this class is indexable, member ordering is not stable</span>
-<span class="sd">    across insertions and deletions.</span>
+<span class="sd">    NOTE: Member ordering is not stable across insertions and deletions.</span>
 
 <span class="sd">    Example usage:</span>
 <span class="sd">    ```</span>
@@ -198,14 +191,10 @@
 <div class="viewcode-block" id="IndexedSet.create_index">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.create_index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prop</span><span class="p">:</span> <span class="n">Property</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        By the given property, create an index that&#39;s updated when adding and removing members.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an index that&#39;s updated when adding and removing members.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            name: Name of the index</span>
-<span class="sd">            prop: A callable that returns an iterable of hashable values of the item</span>
-
-<span class="sd">        NOTE: Mutating set members outside of interface calls can invalidate indices.</span>
+<span class="sd">        Note:</span>
+<span class="sd">            Mutating set members outside of interface calls can invalidate indices.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span>
@@ -269,14 +258,14 @@
 <div class="viewcode-block" id="IndexedSet.lookup">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.lookup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an IndexedSet of all matching items.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an IndexedSet of all matching items.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">value</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="IndexedSet.lookup_one">
 <a class="viewcode-back" href="../../api/generated/pykappa.utils.html#pykappa.utils.IndexedSet.lookup_one">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lookup_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a single matching item. Raises if not exactly one match.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a single matching item. Raises if not exactly one match.&quot;&quot;&quot;</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">value</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">matches</span><span class="p">))</span></div>
