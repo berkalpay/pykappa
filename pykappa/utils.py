@@ -5,12 +5,7 @@ from collections.abc import Callable, Hashable
 
 
 def str_table(rows: list[list], header: Optional[list] = None) -> str:
-    """Format rows into a table with aligned columns.
-
-    Args:
-        rows: List of data rows
-        header: Optional header row
-    """
+    """Format rows into a table with aligned columns."""
     all_rows = [header] + rows if header else rows
 
     num_cols = len(all_rows[0])
@@ -28,7 +23,7 @@ def str_table(rows: list[list], header: Optional[list] = None) -> str:
 
 
 def rejection_sample(population: Iterable, excluded: Iterable, max_attempts: int = 100):
-    """Randomly sample an element from `population` that is not in `excluded`, using rejection sampling."""
+    """Randomly sample an element from `population` that is not in `excluded`."""
     population = list(population)
     if not population:
         raise ValueError("Sequence is empty")
@@ -65,7 +60,7 @@ class OrderedSet[T]:
 
 
 class Counted:
-    """A simple class that assigns a unique integer ID to each instance, starting from 0."""
+    """Assigns a unique integer ID to each instance, starting from 0."""
 
     counter = 0
 
@@ -88,14 +83,12 @@ Property = Callable[
 
 class IndexedSet(set[T], Generic[T]):
     """
-    A subclass of the built-in `set`, with support for indexing
-    by arbitrary properties of set members, as well as integer
-    indexing to allow for random sampling.
+    A subclass of the built-in `set`, with support for indexing by arbitrary
+    properties of set members and integer indexing to enable random sampling.
 
     Credit https://stackoverflow.com/a/15993515 for the integer indexing logic.
 
-    NOTE: Although this class is indexable, member ordering is not stable
-    across insertions and deletions.
+    NOTE: Member ordering is not stable across insertions and deletions.
 
     Example usage:
     ```
@@ -135,14 +128,10 @@ class IndexedSet(set[T], Generic[T]):
         return self._item_list[i]
 
     def create_index(self, name: str, prop: Property):
-        """
-        By the given property, create an index that's updated when adding and removing members.
+        """Create an index that's updated when adding and removing members.
 
-        Args:
-            name: Name of the index
-            prop: A callable that returns an iterable of hashable values of the item
-
-        NOTE: Mutating set members outside of interface calls can invalidate indices.
+        Note:
+            Mutating set members outside of interface calls can invalidate indices.
         """
         assert name not in self.properties
         self.properties[name] = prop
@@ -194,11 +183,11 @@ class IndexedSet(set[T], Generic[T]):
                 self.remove(match)
 
     def lookup(self, name: str, value: Any) -> Self:
-        """Returns an IndexedSet of all matching items."""
+        """Return an IndexedSet of all matching items."""
         return self.indices[name][value]
 
     def lookup_one(self, name: str, value: Any) -> T:
-        """Returns a single matching item. Raises if not exactly one match."""
+        """Return a single matching item. Raises if not exactly one match."""
         matches = self.indices[name][value]
         assert len(matches) == 1
         return next(iter(matches))

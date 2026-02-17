@@ -54,13 +54,7 @@ class Rule(ABC):
 
     @abstractmethod
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update (or None for null
-        event).
-
-        Note:
-            Don't modify anything in mixture directly except for changing
-            internal sites of agents. A null event is represented by returning None.
-        """
+        """Select agents and specify the update (or None for null event)."""
         pass
 
 
@@ -190,8 +184,7 @@ class KappaRule(Rule):
         )
 
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update (or None
-        for invalid match).
+        """Select agents and specify the update (or None for invalid match).
 
         Note:
             Can change the internal states of agents in the mixture but
@@ -314,8 +307,7 @@ class KappaRuleUnimolecular(KappaRule):
         return count
 
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update (or None
-        for invalid match).
+        """Select agents and specify the update (or None for invalid match).
 
         Note:
             n_embeddings must be called before this method so that the
@@ -382,8 +374,7 @@ class KappaRuleBimolecular(KappaRule):
         return count
 
     def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents in the mixture and specify the update (or None
-        for invalid match).
+        """Select agents and specify the update (or None for invalid match).
 
         Note:
             n_embeddings must be called before this method so that the
