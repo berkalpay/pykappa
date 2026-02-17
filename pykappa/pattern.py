@@ -278,7 +278,7 @@ class Component(Counted):
         assert len(parsed_pattern.components) == 1
         return parsed_pattern.components[0]
 
-    def __init__(self, agents: list[Agent], n_copies: int = 1):
+    def __init__(self, agents: Iterable[Agent], n_copies: int = 1):
         """Initialize a component with agents.
 
         Raises:
@@ -368,8 +368,7 @@ class Component(Counted):
                         b_partner = b_site.partner.agent
 
                         if b_partner not in other:
-                            # The embedding must be enclosed within the set of agents
-                            # provided.
+                            # The embedding must be enclosed in the given set of agents
                             root_failed = True
                             break
                         elif a_partner not in agent_map:

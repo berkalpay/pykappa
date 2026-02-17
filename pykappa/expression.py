@@ -54,7 +54,7 @@ class Expression:
     """
 
     @classmethod
-    def from_kappa(cls, kappa_str: str) -> Self:
+    def from_kappa(cls, kappa_str: str) -> "Expression":
         """Parse an Expression from a Kappa string.
 
         Raises:
@@ -229,9 +229,9 @@ class Expression:
             # Add child nodes to the stack
             if hasattr(node, "attrs"):
                 for attr_value in node.attrs.values():
-                    if isinstance(attr_value, Expression):
+                    if isinstance(attr_value, type(self)):
                         stack.append(attr_value)
                     elif isinstance(attr_value, (list, tuple)):
-                        stack.extend(v for v in attr_value if isinstance(v, Expression))
+                        stack.extend(v for v in attr_value if isinstance(v, type(self)))
 
         return result
