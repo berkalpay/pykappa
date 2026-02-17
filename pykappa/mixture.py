@@ -388,20 +388,13 @@ class MixtureUpdate:
 
         Note:
             Sites in the created agent will be emptied.
-
-        Returns:
-            New agent with empty sites.
         """
         new_agent = agent.detached()
         self.agents_to_add.add(new_agent)
         return new_agent
 
     def remove_agent(self, agent: Agent) -> None:
-        """Specify to remove an agent and its edges from the mixture.
-
-        Args:
-            agent: Agent to remove.
-        """
+        """Specify to remove an agent and its edges from the mixture."""
         self.agents_to_remove.add(agent)
         for site in agent:
             if site.coupled:
@@ -424,11 +417,7 @@ class MixtureUpdate:
             self.edges_to_remove.add(Edge(site, site.partner))
 
     def register_changed_agent(self, agent: Agent) -> None:
-        """Register an agent as having internal state changes.
-
-        Args:
-            agent: Agent that has been internally modified.
-        """
+        """Register an agent as having internal state changes."""
         self.agents_changed.add(agent)
 
     @property
