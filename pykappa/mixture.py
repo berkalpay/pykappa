@@ -8,11 +8,7 @@ from pykappa.utils import IndexedSet
 
 @dataclass(frozen=True)
 class Edge:
-    """Represents bonds between sites.
-
-    Note:
-        Edge(x, y) is the same as Edge(y, x).
-    """
+    """Represents bonds between sites. Edge(x, y) equals Edge(y, x)."""
 
     site1: Site
     site2: Site
@@ -49,9 +45,6 @@ class Mixture:
 
         Args:
             patterns: Dictionary mapping pattern strings to copy counts.
-
-        Returns:
-            New Mixture with instantiated patterns.
         """
         real_patterns = []
         for pattern, count in patterns.items():
@@ -63,12 +56,6 @@ class Mixture:
         patterns: Optional[Iterable[Pattern]] = None,
         track_components: bool = False,
     ):
-        """Initialize a new mixture.
-
-        Args:
-            patterns: Optional collection of patterns to instantiate.
-            track_components: Whether to enable connected component tracking from the start.
-        """
         self.agents = IndexedSet()
         self._components = None
         self._embeddings = {}
@@ -88,9 +75,7 @@ class Mixture:
 
     @property
     def kappa_str(self) -> str:
-        """The mixture representation in Kappa format, with %init
-        declarations for each component type.
-        """
+        """The mixture in Kappa format with %init declarations."""
         return "\n".join(
             f"%init: {len(components)} {group.kappa_str}"
             for group, components in grouped(
@@ -105,10 +90,9 @@ class Mixture:
 
     @property
     def components(self) -> IndexedSet[Component]:
-        if self.component_tracking:
+        if self.component_tracking:  # Use cached components if tracking
             return self._components
-        else:
-            # Find connected components among the existing agents
+        else:  # Find connected components among the existing agents
             components = IndexedSet()
             unassigned = set(self.agents)
 
@@ -182,11 +166,7 @@ class Mixture:
         self.apply_update(update)
 
     def embeddings(self, component: Component) -> IndexedSet[Embedding]:
-        """Get embeddings of a tracked component.
-
-        Notes:
-            Returns the number of matches directly returned
-            by subgraph isomorphism, i.e. not accounting for symmetries.
+        """Get embeddings of a tracked component (not accounting for symmetries).
 
         Raises:
             KeyError: If component is not being tracked.
@@ -245,16 +225,7 @@ class Mixture:
                 self._embeddings[component_pattern].add(e)
 
     def _add_agent(self, agent: Agent) -> None:
-        """Add an agent to the mixture.
-
-        Note:
-            The provided agent should not have any bound sites.
-            Calling these private functions isn't guaranteed to keep indexes
-            up to date, which is why they shouldn't be used externally.
-
-        Raises:
-            AssertionError: If agent has bound sites or isn't instantiable.
-        """
+        """Add an agent to the mixture (should not have any bound sites)."""
         assert all(site.partner == "." for site in agent)
         assert agent.instantiable
         self.agents.add(agent)
@@ -263,14 +234,7 @@ class Mixture:
             self.components.add(Component([agent]))
 
     def _remove_agent(self, agent: Agent) -> None:
-        """Remove an agent from the mixture.
-
-        Note:
-            Any bonds associated with agent must be removed first.
-
-        Raises:
-            AssertionError: If agent has bound sites.
-        """
+        """Remove an agent from the mixture (bonds must be removed first)."""
         assert all(site.partner == "." for site in agent)
         self.agents.remove(agent)
 
@@ -279,11 +243,7 @@ class Mixture:
             self.components.remove(component)
 
     def _add_edge(self, edge: Edge) -> None:
-        """Add a bond between two sites.
-
-        Raises:
-            AssertionError: If either agent is not in the mixture.
-        """
+        """Add a bond between two sites."""
         assert edge.site1.agent in self.agents
         assert edge.site2.agent in self.agents
         edge.site1.partner = edge.site2
@@ -295,25 +255,19 @@ class Mixture:
         component1 = self.components.lookup_one("agent", edge.site1.agent)
         component2 = self.components.lookup_one("agent", edge.site2.agent)
         if component1 == component2:
-            return  # The edge is within a single component, do nothing
+            return
 
-        # Ensure `component2` is the smaller one
         if len(component2) > len(component1):
             component1, component2 = component2, component1
 
-        # Merge the components
         with self._relocate_embeddings(component2):
-            self.components.remove(component2)  # NOTE: redundant linear time pass
+            self.components.remove(component2)
             for agent in component2:
                 component1.add(agent)
                 self.components.indices["agent"][agent] = [component1]
 
     def _remove_edge(self, edge: Edge) -> None:
-        """Remove a bond between two sites.
-
-        Raises:
-            AssertionError: If the edge doesn't exist.
-        """
+        """Remove a bond between two sites."""
         assert edge.site1.partner == edge.site2
         assert edge.site2.partner == edge.site1
         edge.site1.partner = "."
@@ -327,28 +281,20 @@ class Mixture:
         old_component = self.components.lookup_one("agent", agent1)
         assert old_component == self.components.lookup_one("agent", agent2)
 
-        # Create a new component if the old one got disconnected
         maybe_new_component = Component(agent1.depth_first_traversal)
         if agent2 in maybe_new_component:
-            return  # The old component is still connected, do nothing
+            return
         new_component1 = maybe_new_component
         new_component2 = Component(agent2.depth_first_traversal)
 
-        # Split the component
         with self._relocate_embeddings(old_component):
-            # TODO: manually update indices in `components` for speed
             self.components.remove(old_component)
             self.components.add(new_component1)
             self.components.add(new_component2)
 
     @contextmanager
     def _relocate_embeddings(self, component: Component):
-        """
-        Temporarily evacuate embeddings tied to `component` and restore
-        against the new component structure afterward. (Only relevant
-        when tracking components.)
-        """
-        # Evacuate embeddings
+        """Temporarily evacuate and restore embeddings during component restructuring."""
         relocated = {}
         for tracked in self._embeddings:
             relocated[tracked] = list(
@@ -359,7 +305,7 @@ class Mixture:
 
         try:
             yield
-        finally:  # Restore embeddings against the new structure
+        finally:
             for tracked in self._embeddings:
                 for e in relocated.get(tracked, []):
                     self._embeddings[tracked].add(e)
@@ -367,28 +313,16 @@ class Mixture:
 
 @dataclass
 class MixtureUpdate:
-    """Specifies changes to be applied to a mixture.
-
-    Attributes:
-        agents_to_add: Agents to be added to the mixture.
-        agents_to_remove: Agents to be removed from the mixture.
-        edges_to_add: Edges to be created.
-        edges_to_remove: Edges to be removed.
-        agents_changed: Agents with internal state changes.
-    """
+    """Specifies changes to be applied to a mixture."""
 
     agents_to_add: set[Agent] = field(default_factory=set)
     agents_to_remove: set[Agent] = field(default_factory=set)
     edges_to_add: set[Edge] = field(default_factory=set)
     edges_to_remove: set[Edge] = field(default_factory=set)
-    agents_changed: set[Agent] = field(default_factory=set)
+    agents_changed: set[Agent] = field(default_factory=set)  # Internal state changes
 
     def create_agent(self, agent: Agent) -> Agent:
-        """Create a new agent based on a template.
-
-        Note:
-            Sites in the created agent will be emptied.
-        """
+        """Create a new agent based on a template (sites will be emptied)."""
         new_agent = agent.detached()
         self.agents_to_add.add(new_agent)
         return new_agent
