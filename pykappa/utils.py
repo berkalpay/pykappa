@@ -76,9 +76,7 @@ class Counted:
 
 
 T = TypeVar("T")  # Member type of `IndexedSet`
-Property = Callable[
-    [T], Iterable[Hashable]
-]  # Callable that returns the property values of an item
+Property = Callable[[T], Iterable[Hashable]]  # Returns the property values of an item
 
 
 class IndexedSet(set[T], Generic[T]):
@@ -92,11 +90,7 @@ class IndexedSet(set[T], Generic[T]):
 
     Example usage:
     ```
-    @dataclass
-    class SportsTeam:
-        name: str
-        jersey_color: str
-        members: list[str]
+    [...] # define a SportsTeam class
 
     teams: IndexedSet[SportsTeam] = IndexedSet()
     teams.create_index("name", lambda team: [team.name])

@@ -57,11 +57,10 @@ class Mixture:
         track_components: bool = False,
     ):
         self.agents = IndexedSet()
+        self.agents.create_index("type", lambda a: [a.type])
         self._components = None
         self._embeddings = {}
         self._max_embedding_width = 0
-
-        self.agents.create_index("type", lambda a: [a.type])
 
         if track_components:
             self.enable_component_tracking()
