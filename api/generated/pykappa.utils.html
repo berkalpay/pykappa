@@ -87,13 +87,7 @@ properties of set members and integer indexing to enable random sampling.</p>
 <p>NOTE: Member ordering is not stable across insertions and deletions.</p>
 <p>Example usage:
 <a href="#id1"><span class="problematic" id="id2">``</span></a>`
-&#64;dataclass
-class SportsTeam:</p>
-<blockquote>
-<div><p>name: str
-jersey_color: str
-members: list[str]</p>
-</div></blockquote>
+[…] # define a SportsTeam class</p>
 <p>teams: IndexedSet[SportsTeam] = IndexedSet()
 teams.create_index(“name”, lambda team: [team.name])
 teams.create_index(“color”, lambda team: [team.jersey_color])</p>

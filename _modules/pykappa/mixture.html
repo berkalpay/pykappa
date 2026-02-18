@@ -106,11 +106,10 @@
         <span class="n">track_components</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_embedding_width</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">track_components</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">enable_component_tracking</span><span class="p">()</span>
@@ -127,7 +126,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The mixture in Kappa format with %init declarations.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;%init: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">group</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">components</span> <span class="ow">in</span> <span class="n">grouped</span><span class="p">(</span>
+            <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">components</span> <span class="ow">in</span> <span class="n">group_by_isomorphism</span><span class="p">(</span>
                 <span class="nb">list</span><span class="p">(</span><span class="n">component</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
             <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">)</span>
@@ -505,9 +504,11 @@
 
 
 
-<div class="viewcode-block" id="grouped">
-<a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.grouped">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">grouped</span><span class="p">(</span><span class="n">components</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Component</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Component</span><span class="p">]]:</span>
+<div class="viewcode-block" id="group_by_isomorphism">
+<a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.group_by_isomorphism">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">group_by_isomorphism</span><span class="p">(</span>
+    <span class="n">components</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Component</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Component</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Group components by isomorphism.</span>
 
 <span class="sd">    Returns:</span>
