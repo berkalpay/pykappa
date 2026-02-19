@@ -2,23 +2,12 @@ name: tests
 on: [push]
 
 jobs:
-  uv-example:
+  tests:
     name: python
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          # Install a specific version of uv.
-          version: "0.6.5"
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -26,7 +15,7 @@ jobs:
           python-version-file: ".python-version"
 
       - name: Install the project
-        run: uv sync --all-extras --dev
+        run: pip install -e .
 
       - name: Run tests
-        run: uv run pytest
+        run: pytest
