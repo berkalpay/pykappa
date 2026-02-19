@@ -15,7 +15,7 @@ dependencies = [
 dev = [
     "py-spy>=0.4.0",
     "pytest",
-    "black",
+    "black==25.1.0",
     "mypy>=1.15.0",
     "memory-profiler>=0.61.0",
 ]
