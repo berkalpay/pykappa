@@ -491,6 +491,7 @@ class System:
         max_time: Optional[float] = None,
         max_updates: Optional[int] = None,
         check_interval: int = 100,
+        **equilibration_kwargs,
     ) -> bool:
         """Run simulation until all observables have equilibrated.
 
