@@ -8,6 +8,7 @@
 
    .. autosummary::
    
+      equilibrated
       rejection_sample
       str_table
    
