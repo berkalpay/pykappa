@@ -3,6 +3,34 @@ from typing import Any, Optional, Iterable, Generic, TypeVar, Self
 from collections import defaultdict
 from collections.abc import Callable, Hashable
 
+import numpy as np
+
+
+def equilibrated(
+    values: list[float],
+    times: Optional[list[float]],
+    tail_fraction: float = 0.1,
+    tolerance: float = 0.01,
+) -> bool:
+    """
+    Checks whether the magnitude of the slope of the tail of the series relative to the mean
+    is sufficiently small (below tolerance). Time can be provided to account for non-uniform
+    sampling intervals.
+
+    Raises:
+        AssertionError: If there are not enough measurements to assess equilibration.
+    """
+    window_len = int(tail_fraction * len(values))
+    assert (
+        len(values) >= window_len and window_len >= 2
+    ), f"Not enough measurements ({window_len}) to assess equilibration"
+
+    times = times[-window_len:] if times is not None else list(range(window_len))
+    values = values[-window_len:]
+    slope, _ = np.polyfit(times, values, deg=1)
+
+    return abs(slope / np.mean(values)) <= tolerance
+
 
 def str_table(rows: list[list], header: Optional[list] = None) -> str:
     """Format rows into a table with aligned columns."""

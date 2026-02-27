@@ -16,7 +16,7 @@ from pykappa.mixture import Mixture
 from pykappa.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
 from pykappa.pattern import Component, Pattern
 from pykappa.expression import Expression
-from pykappa.utils import str_table
+from pykappa.utils import str_table, equilibrated as _equilibrated
 
 
 class System:
@@ -491,7 +491,6 @@ class System:
         max_time: Optional[float] = None,
         max_updates: Optional[int] = None,
         check_interval: int = 100,
-        **equilibration_kwargs,
     ) -> bool:
         """Run simulation until all observables have equilibrated.
 
@@ -499,8 +498,6 @@ class System:
             max_time: Maximum simulation time (None for no limit).
             max_updates: Maximum number of updates (None for no limit).
             check_interval: Number of updates between equilibration checks.
-            **equilibration_kwargs: Keyword arguments passed to equilibrated
-                (tail_fraction, tolerance).
 
         Returns:
             True if equilibrated, False if limits were reached first.
@@ -609,8 +606,7 @@ class Monitor:
     def equilibrated(
         self,
         observable_name: Optional[str] = None,
-        tail_fraction: float = 0.1,
-        tolerance: float = 0.01,
+        **equilibration_kwargs,
     ) -> bool:
         """
         Check if an observable (or all observables) has equilibrated based on
@@ -620,27 +616,18 @@ class Monitor:
             observable_name: Name of the observable to check. If None, checks all observables.
             tail_fraction: Fraction of the history to consider.
             tolerance: Maximum allowed fraction slope deviation from the mean.
-
-        Raises:
-            AssertionError: If there are not enough measurements to assess equilibration.
         """
         if observable_name is None:
             return all(
-                self.equilibrated(obs_name, tail_fraction, tolerance)
+                self.equilibrated(obs_name, **equilibration_kwargs)
                 for obs_name in self.system.observables
             )
 
-        window_len = int(tail_fraction * len(self))
-        assert (
-            len(self) >= window_len and window_len >= 2
-        ), f"Not enough measurements ({window_len}) to assess equilibration for {observable_name}"
-
-        times = np.asarray(self.history["time"][-window_len:], dtype=float)
-        values = np.asarray(self.history[observable_name][-window_len:], dtype=float)
-        slope, _ = np.polyfit(times, values, deg=1)
-
-        mean = np.mean(values)
-        return (abs(slope) - mean) / mean <= tolerance
+        values = self.history[observable_name]
+        times = self.history["time"]
+        assert all(v is not None for v in values)
+        assert all(t is not None for t in times)
+        return _equilibrated(values=values, times=times, **equilibration_kwargs)
 
     def plot(self, combined: bool = False) -> matplotlib.figure.Figure:
         """Make a plot of all observables over time.
