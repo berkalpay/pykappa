@@ -5,7 +5,7 @@ import random
 import warnings
 from collections import defaultdict
 from functools import cached_property
-from typing import Optional, Iterable, Self
+from typing import Callable, Optional, Iterable, Self
 
 import numpy as np
 import pandas as pd
@@ -486,47 +486,45 @@ class System:
         if self.monitor:
             self.monitor.update()
 
-    def update_until_equilibrated(
+    def update_until(
         self,
+        condition: Callable[[Self], bool],
         max_time: Optional[float] = None,
         max_updates: Optional[int] = None,
         check_interval: int = 100,
-        **equilibration_kwargs,
     ) -> bool:
-        """Run simulation until all observables have equilibrated.
+        """Run simulation until a condition of the system has been met.
 
         Args:
+            condition: A function of a system that returns whether the desired condition is met.
             max_time: Maximum simulation time (None for no limit).
             max_updates: Maximum number of updates (None for no limit).
-            check_interval: Number of updates between equilibration checks.
+            check_interval: Number of updates between condition checks.
 
         Returns:
-            True if equilibrated, False if limits were reached first.
-
-        Raises:
-            RuntimeError: If monitoring is not enabled.
+            True if condition was met, False if limits were reached first.
         """
-        if self.monitor is None:
-            raise RuntimeError("Monitoring must be enabled to check equilibration")
-
-        n_updates = 0
         start_time = self.time
+        n_updates = 0
 
         while True:
             for _ in range(check_interval):
-                if max_time is not None and self.time - start_time >= max_time:
-                    return False
-                if max_updates is not None and n_updates >= max_updates:
+                if (max_time is not None and self.time - start_time >= max_time) or (
+                    max_updates is not None and n_updates >= max_updates
+                ):
                     return False
 
                 self.update()
                 n_updates += 1
 
             try:
-                if self.monitor.equilibrated(**equilibration_kwargs):
+                if condition(self):
                     return True
-            except AssertionError:
-                pass  # Not enough data yet
+            except Exception as e:
+                warnings.warn(
+                    f"Condition function raised an exception during update_until: {e}",
+                    RuntimeWarning,
+                )
 
 
 class Monitor:
