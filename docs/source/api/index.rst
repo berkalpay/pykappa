@@ -14,8 +14,8 @@ API reference
    :toctree: generated
    :recursive:
 
-   pykappa.grammar
-   pykappa.algebra
+   pykappa.parsing
+   pykappa.expression
 
 .. autosummary::
    :toctree: generated
