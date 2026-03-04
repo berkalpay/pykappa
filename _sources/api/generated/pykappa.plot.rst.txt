@@ -1,0 +1,12 @@
+﻿pykappa.plot
+============
+
+.. automodule:: pykappa.plot
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ComponentPlot
+   

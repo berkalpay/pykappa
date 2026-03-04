@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>
+  
+  pykappa.parsing — PyKappa
+  
+</title>
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=ee3c7c2a" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pykappa.parsing</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lark</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lark</span><span class="p">,</span> <span class="n">ParseTree</span><span class="p">,</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">Token</span><span class="p">,</span> <span class="n">Transformer</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">SiteType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">KappaRule</span><span class="p">,</span> <span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.expression</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
+
+
+<div class="viewcode-block" id="KappaParser">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KappaParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parser for Kappa language files and expressions.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Don&#39;t instantiate directly: use the global kappa_parser instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Lark parser with Kappa grammar.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">Lark</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;kappa.lark&quot;</span><span class="p">),</span>
+            <span class="n">rel_to</span><span class="o">=</span><span class="vm">__file__</span><span class="p">,</span>
+            <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;earley&quot;</span><span class="p">,</span>
+            <span class="n">lexer</span><span class="o">=</span><span class="s2">&quot;dynamic&quot;</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="s2">&quot;kappa_input&quot;</span><span class="p">,</span>
+            <span class="n">propagate_positions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">maybe_placeholders</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="KappaParser.parse">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaParser.parse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParseTree</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KappaParser.parse_file">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaParser.parse_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParseTree</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
+</div>
+
+
+
+<span class="n">kappa_parser</span> <span class="o">=</span> <span class="n">KappaParser</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="KappaTransformer">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KappaTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms Lark parse trees into Kappa objects (Site, Agent, Pattern, Rule).&quot;&quot;&quot;</span>
+
+    <span class="c1"># --- Site transformations ---</span>
+<div class="viewcode-block" id="KappaTransformer.site_name">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.site_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">site_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.agent_name">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.agent_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">agent_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.state">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">match</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">case</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span>
+            <span class="k">case</span> <span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+            <span class="k">case</span> <span class="n">Tree</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s2">&quot;unspecified&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected internal state: </span><span class="si">{</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.partner">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.partner">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">match</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;#&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;partner&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;</span><span class="k">_</span><span class="s2">&quot;]:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;partner&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;partner&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="k">case</span> <span class="p">[</span><span class="n">Token</span><span class="p">(</span><span class="s2">&quot;INT&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)]:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;partner&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="k">case</span> <span class="p">[</span><span class="n">site_name</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;partner&quot;</span><span class="p">,</span> <span class="n">SiteType</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">site_name</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">agent_name</span><span class="p">)))</span>
+            <span class="k">case</span> <span class="p">[</span><span class="n">Tree</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s2">&quot;unspecified&quot;</span><span class="p">)]:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;partner&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected link state: </span><span class="si">{</span><span class="n">children</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.site">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.site">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">site</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="c1"># children[0] is site_name</span>
+        <span class="c1"># children[1] and children[2] are tuples: (&quot;state&quot;|&quot;partner&quot;, value)</span>
+        <span class="n">site_name</span> <span class="o">=</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;?&quot;</span>
+        <span class="n">partner</span> <span class="o">=</span> <span class="s2">&quot;?&quot;</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">tag</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">child</span>
+                <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;state&quot;</span><span class="p">:</span>
+                    <span class="n">state</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;partner&quot;</span><span class="p">:</span>
+                    <span class="n">partner</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">site_name</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">partner</span><span class="o">=</span><span class="n">partner</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">site</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.undetermined">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.undetermined">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">undetermined</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;unspecified&quot;</span><span class="p">,</span> <span class="p">[])</span></div>
+
+
+    <span class="c1"># --- Agent transformations ---</span>
+<div class="viewcode-block" id="KappaTransformer.interface">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">children</span>  <span class="c1"># List of sites</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.agent">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.agent">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="c1"># First child is agent_name, second is interface (list of sites)</span>
+        <span class="n">agent_type</span> <span class="o">=</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sites</span> <span class="o">=</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">[]</span>
+
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">agent_type</span><span class="p">,</span> <span class="n">sites</span><span class="o">=</span><span class="n">sites</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">:</span>
+            <span class="n">site</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span>
+        <span class="k">return</span> <span class="n">agent</span></div>
+
+
+    <span class="c1"># --- Pattern transformations ---</span>
+<div class="viewcode-block" id="KappaTransformer.pattern">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.pattern">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">agents</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">Agent</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">Pattern</span><span class="p">(</span><span class="n">agents</span><span class="o">=</span><span class="n">agents</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- Rule transformations ---</span>
+<div class="viewcode-block" id="KappaTransformer.label">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.label">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.rate">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.rate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="c1"># Transform the algebraic_expression tree into an Expression</span>
+        <span class="n">expr_tree</span> <span class="o">=</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ExpressionTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">expr_tree</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.rule_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.rule_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rule_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">mid_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">children</span><span class="p">)</span> <span class="k">if</span> <span class="n">child</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;-&gt;&quot;</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="n">left_agents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">right_agents</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">children</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">mid_idx</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">child</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
+                <span class="n">agent</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">Agent</span><span class="p">):</span>
+                <span class="n">agent</span> <span class="o">=</span> <span class="n">child</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mid_idx</span><span class="p">:</span>
+                <span class="n">left_agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">right_agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">Pattern</span><span class="p">(</span><span class="n">left_agents</span><span class="p">),</span> <span class="n">Pattern</span><span class="p">(</span><span class="n">right_agents</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.rev_rule_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.rev_rule_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rev_rule_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_expression</span><span class="p">(</span><span class="n">children</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.f_rule">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.f_rule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">f_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="c1"># children: [optional label], patterns tuple, [optional token], rate</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rates</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="n">child</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">Expression</span><span class="p">):</span>
+                <span class="n">rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">patterns</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">KappaRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.fr_rule">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.fr_rule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fr_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rates</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="n">child</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">Expression</span><span class="p">):</span>
+                <span class="n">rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">patterns</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">KappaRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">KappaRule</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.ambi_rule">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.ambi_rule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ambi_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rates</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="n">child</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">Expression</span><span class="p">):</span>
+                <span class="n">rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">patterns</span>
+        <span class="n">rules</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">rules</span></div>
+
+
+<div class="viewcode-block" id="KappaTransformer.ambi_fr_rule">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.KappaTransformer.ambi_fr_rule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ambi_fr_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rates</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">child</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="n">child</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">Expression</span><span class="p">):</span>
+                <span class="n">rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">patterns</span>
+        <span class="n">rules</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRule</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">rules</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ExpressionTransformer">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExpressionTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms a Lark ParseTree into an Expression object.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ExpressionTransformer.from_tree">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.from_tree">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_tree</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.algebraic_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.algebraic_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">algebraic_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;(&quot;</span> <span class="ow">and</span> <span class="n">children</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;)&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid algebraic expression: </span><span class="si">{</span><span class="n">children</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- Literals ---</span>
+<div class="viewcode-block" id="ExpressionTransformer.SIGNED_FLOAT">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.SIGNED_FLOAT">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SIGNED_FLOAT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.SIGNED_INT">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.SIGNED_INT">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SIGNED_INT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">value</span><span class="p">))</span></div>
+
+
+    <span class="c1"># --- Variables/Constants ---</span>
+<div class="viewcode-block" id="ExpressionTransformer.declared_variable_name">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.declared_variable_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">declared_variable_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.reserved_variable_name">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.reserved_variable_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reserved_variable_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;reserved_variable&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.pattern">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.pattern">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="c1"># Use KappaTransformer for pattern parsing</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">KappaTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="n">children</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;The pattern </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2"> must consist of a single component.&quot;</span>
+        <span class="n">component</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;component_pattern&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">component</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.defined_constant">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.defined_constant">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">defined_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;defined_constant&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- Operations ---</span>
+<div class="viewcode-block" id="ExpressionTransformer.binary_op_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.binary_op_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">binary_op_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">children</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;binary_op&quot;</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">op</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">right</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.binary_op">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.binary_op">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">binary_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.unary_op_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.unary_op_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unary_op_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">op</span><span class="p">,</span> <span class="n">child</span> <span class="o">=</span> <span class="n">children</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;unary_op&quot;</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">op</span><span class="p">,</span> <span class="n">child</span><span class="o">=</span><span class="n">child</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.unary_op">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.unary_op">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unary_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.list_op">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.list_op">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.list_op_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.list_op_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_op_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="o">=</span> <span class="n">children</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;list_op&quot;</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">op</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">args</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- Ternary Conditional ---</span>
+<div class="viewcode-block" id="ExpressionTransformer.conditional_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.conditional_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">conditional_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">cond</span><span class="p">,</span> <span class="n">true_expr</span><span class="p">,</span> <span class="n">false_expr</span> <span class="o">=</span> <span class="n">children</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span>
+            <span class="s2">&quot;conditional&quot;</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">cond</span><span class="p">,</span> <span class="n">true_expr</span><span class="o">=</span><span class="n">true_expr</span><span class="p">,</span> <span class="n">false_expr</span><span class="o">=</span><span class="n">false_expr</span>
+        <span class="p">)</span></div>
+
+
+    <span class="c1"># --- Boolean Logic ---</span>
+<div class="viewcode-block" id="ExpressionTransformer.boolean_expression">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.boolean_expression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boolean_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">children</span>
+            <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;comparison&quot;</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">right</span><span class="p">)</span>
+        <span class="c1"># Handle other boolean cases</span>
+        <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.TRUE">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.TRUE">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">TRUE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;boolean_literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExpressionTransformer.FALSE">
+<a class="viewcode-back" href="../../api/generated/pykappa.parsing.html#pykappa.parsing.ExpressionTransformer.FALSE">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FALSE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;boolean_literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo of PyKappa"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">PyKappa</a></h1>
+
+
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<div class="footer" style="margin-bottom: 0">
+  This work was funded by the John Templeton Foundation (grant no. 63448).
+</div>
+
+    <div class="footer">
+      &#169;2025, PyKappa Developers.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/berkalpay/pykappa" class="github">
+        <img src="../../_static/github-banner.svg" alt="Fork me on GitHub" class="github"/>
+    </a>
+    
+
+    
+<style>
+  .footer {
+    margin-top: 0 !important;
+  }
+</style>
+
+  </body>
+</html>

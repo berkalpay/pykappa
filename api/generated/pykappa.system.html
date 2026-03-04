@@ -198,8 +198,8 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p></li>
 <li><p><strong>rules</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a><em>]</em>)</p></li>
-<li><p><strong>observables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Expression</em><em>]</em>)</p></li>
-<li><p><strong>variables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Expression</em><em>]</em>)</p></li>
+<li><p><strong>observables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>]</em>)</p></li>
+<li><p><strong>variables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>]</em>)</p></li>
 <li><p><strong>monitor</strong> (<a class="reference internal" href="#pykappa.system.Monitor" title="pykappa.system.Monitor"><em>Monitor</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
 </ul>
@@ -233,7 +233,7 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dd><p>Dictionary mapping observable names to expressions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, pykappa.expression.Expression]</p>
+<dd class="field-odd"><p>dict[str, <a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression">pykappa.expression.Expression</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,7 +244,7 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 <dd><p>Dictionary mapping variable names to expressions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, pykappa.expression.Expression]</p>
+<dd class="field-odd"><p>dict[str, <a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression">pykappa.expression.Expression</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -403,7 +403,7 @@ whether the slope of recent values is sufficiently small relative to the mean.</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -566,7 +566,7 @@ Some features may not be compatible between PyKappa and KaSim.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -625,6 +625,9 @@ Some features may not be compatible between PyKappa and KaSim.</p>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.mixture.html">pykappa.mixture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.rule.html">pykappa.rule</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.pattern.html">pykappa.pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.parsing.html">pykappa.parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.expression.html">pykappa.expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.plot.html">pykappa.plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.utils.html">pykappa.utils</a></li>
 </ul>
 </li>

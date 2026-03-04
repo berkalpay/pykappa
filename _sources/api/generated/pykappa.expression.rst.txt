@@ -1,0 +1,18 @@
+﻿pykappa.expression
+==================
+
+.. automodule:: pykappa.expression
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      parse_operator
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Expression
+   
