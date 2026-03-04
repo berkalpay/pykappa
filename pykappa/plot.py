@@ -32,7 +32,7 @@ class ComponentPlot:
         return {id(a): self._positions[id(a)] for a in self.component.agents}
 
     def __call__(self, legend: bool = True):
-        agent_types = list(dict.fromkeys(a.type for a in self.component.agents))
+        agent_types = sorted(dict.fromkeys(a.type for a in self.component.agents))
         type_color = {
             t: "#{:02x}{:02x}{:02x}".format(
                 *[
