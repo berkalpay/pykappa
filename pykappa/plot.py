@@ -59,14 +59,16 @@ class ComponentPlot:
             "  edge  [penwidth=0.3];",
         ]
         if legend:
-            lines += [
-                "  subgraph cluster_legend {",
-                "    style=invis;",
-                "    node [shape=circle, width=0.15, height=0.15, fixedsize=true, style=filled, fontsize=8, labelloc=r];",
-            ]
-            for t, color in type_color.items():
-                lines.append(f'    legend_{t} [label="{t}", fillcolor="{color}"];')
-            lines.append("  }")
+            min_y = min(y for x, y in pos.values())
+            max_x = max(x for x, y in pos.values())
+            lx = max_x + 2.0
+            legend_vertical_spacing = 0.5
+            for i, (t, color) in enumerate(reversed(type_color.items())):
+                ly = min_y + i * legend_vertical_spacing
+                lines.append(
+                    f'  legend_{t} [shape=box, style=filled, fillcolor="{color}", '
+                    f'label="{t}", fontsize=8, fixedsize=false, margin="0.05,0.02", pos="{lx:.3f},{ly:.3f}!"];'
+                )
         for a in self.component.agents:
             color = type_color[a.type]
             x, y = pos[id(a)]
