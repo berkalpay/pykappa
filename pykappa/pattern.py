@@ -3,6 +3,7 @@ from functools import cached_property
 from itertools import permutations
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
+from pykappa.plot import ComponentPlot
 from pykappa.utils import Counted, IndexedSet
 
 if TYPE_CHECKING:
@@ -296,6 +297,7 @@ class Component(Counted):
         self.agents = IndexedSet(agents)  # TODO: order by graph traversal
         self.agents.create_index("type", lambda a: [a.type])
         self.n_copies = n_copies
+        self.plot = ComponentPlot(self)
 
     def __iter__(self):
         yield from self.agents
@@ -433,54 +435,6 @@ class Component(Counted):
             return depth
 
         return max(bfs_depth(a) for a in self.agents)
-
-    def plot(self, legend: bool = True) -> None:
-        """Plot the component using graphviz."""
-        import colorsys
-        from graphviz import Source
-
-        agent_types = list(dict.fromkeys(a.type for a in self.agents))
-        type_color = {
-            t: "#{:02x}{:02x}{:02x}".format(
-                *[
-                    int(c * 255)
-                    for c in colorsys.hls_to_rgb(i / max(len(agent_types), 1), 0.4, 0.8)
-                ]
-            )
-            for i, t in enumerate(agent_types)
-        }
-
-        edges = set()
-        for a in self.agents:
-            for b in a.neighbors:
-                if a is b:
-                    continue
-                edges.add(tuple(sorted((id(a), id(b)))))
-
-        lines = [
-            "graph {",
-            "  graph [overlap=false, splines=false, nodesep=0.05, ranksep=0.05];",
-            "  layout=twopi;",  # radial layout
-            '  node  [shape=circle, width=0.05, height=0.05, fixedsize=true, label="", style=filled];',
-            "  edge  [penwidth=0.3];",
-        ]
-        if legend:
-            lines += [
-                "  subgraph cluster_legend {",
-                '    label="Legend"; style=filled; fillcolor=white; fontsize=10;',
-                "    node [shape=circle, width=0.15, height=0.15, fixedsize=true, style=filled, fontsize=8, labelloc=r];",
-            ]
-            for t, color in type_color.items():
-                lines.append(f'    legend_{t} [label="{t}", fillcolor="{color}"];')
-            lines.append("  }")
-        for a in self.agents:
-            color = type_color[a.type]
-            lines.append(f'  a{id(a)} [fillcolor="{color}"];')
-        for u, v in edges:
-            lines.append(f"  a{u} -- a{v};")
-        lines.append("}")
-
-        return Source("\n".join(lines), engine="twopi")
 
 
 class Pattern:
