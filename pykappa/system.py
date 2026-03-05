@@ -486,46 +486,6 @@ class System:
         if self.monitor:
             self.monitor.update()
 
-    def update_until(
-        self,
-        condition: Callable[[Self], bool],
-        max_time: Optional[float] = None,
-        max_updates: Optional[int] = None,
-        check_interval: int = 100,
-    ) -> bool:
-        """Run simulation until a condition of the system has been met.
-
-        Args:
-            condition: A function of a system that returns whether the desired condition is met.
-            max_time: Maximum simulation time (None for no limit).
-            max_updates: Maximum number of updates (None for no limit).
-            check_interval: Number of updates between condition checks.
-
-        Returns:
-            True if condition was met, False if limits were reached first.
-        """
-        start_time = self.time
-        n_updates = 0
-
-        while True:
-            for _ in range(check_interval):
-                if (max_time is not None and self.time - start_time >= max_time) or (
-                    max_updates is not None and n_updates >= max_updates
-                ):
-                    return False
-
-                self.update()
-                n_updates += 1
-
-            try:
-                if condition(self):
-                    return True
-            except Exception as e:
-                warnings.warn(
-                    f"Condition function raised an exception during update_until: {e}",
-                    RuntimeWarning,
-                )
-
 
 class Monitor:
     """Records the history of the values of observables in a system.

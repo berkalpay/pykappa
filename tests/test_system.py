@@ -291,27 +291,6 @@ def test_equilibrated():
     assert system.monitor.equilibrated("AB")
 
 
-def test_update_until_equilibrated():
-    system = System.from_ka(
-        """
-        %init: 1000 A(x[.])
-        %init: 1000 B(x[.])
-
-        %obs: 'AB' |A(x[1]), B(x[1])|
-        %obs: 'A_free' |A(x[.])|
-
-        A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0
-        """
-    )
-
-    for _ in range(100):
-        system.update()
-    assert not system.monitor.equilibrated()
-
-    assert system.update_until(lambda s: s.monitor.equilibrated(), max_updates=10**5)
-    assert system.monitor.equilibrated()
-
-
 def test_uniqueness_and_persistence_of_agent_ids():
     system = System.from_ka(
         """
