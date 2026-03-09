@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>
+  
+  pykappa.analysis — PyKappa
+  
+</title>
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=ee3c7c2a" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pykappa.utils" href="pykappa.utils.html" />
+    <link rel="prev" title="pykappa.expression" href="pykappa.expression.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pykappa.analysis">
+<span id="pykappa-analysis"></span><h1>pykappa.analysis<a class="headerlink" href="#module-pykappa.analysis" title="Link to this heading">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.equilibrated" title="pykappa.analysis.equilibrated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibrated</span></code></a>(values[, times, tail_fraction, ...])</p></td>
+<td><p>Checks whether the magnitude of the slope of the tail of the series relative to the mean is sufficiently small (below tolerance).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.equilibration_time" title="pykappa.analysis.equilibration_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibration_time</span></code></a>(values[, times, ...])</p></td>
+<td><p>Earliest time from which the remaining series is equilibrated.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.equilibrium_value" title="pykappa.analysis.equilibrium_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibrium_value</span></code></a>(values[, times, ...])</p></td>
+<td><p>Mean of the series from the equilibration point onward.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.relative_slope" title="pykappa.analysis.relative_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relative_slope</span></code></a>(values[, times, tail_fraction])</p></td>
+<td><p>Computes the magnitude of the slope of the tail of the series.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.ComponentPlot" title="pykappa.analysis.ComponentPlot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComponentPlot</span></code></a>(component)</p></td>
+<td><p>Stable visualization of a Component across simulation steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.Monitor" title="pykappa.analysis.Monitor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Monitor</span></code></a>(system)</p></td>
+<td><p>Records the history of the values of observables in a system.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykappa.analysis.ComponentPlot">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">ComponentPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#ComponentPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.ComponentPlot" title="Link to this definition">¶</a></dt>
+<dd><p>Stable visualization of a Component across simulation steps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>component</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">Monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#Monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.Monitor" title="Link to this definition">¶</a></dt>
+<dd><p>Records the history of the values of observables in a system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.system">
+<span class="sig-name descname"><span class="pre">system</span></span><a class="headerlink" href="#pykappa.analysis.Monitor.system" title="Link to this definition">¶</a></dt>
+<dd><p>The system being monitored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System">System</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.history">
+<span class="sig-name descname"><span class="pre">history</span></span><a class="headerlink" href="#pykappa.analysis.Monitor.history" title="Link to this definition">¶</a></dt>
+<dd><p>Dictionary mapping observable names to their value history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, list[float | None]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.dataframe">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dataframe</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></span><a class="headerlink" href="#pykappa.analysis.Monitor.dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Get the history of observable values as a pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame with time and observable columns.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.equilibrated">
+<span class="sig-name descname"><span class="pre">equilibrated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observable_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">equilibration_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#Monitor.equilibrated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.Monitor.equilibrated" title="Link to this definition">¶</a></dt>
+<dd><p>Check if an observable (or all observables) has equilibrated based on
+whether the slope of recent values is sufficiently small relative to the mean.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>observable_name</strong> (<em>str</em><em> | </em><em>None</em>) – Name of the observable to check. If None, checks all observables.</p></li>
+<li><p><strong>tail_fraction</strong> – Fraction of the history to consider.</p></li>
+<li><p><strong>tolerance</strong> – Maximum allowed fraction slope deviation from the mean.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">history</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.measure">
+<span class="sig-name descname"><span class="pre">measure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observable_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#Monitor.measure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.Monitor.measure" title="Link to this definition">¶</a></dt>
+<dd><p>Get the value of an observable at a specific time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If simulation hasn’t reached the specified time.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>observable_name</strong> (<em>str</em>)</p></li>
+<li><p><strong>time</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">combined</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#Monitor.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.Monitor.plot" title="Link to this definition">¶</a></dt>
+<dd><p>Make a plot of all observables over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>combined</strong> (<em>bool</em>) – Whether to plot all observables on the same axes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Figure</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">system</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><span class="pre">System</span></a></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.tail_mean">
+<span class="sig-name descname"><span class="pre">tail_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observable_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#Monitor.tail_mean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.Monitor.tail_mean" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the average value of an observable over a fraction of the tail.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>observable_name</strong> (<em>str</em>) – Name of the observable to measure.</p></li>
+<li><p><strong>tail_fraction</strong> (<em>float</em>) – Fraction of the history to consider (from the end).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If there are not enough measurements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.analysis.Monitor.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#Monitor.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.Monitor.update" title="Link to this definition">¶</a></dt>
+<dd><p>Record current time and observable values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.analysis.equilibrated">
+<span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">equilibrated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#equilibrated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.equilibrated" title="Link to this definition">¶</a></dt>
+<dd><p>Checks whether the magnitude of the slope of the tail of the series relative to the mean
+is sufficiently small (below tolerance). Time can be provided to account for non-uniform
+sampling intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>times</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>tail_fraction</strong> (<em>float</em>)</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.analysis.equilibration_time">
+<span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">equilibration_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_tail_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#equilibration_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.equilibration_time" title="Link to this definition">¶</a></dt>
+<dd><p>Earliest time from which the remaining series is equilibrated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>times</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>min_tail_length</strong> (<em>int</em>)</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.analysis.equilibrium_value">
+<span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">equilibrium_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_tail_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#equilibrium_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.equilibrium_value" title="Link to this definition">¶</a></dt>
+<dd><p>Mean of the series from the equilibration point onward.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>times</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>min_tail_length</strong> (<em>int</em>)</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.analysis.relative_slope">
+<span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">relative_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#relative_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.relative_slope" title="Link to this definition">¶</a></dt>
+<dd><p>Computes the magnitude of the slope of the tail of the series.
+Time can be provided to account for non-uniform sampling intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If there are not enough measurements to compute the slope.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>times</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>tail_fraction</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo of PyKappa"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">PyKappa</a></h1>
+
+
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pykappa.system.html">pykappa.system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.mixture.html">pykappa.mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.rule.html">pykappa.rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.pattern.html">pykappa.pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.parsing.html">pykappa.parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.expression.html">pykappa.expression</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pykappa.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.utils.html">pykappa.utils</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">API reference</a><ul>
+      <li>Previous: <a href="pykappa.expression.html" title="previous chapter">pykappa.expression</a></li>
+      <li>Next: <a href="pykappa.utils.html" title="next chapter">pykappa.utils</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<div class="footer" style="margin-bottom: 0">
+  This work was funded by the John Templeton Foundation (grant no. 63448).
+</div>
+
+    <div class="footer">
+      &#169;2025, PyKappa Developers.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/api/generated/pykappa.analysis.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/berkalpay/pykappa" class="github">
+        <img src="../../_static/github-banner.svg" alt="Fork me on GitHub" class="github"/>
+    </a>
+    
+
+    
+<style>
+  .footer {
+    margin-top: 0 !important;
+  }
+</style>
+
+  </body>
+</html>

@@ -21,5 +21,5 @@ API reference
    :toctree: generated
    :recursive:
 
-   pykappa.plot
+   pykappa.analysis
    pykappa.utils

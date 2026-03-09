@@ -22,7 +22,7 @@
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="pykappa.plot" href="pykappa.plot.html" />
+    <link rel="prev" title="pykappa.analysis" href="pykappa.analysis.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -45,13 +45,10 @@
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.utils.equilibrated" title="pykappa.utils.equilibrated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibrated</span></code></a>(values, times[, tail_fraction, ...])</p></td>
-<td><p>Checks whether the magnitude of the slope of the tail of the series relative to the mean is sufficiently small (below tolerance).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.utils.rejection_sample" title="pykappa.utils.rejection_sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rejection_sample</span></code></a>(population, excluded[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.utils.rejection_sample" title="pykappa.utils.rejection_sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rejection_sample</span></code></a>(population, excluded[, ...])</p></td>
 <td><p>Randomly sample an element from <cite>population</cite> that is not in <cite>excluded</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.utils.str_table" title="pykappa.utils.str_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str_table</span></code></a>(rows[, header])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.utils.str_table" title="pykappa.utils.str_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str_table</span></code></a>(rows[, header])</p></td>
 <td><p>Format rows into a table with aligned columns.</p></td>
 </tr>
 </tbody>
@@ -242,30 +239,6 @@ teams.lookup(“color”, “blue”) # Returns all teams with blue jerseys
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pykappa.utils.equilibrated">
-<span class="sig-prename descclassname"><span class="pre">pykappa.utils.</span></span><span class="sig-name descname"><span class="pre">equilibrated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/utils.html#equilibrated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.utils.equilibrated" title="Link to this definition">¶</a></dt>
-<dd><p>Checks whether the magnitude of the slope of the tail of the series relative to the mean
-is sufficiently small (below tolerance). Time can be provided to account for non-uniform
-sampling intervals.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – If there are not enough measurements to assess equilibration.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>)</p></li>
-<li><p><strong>times</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>tail_fraction</strong> (<em>float</em>)</p></li>
-<li><p><strong>tolerance</strong> (<em>float</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pykappa.utils.rejection_sample">
 <span class="sig-prename descclassname"><span class="pre">pykappa.utils.</span></span><span class="sig-name descname"><span class="pre">rejection_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/utils.html#rejection_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.utils.rejection_sample" title="Link to this definition">¶</a></dt>
 <dd><p>Randomly sample an element from <cite>population</cite> that is not in <cite>excluded</cite>.</p>
@@ -339,7 +312,7 @@ sampling intervals.</p>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.pattern.html">pykappa.pattern</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.parsing.html">pykappa.parsing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.expression.html">pykappa.expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pykappa.plot.html">pykappa.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.analysis.html">pykappa.analysis</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pykappa.utils</a></li>
 </ul>
 </li>
@@ -350,7 +323,7 @@ sampling intervals.</p>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">API reference</a><ul>
-      <li>Previous: <a href="pykappa.plot.html" title="previous chapter">pykappa.plot</a></li>
+      <li>Previous: <a href="pykappa.analysis.html" title="previous chapter">pykappa.analysis</a></li>
   </ul></li>
   </ul></li>
 </ul>

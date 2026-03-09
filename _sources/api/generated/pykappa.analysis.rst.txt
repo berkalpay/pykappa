@@ -1,0 +1,22 @@
+﻿pykappa.analysis
+================
+
+.. automodule:: pykappa.analysis
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      equilibrated
+      equilibration_time
+      equilibrium_value
+      relative_slope
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ComponentPlot
+      Monitor
+   
