@@ -7,17 +7,12 @@ from collections import defaultdict
 from functools import cached_property
 from typing import Optional, Iterable, Self
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.figure
-
 from pykappa.mixture import Mixture
 from pykappa.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
 from pykappa.pattern import Component, Pattern
 from pykappa.expression import Expression
+from pykappa.analysis import Monitor
 from pykappa.utils import str_table
-from pykappa.analysis import equilibrated as _equilibrated
 
 
 class System:
@@ -486,132 +481,3 @@ class System:
         self.time += time
         if self.monitor:
             self.monitor.update()
-
-
-class Monitor:
-    """Records the history of the values of observables in a system.
-
-    Attributes:
-        system: The system being monitored.
-        history: Dictionary mapping observable names to their value history.
-    """
-
-    system: System
-    history: dict[str, list[Optional[float]]]
-
-    def __init__(self, system: System):
-        """Initialize a monitor for the given system."""
-        self.system = system
-        self.history = {"time": []} | {obs_name: [] for obs_name in system.observables}
-
-    def __len__(self) -> int:
-        """The number of records."""
-        return len(self.history["time"])
-
-    def update(self) -> None:
-        """Record current time and observable values."""
-        self.history["time"].append(self.system.time)
-        for obs_name in self.system.observables:
-            if obs_name not in self.history:
-                self.history[obs_name] = [None] * (len(self.history["time"]) - 1)
-            self.history[obs_name].append(self.system[obs_name])
-
-    def measure(self, observable_name: str, time: Optional[float] = None):
-        """Get the value of an observable at a specific time.
-
-        Raises:
-            AssertionError: If simulation hasn't reached the specified time.
-        """
-        import bisect
-
-        times: list[int] = list(self.history["time"])
-        if time is None:
-            time = times[-1]
-        assert time <= max(times), "Simulation hasn't reached time {time}"
-
-        return self.history[observable_name][bisect.bisect_right(times, time) - 1]
-
-    @property
-    def dataframe(self) -> pd.DataFrame:
-        """Get the history of observable values as a pandas DataFrame.
-
-        Returns:
-            DataFrame with time and observable columns.
-        """
-        return pd.DataFrame(self.history)
-
-    def tail_mean(
-        self,
-        observable_name: str,
-        tail_fraction: float = 0.1,
-    ) -> float:
-        """
-        Calculate the average value of an observable over a fraction of the tail.
-
-        Args:
-            observable_name: Name of the observable to measure.
-            tail_fraction: Fraction of the history to consider (from the end).
-
-        Raises:
-            AssertionError: If there are not enough measurements.
-        """
-        window_len = int(tail_fraction * len(self))
-        assert (
-            len(self) >= window_len and window_len >= 1
-        ), f"Not enough measurements ({len(self)}) to calculate tail mean for {observable_name}"
-
-        values = np.asarray(self.history[observable_name][-window_len:], dtype=float)
-        return float(np.mean(values))
-
-    def equilibrated(
-        self,
-        observable_name: Optional[str] = None,
-        **equilibration_kwargs,
-    ) -> bool:
-        """
-        Check if an observable (or all observables) has equilibrated based on
-        whether the slope of recent values is sufficiently small relative to the mean.
-
-        Args:
-            observable_name: Name of the observable to check. If None, checks all observables.
-            tail_fraction: Fraction of the history to consider.
-            tolerance: Maximum allowed fraction slope deviation from the mean.
-        """
-        if observable_name is None:
-            return all(
-                self.equilibrated(obs_name, **equilibration_kwargs)
-                for obs_name in self.system.observables
-            )
-
-        values = self.history[observable_name]
-        times = self.history["time"]
-        assert all(v is not None for v in values)
-        assert all(t is not None for t in times)
-        return _equilibrated(values=values, times=times, **equilibration_kwargs)
-
-    def plot(self, combined: bool = False) -> matplotlib.figure.Figure:
-        """Make a plot of all observables over time.
-
-        Args:
-            combined: Whether to plot all observables on the same axes.
-        """
-        if combined:
-            fig, ax = plt.subplots()
-            for obs_name in self.system.observables:
-                ax.plot(self.history["time"], self.history[obs_name], label=obs_name)
-            plt.legend()
-            plt.xlabel("Time")
-            plt.ylabel("Observable")
-            plt.margins(0, 0)
-        else:
-            fig, axs = plt.subplots(
-                len(self.system.observables), 1, sharex=True, layout="constrained"
-            )
-            if len(self.system.observables) == 1:
-                axs = [axs]
-            for i, obs_name in enumerate(self.system.observables):
-                axs[i].plot(self.history["time"], self.history[obs_name], color="black")
-                axs[i].set_title(obs_name)
-                if i == len(self.system.observables) - 1:
-                    axs[i].set_xlabel("Time")
-        return fig
