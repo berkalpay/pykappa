@@ -5,7 +5,7 @@ import random
 import warnings
 from collections import defaultdict
 from functools import cached_property
-from typing import Callable, Optional, Iterable, Self
+from typing import Optional, Iterable, Self
 
 import numpy as np
 import pandas as pd
@@ -16,7 +16,8 @@ from pykappa.mixture import Mixture
 from pykappa.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
 from pykappa.pattern import Component, Pattern
 from pykappa.expression import Expression
-from pykappa.utils import str_table, equilibrated as _equilibrated
+from pykappa.utils import str_table
+from pykappa.analysis import equilibrated as _equilibrated
 
 
 class System:
