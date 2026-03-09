@@ -6,9 +6,35 @@ from collections.abc import Callable, Hashable
 import numpy as np
 
 
+def relative_slope(
+    values: list[float], times: Optional[list[float]] = None, tail_fraction: float = 0.1
+) -> float:
+    """
+    Computes the magnitude of the slope of the tail of the series.
+    Time can be provided to account for non-uniform sampling intervals.
+
+    Raises:
+        AssertionError: If there are not enough measurements to compute the slope.
+    """
+    times = times if times is not None else list(range(len(values)))
+
+    t_tail = times[-1] - tail_fraction * (times[-1] - times[0])
+    tail_indices = [i for i, t in enumerate(times) if t >= t_tail]
+
+    assert (
+        len(tail_indices) >= 2
+    ), f"Not enough measurements ({len(tail_indices)}) to compute slope"
+
+    tail_times = [times[i] for i in tail_indices]
+    tail_values = [values[i] for i in tail_indices]
+    slope, _ = np.polyfit(tail_times, tail_values, deg=1)
+
+    return float(slope / np.mean(tail_values))
+
+
 def equilibrated(
     values: list[float],
-    times: Optional[list[float]],
+    times: Optional[list[float]] = None,
     tail_fraction: float = 0.1,
     tolerance: float = 0.01,
 ) -> bool:
@@ -16,20 +42,8 @@ def equilibrated(
     Checks whether the magnitude of the slope of the tail of the series relative to the mean
     is sufficiently small (below tolerance). Time can be provided to account for non-uniform
     sampling intervals.
-
-    Raises:
-        AssertionError: If there are not enough measurements to assess equilibration.
     """
-    window_len = int(tail_fraction * len(values))
-    assert (
-        len(values) >= window_len and window_len >= 2
-    ), f"Not enough measurements ({window_len}) to assess equilibration"
-
-    times = times[-window_len:] if times is not None else list(range(window_len))
-    values = values[-window_len:]
-    slope, _ = np.polyfit(times, values, deg=1)
-
-    return abs(slope / np.mean(values)) <= tolerance
+    return abs(relative_slope(values, times, tail_fraction)) <= tolerance
 
 
 def str_table(rows: list[list], header: Optional[list] = None) -> str:
