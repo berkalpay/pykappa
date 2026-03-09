@@ -3,7 +3,7 @@ from functools import cached_property
 from itertools import permutations
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
-from pykappa.plot import ComponentPlot
+from pykappa.analysis import ComponentPlot
 from pykappa.utils import Counted, IndexedSet
 
 if TYPE_CHECKING:
