@@ -46,6 +46,33 @@ def equilibrated(
     return abs(relative_slope(values, times, tail_fraction)) <= tolerance
 
 
+def equilibration_time(
+    values: list[float],
+    times: Optional[list[float]] = None,
+    min_tail_length: int = 2,
+    tolerance: float = 0.01,
+) -> float:
+    """Earliest time from which the remaining series is equilibrated."""
+    times = times if times is not None else list(range(len(values)))
+    for i in range(len(values) - min_tail_length + 1):
+        if abs(relative_slope(values[i:], times[i:], tail_fraction=1.0)) <= tolerance:
+            return times[i]
+    raise ValueError(f"Equilibrium not detected (tolerance={tolerance})")
+
+
+def equilibrium_value(
+    values: list[float],
+    times: Optional[list[float]] = None,
+    min_tail_length: int = 2,
+    tolerance: float = 0.01,
+) -> float:
+    """Mean of the series from the equilibration point onward."""
+    times = times if times is not None else list(range(len(values)))
+    eq_time = equilibration_time(values, times, min_tail_length, tolerance)
+    eq_index = next(i for i, t in enumerate(times) if t >= eq_time)
+    return float(np.mean(values[eq_index:]))
+
+
 def str_table(rows: list[list], header: Optional[list] = None) -> str:
     """Format rows into a table with aligned columns."""
     all_rows = [header] + rows if header else rows
