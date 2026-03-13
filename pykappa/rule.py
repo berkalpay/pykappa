@@ -1,6 +1,5 @@
 import random
 from math import prod
-from abc import ABC, abstractmethod
 from typing import Optional, Self, TYPE_CHECKING
 from functools import cached_property
 from copy import deepcopy
