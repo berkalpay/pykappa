@@ -77,7 +77,7 @@ class Mixture:
         """The mixture in Kappa format with %init declarations."""
         return "\n".join(
             f"%init: {len(components)} {group.kappa_str}"
-            for group, components in group_by_isomorphism(
+            for group, components in _group_by_isomorphism(
                 list(component for component in self)
             ).items()
         )
@@ -409,13 +409,11 @@ def neighborhood(agents: Iterable[Agent], radius: int) -> set[Agent]:
     return seen
 
 
-def group_by_isomorphism(
+def _group_by_isomorphism(
     components: Iterable[Component],
 ) -> dict[Component, list[Component]]:
-    """Group components by isomorphism.
-
-    Returns:
-        Dictionary mapping representative components to lists of isomorphic components.
+    """Returns a dictionary mapping representative components to lists
+    of isomorphic components.
     """
     grouped: dict[Component, list[Component]] = {}
     for component in components:
