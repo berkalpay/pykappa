@@ -1,5 +1,8 @@
 import math
 import colorsys
+import shutil
+import tempfile
+import os
 from typing import TYPE_CHECKING, Optional
 
 import numpy as np
