@@ -133,7 +133,7 @@ class Agent(Counted):
         Raises:
             AssertionError: If the string doesn't describe exactly one agent.
         """
-        from pykappa.parsing import kappa_parser, KappaTransformer
+        from pykappa._parsing import kappa_parser, KappaTransformer
 
         # Check pattern describes only a single agent
         input_tree = kappa_parser.parse(kappa_str)
@@ -459,7 +459,7 @@ class Pattern:
         Raises:
             AssertionError: If the string doesn't describe exactly one pattern.
         """
-        from pykappa.parsing import kappa_parser, KappaTransformer
+        from pykappa._parsing import kappa_parser, KappaTransformer
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"

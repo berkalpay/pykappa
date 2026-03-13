@@ -54,7 +54,7 @@ class Rule:
         Note:
             Forward-reverse rules (with "<->") represent two rules.
         """
-        from pykappa.parsing import kappa_parser, KappaTransformer
+        from pykappa._parsing import kappa_parser, KappaTransformer
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"
