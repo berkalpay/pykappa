@@ -455,7 +455,7 @@ class System:
             warnings.warn("system has no reactivity: no rule applied", RuntimeWarning)
             return None
 
-    def apply_rule(self, rule: Rule) -> None:
+    def _apply_rule(self, rule: Rule) -> None:
         """Apply a rule to the mixture and update tallies."""
         update = rule._select(self.mixture)
         if update is not None:
@@ -472,7 +472,7 @@ class System:
 
         self.wait()
         if (rule := self.choose_rule()) is not None:
-            self.apply_rule(rule)
+            self._apply_rule(rule)
 
         if self.monitor is not None:
             self.monitor.update()
