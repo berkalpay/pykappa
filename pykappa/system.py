@@ -329,7 +329,7 @@ class System:
             rev = self.rules[rev_name]
             kappa_list.append(
                 f"{fwd.left.kappa_str} <-> {fwd.right.kappa_str} "
-                f"@ {fwd.rate_str}, {rev.rate_str}"
+                f"@ {fwd._rate_str}, {rev._rate_str}"
             )
         # Otherwise format with -> notation
         for name, rule in self.rules.items():
