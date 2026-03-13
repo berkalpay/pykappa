@@ -56,7 +56,7 @@ def test_simple_rule_application():
     assert system["o1"] == 0
 
     for i in range(1, n_copies + 1):
-        update = rule.select(system.mixture)
+        update = rule._select(system.mixture)
         assert len(update.edges_to_remove) == 1
 
         system.mixture._apply_update(update)
@@ -83,7 +83,7 @@ def test_edge_creating_rule_application():
     assert rule.n_embeddings(system.mixture) == n_copies * n_copies
     assert system["o0"] == 0
     for _ in range(1, n_copies + 1):
-        update = rule.select(system.mixture)
+        update = rule._select(system.mixture)
         assert len(update.edges_to_add) == 1
         system.mixture._apply_update(update)
     assert system["o0"] == n_copies
@@ -110,7 +110,7 @@ def test_rule_application():
     assert system["o1"] == 0
 
     for i in range(1, n_copies + 1):
-        update = rule.select(system.mixture)
+        update = rule._select(system.mixture)
         assert len(update.edges_to_remove) == 2
         assert len(update.edges_to_add) == 1
         assert len(update.agents_changed) == 1
@@ -143,7 +143,7 @@ def test_simple_unimolecular_rule_application(n_copies):
     n_rule2_applications = n_copies // 2
 
     for i in range(1, n_rule2_applications + 1):
-        update = rule2.select(system.mixture)
+        update = rule2._select(system.mixture)
         system.mixture._apply_update(update)
         assert system["o0"] == n_copies - i
         assert len(system.mixture.components) == n_copies + i
@@ -153,7 +153,7 @@ def test_simple_unimolecular_rule_application(n_copies):
         rule1.n_embeddings(
             system.mixture
         )  # Uni/bimolecular rules use this to weight choices
-        update = rule1.select(system.mixture)
+        update = rule1._select(system.mixture)
         system.mixture._apply_update(update)
         assert rule1.n_embeddings(system.mixture) == n_copies - n_rule2_applications - i
         assert system["o0"] == n_copies - n_rule2_applications - i
@@ -175,7 +175,7 @@ def test_simple_bimolecular_rule_application(n_copies):
         rule1.n_embeddings(
             system.mixture
         )  # Uni/bimolecular rules use this to weight choices
-        update = rule1.select(system.mixture)
+        update = rule1._select(system.mixture)
         system.mixture._apply_update(update)
         assert rule1.n_embeddings(system.mixture) == 2 * comb(n_copies - 2 * i, 2)
         assert system["o0"] == i

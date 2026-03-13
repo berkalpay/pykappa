@@ -457,7 +457,7 @@ class System:
 
     def apply_rule(self, rule: Rule) -> None:
         """Apply a rule to the mixture and update tallies."""
-        update = rule.select(self.mixture)
+        update = rule._select(self.mixture)
         if update is not None:
             self.tallies[str(rule)]["applied"] += 1
             self.mixture._apply_update(update)

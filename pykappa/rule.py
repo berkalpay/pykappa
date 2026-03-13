@@ -161,7 +161,7 @@ class Rule:
             len(mixture.embeddings(component)) for component in self.left.components
         )
 
-    def select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
+    def _select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
         """Select agents and specify the update (or None for invalid match).
 
         Note:
@@ -282,7 +282,7 @@ class UnimolecularRule(Rule):
             count += weight
         return count
 
-    def select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
+    def _select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
         """Select agents and specify the update (or None for invalid match).
 
         Note:
@@ -348,7 +348,7 @@ class BimolecularRule(Rule):
 
         return count
 
-    def select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
+    def _select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
         """Select agents and specify the update (or None for invalid match).
 
         Note:
