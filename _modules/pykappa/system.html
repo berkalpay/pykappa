@@ -49,7 +49,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Self</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">,</span> <span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.expression</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Monitor</span>
@@ -219,7 +219,7 @@
         <span class="n">real_rules</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">rules</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
-                <span class="n">real_rules</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">KappaRule</span><span class="o">.</span><span class="n">list_from_kappa</span><span class="p">(</span><span class="n">rule</span><span class="p">))</span>
+                <span class="n">real_rules</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Rule</span><span class="o">.</span><span class="n">list_from_kappa</span><span class="p">(</span><span class="n">rule</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">observables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">real_observables</span> <span class="o">=</span> <span class="p">{}</span>
@@ -275,7 +275,7 @@
 
         <span class="n">mixture</span> <span class="o">=</span> <span class="n">Mixture</span><span class="p">()</span> <span class="k">if</span> <span class="n">mixture</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mixture</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-            <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span><span class="p">]</span>
+            <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
         <span class="p">):</span>
             <span class="n">mixture</span><span class="o">.</span><span class="n">enable_component_tracking</span><span class="p">()</span>
@@ -441,9 +441,9 @@
         <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">,</span> <span class="s2">&quot;Rule </span><span class="si">{name}</span><span class="s2"> already exists in the system&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">rule</span> <span class="o">=</span> <span class="n">KappaRule</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+            <span class="n">rule</span> <span class="o">=</span> <span class="n">Rule</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">enable_component_tracking</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_track_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
@@ -469,10 +469,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_track_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Track components mentioned in the left hand side of a Rule.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
-                <span class="c1"># TODO: For efficiency check for isomorphism with already-tracked components</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+            <span class="c1"># TODO: For efficiency check for isomorphism with already-tracked components</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_track_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Track the Components in the given expression.</span>
@@ -565,10 +564,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;KaSim&quot;</span><span class="p">),</span> <span class="s2">&quot;KaSim not found in the PATH.&quot;</span>
 
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">KappaRule</span><span class="p">)</span> <span class="ow">and</span> <span class="n">rule</span><span class="o">.</span><span class="n">n_symmetries</span> <span class="o">&gt;</span> <span class="mi">1</span>
-            <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">n_symmetries</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;Some rules have multiple symmetries. &quot;</span>
                 <span class="s2">&quot;PyKappa normalizes reactivities accordingly: results may differ from KaSim.&quot;</span>

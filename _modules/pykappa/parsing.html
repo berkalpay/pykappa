@@ -43,7 +43,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lark</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lark</span><span class="p">,</span> <span class="n">ParseTree</span><span class="p">,</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">Token</span><span class="p">,</span> <span class="n">Transformer</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">SiteType</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">KappaRule</span><span class="p">,</span> <span class="n">KappaRuleUnimolecular</span><span class="p">,</span> <span class="n">KappaRuleBimolecular</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.expression</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
 
 
@@ -257,7 +257,7 @@
                 <span class="n">rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
 
         <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">patterns</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">KappaRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Rule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span></div>
 
 
 <div class="viewcode-block" id="KappaTransformer.fr_rule">
@@ -273,7 +273,7 @@
                 <span class="n">rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
 
         <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">patterns</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">KappaRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">KappaRule</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Rule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">Rule</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span></div>
 
 
 <div class="viewcode-block" id="KappaTransformer.ambi_rule">
@@ -293,15 +293,15 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UnimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UnimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
         <span class="k">return</span> <span class="n">rules</span></div>
 
@@ -325,17 +325,17 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleBimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UnimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UnimolecularRule</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-        <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KappaRule</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rule</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">rates</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
 
         <span class="k">return</span> <span class="n">rules</span></div>
 </div>

@@ -81,45 +81,7 @@
 
 <div class="viewcode-block" id="Rule">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Rule</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for all rule types.&quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="Rule.reactivity">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.reactivity">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the total reactivity of this rule in the given system.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_embeddings</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Rule.rate">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.rate">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the stochastic rate of the rule.&quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="Rule.n_embeddings">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.n_embeddings">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count the number of ways this rule can be applied to the mixture.&quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="Rule.select">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.select">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for null event).&quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-</div>
-
-
-
-<div class="viewcode-block" id="KappaRule">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">KappaRule</span><span class="p">(</span><span class="n">Rule</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Rule</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard Kappa rule with left-hand side, right-hand side, and rate.</span>
 
 <span class="sd">    Attributes:</span>
@@ -132,8 +94,8 @@
     <span class="n">right</span><span class="p">:</span> <span class="n">Pattern</span>
     <span class="n">stochastic_rate</span><span class="p">:</span> <span class="n">Expression</span>
 
-<div class="viewcode-block" id="KappaRule.list_from_kappa">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.list_from_kappa">[docs]</a>
+<div class="viewcode-block" id="Rule.list_from_kappa">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.list_from_kappa">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">list_from_kappa</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">kappa_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse Kappa string into a list of rules.</span>
@@ -149,8 +111,8 @@
         <span class="k">return</span> <span class="n">KappaTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">rule_tree</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="KappaRule.from_kappa">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.from_kappa">[docs]</a>
+<div class="viewcode-block" id="Rule.from_kappa">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.from_kappa">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_kappa</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">kappa_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a single Kappa rule from string.</span>
@@ -197,8 +159,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> @ </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rate_str</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="KappaRule.reactivity">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.reactivity">[docs]</a>
+<div class="viewcode-block" id="Rule.reactivity">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.reactivity">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the total reactivity of this rule in the given system,</span>
 <span class="sd">        i.e. the number of embeddings times the reaction rate, accounting</span>
@@ -241,15 +203,15 @@
         <span class="n">pattern</span> <span class="o">=</span> <span class="n">Pattern</span><span class="p">(</span><span class="n">left_agents</span> <span class="o">+</span> <span class="n">right_agents</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pattern</span><span class="o">.</span><span class="n">n_isomorphisms</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
 
-<div class="viewcode-block" id="KappaRule.rate">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.rate">[docs]</a>
+<div class="viewcode-block" id="Rule.rate">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.rate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the stochastic rate expression.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stochastic_rate</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="KappaRule.n_embeddings">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.n_embeddings">[docs]</a>
+<div class="viewcode-block" id="Rule.n_embeddings">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.n_embeddings">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Count embeddings in the mixture.</span>
 
@@ -262,8 +224,8 @@
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="KappaRule.select">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRule.select">[docs]</a>
+<div class="viewcode-block" id="Rule.select">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.select">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
 
@@ -359,10 +321,10 @@
 
 
 
-<div class="viewcode-block" id="KappaRuleUnimolecular">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleUnimolecular">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">KappaRuleUnimolecular</span><span class="p">(</span><span class="n">KappaRule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unimolecular Kappa rule that acts within a single component.</span>
+<div class="viewcode-block" id="UnimolecularRule">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.UnimolecularRule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnimolecularRule</span><span class="p">(</span><span class="n">Rule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rule that acts within a single component.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        component_weights: Cache of embedding weights per component.</span>
@@ -376,8 +338,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">rate_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;0 </span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stochastic_rate</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="KappaRuleUnimolecular.n_embeddings">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleUnimolecular.n_embeddings">[docs]</a>
+<div class="viewcode-block" id="UnimolecularRule.n_embeddings">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.UnimolecularRule.n_embeddings">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Count the total number of embeddings in the mixture.&quot;&quot;&quot;</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -392,8 +354,8 @@
         <span class="k">return</span> <span class="n">count</span></div>
 
 
-<div class="viewcode-block" id="KappaRuleUnimolecular.select">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleUnimolecular.select">[docs]</a>
+<div class="viewcode-block" id="UnimolecularRule.select">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.UnimolecularRule.select">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
 
@@ -424,10 +386,10 @@
 
 
 
-<div class="viewcode-block" id="KappaRuleBimolecular">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleBimolecular">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">KappaRuleBimolecular</span><span class="p">(</span><span class="n">KappaRule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bimolecular Kappa rule.</span>
+<div class="viewcode-block" id="BimolecularRule">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.BimolecularRule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BimolecularRule</span><span class="p">(</span><span class="n">Rule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rule that acts between two distinct components.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        component_weights: Cache of embedding weights per component.</span>
@@ -445,8 +407,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">rate_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">rate_str</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">{0}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="KappaRuleBimolecular.n_embeddings">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleBimolecular.n_embeddings">[docs]</a>
+<div class="viewcode-block" id="BimolecularRule.n_embeddings">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.BimolecularRule.n_embeddings">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Count the total number of embeddings in the mixture.&quot;&quot;&quot;</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -467,8 +429,8 @@
         <span class="k">return</span> <span class="n">count</span></div>
 
 
-<div class="viewcode-block" id="KappaRuleBimolecular.select">
-<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.KappaRuleBimolecular.select">[docs]</a>
+<div class="viewcode-block" id="BimolecularRule.select">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.BimolecularRule.select">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MixtureUpdate</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
 
