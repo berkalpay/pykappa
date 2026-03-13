@@ -460,7 +460,7 @@ class System:
         update = rule.select(self.mixture)
         if update is not None:
             self.tallies[str(rule)]["applied"] += 1
-            self.mixture.apply_update(update)
+            self.mixture._apply_update(update)
             del self.__dict__["rule_reactivities"]
         else:
             self.tallies[str(rule)]["failed"] += 1

@@ -3,7 +3,7 @@ It supports
    * programatic construction of :class:`systems <pykappa.system.System>` from Kappa strings;
    * manipulation of systems such as by :class:`adding <pykappa.mixture.Mixture.add>` and :class:`removing <pykappa.mixture.Mixture.remove>` agents and :class:`editing <pykappa.system.System.add_rule>` rules;
    * :class:`monitoring <pykappa.system.Monitor>` the history of observables;
-   * cached :class:`tracking <pykappa.mixture.Mixture.apply_update>` of rule embeddings for algorithmically efficient simulation :class:`updates <pykappa.system.System.update>`; and
+   * cached :class:`tracking <pykappa.mixture.Mixture._apply_update>` of rule embeddings for algorithmically efficient simulation :class:`updates <pykappa.system.System.update>`; and
    * :class:`passing systems<pykappa.system.System.update_via_kasim>` to `KaSim <https://github.com/Kappa-Dev/KappaTools>`_ for faster compiled execution.
 Visit the :doc:`examples <examples/index>` gallery to see how PyKappa can be used to simulate systems of molecular interactions such as :doc:`polymerization <examples/linear_polymerization>` and :doc:`gene regulation <examples/lac_operon>`.
 See the `language manual <https://kappalanguage.org/sites/kappalanguage.org/files/inline-files/Kappa_Manual.pdf>`_ for a detailed description of the Kappa language.
