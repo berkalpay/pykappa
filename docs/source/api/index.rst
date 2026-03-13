@@ -15,11 +15,3 @@ API reference
    :recursive:
 
    pykappa.analysis
-
-.. autosummary::
-   :toctree: generated
-   :recursive:
-
-   pykappa._parsing
-   pykappa._expression
-   pykappa._utils
