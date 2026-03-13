@@ -4,7 +4,7 @@ from itertools import permutations
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
 from pykappa.analysis import _ComponentPlot
-from pykappa.utils import Counted, IndexedSet
+from pykappa._utils import Counted, IndexedSet
 
 if TYPE_CHECKING:
     from pykappa.mixture import Mixture

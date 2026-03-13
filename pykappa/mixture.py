@@ -3,7 +3,7 @@ from typing import Optional, Iterable, Iterator, Self
 from contextlib import contextmanager
 
 from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
-from pykappa.utils import IndexedSet
+from pykappa._utils import IndexedSet
 
 
 @dataclass(frozen=True)
