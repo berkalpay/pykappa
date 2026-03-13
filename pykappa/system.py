@@ -8,7 +8,7 @@ from functools import cached_property
 from typing import Optional, Iterable, Self
 
 from pykappa.mixture import Mixture
-from pykappa.rule import Rule, KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
+from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa.pattern import Component, Pattern
 from pykappa.expression import Expression
 from pykappa.analysis import Monitor
@@ -168,7 +168,7 @@ class System:
         real_rules = []
         if rules is not None:
             for rule in rules:
-                real_rules.extend(KappaRule.list_from_kappa(rule))
+                real_rules.extend(Rule.list_from_kappa(rule))
 
         if observables is None:
             real_observables = {}
@@ -223,7 +223,7 @@ class System:
 
         mixture = Mixture() if mixture is None else mixture
         if any(
-            type(rule) in [KappaRuleUnimolecular, KappaRuleBimolecular]
+            type(rule) in [UnimolecularRule, BimolecularRule]
             for rule in self.rules.values()
         ):
             mixture.enable_component_tracking()
@@ -381,9 +381,9 @@ class System:
         assert name not in self.rules, "Rule {name} already exists in the system"
 
         if isinstance(rule, str):
-            rule = KappaRule.from_kappa(rule)
+            rule = Rule.from_kappa(rule)
 
-        if type(rule) in [KappaRuleUnimolecular, KappaRuleBimolecular]:
+        if type(rule) in [UnimolecularRule, BimolecularRule]:
             self.mixture.enable_component_tracking()
 
         self._track_rule(rule)
@@ -405,10 +405,9 @@ class System:
 
     def _track_rule(self, rule: Rule) -> None:
         """Track components mentioned in the left hand side of a Rule."""
-        if isinstance(rule, KappaRule):
-            for component in rule.left.components:
-                # TODO: For efficiency check for isomorphism with already-tracked components
-                self.mixture.track_component(component)
+        for component in rule.left.components:
+            # TODO: For efficiency check for isomorphism with already-tracked components
+            self.mixture.track_component(component)
 
     def _track_expression(self, expression: Expression) -> None:
         """Track the Components in the given expression.
@@ -487,10 +486,7 @@ class System:
         """
         assert shutil.which("KaSim"), "KaSim not found in the PATH."
 
-        if any(
-            isinstance(rule, KappaRule) and rule.n_symmetries > 1
-            for rule in self.rules.values()
-        ):
+        if any(rule.n_symmetries > 1 for rule in self.rules.values()):
             warnings.warn(
                 "Some rules have multiple symmetries. "
                 "PyKappa normalizes reactivities accordingly: results may differ from KaSim."

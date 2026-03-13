@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pykappa.parsing import kappa_parser
 from pykappa.pattern import Pattern
-from pykappa.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
+from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa.system import System
 
 # Parser
@@ -52,45 +52,45 @@ def test_pattern_from_kappa():
     ],
 )
 def test_rule_len_from_kappa(rule_str, rule_len):
-    assert len(KappaRule.list_from_kappa(rule_str)) == rule_len
+    assert len(Rule.list_from_kappa(rule_str)) == rule_len
 
 
 def test_ambi_rule_from_kappa():
-    rules = KappaRule.list_from_kappa(
+    rules = Rule.list_from_kappa(
         "A(a{p}), B(b[1]), C(c[1]) -> A(a{u}), B(b[.]), C(c[.]) @ 1.0 {2.0}"
     )
     assert len(rules) == 2
-    assert isinstance(rules[0], KappaRuleBimolecular)
-    assert isinstance(rules[1], KappaRuleUnimolecular)
+    assert isinstance(rules[0], BimolecularRule)
+    assert isinstance(rules[1], UnimolecularRule)
     assert rules[0].stochastic_rate.evaluate() == 1.0
     assert rules[1].stochastic_rate.evaluate() == 2.0
 
 
 def test_uni_rule_from_kappa():
-    rules = KappaRule.list_from_kappa(
+    rules = Rule.list_from_kappa(
         "A(a{p}), B(b[1]), C(c[1]) -> A(a{u}), B(b[.]), C(c[.]) @ 0.0 {2.0}"
     )
     assert len(rules) == 1
-    assert isinstance(rules[0], KappaRuleUnimolecular)
+    assert isinstance(rules[0], UnimolecularRule)
     assert rules[0].stochastic_rate.evaluate() == 2.0
 
 
 def test_bi_rule_from_kappa():
-    rules = KappaRule.list_from_kappa(
+    rules = Rule.list_from_kappa(
         "A(a{p}), B(b[1]), C(c[1]) -> A(a{u}), B(b[.]), C(c[.]) @ 1.0 {0.0}"
     )
     assert len(rules) == 1
-    assert isinstance(rules[0], KappaRuleBimolecular)
+    assert isinstance(rules[0], BimolecularRule)
     assert rules[0].stochastic_rate.evaluate() == 1.0
 
 
 def test_ambi_fr_rule_from_kappa():
-    rules = KappaRule.list_from_kappa(
+    rules = Rule.list_from_kappa(
         "A(a{p}), B(b[1]), C(c[1]) <-> A(a{u}), B(b[.]), C(c[.]) @ 1.0 {2.0}, 3.0"
     )
     assert len(rules) == 3
-    assert isinstance(rules[0], KappaRuleBimolecular)
-    assert isinstance(rules[1], KappaRuleUnimolecular)
+    assert isinstance(rules[0], BimolecularRule)
+    assert isinstance(rules[1], UnimolecularRule)
     assert rules[0].stochastic_rate.evaluate() == 1.0
     assert rules[1].stochastic_rate.evaluate() == 2.0
     assert rules[2].stochastic_rate.evaluate() == 3.0

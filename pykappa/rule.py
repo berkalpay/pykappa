@@ -35,30 +35,7 @@ def kinetic_to_stochastic_on_rate(
     return k_on / (AVOGADRO * volume ** (molecularity - 1))
 
 
-class Rule(ABC):
-    """Abstract base class for all rule types."""
-
-    def reactivity(self, system: "System") -> float:
-        """Calculate the total reactivity of this rule in the given system."""
-        return self.n_embeddings(system.mixture) * self.rate(system)
-
-    @abstractmethod
-    def rate(self, system: "System") -> float:
-        """Get the stochastic rate of the rule."""
-        pass
-
-    @abstractmethod
-    def n_embeddings(self, mixture: Mixture) -> int:
-        """Count the number of ways this rule can be applied to the mixture."""
-        pass
-
-    @abstractmethod
-    def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
-        """Select agents and specify the update (or None for null event)."""
-        pass
-
-
-class KappaRule(Rule):
+class Rule:
     """Standard Kappa rule with left-hand side, right-hand side, and rate.
 
     Attributes:
@@ -279,8 +256,8 @@ class KappaRule(Rule):
         return update
 
 
-class KappaRuleUnimolecular(KappaRule):
-    """Unimolecular Kappa rule that acts within a single component.
+class UnimolecularRule(Rule):
+    """Rule that acts within a single component.
 
     Attributes:
         component_weights: Cache of embedding weights per component.
@@ -335,8 +312,8 @@ class KappaRuleUnimolecular(KappaRule):
         return self._produce_update(selection_map, mixture)
 
 
-class KappaRuleBimolecular(KappaRule):
-    """Bimolecular Kappa rule.
+class BimolecularRule(Rule):
+    """Rule that acts between two distinct components.
 
     Attributes:
         component_weights: Cache of embedding weights per component.

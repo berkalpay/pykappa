@@ -2,7 +2,7 @@ from pathlib import Path
 from lark import Lark, ParseTree, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, SiteType
-from pykappa.rule import KappaRule, KappaRuleUnimolecular, KappaRuleBimolecular
+from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa.expression import Expression
 
 
@@ -164,7 +164,7 @@ class KappaTransformer(Transformer):
                 rates.append(child)
 
         left, right = patterns
-        return [KappaRule(left, right, rates[0])]
+        return [Rule(left, right, rates[0])]
 
     def fr_rule(self, children):
         patterns = None
@@ -177,7 +177,7 @@ class KappaTransformer(Transformer):
                 rates.append(child)
 
         left, right = patterns
-        return [KappaRule(left, right, rates[0]), KappaRule(right, left, rates[1])]
+        return [Rule(left, right, rates[0]), Rule(right, left, rates[1])]
 
     def ambi_rule(self, children):
         patterns = None
@@ -194,15 +194,15 @@ class KappaTransformer(Transformer):
 
         try:
             if rates[0].evaluate() != 0:
-                rules.append(KappaRuleBimolecular(left, right, rates[0]))
+                rules.append(BimolecularRule(left, right, rates[0]))
         except:
-            rules.append(KappaRuleBimolecular(left, right, rates[0]))
+            rules.append(BimolecularRule(left, right, rates[0]))
 
         try:
             if rates[1].evaluate() != 0:
-                rules.append(KappaRuleUnimolecular(left, right, rates[1]))
+                rules.append(UnimolecularRule(left, right, rates[1]))
         except:
-            rules.append(KappaRuleUnimolecular(left, right, rates[1]))
+            rules.append(UnimolecularRule(left, right, rates[1]))
 
         return rules
 
@@ -223,17 +223,17 @@ class KappaTransformer(Transformer):
 
         try:
             if rates[0].evaluate() != 0:
-                rules.append(KappaRuleBimolecular(left, right, rates[0]))
+                rules.append(BimolecularRule(left, right, rates[0]))
         except:
-            rules.append(KappaRuleBimolecular(left, right, rates[0]))
+            rules.append(BimolecularRule(left, right, rates[0]))
 
         try:
             if rates[1].evaluate() != 0:
-                rules.append(KappaRuleUnimolecular(left, right, rates[1]))
+                rules.append(UnimolecularRule(left, right, rates[1]))
         except:
-            rules.append(KappaRuleUnimolecular(left, right, rates[1]))
+            rules.append(UnimolecularRule(left, right, rates[1]))
 
-        rules.append(KappaRule(right, left, rates[2]))
+        rules.append(Rule(right, left, rates[2]))
 
         return rules
 
