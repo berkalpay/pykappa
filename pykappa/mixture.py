@@ -7,7 +7,7 @@ from pykappa._utils import IndexedSet
 
 
 @dataclass(frozen=True)
-class Edge:
+class _Edge:
     """Represents bonds between sites. Edge(x, y) equals Edge(y, x)."""
 
     site1: Site
@@ -152,7 +152,7 @@ class Mixture:
                     i_partner = component_ordered.index(partner.agent)
                     new_site = new_agents[i][site.label]
                     new_partner = new_agents[i_partner][partner.label]
-                    new_edges.add(Edge(new_site, new_partner))
+                    new_edges.add(_Edge(new_site, new_partner))
 
         update = _MixtureUpdate(agents_to_add=set(new_agents), edges_to_add=new_edges)
         self.apply_update(update)
@@ -241,7 +241,7 @@ class Mixture:
             component = self.components.lookup_one("agent", agent)
             self.components.remove(component)
 
-    def _add_edge(self, edge: Edge) -> None:
+    def _add_edge(self, edge: _Edge) -> None:
         """Add a bond between two sites."""
         assert edge.site1.agent in self.agents
         assert edge.site2.agent in self.agents
@@ -265,7 +265,7 @@ class Mixture:
                 component1.add(agent)
                 self.components.indices["agent"][agent] = [component1]
 
-    def _remove_edge(self, edge: Edge) -> None:
+    def _remove_edge(self, edge: _Edge) -> None:
         """Remove a bond between two sites."""
         assert edge.site1.partner == edge.site2
         assert edge.site2.partner == edge.site1
@@ -316,8 +316,8 @@ class _MixtureUpdate:
 
     agents_to_add: set[Agent] = field(default_factory=set)
     agents_to_remove: set[Agent] = field(default_factory=set)
-    edges_to_add: set[Edge] = field(default_factory=set)
-    edges_to_remove: set[Edge] = field(default_factory=set)
+    edges_to_add: set[_Edge] = field(default_factory=set)
+    edges_to_remove: set[_Edge] = field(default_factory=set)
     agents_changed: set[Agent] = field(default_factory=set)  # Internal state changes
 
     def create_agent(self, agent: Agent) -> Agent:
@@ -331,7 +331,7 @@ class _MixtureUpdate:
         self.agents_to_remove.add(agent)
         for site in agent:
             if site.coupled:
-                self.edges_to_remove.add(Edge(site, site.partner))
+                self.edges_to_remove.add(_Edge(site, site.partner))
 
     def connect_sites(self, site1: Site, site2: Site) -> None:
         """Specify to create an edge between two sites. If the sites
@@ -342,12 +342,12 @@ class _MixtureUpdate:
         if site2.coupled and site2.partner != site1:
             self.disconnect_site(site2)
         if not site1.partner == site2:
-            self.edges_to_add.add(Edge(site1, site2))
+            self.edges_to_add.add(_Edge(site1, site2))
 
     def disconnect_site(self, site: Site) -> None:
         """Specify that a site should be unbound."""
         if site.coupled:
-            self.edges_to_remove.add(Edge(site, site.partner))
+            self.edges_to_remove.add(_Edge(site, site.partner))
 
     def register_changed_agent(self, agent: Agent) -> None:
         """Register an agent as having internal state changes."""
