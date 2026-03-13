@@ -123,9 +123,12 @@ class KappaRule(Rule):
         return self.kappa_str
 
     @property
+    def rate_str(self) -> str:
+        return self.stochastic_rate.kappa_str
+
+    @property
     def kappa_str(self) -> str:
-        """The rule representation in Kappa format."""
-        return f"{self.left.kappa_str} -> {self.right.kappa_str} @ {self.stochastic_rate.kappa_str}"
+        return f"{self.left.kappa_str} -> {self.right.kappa_str} @ {self.rate_str}"
 
     def reactivity(self, system: "System") -> float:
         """Calculate the total reactivity of this rule in the given system,
@@ -284,14 +287,12 @@ class KappaRuleUnimolecular(KappaRule):
     """
 
     def __post_init__(self):
-        """Initialize the rule and component weights cache."""
         super().__post_init__()
         self.component_weights: dict[Component, int] = {}
 
     @property
-    def kappa_str(self) -> str:
-        """Get the rule representation in Kappa format."""
-        return f"{self.left.kappa_str} -> {self.right.kappa_str} @ 0 {{{self.stochastic_rate.kappa_str}}}"
+    def rate_str(self) -> str:
+        return f"0 {{{self.stochastic_rate.kappa_str}}}"
 
     def n_embeddings(self, mixture: Mixture) -> int:
         """Count the total number of embeddings in the mixture."""
@@ -350,9 +351,8 @@ class KappaRuleBimolecular(KappaRule):
         ), "Bimolecular rule patterns must consist of exactly 2 components."
 
     @property
-    def kappa_str(self) -> str:
-        """The rule representation in Kappa format."""
-        return super().kappa_str + "{0}"
+    def rate_str(self) -> str:
+        return super().rate_str + " {0}"
 
     def n_embeddings(self, mixture: Mixture) -> int:
         """Count the total number of embeddings in the mixture."""
