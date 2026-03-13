@@ -44,8 +44,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">permutations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComponentPlot</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counted</span><span class="p">,</span> <span class="n">IndexedSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">_ComponentPlot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counted</span><span class="p">,</span> <span class="n">IndexedSet</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span>
@@ -184,7 +184,7 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If the string doesn&#39;t describe exactly one agent.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.parsing</span><span class="w"> </span><span class="kn">import</span> <span class="n">kappa_parser</span><span class="p">,</span> <span class="n">KappaTransformer</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._parsing</span><span class="w"> </span><span class="kn">import</span> <span class="n">kappa_parser</span><span class="p">,</span> <span class="n">KappaTransformer</span>
 
         <span class="c1"># Check pattern describes only a single agent</span>
         <span class="n">input_tree</span> <span class="o">=</span> <span class="n">kappa_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">kappa_str</span><span class="p">)</span>
@@ -367,7 +367,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span>  <span class="c1"># TODO: order by graph traversal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_copies</span> <span class="o">=</span> <span class="n">n_copies</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot</span> <span class="o">=</span> <span class="n">ComponentPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot</span> <span class="o">=</span> <span class="n">_ComponentPlot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span>
@@ -546,7 +546,7 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If the string doesn&#39;t describe exactly one pattern.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.parsing</span><span class="w"> </span><span class="kn">import</span> <span class="n">kappa_parser</span><span class="p">,</span> <span class="n">KappaTransformer</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._parsing</span><span class="w"> </span><span class="kn">import</span> <span class="n">kappa_parser</span><span class="p">,</span> <span class="n">KappaTransformer</span>
 
         <span class="n">input_tree</span> <span class="o">=</span> <span class="n">kappa_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">kappa_str</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;kappa_input&quot;</span>

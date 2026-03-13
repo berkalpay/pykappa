@@ -8,14 +8,11 @@
 
    .. autosummary::
    
-      group_by_isomorphism
       neighborhood
    
    .. rubric:: Classes
 
    .. autosummary::
    
-      Edge
       Mixture
-      MixtureUpdate
    

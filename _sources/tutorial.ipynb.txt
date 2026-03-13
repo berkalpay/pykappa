@@ -170,8 +170,8 @@
         "for component in bind.left.components:\n",
         "    mixture.track_component(component)\n",
         "\n",
-        "update = bind.select(mixture)\n",
-        "mixture.apply_update(update)\n",
+        "update = bind._select(mixture)\n",
+        "mixture._apply_update(update)\n",
         "\n",
         "mixture.track_component(complex)\n",
         "print(\"AB count after one binding event:\", len(mixture.embeddings(complex)))"
@@ -194,7 +194,7 @@
       "metadata": {},
       "outputs": [],
       "source": [
-        "from pykappa.expression import Expression\n",
+        "from pykappa._expression import Expression\n",
         "\n",
         "literal_expr = Expression.from_kappa(\"42\")\n",
         "print(\"Literal expression value:\", literal_expr.evaluate())\n",

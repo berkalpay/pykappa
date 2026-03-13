@@ -60,8 +60,8 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p></li>
 <li><p><strong>rules</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a><em>]</em>)</p></li>
-<li><p><strong>observables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>]</em>)</p></li>
-<li><p><strong>variables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>]</em>)</p></li>
+<li><p><strong>observables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Expression</em><em>]</em>)</p></li>
+<li><p><strong>variables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Expression</em><em>]</em>)</p></li>
 <li><p><strong>monitor</strong> (<a class="reference internal" href="pykappa.analysis.html#pykappa.analysis.Monitor" title="pykappa.analysis.Monitor"><em>Monitor</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
 </ul>
@@ -95,7 +95,7 @@
 <dd><p>Dictionary mapping observable names to expressions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, <a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression">pykappa.expression.Expression</a>]</p>
+<dd class="field-odd"><p>dict[str, pykappa._expression.Expression]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -106,7 +106,7 @@
 <dd><p>Dictionary mapping variable names to expressions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, <a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression">pykappa.expression.Expression</a>]</p>
+<dd class="field-odd"><p>dict[str, pykappa._expression.Expression]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -227,12 +227,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -275,20 +275,6 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.system.System.set_mixture">
-<span class="sig-name descname"><span class="pre">set_mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/system.html#System.set_mixture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.system.System.set_mixture" title="Link to this definition">¶</a></dt>
-<dd><p>Set the system’s mixture and update tracking.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -355,34 +341,6 @@
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>RuntimeWarning</strong> – If system has no reactivity (infinite wait time).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.system.System.choose_rule">
-<span class="sig-name descname"><span class="pre">choose_rule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/system.html#System.choose_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.system.System.choose_rule" title="Link to this definition">¶</a></dt>
-<dd><p>Choose a rule to apply based on reactivity weights.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Selected rule, or None if no rules have positive reactivity.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a> | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.system.System.apply_rule">
-<span class="sig-name descname"><span class="pre">apply_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rule</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/system.html#System.apply_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.system.System.apply_rule" title="Link to this definition">¶</a></dt>
-<dd><p>Apply a rule to the mixture and update tallies.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rule</strong> (<a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -462,10 +420,7 @@ Some features are not compatible between PyKappa and KaSim.</p>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.mixture.html">pykappa.mixture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.rule.html">pykappa.rule</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.pattern.html">pykappa.pattern</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pykappa.parsing.html">pykappa.parsing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pykappa.expression.html">pykappa.expression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.analysis.html">pykappa.analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pykappa.utils.html">pykappa.utils</a></li>
 </ul>
 </li>
 </ul>

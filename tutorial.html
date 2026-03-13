@@ -194,8 +194,8 @@ Embeddings in the AB complex: 1
 <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">bind</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
     <span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
 
-<span class="n">update</span> <span class="o">=</span> <span class="n">bind</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">mixture</span><span class="p">)</span>
-<span class="n">mixture</span><span class="o">.</span><span class="n">apply_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+<span class="n">update</span> <span class="o">=</span> <span class="n">bind</span><span class="o">.</span><span class="n">_select</span><span class="p">(</span><span class="n">mixture</span><span class="p">)</span>
+<span class="n">mixture</span><span class="o">.</span><span class="n">_apply_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
 
 <span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AB count after one binding event:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="nb">complex</span><span class="p">)))</span>
@@ -219,7 +219,7 @@ AB count after one binding event: 3
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.expression</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._expression</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
 
 <span class="n">literal_expr</span> <span class="o">=</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="s2">&quot;42&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Literal expression value:&quot;</span><span class="p">,</span> <span class="n">literal_expr</span><span class="o">.</span><span class="n">evaluate</span><span class="p">())</span>
