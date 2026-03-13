@@ -21,7 +21,7 @@ jobs:
       uses: pandoc/actions/setup@v1
     - name: Install dependencies
       run: |
-        pip install sphinx pydata-sphinx-theme matplotlib nbsphinx ipykernel
+        pip install sphinx matplotlib nbsphinx ipykernel
         pip install .
     - name: Build HTML
       run: |
