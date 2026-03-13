@@ -3,7 +3,7 @@ from functools import cached_property
 from itertools import permutations
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
-from pykappa.analysis import ComponentPlot
+from pykappa.analysis import _ComponentPlot
 from pykappa.utils import Counted, IndexedSet
 
 if TYPE_CHECKING:
@@ -297,7 +297,7 @@ class Component(Counted):
         self.agents = IndexedSet(agents)  # TODO: order by graph traversal
         self.agents.create_index("type", lambda a: [a.type])
         self.n_copies = n_copies
-        self.plot = ComponentPlot(self)
+        self.plot = _ComponentPlot(self)
 
     def __iter__(self):
         yield from self.agents
