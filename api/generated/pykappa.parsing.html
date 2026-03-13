@@ -58,115 +58,6 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.parsing.</span></span><span class="sig-name descname"><span class="pre">ExpressionTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visit_tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer" title="Link to this definition">¶</a></dt>
-<dd><p>Transforms a Lark ParseTree into an Expression object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>visit_tokens</strong> (<em>bool</em>)</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.FALSE">
-<span class="sig-name descname"><span class="pre">FALSE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.FALSE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.FALSE" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.SIGNED_FLOAT">
-<span class="sig-name descname"><span class="pre">SIGNED_FLOAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.SIGNED_FLOAT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.SIGNED_FLOAT" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.SIGNED_INT">
-<span class="sig-name descname"><span class="pre">SIGNED_INT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.SIGNED_INT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.SIGNED_INT" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.TRUE">
-<span class="sig-name descname"><span class="pre">TRUE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.TRUE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.TRUE" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.algebraic_expression">
-<span class="sig-name descname"><span class="pre">algebraic_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.algebraic_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.algebraic_expression" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.binary_op">
-<span class="sig-name descname"><span class="pre">binary_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.binary_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.binary_op" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.binary_op_expression">
-<span class="sig-name descname"><span class="pre">binary_op_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.binary_op_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.binary_op_expression" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.boolean_expression">
-<span class="sig-name descname"><span class="pre">boolean_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.boolean_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.boolean_expression" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.conditional_expression">
-<span class="sig-name descname"><span class="pre">conditional_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.conditional_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.conditional_expression" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.declared_variable_name">
-<span class="sig-name descname"><span class="pre">declared_variable_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.declared_variable_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.declared_variable_name" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.defined_constant">
-<span class="sig-name descname"><span class="pre">defined_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.defined_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.defined_constant" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.from_tree">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.from_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.from_tree" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tree</strong> (<em>Tree</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.list_op">
-<span class="sig-name descname"><span class="pre">list_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.list_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.list_op" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.list_op_expression">
-<span class="sig-name descname"><span class="pre">list_op_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.list_op_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.list_op_expression" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.pattern">
-<span class="sig-name descname"><span class="pre">pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.pattern" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.reserved_variable_name">
-<span class="sig-name descname"><span class="pre">reserved_variable_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.reserved_variable_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.reserved_variable_name" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.unary_op">
-<span class="sig-name descname"><span class="pre">unary_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.unary_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.unary_op" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.unary_op_expression">
-<span class="sig-name descname"><span class="pre">unary_op_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.unary_op_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.unary_op_expression" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="pykappa.parsing.KappaParser">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.parsing.</span></span><span class="sig-name descname"><span class="pre">KappaParser</span></span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaParser" title="Link to this definition">¶</a></dt>
 <dd><p>Parser for Kappa language files and expressions.</p>
@@ -212,8 +103,8 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.agent">
-<span class="sig-name descname"><span class="pre">agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.agent" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.site_name">
+<span class="sig-name descname"><span class="pre">site_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.site_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.site_name" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -222,13 +113,58 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.ambi_fr_rule">
-<span class="sig-name descname"><span class="pre">ambi_fr_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.ambi_fr_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.ambi_fr_rule" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.state">
+<span class="sig-name descname"><span class="pre">state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.state" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.ambi_rule">
-<span class="sig-name descname"><span class="pre">ambi_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.ambi_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.ambi_rule" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.partner">
+<span class="sig-name descname"><span class="pre">partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.partner" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.site">
+<span class="sig-name descname"><span class="pre">site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.site" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.undetermined">
+<span class="sig-name descname"><span class="pre">undetermined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.undetermined"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.undetermined" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.interface">
+<span class="sig-name descname"><span class="pre">interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.interface" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.agent">
+<span class="sig-name descname"><span class="pre">agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.agent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.pattern" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.label">
+<span class="sig-name descname"><span class="pre">label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.label" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.rate">
+<span class="sig-name descname"><span class="pre">rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.rate" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.rule_expression">
+<span class="sig-name descname"><span class="pre">rule_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.rule_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.rule_expression" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.rev_rule_expression">
+<span class="sig-name descname"><span class="pre">rev_rule_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.rev_rule_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.rev_rule_expression" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -242,58 +178,122 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.interface">
-<span class="sig-name descname"><span class="pre">interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.interface" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.ambi_rule">
+<span class="sig-name descname"><span class="pre">ambi_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.ambi_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.ambi_rule" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.label">
-<span class="sig-name descname"><span class="pre">label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.label" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.ambi_fr_rule">
+<span class="sig-name descname"><span class="pre">ambi_fr_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.ambi_fr_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.ambi_fr_rule" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.parsing.</span></span><span class="sig-name descname"><span class="pre">ExpressionTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visit_tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer" title="Link to this definition">¶</a></dt>
+<dd><p>Transforms a Lark ParseTree into an Expression object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>visit_tokens</strong> (<em>bool</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.from_tree">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.from_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.from_tree" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tree</strong> (<em>Tree</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.algebraic_expression">
+<span class="sig-name descname"><span class="pre">algebraic_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.algebraic_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.algebraic_expression" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.partner">
-<span class="sig-name descname"><span class="pre">partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.partner" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.SIGNED_FLOAT">
+<span class="sig-name descname"><span class="pre">SIGNED_FLOAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.SIGNED_FLOAT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.SIGNED_FLOAT" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.pattern">
-<span class="sig-name descname"><span class="pre">pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.pattern" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.SIGNED_INT">
+<span class="sig-name descname"><span class="pre">SIGNED_INT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.SIGNED_INT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.SIGNED_INT" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.rate">
-<span class="sig-name descname"><span class="pre">rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.rate" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.declared_variable_name">
+<span class="sig-name descname"><span class="pre">declared_variable_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.declared_variable_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.declared_variable_name" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.rev_rule_expression">
-<span class="sig-name descname"><span class="pre">rev_rule_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.rev_rule_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.rev_rule_expression" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.reserved_variable_name">
+<span class="sig-name descname"><span class="pre">reserved_variable_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.reserved_variable_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.reserved_variable_name" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.rule_expression">
-<span class="sig-name descname"><span class="pre">rule_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.rule_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.rule_expression" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.pattern" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.site">
-<span class="sig-name descname"><span class="pre">site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.site" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.defined_constant">
+<span class="sig-name descname"><span class="pre">defined_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.defined_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.defined_constant" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.site_name">
-<span class="sig-name descname"><span class="pre">site_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.site_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.site_name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.binary_op_expression">
+<span class="sig-name descname"><span class="pre">binary_op_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.binary_op_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.binary_op_expression" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.state">
-<span class="sig-name descname"><span class="pre">state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.state" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.binary_op">
+<span class="sig-name descname"><span class="pre">binary_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.binary_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.binary_op" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.parsing.KappaTransformer.undetermined">
-<span class="sig-name descname"><span class="pre">undetermined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#KappaTransformer.undetermined"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.KappaTransformer.undetermined" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.unary_op_expression">
+<span class="sig-name descname"><span class="pre">unary_op_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.unary_op_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.unary_op_expression" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.unary_op">
+<span class="sig-name descname"><span class="pre">unary_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.unary_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.unary_op" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.list_op">
+<span class="sig-name descname"><span class="pre">list_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.list_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.list_op" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.list_op_expression">
+<span class="sig-name descname"><span class="pre">list_op_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.list_op_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.list_op_expression" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.conditional_expression">
+<span class="sig-name descname"><span class="pre">conditional_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.conditional_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.conditional_expression" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.boolean_expression">
+<span class="sig-name descname"><span class="pre">boolean_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.boolean_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.boolean_expression" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.TRUE">
+<span class="sig-name descname"><span class="pre">TRUE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.TRUE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.TRUE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.parsing.ExpressionTransformer.FALSE">
+<span class="sig-name descname"><span class="pre">FALSE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/parsing.html#ExpressionTransformer.FALSE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.parsing.ExpressionTransformer.FALSE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

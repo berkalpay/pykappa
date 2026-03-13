@@ -67,359 +67,26 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sites</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent" title="Link to this definition">¶</a></dt>
-<dd><p>Represents an agent with a type and collection of sites.</p>
-<dl class="field-list simple">
+<dt class="sig sig-object py" id="pykappa.pattern.SiteType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">SiteType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pykappa.pattern.SiteType" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>type</strong> (<em>str</em>)</p></li>
-<li><p><strong>sites</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><em>Site</em></a><em>]</em>)</p></li>
+<li><p><strong>site_name</strong> (<em>str</em>)</p></li>
+<li><p><strong>agent_name</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.type">
-<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pykappa.pattern.Agent.type" title="Link to this definition">¶</a></dt>
-<dd><p>Type name of the agent.</p>
+<dt class="sig sig-object py" id="pykappa.pattern.SiteType.agent_name">
+<span class="sig-name descname"><span class="pre">agent_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.SiteType.agent_name" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.interface">
-<span class="sig-name descname"><span class="pre">interface</span></span><a class="headerlink" href="#pykappa.pattern.Agent.interface" title="Link to this definition">¶</a></dt>
-<dd><p>Dictionary mapping site labels to Site objects.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.depth_first_traversal">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">depth_first_traversal</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.depth_first_traversal" title="Link to this definition">¶</a></dt>
-<dd><p>Perform depth-first traversal starting from this agent.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.detached">
-<span class="sig-name descname"><span class="pre">detached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.detached"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.detached" title="Link to this definition">¶</a></dt>
-<dd><p>Create a clone with all sites emptied of partners.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Self</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.embeds_in">
-<span class="sig-name descname"><span class="pre">embeds_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.embeds_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.embeds_in" title="Link to this definition">¶</a></dt>
-<dd><p>Check whether self as a pattern matches other as a concrete agent.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.from_kappa">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.from_kappa" title="Link to this definition">¶</a></dt>
-<dd><p>Parse a single agent from a Kappa string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – If the string doesn’t describe exactly one agent.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>kappa_str</strong> (<em>str</em>)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Self</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.instantiable">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.instantiable" title="Link to this definition">¶</a></dt>
-<dd><p>Check if this agent pattern can be instantiated.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.isomorphic">
-<span class="sig-name descname"><span class="pre">isomorphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.isomorphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.isomorphic" title="Link to this definition">¶</a></dt>
-<dd><p>Check if two Agents are equivalent locally, ignoring partners.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Doesn’t assume agents of the same type will have the same site signatures.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.kappa_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><a class="headerlink" href="#pykappa.pattern.Agent.kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>The agent representation in Kappa format.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.neighbors">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">neighbors</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.neighbors" title="Link to this definition">¶</a></dt>
-<dd><p>The agents directly connected to this one.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.sites">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sites</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><span class="pre">Site</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.sites" title="Link to this definition">¶</a></dt>
-<dd><p>All sites of this agent.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.underspecified">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.underspecified" title="Link to this definition">¶</a></dt>
-<dd><p>Check if a concrete Agent can be created from this pattern.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pykappa.pattern.Component">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_copies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component" title="Link to this definition">¶</a></dt>
-<dd><p>A set of agents that are all in the same connected component.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Connectedness is not guaranteed statically and must be enforced.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>agents</strong> (<a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><em>IndexedSet</em></a><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
-<li><p><strong>n_copies</strong> (<em>int</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.add" title="Link to this definition">¶</a></dt>
-<dd><p>Add an agent to this component.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agent</strong> (<a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.agents">
-<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><span class="pre">IndexedSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Component.agents" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.diameter">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">diameter</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pykappa.pattern.Component.diameter" title="Link to this definition">¶</a></dt>
-<dd><p>Get the maximum minimum shortest path between any two agents.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.embeddings">
-<span class="sig-name descname"><span class="pre">embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.embeddings" title="Link to this definition">¶</a></dt>
-<dd><p>Find embeddings of self in other.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>other</strong> (<em>Self</em><em> | </em><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a><em> | </em><em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>) – Target to find embeddings in.</p></li>
-<li><p><strong>exact</strong> (<em>bool</em>) – If True, finds isomorphisms instead of embeddings.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Iterator</em>[<a class="reference internal" href="#pykappa.pattern.Embedding" title="pykappa.pattern.Embedding"><em>Embedding</em></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.from_kappa">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.from_kappa" title="Link to this definition">¶</a></dt>
-<dd><p>Parse a single component from a Kappa string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – If the pattern doesn’t represent exactly one component.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>kappa_str</strong> (<em>str</em>)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Self</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.isomorphic">
-<span class="sig-name descname"><span class="pre">isomorphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.isomorphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.isomorphic" title="Link to this definition">¶</a></dt>
-<dd><p>Check if two components are isomorphic.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.isomorphisms">
-<span class="sig-name descname"><span class="pre">isomorphisms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.isomorphisms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.isomorphisms" title="Link to this definition">¶</a></dt>
-<dd><p>Find bijections which respect links in the site graph.</p>
-<p>Checks for bijections ensuring that any internal site state specified
-in one component exists and is the same in the other.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Handles isomorphism generally, between instantiated components
-in a mixture and potentially between rule patterns.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em><em> | </em><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Iterator</em>[dict[<a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>, <a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.kappa_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Component.kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>The component representation in Kappa format.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.n_automorphisms">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_automorphisms</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pykappa.pattern.Component.n_automorphisms" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the number of automorphisms (i.e. isomorphisms onto itself)
-of the component.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This uses a cached result, and thus should only be used
-for static components, i.e. the ones in rules and observables.
-Do not use this for components in a mixture that can change.</p>
-</div>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Component.n_copies">
-<span class="sig-name descname"><span class="pre">n_copies</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pykappa.pattern.Component.n_copies" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pykappa.pattern.Embedding">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Embedding</span></span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Embedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Embedding" title="Link to this definition">¶</a></dt>
-<dd><p>Dictionary representing a mapping from pattern agents to mixture agents.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern" title="Link to this definition">¶</a></dt>
-<dd><p>A pattern consisting of multiple agents, some of which may be None (empty slots).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agents</strong> (<em>list</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em> | </em><em>None</em><em>]</em>)</p>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.agents">
-<span class="sig-name descname"><span class="pre">agents</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.agents" title="Link to this definition">¶</a></dt>
-<dd><p>List of agents, where None represents empty slots in rules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent">pykappa.pattern.Agent</a> | None]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.agents_to_kappa_str">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">agents_to_kappa_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern.agents_to_kappa_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern.agents_to_kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>Convert a collection of agents to Kappa string representation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agents</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em> | </em><em>None</em><em>]</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.components">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">components</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Component" title="pykappa.pattern.Component"><span class="pre">Component</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Pattern.components" title="Link to this definition">¶</a></dt>
-<dd><p>The connected components in this pattern.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.from_kappa">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern.from_kappa" title="Link to this definition">¶</a></dt>
-<dd><p>Parse a pattern from a Kappa string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>kappa_str</strong> (<em>str</em>) – Kappa string describing a pattern.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Parsed Pattern object.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – If the string doesn’t describe exactly one pattern.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Self</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.kappa_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>The pattern representation in Kappa format.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.n_isomorphisms">
-<span class="sig-name descname"><span class="pre">n_isomorphisms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern.n_isomorphisms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern.n_isomorphisms" title="Link to this definition">¶</a></dt>
-<dd><p>Counts the number of bijections which respect links in the site graph.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Runtime is exponential in the number of components; use with caution.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.underspecified">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.underspecified" title="Link to this definition">¶</a></dt>
-<dd><p>Check if any agents in the pattern are underspecified.</p>
+<dt class="sig sig-object py" id="pykappa.pattern.SiteType.site_name">
+<span class="sig-name descname"><span class="pre">site_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.SiteType.site_name" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
 </dd></dl>
 
 </dd></dl>
@@ -467,9 +134,43 @@ Do not use this for components in a mixture that can change.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">agent</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">agent</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_partner_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_partner_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_partner_str" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_state_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_state_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_state_str" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_str" title="Link to this definition">¶</a></dt>
+<dd><p>The site representation in Kappa format.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.undetermined">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">undetermined</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.undetermined" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the site is in a state equivalent to leaving it unnamed in an agent.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.underspecified">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.underspecified" title="Link to this definition">¶</a></dt>
+<dd><p>Check if a concrete Site can be created from this pattern.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.stated">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stated</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.stated" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the site has a specific internal state.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Site.bound">
@@ -497,63 +198,362 @@ Do not use this for components in a mixture that can change.</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_partner_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_partner_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_partner_str" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+</dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_state_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_state_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_state_str" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sites</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent" title="Link to this definition">¶</a></dt>
+<dd><p>Represents an agent with a type and collection of sites.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<em>str</em>)</p></li>
+<li><p><strong>sites</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><em>Site</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pykappa.pattern.Agent.type" title="Link to this definition">¶</a></dt>
+<dd><p>Type name of the agent.</p>
+</dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>The site representation in Kappa format.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.interface">
+<span class="sig-name descname"><span class="pre">interface</span></span><a class="headerlink" href="#pykappa.pattern.Agent.interface" title="Link to this definition">¶</a></dt>
+<dd><p>Dictionary mapping site labels to Site objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.from_kappa">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.from_kappa" title="Link to this definition">¶</a></dt>
+<dd><p>Parse a single agent from a Kappa string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If the string doesn’t describe exactly one agent.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>kappa_str</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Self</em></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.stated">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stated</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.stated" title="Link to this definition">¶</a></dt>
-<dd><p>Check if the site has a specific internal state.</p>
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.kappa_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><a class="headerlink" href="#pykappa.pattern.Agent.kappa_str" title="Link to this definition">¶</a></dt>
+<dd><p>The agent representation in Kappa format.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.underspecified">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.underspecified" title="Link to this definition">¶</a></dt>
-<dd><p>Check if a concrete Site can be created from this pattern.</p>
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.sites">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sites</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><span class="pre">Site</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.sites" title="Link to this definition">¶</a></dt>
+<dd><p>All sites of this agent.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.undetermined">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">undetermined</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.undetermined" title="Link to this definition">¶</a></dt>
-<dd><p>Check if the site is in a state equivalent to leaving it unnamed in an agent.</p>
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.underspecified">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.underspecified" title="Link to this definition">¶</a></dt>
+<dd><p>Check if a concrete Agent can be created from this pattern.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.neighbors">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">neighbors</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.neighbors" title="Link to this definition">¶</a></dt>
+<dd><p>The agents directly connected to this one.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.depth_first_traversal">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">depth_first_traversal</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.depth_first_traversal" title="Link to this definition">¶</a></dt>
+<dd><p>Perform depth-first traversal starting from this agent.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.instantiable">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.instantiable" title="Link to this definition">¶</a></dt>
+<dd><p>Check if this agent pattern can be instantiated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.detached">
+<span class="sig-name descname"><span class="pre">detached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.detached"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.detached" title="Link to this definition">¶</a></dt>
+<dd><p>Create a clone with all sites emptied of partners.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Self</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.isomorphic">
+<span class="sig-name descname"><span class="pre">isomorphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.isomorphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.isomorphic" title="Link to this definition">¶</a></dt>
+<dd><p>Check if two Agents are equivalent locally, ignoring partners.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Doesn’t assume agents of the same type will have the same site signatures.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.embeds_in">
+<span class="sig-name descname"><span class="pre">embeds_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.embeds_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.embeds_in" title="Link to this definition">¶</a></dt>
+<dd><p>Check whether self as a pattern matches other as a concrete agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pykappa.pattern.SiteType">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">SiteType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pykappa.pattern.SiteType" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dt class="sig sig-object py" id="pykappa.pattern.Embedding">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Embedding</span></span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Embedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Embedding" title="Link to this definition">¶</a></dt>
+<dd><p>Dictionary representing a mapping from pattern agents to mixture agents.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykappa.pattern.Component">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_copies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component" title="Link to this definition">¶</a></dt>
+<dd><p>A set of agents that are all in the same connected component.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Connectedness is not guaranteed statically and must be enforced.</p>
+</div>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>site_name</strong> (<em>str</em>)</p></li>
-<li><p><strong>agent_name</strong> (<em>str</em>)</p></li>
+<li><p><strong>agents</strong> (<a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><em>IndexedSet</em></a><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p></li>
+<li><p><strong>n_copies</strong> (<em>int</em>)</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.SiteType.agent_name">
-<span class="sig-name descname"><span class="pre">agent_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.SiteType.agent_name" title="Link to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.from_kappa">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.from_kappa" title="Link to this definition">¶</a></dt>
+<dd><p>Parse a single component from a Kappa string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If the pattern doesn’t represent exactly one component.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>kappa_str</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Self</em></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.SiteType.site_name">
-<span class="sig-name descname"><span class="pre">site_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.SiteType.site_name" title="Link to this definition">¶</a></dt>
-<dd><p>Alias for field number 0</p>
+<dt class="sig sig-object py" id="pykappa.pattern.Component.agents">
+<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><span class="pre">IndexedSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Component.agents" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.n_copies">
+<span class="sig-name descname"><span class="pre">n_copies</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pykappa.pattern.Component.n_copies" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.kappa_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Component.kappa_str" title="Link to this definition">¶</a></dt>
+<dd><p>The component representation in Kappa format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.add" title="Link to this definition">¶</a></dt>
+<dd><p>Add an agent to this component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent</strong> (<a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.isomorphic">
+<span class="sig-name descname"><span class="pre">isomorphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.isomorphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.isomorphic" title="Link to this definition">¶</a></dt>
+<dd><p>Check if two components are isomorphic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.embeddings">
+<span class="sig-name descname"><span class="pre">embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.embeddings" title="Link to this definition">¶</a></dt>
+<dd><p>Find embeddings of self in other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<em>Self</em><em> | </em><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a><em> | </em><em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>) – Target to find embeddings in.</p></li>
+<li><p><strong>exact</strong> (<em>bool</em>) – If True, finds isomorphisms instead of embeddings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator</em>[<a class="reference internal" href="#pykappa.pattern.Embedding" title="pykappa.pattern.Embedding"><em>Embedding</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.isomorphisms">
+<span class="sig-name descname"><span class="pre">isomorphisms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Component.isomorphisms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Component.isomorphisms" title="Link to this definition">¶</a></dt>
+<dd><p>Find bijections which respect links in the site graph.</p>
+<p>Checks for bijections ensuring that any internal site state specified
+in one component exists and is the same in the other.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Handles isomorphism generally, between instantiated components
+in a mixture and potentially between rule patterns.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>Self</em><em> | </em><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator</em>[dict[<a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>, <a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.n_automorphisms">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_automorphisms</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pykappa.pattern.Component.n_automorphisms" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the number of automorphisms (i.e. isomorphisms onto itself)
+of the component.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This uses a cached result, and thus should only be used
+for static components, i.e. the ones in rules and observables.
+Do not use this for components in a mixture that can change.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Component.diameter">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">diameter</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pykappa.pattern.Component.diameter" title="Link to this definition">¶</a></dt>
+<dd><p>Get the maximum minimum shortest path between any two agents.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern" title="Link to this definition">¶</a></dt>
+<dd><p>A pattern consisting of multiple agents, some of which may be None (empty slots).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agents</strong> (<em>list</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em> | </em><em>None</em><em>]</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.agents">
+<span class="sig-name descname"><span class="pre">agents</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.agents" title="Link to this definition">¶</a></dt>
+<dd><p>List of agents, where None represents empty slots in rules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent">pykappa.pattern.Agent</a> | None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.from_kappa">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern.from_kappa" title="Link to this definition">¶</a></dt>
+<dd><p>Parse a pattern from a Kappa string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kappa_str</strong> (<em>str</em>) – Kappa string describing a pattern.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parsed Pattern object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If the string doesn’t describe exactly one pattern.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Self</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.components">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">components</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Component" title="pykappa.pattern.Component"><span class="pre">Component</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Pattern.components" title="Link to this definition">¶</a></dt>
+<dd><p>The connected components in this pattern.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.agents_to_kappa_str">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">agents_to_kappa_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern.agents_to_kappa_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern.agents_to_kappa_str" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a collection of agents to Kappa string representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agents</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em> | </em><em>None</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.kappa_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.kappa_str" title="Link to this definition">¶</a></dt>
+<dd><p>The pattern representation in Kappa format.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.underspecified">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.underspecified" title="Link to this definition">¶</a></dt>
+<dd><p>Check if any agents in the pattern are underspecified.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.n_isomorphisms">
+<span class="sig-name descname"><span class="pre">n_isomorphisms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern.n_isomorphisms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern.n_isomorphisms" title="Link to this definition">¶</a></dt>
+<dd><p>Counts the number of bijections which respect links in the site graph.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Runtime is exponential in the number of components; use with caution.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

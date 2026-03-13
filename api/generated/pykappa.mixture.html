@@ -150,6 +150,53 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.from_kappa">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.from_kappa" title="Link to this definition">¶</a></dt>
+<dd><p>Create a mixture from Kappa pattern strings and counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>patterns</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) – Dictionary mapping pattern strings to copy counts.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Self</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><span class="pre">IndexedSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.kappa_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.mixture.Mixture.kappa_str" title="Link to this definition">¶</a></dt>
+<dd><p>The mixture in Kappa format with %init declarations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.component_tracking">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">component_tracking</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.mixture.Mixture.component_tracking" title="Link to this definition">¶</a></dt>
+<dd><p>Whether connected components are being tracked.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.components">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">components</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><span class="pre">IndexedSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><span class="pre">Component</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.Mixture.components" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.enable_component_tracking">
+<span class="sig-name descname"><span class="pre">enable_component_tracking</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.enable_component_tracking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.enable_component_tracking" title="Link to this definition">¶</a></dt>
+<dd><p>Turn on connected-component tracking for this mixture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_copies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.add" title="Link to this definition">¶</a></dt>
 <dd><p>Add instances of a pattern or component to the mixture.</p>
@@ -169,35 +216,19 @@
 </dl>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><span class="pre">IndexedSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.apply_update">
-<span class="sig-name descname"><span class="pre">apply_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.apply_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.apply_update" title="Link to this definition">¶</a></dt>
-<dd><p>Apply a collection of changes to the mixture.</p>
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.remove" title="Link to this definition">¶</a></dt>
+<dd><p>Remove a component from the mixture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>update</strong> (<a class="reference internal" href="#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a>)</p>
+<dd class="field-odd"><p><strong>component</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.component_tracking">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">component_tracking</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.mixture.Mixture.component_tracking" title="Link to this definition">¶</a></dt>
-<dd><p>Whether connected components are being tracked.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.components">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">components</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.utils.html#pykappa.utils.IndexedSet" title="pykappa.utils.IndexedSet"><span class="pre">IndexedSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><span class="pre">Component</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.Mixture.components" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture.embeddings">
@@ -234,57 +265,26 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.enable_component_tracking">
-<span class="sig-name descname"><span class="pre">enable_component_tracking</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.enable_component_tracking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.enable_component_tracking" title="Link to this definition">¶</a></dt>
-<dd><p>Turn on connected-component tracking for this mixture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.from_kappa">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.from_kappa" title="Link to this definition">¶</a></dt>
-<dd><p>Create a mixture from Kappa pattern strings and counts.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>patterns</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) – Dictionary mapping pattern strings to copy counts.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Self</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.kappa_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.mixture.Mixture.kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>The mixture in Kappa format with %init declarations.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.remove" title="Link to this definition">¶</a></dt>
-<dd><p>Remove a component from the mixture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>component</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture.track_component">
 <span class="sig-name descname"><span class="pre">track_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.track_component"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.track_component" title="Link to this definition">¶</a></dt>
 <dd><p>Start tracking embeddings of a component.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>component</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.apply_update">
+<span class="sig-name descname"><span class="pre">apply_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.apply_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.apply_update" title="Link to this definition">¶</a></dt>
+<dd><p>Apply a collection of changes to the mixture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>update</strong> (<a class="reference internal" href="#pykappa.mixture.MixtureUpdate" title="pykappa.mixture.MixtureUpdate"><em>MixtureUpdate</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -307,11 +307,6 @@
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.agents_changed">
-<span class="sig-name descname"><span class="pre">agents_changed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.agents_changed" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.agents_to_add">
 <span class="sig-name descname"><span class="pre">agents_to_add</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.agents_to_add" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -320,6 +315,49 @@
 <dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.agents_to_remove">
 <span class="sig-name descname"><span class="pre">agents_to_remove</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.agents_to_remove" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.edges_to_add">
+<span class="sig-name descname"><span class="pre">edges_to_add</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.mixture.Edge" title="pykappa.mixture.Edge"><span class="pre">Edge</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.edges_to_add" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.edges_to_remove">
+<span class="sig-name descname"><span class="pre">edges_to_remove</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.mixture.Edge" title="pykappa.mixture.Edge"><span class="pre">Edge</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.edges_to_remove" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.agents_changed">
+<span class="sig-name descname"><span class="pre">agents_changed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.agents_changed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.create_agent">
+<span class="sig-name descname"><span class="pre">create_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#MixtureUpdate.create_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.create_agent" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new agent based on a template (sites will be emptied).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.remove_agent">
+<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#MixtureUpdate.remove_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.remove_agent" title="Link to this definition">¶</a></dt>
+<dd><p>Specify to remove an agent and its edges from the mixture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.connect_sites">
@@ -340,20 +378,6 @@ are bound to other sites, indicates to remove those edges.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.create_agent">
-<span class="sig-name descname"><span class="pre">create_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#MixtureUpdate.create_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.create_agent" title="Link to this definition">¶</a></dt>
-<dd><p>Create a new agent based on a template (sites will be emptied).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agent</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.disconnect_site">
 <span class="sig-name descname"><span class="pre">disconnect_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#MixtureUpdate.disconnect_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.disconnect_site" title="Link to this definition">¶</a></dt>
 <dd><p>Specify that a site should be unbound.</p>
@@ -366,16 +390,6 @@ are bound to other sites, indicates to remove those edges.</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.edges_to_add">
-<span class="sig-name descname"><span class="pre">edges_to_add</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.mixture.Edge" title="pykappa.mixture.Edge"><span class="pre">Edge</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.edges_to_add" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.edges_to_remove">
-<span class="sig-name descname"><span class="pre">edges_to_remove</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.mixture.Edge" title="pykappa.mixture.Edge"><span class="pre">Edge</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.edges_to_remove" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.register_changed_agent">
@@ -391,18 +405,10 @@ are bound to other sites, indicates to remove those edges.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.remove_agent">
-<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#MixtureUpdate.remove_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.remove_agent" title="Link to this definition">¶</a></dt>
-<dd><p>Specify to remove an agent and its edges from the mixture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agent</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.touched_before">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">touched_before</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.touched_before" title="Link to this definition">¶</a></dt>
+<dd><p>The agents that will be changed or removed by this update.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -411,29 +417,6 @@ are bound to other sites, indicates to remove those edges.</p>
 <dd><p>The agents that will be changed or added after this update.</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.mixture.MixtureUpdate.touched_before">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">touched_before</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.MixtureUpdate.touched_before" title="Link to this definition">¶</a></dt>
-<dd><p>The agents that will be changed or removed by this update.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pykappa.mixture.group_by_isomorphism">
-<span class="sig-prename descclassname"><span class="pre">pykappa.mixture.</span></span><span class="sig-name descname"><span class="pre">group_by_isomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#group_by_isomorphism"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.group_by_isomorphism" title="Link to this definition">¶</a></dt>
-<dd><p>Group components by isomorphism.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dictionary mapping representative components to lists of isomorphic components.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>components</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a><em>]</em>)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>, list[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>]]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -449,6 +432,23 @@ are bound to other sites, indicates to remove those edges.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>set[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.mixture.group_by_isomorphism">
+<span class="sig-prename descclassname"><span class="pre">pykappa.mixture.</span></span><span class="sig-name descname"><span class="pre">group_by_isomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#group_by_isomorphism"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.group_by_isomorphism" title="Link to this definition">¶</a></dt>
+<dd><p>Group components by isomorphism.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary mapping representative components to lists of isomorphic components.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>components</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a><em>]</em>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>, list[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>]]</p>
 </dd>
 </dl>
 </dd></dl>

@@ -59,6 +59,23 @@
 </tr>
 </tbody>
 </table>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.expression.parse_operator">
+<span class="sig-prename descclassname"><span class="pre">pykappa.expression.</span></span><span class="sig-name descname"><span class="pre">parse_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_operator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/expression.html#parse_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.expression.parse_operator" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a Kappa string operator to a Python function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the operator is not recognized.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>kappa_operator</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Callable</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.expression.Expression">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.expression.</span></span><span class="sig-name descname"><span class="pre">Expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/expression.html#Expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.expression.Expression" title="Link to this definition">¶</a></dt>
@@ -73,6 +90,34 @@
 <dt class="sig sig-object py" id="pykappa.expression.Expression.attrs">
 <span class="sig-name descname"><span class="pre">attrs</span></span><a class="headerlink" href="#pykappa.expression.Expression.attrs" title="Link to this definition">¶</a></dt>
 <dd><p>Dictionary of attributes specific to the expression type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.expression.Expression.from_kappa">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/expression.html#Expression.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.expression.Expression.from_kappa" title="Link to this definition">¶</a></dt>
+<dd><p>Parse an Expression from a Kappa string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If the string doesn’t represent a valid expression.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>kappa_str</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.expression.Expression.kappa_str">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.expression.Expression.kappa_str" title="Link to this definition">¶</a></dt>
+<dd><p>Get the expression representation in Kappa format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If expression type is not supported for string conversion.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -110,51 +155,6 @@
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.expression.Expression.from_kappa">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/expression.html#Expression.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.expression.Expression.from_kappa" title="Link to this definition">¶</a></dt>
-<dd><p>Parse an Expression from a Kappa string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – If the string doesn’t represent a valid expression.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>kappa_str</strong> (<em>str</em>)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.expression.Expression.kappa_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.expression.Expression.kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>Get the expression representation in Kappa format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If expression type is not supported for string conversion.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pykappa.expression.parse_operator">
-<span class="sig-prename descclassname"><span class="pre">pykappa.expression.</span></span><span class="sig-name descname"><span class="pre">parse_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_operator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/expression.html#parse_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.expression.parse_operator" title="Link to this definition">¶</a></dt>
-<dd><p>Convert a Kappa string operator to a Python function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the operator is not recognized.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>kappa_operator</strong> (<em>str</em>)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Callable</em></p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>
