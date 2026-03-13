@@ -96,7 +96,7 @@
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 
 <span class="c1"># Add extracellular lactose and continue simulating</span>
-<span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;L(loc</span><span class="si">{out}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;L(loc</span><span class="si">{out}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 <span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">800</span><span class="p">:</span>
    <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 </pre></div>

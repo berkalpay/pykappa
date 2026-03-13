@@ -78,7 +78,7 @@
                 "    system.update()\n",
                 "\n",
                 "# Add extracellular lactose and continue simulating\n",
-                "system.mixture.instantiate(\"L(loc{out})\", 1000)\n",
+                "system.mixture.add(\"L(loc{out})\", 1000)\n",
                 "while system.time < 800:\n",
                 "   system.update()"
             ]

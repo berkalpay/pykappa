@@ -115,9 +115,9 @@ Embeddings of complex in itself: 1
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span>
 
 <span class="n">mixture</span> <span class="o">=</span> <span class="n">Mixture</span><span class="p">()</span>
-<span class="n">mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;A(x[.])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;B(x[.])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;A(x[1]), B(x[1])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;A(x[.])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;B(x[.])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;A(x[1]), B(x[1])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mixture as a Kappa string:</span><span class="se">\n</span><span class="si">{</span><span class="n">mixture</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -146,8 +146,8 @@ Mixture as a Kappa string:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comp_mixture</span> <span class="o">=</span> <span class="n">Mixture</span><span class="p">(</span><span class="n">track_components</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">comp_mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;A(x[.])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">comp_mixture</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="s2">&quot;A(x[1]), B(x[1])&quot;</span><span class="p">)</span>
+<span class="n">comp_mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;A(x[.])&quot;</span><span class="p">,</span> <span class="n">n_copies</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">comp_mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;A(x[1]), B(x[1])&quot;</span><span class="p">)</span>
 
 <span class="c1"># Iterate over all components</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Components in mixture:&quot;</span><span class="p">)</span>

@@ -97,7 +97,7 @@
             "metadata": {},
             "outputs": [],
             "source": [
-                "system.mixture.instantiate(\"C(m[.])\", 500)\n",
+                "system.mixture.add(\"C(m[.])\", 500)\n",
                 "\n",
                 "while system.time < 200:\n",
                 "    system.update()\n",

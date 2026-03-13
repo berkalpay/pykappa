@@ -151,14 +151,20 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.add" title="Link to this definition">¶</a></dt>
-<dd><p>Add a component to the mixture.</p>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_copies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.add" title="Link to this definition">¶</a></dt>
+<dd><p>Add instances of a pattern or component to the mixture.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>component</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>)</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If pattern is underspecified.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>pattern</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a><em> | </em><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a><em> | </em><em>str</em>)</p></li>
+<li><p><strong>n_copies</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -248,26 +254,6 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>Self</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.instantiate">
-<span class="sig-name descname"><span class="pre">instantiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_copies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.instantiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.instantiate" title="Link to this definition">¶</a></dt>
-<dd><p>Add instances of a pattern to the mixture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pattern</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a><em> | </em><em>str</em>) – Pattern to instantiate, or Kappa string.</p></li>
-<li><p><strong>n_copies</strong> (<em>int</em>) – Number of copies to create.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>AssertionError</strong> – If pattern is underspecified.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
