@@ -99,12 +99,12 @@ class Rule:
         return self.kappa_str
 
     @property
-    def rate_str(self) -> str:
+    def _rate_str(self) -> str:
         return self.stochastic_rate.kappa_str
 
     @property
     def kappa_str(self) -> str:
-        return f"{self.left.kappa_str} -> {self.right.kappa_str} @ {self.rate_str}"
+        return f"{self.left.kappa_str} -> {self.right.kappa_str} @ {self._rate_str}"
 
     def reactivity(self, system: "System") -> float:
         """Calculate the total reactivity of this rule in the given system,
@@ -148,7 +148,6 @@ class Rule:
         return pattern.n_isomorphisms(pattern)
 
     def rate(self, system: "System") -> float:
-        """Evaluate the stochastic rate expression."""
         return self.stochastic_rate.evaluate(system)
 
     def n_embeddings(self, mixture: Mixture) -> int:
@@ -267,7 +266,7 @@ class UnimolecularRule(Rule):
         self.component_weights: dict[Component, int] = {}
 
     @property
-    def rate_str(self) -> str:
+    def _rate_str(self) -> str:
         return f"0 {{{self.stochastic_rate.kappa_str}}}"
 
     def n_embeddings(self, mixture: Mixture) -> int:
@@ -327,8 +326,8 @@ class BimolecularRule(Rule):
         ), "Bimolecular rule patterns must consist of exactly 2 components."
 
     @property
-    def rate_str(self) -> str:
-        return super().rate_str + " {0}"
+    def _rate_str(self) -> str:
+        return super()._rate_str + " {0}"
 
     def n_embeddings(self, mixture: Mixture) -> int:
         """Count the total number of embeddings in the mixture."""
