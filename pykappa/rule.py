@@ -5,7 +5,7 @@ from functools import cached_property
 from copy import deepcopy
 
 from pykappa.pattern import Pattern, Component, Agent, Site
-from pykappa.mixture import Mixture, MixtureUpdate
+from pykappa.mixture import Mixture, _MixtureUpdate
 from pykappa._expression import Expression
 from pykappa._utils import rejection_sample
 
@@ -162,7 +162,7 @@ class Rule:
             len(mixture.embeddings(component)) for component in self.left.components
         )
 
-    def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
+    def select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
         """Select agents and specify the update (or None for invalid match).
 
         Note:
@@ -189,7 +189,7 @@ class Rule:
 
     def _produce_update(
         self, selection_map: dict[Agent, Agent], mixture: Mixture
-    ) -> MixtureUpdate:
+    ) -> _MixtureUpdate:
         """Produce an update specification from selected agents.
 
         Args:
@@ -203,7 +203,7 @@ class Rule:
         new_selection: list[Optional[Agent]] = [None] * len(
             selection
         )  # The new/modified agents used to make the appropriate edges
-        update = MixtureUpdate()
+        update = _MixtureUpdate()
 
         # Manage agents
         for i in range(len(self)):
@@ -283,7 +283,7 @@ class UnimolecularRule(Rule):
             count += weight
         return count
 
-    def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
+    def select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
         """Select agents and specify the update (or None for invalid match).
 
         Note:
@@ -349,7 +349,7 @@ class BimolecularRule(Rule):
 
         return count
 
-    def select(self, mixture: Mixture) -> Optional[MixtureUpdate]:
+    def select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
         """Select agents and specify the update (or None for invalid match).
 
         Note:
