@@ -1,5 +1,8 @@
 import math
 import colorsys
+import shutil
+import tempfile
+import os
 from typing import TYPE_CHECKING, Optional
 
 import numpy as np
@@ -11,6 +14,44 @@ import matplotlib.figure
 if TYPE_CHECKING:
     from pykappa.pattern import Component
     from pykappa.system import System
+
+
+class StaticAnalyzer:
+    """Provides analysis of a system via (Ka)ppa (S)tatic (a)nalyzer."""
+
+    system: "System"
+    _tmpdir: tempfile.TemporaryDirectory
+    _inp: str
+
+    def __init__(self, system: "System"):
+        self.system = system
+
+    def __enter__(self):
+        assert shutil.which("KaSa"), "KaSa not found in the PATH."
+        self._tmpdir = tempfile.TemporaryDirectory()
+
+        # Serialize the `system` to a Kappa string
+        # NOTE: We may want to do this via stdin and stdout instead of
+        # explicitly creating files. Not sure if KaSa supports this.
+        self._inp = os.path.join(self._tmpdir.name, "in.ka")
+        with open(self._inp, "w") as f:
+            f.write(self.system.kappa_str)
+
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._tmpdir.cleanup()  # also deletes subfiles
+
+    def contact_map(self):
+        os.system(
+            f"KaSa {self._inp} --reset-all --compute-contact-map "
+            f"--output-directory {self._tmpdir.name} "
+            f"--output-contact-map out "
+        )
+
+        with open(os.path.join(self._tmpdir.name, "out.dot")) as f:
+            dot = f.read()
+        return Source(dot, engine="neato")
 
 
 class ComponentPlot:
