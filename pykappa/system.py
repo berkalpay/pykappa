@@ -12,7 +12,7 @@ from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa.pattern import Component, Pattern
 from pykappa._expression import Expression
 from pykappa.analysis import Monitor
-from pykappa.utils import str_table
+from pykappa._utils import str_table
 
 
 class System:

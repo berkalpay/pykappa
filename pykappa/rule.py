@@ -7,7 +7,7 @@ from copy import deepcopy
 from pykappa.pattern import Pattern, Component, Agent, Site
 from pykappa.mixture import Mixture, MixtureUpdate
 from pykappa._expression import Expression
-from pykappa.utils import rejection_sample
+from pykappa._utils import rejection_sample
 
 if TYPE_CHECKING:
     from pykappa.system import System
