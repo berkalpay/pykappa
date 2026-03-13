@@ -28,6 +28,7 @@ exclude_patterns = []
 autosummary_generate = True
 autodoc_typehints = "description"
 autodoc_default_options = {"members": True, "undoc-members": True}
+autodoc_member_order = "bysource"
 autoclass_content = "class"
 napoleon_google_docstring = True
 nbsphinx_execute = "always"
