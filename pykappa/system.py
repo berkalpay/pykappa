@@ -231,7 +231,7 @@ class System:
         self.observables = {} if observables is None else observables
         self.variables = {} if variables is None else variables
 
-        self.set_mixture(mixture)
+        self._set_mixture(mixture)
         self.time = 0
 
         self.tallies = defaultdict(lambda: {"applied": 0, "failed": 0})
@@ -354,7 +354,7 @@ class System:
         with open(filepath, "w") as f:
             f.write(self.kappa_str)
 
-    def set_mixture(self, mixture: Mixture) -> None:
+    def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
         self.mixture = mixture
         for rule in self.rules.values():
@@ -510,7 +510,7 @@ class System:
                         output_kappa_str += split[0] + split[-1]
 
         # Apply the update
-        self.set_mixture(System.from_ka(output_kappa_str).mixture)
+        self._set_mixture(System.from_ka(output_kappa_str).mixture)
         self.time += time
         if self.monitor:
             self.monitor.update()
