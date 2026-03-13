@@ -176,7 +176,7 @@ def test_system_manipulation():
     assert system["AB"] == 1
 
     # Add a pattern
-    system.mixture.instantiate("A(x[1]), B(x[1])")
+    system.mixture.add("A(x[1]), B(x[1])")
     assert system["AB"] == 2
     total_agents_pre_removal = system["total_agents"]
     assert total_agents_pre_removal == 22

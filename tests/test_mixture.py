@@ -56,7 +56,7 @@ def test_find_embeddings_one_component(test_case):
 
     mixture = Mixture()
     for _ in range(n):
-        mixture.instantiate(mixture_pattern, n_copies)
+        mixture.add(mixture_pattern, n_copies)
 
     match_pattern = Pattern.from_kappa(match_pattern_str)
     assert len(match_pattern.components) == 1
@@ -67,8 +67,8 @@ def test_find_embeddings_one_component(test_case):
 
 def test_embeddings_in_component():
     mixture = Mixture(track_components=True)
-    mixture.instantiate("A(x[.])", n_copies=2)
-    mixture.instantiate("A(x[1]), B(x[1])")
+    mixture.add("A(x[.])", n_copies=2)
+    mixture.add("A(x[1]), B(x[1])")
 
     complex = Pattern.from_kappa("A(x[1]), B(x[1])").components[0]
     mixture.track_component(complex)

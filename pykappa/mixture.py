@@ -67,7 +67,7 @@ class Mixture:
 
         if patterns is not None:
             for pattern in patterns:
-                self.instantiate(pattern)
+                self.add(pattern)
 
     def __iter__(self) -> Iterator[Component]:
         yield from self.components
@@ -118,16 +118,17 @@ class Mixture:
                 lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
             )
 
-    def instantiate(self, pattern: Pattern | str, n_copies: int = 1) -> None:
-        """Add instances of a pattern to the mixture.
-
-        Args:
-            pattern: Pattern to instantiate, or Kappa string.
-            n_copies: Number of copies to create.
+    def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
+        """Add instances of a pattern or component to the mixture.
 
         Raises:
             AssertionError: If pattern is underspecified.
         """
+        if isinstance(pattern, Component):
+            for _ in range(n_copies):
+                self._add_component(pattern)
+            return
+
         if isinstance(pattern, str):
             pattern = Pattern.from_kappa(pattern)
 
@@ -136,10 +137,9 @@ class Mixture:
         ), "Pattern isn't specific enough to instantiate."
         for _ in range(n_copies):
             for component in pattern.components:
-                self.add(component)
+                self._add_component(component)
 
-    def add(self, component: Component) -> None:
-        """Add a component to the mixture."""
+    def _add_component(self, component: Component) -> None:
         component_ordered = list(component.agents)
         new_agents = [agent.detached() for agent in component_ordered]
         new_edges = set()

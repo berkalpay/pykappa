@@ -142,7 +142,7 @@ class System:
 
         system = cls(None, rules, observables, variables, seed=seed)
         for init in inits:
-            system.mixture.instantiate(init[1], int(init[0].evaluate(system)))
+            system.mixture.add(init[1], int(init[0].evaluate(system)))
         return system
 
     @classmethod
