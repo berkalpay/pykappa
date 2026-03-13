@@ -60,7 +60,7 @@ class Expression:
         Raises:
             AssertionError: If the string doesn't represent a valid expression.
         """
-        from pykappa.parsing import kappa_parser, ExpressionTransformer
+        from pykappa._parsing import kappa_parser, ExpressionTransformer
 
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"
