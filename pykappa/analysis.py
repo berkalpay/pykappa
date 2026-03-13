@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from pykappa.system import System
 
 
-class ComponentPlot:
+class _ComponentPlot:
     """Stable visualization of a Component across simulation steps."""
 
     def __init__(self, component: "Component"):
