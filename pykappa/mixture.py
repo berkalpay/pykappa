@@ -155,14 +155,14 @@ class Mixture:
                     new_edges.add(_Edge(new_site, new_partner))
 
         update = _MixtureUpdate(agents_to_add=set(new_agents), edges_to_add=new_edges)
-        self.apply_update(update)
+        self._apply_update(update)
 
     def remove(self, component: Component) -> None:
         """Remove a component from the mixture."""
         update = _MixtureUpdate()
         for agent in component:
             update.remove_agent(agent)
-        self.apply_update(update)
+        self._apply_update(update)
 
     def embeddings(self, component: Component) -> IndexedSet[Embedding]:
         """Get embeddings of a tracked component (not accounting for symmetries).
@@ -199,7 +199,7 @@ class Mixture:
                 lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
             )
 
-    def apply_update(self, update: "_MixtureUpdate") -> None:
+    def _apply_update(self, update: "_MixtureUpdate") -> None:
         """Apply a collection of changes to the mixture."""
         for agent in update.touched_before:
             for tracked in self._embeddings:
