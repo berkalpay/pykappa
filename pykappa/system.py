@@ -441,7 +441,7 @@ class System:
                 "system has no reactivity: infinite wait time", RuntimeWarning
             )
 
-    def choose_rule(self) -> Optional[Rule]:
+    def _choose_rule(self) -> Optional[Rule]:
         """Choose a rule to apply based on reactivity weights.
 
         Returns:
@@ -471,7 +471,7 @@ class System:
             self.monitor.update()  # Record initial state
 
         self.wait()
-        if (rule := self.choose_rule()) is not None:
+        if (rule := self._choose_rule()) is not None:
             self._apply_rule(rule)
 
         if self.monitor is not None:
