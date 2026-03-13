@@ -1,7 +1,7 @@
 import pytest
 from math import comb
 
-from pykappa.expression import Expression
+from pykappa._expression import Expression
 from pykappa.pattern import Pattern
 from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa.system import System
