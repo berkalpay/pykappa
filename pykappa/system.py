@@ -289,21 +289,65 @@ class System:
         )
 
     @property
+    def _reversible_rules(self) -> list[tuple[str, str]]:
+        """Find forward/reverse rule pairs by checking pattern symmetry."""
+        names = list(self.rules.keys())
+        pairs = []
+        used = set()
+
+        for i, name_a in enumerate(names):
+            if name_a in used:
+                continue
+            rule_a = self.rules[name_a]
+
+            for name_b in names[i + 1 :]:
+                if name_b in used:
+                    continue
+                rule_b = self.rules[name_b]
+
+                if rule_a.left.n_isomorphisms(
+                    rule_b.right
+                ) and rule_a.right.n_isomorphisms(rule_b.left):
+                    pairs.append((name_a, name_b))
+                    used.add(name_a)
+                    used.add(name_b)
+                    break
+
+        return pairs
+
+    @property
     def kappa_str(self) -> str:
         """The system representation in Kappa (.ka style) format."""
-        kappa_str = ""
+
+        kappa_list = []
+
+        # Format reversible rules with <-> notation
+        pairs = self._reversible_rules
+        paired = {name for pair in pairs for name in pair}
+        for fwd_name, rev_name in pairs:
+            fwd = self.rules[fwd_name]
+            rev = self.rules[rev_name]
+            kappa_list.append(
+                f"{fwd.left.kappa_str} <-> {fwd.right.kappa_str} "
+                f"@ {fwd.rate_str}, {rev.rate_str}"
+            )
+        # Otherwise format with -> notation
+        for name, rule in self.rules.items():
+            if name not in paired:
+                kappa_list.append(rule.kappa_str)
+
         for var_name, var in self.variables.items():
-            kappa_str += f"%var: '{var_name}' {var.kappa_str}\n"
-        for rule in self.rules.values():
-            assert isinstance(rule, KappaRule)
-            kappa_str += f"{rule.kappa_str}\n"
+            kappa_list.append(f"%var: '{var_name}' {var.kappa_str}")
+
         for obs_name, obs in self.observables.items():
             obs_str = (
                 f"|{obs.kappa_str}|" if isinstance(obs, Component) else obs.kappa_str
             )
-            kappa_str += f"%obs: '{obs_name}' {obs_str}\n"
-        kappa_str += self.mixture.kappa_str
-        return kappa_str
+            kappa_list.append(f"%obs: '{obs_name}' {obs_str}")
+
+        kappa_list.append(self.mixture.kappa_str)
+
+        return "\n".join(kappa_list)
 
     def to_ka(self, filepath: str) -> None:
         """Write system information to a Kappa file."""
