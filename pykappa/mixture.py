@@ -154,12 +154,12 @@ class Mixture:
                     new_partner = new_agents[i_partner][partner.label]
                     new_edges.add(Edge(new_site, new_partner))
 
-        update = MixtureUpdate(agents_to_add=set(new_agents), edges_to_add=new_edges)
+        update = _MixtureUpdate(agents_to_add=set(new_agents), edges_to_add=new_edges)
         self.apply_update(update)
 
     def remove(self, component: Component) -> None:
         """Remove a component from the mixture."""
-        update = MixtureUpdate()
+        update = _MixtureUpdate()
         for agent in component:
             update.remove_agent(agent)
         self.apply_update(update)
@@ -199,7 +199,7 @@ class Mixture:
                 lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
             )
 
-    def apply_update(self, update: "MixtureUpdate") -> None:
+    def apply_update(self, update: "_MixtureUpdate") -> None:
         """Apply a collection of changes to the mixture."""
         for agent in update.touched_before:
             for tracked in self._embeddings:
@@ -311,7 +311,7 @@ class Mixture:
 
 
 @dataclass
-class MixtureUpdate:
+class _MixtureUpdate:
     """Specifies changes to be applied to a mixture."""
 
     agents_to_add: set[Agent] = field(default_factory=set)
