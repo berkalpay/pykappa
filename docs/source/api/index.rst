@@ -14,12 +14,12 @@ API reference
    :toctree: generated
    :recursive:
 
-   pykappa._parsing
-   pykappa._expression
+   pykappa.analysis
 
 .. autosummary::
    :toctree: generated
    :recursive:
 
-   pykappa.analysis
+   pykappa._parsing
+   pykappa._expression
    pykappa._utils
