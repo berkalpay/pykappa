@@ -145,8 +145,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.system.System.rng">
-<span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#pykappa.system.System.rng" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.system.System._rng">
+<span class="sig-name descname"><span class="pre">_rng</span></span><a class="headerlink" href="#pykappa.system.System._rng" title="Link to this definition">¶</a></dt>
 <dd><p>Random number generator for reproducibility of updates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -217,37 +217,32 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">rng</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Random</span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rules</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><span class="pre">Rule</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">rules</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><span class="pre">Rule</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">time</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">time</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tallies</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">defaultdict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">tallies</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">defaultdict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">monitor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.analysis.html#pykappa.analysis.Monitor" title="pykappa.analysis.Monitor"><span class="pre">Monitor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">monitor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.analysis.html#pykappa.analysis.Monitor" title="pykappa.analysis.Monitor"><span class="pre">Monitor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
