@@ -1,5 +1,6 @@
 import pytest
-from pykappa.system import System
+
+from pykappa import System
 
 
 @pytest.mark.parametrize(

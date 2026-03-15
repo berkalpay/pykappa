@@ -2,10 +2,9 @@ import pytest
 import math
 from pathlib import Path
 
+from pykappa import Pattern, Rule, System
+from pykappa.rule import UnimolecularRule, BimolecularRule
 from pykappa._parsing import kappa_parser
-from pykappa.pattern import Pattern
-from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
-from pykappa.system import System
 
 # Parser
 

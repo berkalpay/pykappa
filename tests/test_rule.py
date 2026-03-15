@@ -1,10 +1,9 @@
 import pytest
 from math import comb
 
+from pykappa import System, Pattern, Rule
+from pykappa.rule import UnimolecularRule, BimolecularRule
 from pykappa._expression import Expression
-from pykappa.pattern import Pattern
-from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
-from pykappa.system import System
 
 
 @pytest.mark.parametrize(

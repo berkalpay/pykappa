@@ -1,7 +1,7 @@
 import pytest
 
-from pykappa.pattern import Pattern, Component
-from pykappa.mixture import Mixture, neighborhood
+from pykappa import Pattern, Component, Mixture
+from pykappa.mixture import neighborhood
 
 
 def test_neighborhood_requires_frontier_growth_for_radius_gt_1():

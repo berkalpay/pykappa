@@ -1,4 +1,4 @@
-from pykappa.system import System
+from pykappa import System
 
 if __name__ == "__main__":
     system = System.from_kappa(
