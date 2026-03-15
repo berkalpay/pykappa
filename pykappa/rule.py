@@ -258,12 +258,12 @@ class UnimolecularRule(Rule):
     """Rule that acts within a single component.
 
     Attributes:
-        component_weights: Cache of embedding weights per component.
+        _component_weights: Cache of embedding weights per component.
     """
 
     def __post_init__(self):
         super().__post_init__()
-        self.component_weights: dict[Component, int] = {}
+        self._component_weights: dict[Component, int] = {}
 
     @property
     def _rate_str(self) -> str:
@@ -272,13 +272,13 @@ class UnimolecularRule(Rule):
     def n_embeddings(self, mixture: Mixture) -> int:
         """Count the total number of embeddings in the mixture."""
         count = 0
-        self.component_weights = {}
+        self._component_weights = {}
         for component in mixture.components:
             weight = prod(
                 len(mixture.embeddings_in_component(match_component, component))
                 for match_component in self.left.components
             )
-            self.component_weights[component] = weight
+            self._component_weights[component] = weight
             count += weight
         return count
 
@@ -289,8 +289,8 @@ class UnimolecularRule(Rule):
             n_embeddings must be called before this method so that the
             component_weights cache is up-to-date.
         """
-        components_ordered = list(self.component_weights)
-        weights = [self.component_weights[c] for c in components_ordered]
+        components_ordered = list(self._component_weights)
+        weights = [self._component_weights[c] for c in components_ordered]
         selected_component = random.choices(components_ordered, weights)[0]
 
         selection_map: dict[Agent, Agent] = {}
@@ -314,13 +314,13 @@ class BimolecularRule(Rule):
     """Rule that acts between two distinct components.
 
     Attributes:
-        component_weights: Cache of embedding weights per component.
+        _component_weights: Cache of embedding weights per component.
     """
 
     def __post_init__(self):
         """Initialize the rule and validate it has exactly 2 components."""
         super().__post_init__()
-        self.component_weights: dict[Component, int] = {}
+        self._component_weights: dict[Component, int] = {}
         assert (
             len(self.left.components) == 2
         ), "Bimolecular rule patterns must consist of exactly 2 components."
@@ -332,7 +332,7 @@ class BimolecularRule(Rule):
     def n_embeddings(self, mixture: Mixture) -> int:
         """Count the total number of embeddings in the mixture."""
         count = 0
-        self.component_weights = {}
+        self._component_weights = {}
 
         for component in mixture.components:
             n_match1 = len(
@@ -343,7 +343,7 @@ class BimolecularRule(Rule):
             )
 
             weight = n_match1 * n_match2
-            self.component_weights[component] = weight
+            self._component_weights[component] = weight
             count += weight
 
         return count
@@ -355,8 +355,8 @@ class BimolecularRule(Rule):
             n_embeddings must be called before this method so that the
             component_weights cache is up-to-date.
         """
-        components_ordered = list(self.component_weights.keys())
-        weights = [self.component_weights[c] for c in components_ordered]
+        components_ordered = list(self._component_weights.keys())
+        weights = [self._component_weights[c] for c in components_ordered]
         selected_component = random.choices(components_ordered, weights)[0]
 
         match1 = random.choice(
