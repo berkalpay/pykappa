@@ -26,7 +26,7 @@ class System:
         monitor: Optional Monitor object for tracking simulation history.
         time: Current simulation time.
         tallies: Dictionary tracking rule application counts.
-        rng: Random number generator for reproducibility of updates.
+        _rng: Random number generator for reproducibility of updates.
     """
 
     mixture: Mixture
@@ -36,7 +36,7 @@ class System:
     monitor: Optional["Monitor"]
     time: float
     tallies: defaultdict[str, dict[str, int]]
-    rng: random.Random
+    _rng: random.Random
 
     @classmethod
     def read_ka(cls, filepath: str, seed: Optional[int] = None) -> Self:
@@ -215,7 +215,7 @@ class System:
             monitor: Whether to enable monitoring of simulation history.
             seed: Random seed for reproducibility.
         """
-        self.rng = random.Random() if seed is None else random.Random(seed)
+        self._rng = random.Random() if seed is None else random.Random(seed)
 
         self.rules = (
             {} if rules is None else {f"r{i}": rule for i, rule in enumerate(rules)}
@@ -435,7 +435,7 @@ class System:
             RuntimeWarning: If system has no reactivity (infinite wait time).
         """
         try:
-            self.time += self.rng.expovariate(self.reactivity)
+            self.time += self._rng.expovariate(self.reactivity)
         except ZeroDivisionError:
             warnings.warn(
                 "system has no reactivity: infinite wait time", RuntimeWarning
@@ -448,7 +448,7 @@ class System:
             Selected rule, or None if no rules have positive reactivity.
         """
         try:
-            return self.rng.choices(
+            return self._rng.choices(
                 list(self.rules.values()), weights=self.rule_reactivities
             )[0]
         except ValueError:
