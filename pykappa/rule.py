@@ -21,19 +21,6 @@ VOLUMES = {"fibro": 2.25e-12, "yeast": 4.2e-14}
 ROOM_TEMPERATURE = 273.15 + 25
 
 
-def kinetic_to_stochastic_on_rate(
-    k_on: float = DIFFUSION_RATE, volume: float = 1, molecularity: int = 2
-) -> float:
-    """Convert a kinetic on-rate constant to a stochastic one.
-
-    Args:
-        k_on: Kinetic on-rate constant.
-        volume: Reaction volume.
-        molecularity: Number of reactants.
-    """
-    return k_on / (AVOGADRO * volume ** (molecularity - 1))
-
-
 class Rule:
     """Standard Kappa rule with left-hand side, right-hand side, and rate.
 

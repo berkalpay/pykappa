@@ -5,7 +5,7 @@ import random
 from collections import defaultdict
 
 from pykappa import System
-from pykappa.rule import AVOGADRO, DIFFUSION_RATE, kinetic_to_stochastic_on_rate
+from pykappa.rule import AVOGADRO, DIFFUSION_RATE
 
 
 def heterodimerization_system(k_on: float = 2.5e9) -> System:
@@ -129,7 +129,7 @@ def test_equilibrium_matches_kd(kd, a_init, b_init):
     within a relative margin of error.
     """
     volume = 10**-13
-    on_rate = kinetic_to_stochastic_on_rate(volume=volume)
+    on_rate = DIFFUSION_RATE / (AVOGADRO * volume)
     kd = 10**-9
     off_rate = DIFFUSION_RATE * kd
     system = System.from_ka(
