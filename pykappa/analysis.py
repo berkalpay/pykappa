@@ -279,3 +279,53 @@ def equilibrium_value(
     eq_time = equilibration_time(values, times, min_tail_length, tolerance)
     eq_index = next(i for i, t in enumerate(times) if t >= eq_time)
     return float(np.mean(values[eq_index:]))
+
+
+def binding_kinetics_table(system, volume: float = 1.0) -> str:
+    """Summarize kinetic constants of two-component binding/unbinding rules
+    given volume in liters.
+    """
+
+    from pykappa.rule import AVOGADRO
+    from pykappa._utils import str_table
+
+    header = ["name", "rule", "k_on", "k_off", "K_D"]
+    rows = []
+
+    for fwd_name, rev_name in system._reversible_rules:
+        fwd = system.rules[fwd_name]
+        rev = system.rules[rev_name]
+
+        fwd_mol = len(fwd.left.components)
+        rev_mol = len(rev.left.components)
+
+        if (fwd_mol == 2 and rev_mol == 1) or (fwd_mol == 1 and rev_mol == 2):
+            # Determine binding and unbinding reactions
+            is_fwd_binding = fwd_mol == 2
+            binding_rxn = fwd if is_fwd_binding else rev
+            unbinding_rxn = rev if is_fwd_binding else fwd
+
+            binding_types = sorted(
+                comp.agents[0].type for comp in binding_rxn.left.components
+            )
+            unbinding_types = sorted(
+                agent.type
+                for comp in unbinding_rxn.left.components
+                for agent in comp.agents
+                if agent is not None
+            )
+            if binding_types == unbinding_types:
+                k_on = binding_rxn.rate(system) * AVOGADRO * volume
+                k_off = unbinding_rxn.rate(system)
+                kd = k_off / k_on
+                rows.append(
+                    [
+                        f"{fwd_name}/{rev_name}",
+                        f"{fwd.left.kappa_str} <-> {fwd.right.kappa_str}",
+                        f"{k_on:.2e}",
+                        f"{k_off:.2e}",
+                        f"{kd:.2e}",
+                    ]
+                )
+
+    return str_table(rows, header)
