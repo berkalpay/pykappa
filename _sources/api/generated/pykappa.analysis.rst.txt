@@ -8,6 +8,7 @@
 
    .. autosummary::
    
+      binding_kinetics_table
       equilibrated
       equilibration_time
       equilibrium_value

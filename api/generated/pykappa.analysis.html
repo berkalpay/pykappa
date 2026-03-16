@@ -45,16 +45,19 @@
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.equilibrated" title="pykappa.analysis.equilibrated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibrated</span></code></a>(values[, times, tail_fraction, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.binding_kinetics_table" title="pykappa.analysis.binding_kinetics_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binding_kinetics_table</span></code></a>(system[, volume])</p></td>
+<td><p>Summarize kinetic constants of two-component binding/unbinding rules given volume in liters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.equilibrated" title="pykappa.analysis.equilibrated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibrated</span></code></a>(values[, times, tail_fraction, ...])</p></td>
 <td><p>Checks whether the magnitude of the slope of the tail of the series relative to the mean is sufficiently small (below tolerance).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.equilibration_time" title="pykappa.analysis.equilibration_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibration_time</span></code></a>(values[, times, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.equilibration_time" title="pykappa.analysis.equilibration_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibration_time</span></code></a>(values[, times, ...])</p></td>
 <td><p>Earliest time from which the remaining series is equilibrated.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.equilibrium_value" title="pykappa.analysis.equilibrium_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibrium_value</span></code></a>(values[, times, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.equilibrium_value" title="pykappa.analysis.equilibrium_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equilibrium_value</span></code></a>(values[, times, ...])</p></td>
 <td><p>Mean of the series from the equilibration point onward.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.relative_slope" title="pykappa.analysis.relative_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relative_slope</span></code></a>(values[, times, tail_fraction])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.relative_slope" title="pykappa.analysis.relative_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relative_slope</span></code></a>(values[, times, tail_fraction])</p></td>
 <td><p>Computes the magnitude of the slope of the tail of the series.</p></td>
 </tr>
 </tbody>
@@ -279,6 +282,21 @@ sampling intervals.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.analysis.binding_kinetics_table">
+<span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">binding_kinetics_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#binding_kinetics_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.binding_kinetics_table" title="Link to this definition">¶</a></dt>
+<dd><p>Summarize kinetic constants of two-component binding/unbinding rules
+given volume in liters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>volume</strong> (<em>float</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

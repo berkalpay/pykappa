@@ -350,6 +350,59 @@
     <span class="n">eq_index</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">eq_time</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">eq_index</span><span class="p">:]))</span></div>
 
+
+
+<div class="viewcode-block" id="binding_kinetics_table">
+<a class="viewcode-back" href="../../api/generated/pykappa.analysis.html#pykappa.analysis.binding_kinetics_table">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">binding_kinetics_table</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Summarize kinetic constants of two-component binding/unbinding rules</span>
+<span class="sd">    given volume in liters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">AVOGADRO</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_table</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span> <span class="s2">&quot;k_on&quot;</span><span class="p">,</span> <span class="s2">&quot;k_off&quot;</span><span class="p">,</span> <span class="s2">&quot;K_D&quot;</span><span class="p">]</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">fwd_name</span><span class="p">,</span> <span class="n">rev_name</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">_reversible_rules</span><span class="p">:</span>
+        <span class="n">fwd</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">fwd_name</span><span class="p">]</span>
+        <span class="n">rev</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rev_name</span><span class="p">]</span>
+
+        <span class="n">fwd_mol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+        <span class="n">rev_mol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rev</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">rev_mol</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">rev_mol</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="c1"># Determine binding and unbinding reactions</span>
+            <span class="n">is_fwd_binding</span> <span class="o">=</span> <span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">2</span>
+            <span class="n">binding_rxn</span> <span class="o">=</span> <span class="n">fwd</span> <span class="k">if</span> <span class="n">is_fwd_binding</span> <span class="k">else</span> <span class="n">rev</span>
+            <span class="n">unbinding_rxn</span> <span class="o">=</span> <span class="n">rev</span> <span class="k">if</span> <span class="n">is_fwd_binding</span> <span class="k">else</span> <span class="n">fwd</span>
+
+            <span class="n">binding_types</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">comp</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">binding_rxn</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
+            <span class="p">)</span>
+            <span class="n">unbinding_types</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">type</span>
+                <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">unbinding_rxn</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
+                <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">comp</span><span class="o">.</span><span class="n">agents</span>
+                <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">binding_types</span> <span class="o">==</span> <span class="n">unbinding_types</span><span class="p">:</span>
+                <span class="n">k_on</span> <span class="o">=</span> <span class="n">binding_rxn</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span> <span class="o">*</span> <span class="n">AVOGADRO</span> <span class="o">*</span> <span class="n">volume</span>
+                <span class="n">k_off</span> <span class="o">=</span> <span class="n">unbinding_rxn</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+                <span class="n">kd</span> <span class="o">=</span> <span class="n">k_off</span> <span class="o">/</span> <span class="n">k_on</span>
+                <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fwd_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">rev_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k_on</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k_off</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kd</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">str_table</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span></div>
+
 </pre></div>
 
           </div>
