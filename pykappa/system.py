@@ -10,8 +10,8 @@ from typing import Optional, Iterable, Self
 from pykappa.mixture import Mixture
 from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa.pattern import Component, Pattern
-from pykappa._expression import Expression
 from pykappa.analysis import Monitor
+from pykappa._expression import Expression
 from pykappa._utils import str_table
 
 
