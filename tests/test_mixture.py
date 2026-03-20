@@ -71,7 +71,7 @@ def test_embeddings_in_component():
     mixture.add("A(x[1]), B(x[1])")
 
     complex = Pattern.from_kappa("A(x[1]), B(x[1])").components[0]
-    mixture.track_component(complex)
+    mixture._track_component(complex)
     mixture_component = next(c for c in mixture.components if len(c.agents) == 2)
     embeddings_in_comp = mixture.embeddings_in_component(complex, mixture_component)
     assert len(embeddings_in_comp) == 1

@@ -168,7 +168,7 @@ class Mixture:
             return self._embeddings[component]
         except KeyError as e:
             e.add_note(
-                f"Undeclared component: {component}. To embed it, first use `track_component`."
+                f"Undeclared component: {component}. To track it, add it as an observable."
             )
             raise
 
@@ -180,7 +180,7 @@ class Mixture:
             raise RuntimeError("Component tracking is not enabled.")
         return self._embeddings[match_pattern].lookup("component", mixture_component)
 
-    def track_component(self, component: Component):
+    def _track_component(self, component: Component):
         """Start tracking embeddings of a component."""
         self._max_embedding_width = max(component.diameter, self._max_embedding_width)
         embeddings = IndexedSet(component.embeddings(self))

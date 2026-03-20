@@ -194,8 +194,7 @@ class System:
         monitor: bool = True,
         seed: Optional[int] = None,
     ):
-        """Initialize a new System.
-
+        """
         Args:
             mixture: Initial mixture state.
             rules: Collection of rules to apply.
@@ -396,7 +395,7 @@ class System:
         """Track components mentioned in the left hand side of a Rule."""
         for component in rule.left.components:
             # TODO: For efficiency check for isomorphism with already-tracked components
-            self.mixture.track_component(component)
+            self.mixture._track_component(component)
 
     def _track_expression(self, expression: Expression) -> None:
         """Track the Components in the given expression.
@@ -405,7 +404,7 @@ class System:
             Doesn't track patterns nested by indirection - see the filter method.
         """
         for component_expr in expression.filter("component_pattern"):
-            self.mixture.track_component(component_expr.attrs["value"])
+            self.mixture._track_component(component_expr.attrs["value"])
 
     @cached_property
     def rule_reactivities(self) -> list[float]:
