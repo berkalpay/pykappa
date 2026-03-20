@@ -70,39 +70,6 @@
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.left">
-<span class="sig-name descname"><span class="pre">left</span></span><a class="headerlink" href="#pykappa.rule.Rule.left" title="Link to this definition">¶</a></dt>
-<dd><p>Left-hand side pattern.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern">pykappa.pattern.Pattern</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.right">
-<span class="sig-name descname"><span class="pre">right</span></span><a class="headerlink" href="#pykappa.rule.Rule.right" title="Link to this definition">¶</a></dt>
-<dd><p>Right-hand side pattern.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern">pykappa.pattern.Pattern</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.stochastic_rate">
-<span class="sig-name descname"><span class="pre">stochastic_rate</span></span><a class="headerlink" href="#pykappa.rule.Rule.stochastic_rate" title="Link to this definition">¶</a></dt>
-<dd><p>Rate expression for the rule.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pykappa._expression.Expression</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.Rule.list_from_kappa">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">list_from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule.list_from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule.list_from_kappa" title="Link to this definition">¶</a></dt>
@@ -139,18 +106,18 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">left</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.rule.Rule.left">
+<span class="sig-name descname"><span class="pre">left</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#pykappa.rule.Rule.left" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">right</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.rule.Rule.right">
+<span class="sig-name descname"><span class="pre">right</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#pykappa.rule.Rule.right" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">stochastic_rate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Expression</span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.rule.Rule.stochastic_rate">
+<span class="sig-name descname"><span class="pre">stochastic_rate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Expression</span></span><a class="headerlink" href="#pykappa.rule.Rule.stochastic_rate" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -232,12 +199,6 @@ applies this correction when calculating rule reactivities.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.UnimolecularRule._component_weights">
-<span class="sig-name descname"><span class="pre">_component_weights</span></span><a class="headerlink" href="#pykappa.rule.UnimolecularRule._component_weights" title="Link to this definition">¶</a></dt>
-<dd><p>Cache of embedding weights per component.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.UnimolecularRule.n_embeddings">
 <span class="sig-name descname"><span class="pre">n_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#UnimolecularRule.n_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.UnimolecularRule.n_embeddings" title="Link to this definition">¶</a></dt>
@@ -267,12 +228,6 @@ applies this correction when calculating rule reactivities.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.BimolecularRule._component_weights">
-<span class="sig-name descname"><span class="pre">_component_weights</span></span><a class="headerlink" href="#pykappa.rule.BimolecularRule._component_weights" title="Link to this definition">¶</a></dt>
-<dd><p>Cache of embedding weights per component.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.BimolecularRule.n_embeddings">
 <span class="sig-name descname"><span class="pre">n_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#BimolecularRule.n_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.BimolecularRule.n_embeddings" title="Link to this definition">¶</a></dt>

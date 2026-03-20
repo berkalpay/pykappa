@@ -129,18 +129,12 @@
 <div class="viewcode-block" id="Monitor">
 <a class="viewcode-back" href="../../api/generated/pykappa.analysis.html#pykappa.analysis.Monitor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Monitor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Records the history of the values of observables in a system.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        system: The system being monitored.</span>
-<span class="sd">        history: Dictionary mapping observable names to their value history.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Records the history of the values of observables in a system.&quot;&quot;&quot;</span>
 
     <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span>
-    <span class="n">history</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span>
+    <span class="n">history</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span>  <span class="c1">#: Maps observable names to their history</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a monitor for the given system.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">system</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="p">[]}</span> <span class="o">|</span> <span class="p">{</span><span class="n">obs_name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">obs_name</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">observables</span><span class="p">}</span>
 

@@ -72,50 +72,6 @@
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.agents">
-<span class="sig-name descname"><span class="pre">agents</span></span><a class="headerlink" href="#pykappa.mixture.Mixture.agents" title="Link to this definition">¶</a></dt>
-<dd><p>Indexed set of all agents in the mixture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pykappa._utils.IndexedSet[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent">pykappa.pattern.Agent</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture._components">
-<span class="sig-name descname"><span class="pre">_components</span></span><a class="headerlink" href="#pykappa.mixture.Mixture._components" title="Link to this definition">¶</a></dt>
-<dd><p>Indexed set of components if enabled, else None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pykappa._utils.IndexedSet[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component">pykappa.pattern.Component</a>] | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture._embeddings">
-<span class="sig-name descname"><span class="pre">_embeddings</span></span><a class="headerlink" href="#pykappa.mixture.Mixture._embeddings" title="Link to this definition">¶</a></dt>
-<dd><p>Cache of embeddings for tracked components.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component">pykappa.pattern.Component</a>, pykappa._utils.IndexedSet[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Embedding" title="pykappa.pattern.Embedding">pykappa.pattern.Embedding</a>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture._max_embedding_width">
-<span class="sig-name descname"><span class="pre">_max_embedding_width</span></span><a class="headerlink" href="#pykappa.mixture.Mixture._max_embedding_width" title="Link to this definition">¶</a></dt>
-<dd><p>Maximum diameter of tracked components.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture.from_kappa">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.from_kappa" title="Link to this definition">¶</a></dt>
@@ -131,8 +87,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IndexedSet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.mixture.Mixture.agents">
+<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IndexedSet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.Mixture.agents" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -227,17 +183,6 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>IndexedSet</em>[<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Embedding" title="pykappa.pattern.Embedding"><em>Embedding</em></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.track_component">
-<span class="sig-name descname"><span class="pre">track_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.track_component"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.track_component" title="Link to this definition">¶</a></dt>
-<dd><p>Start tracking embeddings of a component.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>component</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><em>Component</em></a>)</p>
 </dd>
 </dl>
 </dd></dl>

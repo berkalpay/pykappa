@@ -65,13 +65,7 @@
 <div class="viewcode-block" id="Rule">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Rule</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard Kappa rule with left-hand side, right-hand side, and rate.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        left: Left-hand side pattern.</span>
-<span class="sd">        right: Right-hand side pattern.</span>
-<span class="sd">        stochastic_rate: Rate expression for the rule.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard Kappa rule with left-hand side, right-hand side, and rate.&quot;&quot;&quot;</span>
 
     <span class="n">left</span><span class="p">:</span> <span class="n">Pattern</span>
     <span class="n">right</span><span class="p">:</span> <span class="n">Pattern</span>
@@ -303,15 +297,13 @@
 <div class="viewcode-block" id="UnimolecularRule">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.UnimolecularRule">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnimolecularRule</span><span class="p">(</span><span class="n">Rule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rule that acts within a single component.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rule that acts within a single component.&quot;&quot;&quot;</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        _component_weights: Cache of embedding weights per component.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_component_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># Cache of embedding weights per component</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_rate_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -365,16 +357,13 @@
 <div class="viewcode-block" id="BimolecularRule">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.BimolecularRule">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BimolecularRule</span><span class="p">(</span><span class="n">Rule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rule that acts between two distinct components.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rule that acts between two distinct components.&quot;&quot;&quot;</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        _component_weights: Cache of embedding weights per component.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_component_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># Cache of embedding weights per component</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the rule and validate it has exactly 2 components.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">assert</span> <span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
         <span class="p">),</span> <span class="s2">&quot;Bimolecular rule patterns must consist of exactly 2 components.&quot;</span>

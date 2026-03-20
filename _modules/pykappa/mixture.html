@@ -69,18 +69,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A collection of agents and their connections.</span>
 
 <span class="sd">    Optionally tracks connected components, enabled via `enable_component_tracking()`.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        agents: Indexed set of all agents in the mixture.</span>
-<span class="sd">        _components: Indexed set of components if enabled, else None.</span>
-<span class="sd">        _embeddings: Cache of embeddings for tracked components.</span>
-<span class="sd">        _max_embedding_width: Maximum diameter of tracked components.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">agents</span><span class="p">:</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span>
-    <span class="n">_components</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IndexedSet</span><span class="p">[</span><span class="n">Component</span><span class="p">]]</span>
-    <span class="n">_embeddings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Embedding</span><span class="p">]]</span>
-    <span class="n">_max_embedding_width</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_components</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IndexedSet</span><span class="p">[</span><span class="n">Component</span><span class="p">]]</span>  <span class="c1"># Components if tracking is enabled</span>
+    <span class="n">_embeddings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Embedding</span><span class="p">]]</span>  <span class="c1"># Cache of embeddings</span>
+    <span class="n">_max_embedding_width</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Maximum diameter of tracked components</span>
 
 <div class="viewcode-block" id="Mixture.from_kappa">
 <a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.Mixture.from_kappa">[docs]</a>
@@ -231,7 +225,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">component</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">e</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Undeclared component: </span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="s2">. To embed it, first use `track_component`.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Undeclared component: </span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="s2">. To track it, add it as an observable.&quot;</span>
             <span class="p">)</span>
             <span class="k">raise</span></div>
 
@@ -247,9 +241,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">match_pattern</span><span class="p">]</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;component&quot;</span><span class="p">,</span> <span class="n">mixture_component</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Mixture.track_component">
-<a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.Mixture.track_component">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">track_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_track_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start tracking embeddings of a component.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_embedding_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">diameter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_embedding_width</span><span class="p">)</span>
         <span class="n">embeddings</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
@@ -260,8 +252,7 @@
             <span class="n">embeddings</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span>
                 <span class="s2">&quot;component&quot;</span><span class="p">,</span>
                 <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">values</span><span class="p">())))],</span>
-            <span class="p">)</span></div>
-
+            <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_apply_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="s2">&quot;_MixtureUpdate&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply a collection of changes to the mixture.&quot;&quot;&quot;</span>

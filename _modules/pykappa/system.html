@@ -59,27 +59,16 @@
 <div class="viewcode-block" id="System">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">System</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Kappa system containing agents, rules, observables, and variables for simulation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Kappa system containing agents, rules, observables, and variables for simulation.&quot;&quot;&quot;</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        mixture: The current state of agents and their connections.</span>
-<span class="sd">        rules: Dictionary mapping rule names to Rule objects.</span>
-<span class="sd">        observables: Dictionary mapping observable names to expressions.</span>
-<span class="sd">        variables: Dictionary mapping variable names to expressions.</span>
-<span class="sd">        monitor: Optional Monitor object for tracking simulation history.</span>
-<span class="sd">        time: Current simulation time.</span>
-<span class="sd">        tallies: Dictionary tracking rule application counts.</span>
-<span class="sd">        _rng: Random number generator for reproducibility of updates.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span>
-    <span class="n">rules</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Rule</span><span class="p">]</span>
-    <span class="n">observables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span>
-    <span class="n">variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span>
-    <span class="n">monitor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Monitor&quot;</span><span class="p">]</span>
-    <span class="n">time</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">tallies</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
-    <span class="n">_rng</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span>
+    <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span>  <span class="c1">#: The current state of agents and their connections</span>
+    <span class="n">rules</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Rule</span><span class="p">]</span>  <span class="c1">#: Maps rule names to Rule objects</span>
+    <span class="n">observables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span>  <span class="c1">#: Maps observable names to expressions</span>
+    <span class="n">variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span>  <span class="c1">#: Maps variable names to expressions</span>
+    <span class="n">monitor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Monitor&quot;</span><span class="p">]</span>  <span class="c1">#: Optionally tracks simulation history</span>
+    <span class="n">time</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1">#: Current simulation time</span>
+    <span class="n">tallies</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>  <span class="c1">#: Tracks rule applications</span>
+    <span class="n">_rng</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span>  <span class="c1"># Random number generator for reproducibility of updates</span>
 
 <div class="viewcode-block" id="System.read_ka">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.read_ka">[docs]</a>
@@ -257,8 +246,7 @@
         <span class="n">monitor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a new System.</span>
-
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            mixture: Initial mixture state.</span>
 <span class="sd">            rules: Collection of rules to apply.</span>
@@ -468,7 +456,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Track components mentioned in the left hand side of a Rule.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
             <span class="c1"># TODO: For efficiency check for isomorphism with already-tracked components</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_track_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Track the Components in the given expression.</span>
@@ -477,7 +465,7 @@
 <span class="sd">            Doesn&#39;t track patterns nested by indirection - see the filter method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">component_expr</span> <span class="ow">in</span> <span class="n">expression</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;component_pattern&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="n">component_expr</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component_expr</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">rule_reactivities</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>

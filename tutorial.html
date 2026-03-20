@@ -46,7 +46,7 @@
             
   <section id="Tutorial">
 <h1>Tutorial<a class="headerlink" href="#Tutorial" title="Link to this heading">¶</a></h1>
-<p>PyKappa works in terms of patterns, mixtures, and rules, and expressions, culminating in systems. Let’s see how the API works at each level.</p>
+<p>PyKappa works in terms of patterns, mixtures, and rules, and expressions, culminating in systems. Let’s see how the API works at each level, including internal implementation details.</p>
 <section id="Patterns">
 <h2>Patterns<a class="headerlink" href="#Patterns" title="Link to this heading">¶</a></h2>
 <p>As in Kappa, patterns (subsets of a mixture on which rules can operate) can be broken down into components (a connected set of agents). Agents are typed objects with named sites, each of which has an internal state and possibly a binding partner – the site of another agent. All of these classes of objects can be constructed from Kappa strings using the <code class="docutils literal notranslate"><span class="pre">from_kappa</span></code> classmethod.</p>
@@ -122,7 +122,7 @@ Embeddings of complex in itself: 1
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mixture as a Kappa string:</span><span class="se">\n</span><span class="si">{</span><span class="n">mixture</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Track a component pattern to query embeddings efficiently</span>
-<span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+<span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#AB embeddings (cached):&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="nb">complex</span><span class="p">)))</span>
 </pre></div>
 </div>
@@ -155,7 +155,7 @@ Mixture as a Kappa string:
     <span class="nb">print</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span>
 
 <span class="c1"># Query embeddings within a specific component</span>
-<span class="n">comp_mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+<span class="n">comp_mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
 <span class="n">mixture_component</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">comp_mixture</span><span class="o">.</span><span class="n">components</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">embeddings_in_comp</span> <span class="o">=</span> <span class="n">comp_mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">,</span> <span class="n">mixture_component</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Embeddings in the AB complex: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings_in_comp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -192,12 +192,12 @@ Embeddings in the AB complex: 1
 
 <span class="c1"># Track the components on the left-hand side of the rule</span>
 <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">bind</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
-    <span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+    <span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
 
 <span class="n">update</span> <span class="o">=</span> <span class="n">bind</span><span class="o">.</span><span class="n">_select</span><span class="p">(</span><span class="n">mixture</span><span class="p">)</span>
 <span class="n">mixture</span><span class="o">.</span><span class="n">_apply_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
 
-<span class="n">mixture</span><span class="o">.</span><span class="n">track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+<span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AB count after one binding event:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="nb">complex</span><span class="p">)))</span>
 </pre></div>
 </div>
