@@ -22,13 +22,7 @@ ROOM_TEMPERATURE = 273.15 + 25
 
 
 class Rule:
-    """Standard Kappa rule with left-hand side, right-hand side, and rate.
-
-    Attributes:
-        left: Left-hand side pattern.
-        right: Right-hand side pattern.
-        stochastic_rate: Rate expression for the rule.
-    """
+    """Standard Kappa rule with left-hand side, right-hand side, and rate."""
 
     left: Pattern
     right: Pattern
@@ -242,15 +236,13 @@ class Rule:
 
 
 class UnimolecularRule(Rule):
-    """Rule that acts within a single component.
+    """Rule that acts within a single component."""
 
-    Attributes:
-        _component_weights: Cache of embedding weights per component.
-    """
+    _component_weights: dict[Component, int]  # Cache of embedding weights per component
 
     def __post_init__(self):
         super().__post_init__()
-        self._component_weights: dict[Component, int] = {}
+        self._component_weights = {}
 
     @property
     def _rate_str(self) -> str:
@@ -298,16 +290,14 @@ class UnimolecularRule(Rule):
 
 
 class BimolecularRule(Rule):
-    """Rule that acts between two distinct components.
+    """Rule that acts between two distinct components."""
 
-    Attributes:
-        _component_weights: Cache of embedding weights per component.
-    """
+    _component_weights: dict[Component, int]  # Cache of embedding weights per component
 
     def __post_init__(self):
         """Initialize the rule and validate it has exactly 2 components."""
         super().__post_init__()
-        self._component_weights: dict[Component, int] = {}
+        self._component_weights = {}
         assert (
             len(self.left.components) == 2
         ), "Bimolecular rule patterns must consist of exactly 2 components."

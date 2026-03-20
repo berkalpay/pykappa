@@ -26,18 +26,12 @@ class Mixture:
     """A collection of agents and their connections.
 
     Optionally tracks connected components, enabled via `enable_component_tracking()`.
-
-    Attributes:
-        agents: Indexed set of all agents in the mixture.
-        _components: Indexed set of components if enabled, else None.
-        _embeddings: Cache of embeddings for tracked components.
-        _max_embedding_width: Maximum diameter of tracked components.
     """
 
     agents: IndexedSet[Agent]
-    _components: Optional[IndexedSet[Component]]
-    _embeddings: dict[Component, IndexedSet[Embedding]]
-    _max_embedding_width: int
+    _components: Optional[IndexedSet[Component]]  # Components if tracking is enabled
+    _embeddings: dict[Component, IndexedSet[Embedding]]  # Cache of embeddings
+    _max_embedding_width: int  # Maximum diameter of tracked components
 
     @classmethod
     def from_kappa(cls, patterns: dict[str, int]) -> Self:

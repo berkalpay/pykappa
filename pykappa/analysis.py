@@ -86,15 +86,10 @@ class _ComponentPlot:
 
 
 class Monitor:
-    """Records the history of the values of observables in a system.
-
-    Attributes:
-        system: The system being monitored.
-        history: Dictionary mapping observable names to their value history.
-    """
+    """Records the history of the values of observables in a system."""
 
     system: "System"
-    history: dict[str, list[Optional[float]]]
+    history: dict[str, list[Optional[float]]]  #: Maps observable names to their history
 
     def __init__(self, system: "System"):
         """Initialize a monitor for the given system."""

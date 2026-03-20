@@ -1,7 +1,7 @@
 import math
 import operator
 from collections import deque
-from typing import Self, Optional, Callable, TYPE_CHECKING
+from typing import Any, Self, Optional, Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pykappa.pattern import Component
@@ -46,12 +46,10 @@ def parse_operator(kappa_operator: str) -> Callable:
 
 
 class Expression:
-    """Algebraic expressions as specified by the Kappa language.
+    """Algebraic expressions as specified by the Kappa language."""
 
-    Attributes:
-        type: Type of expression (literal, variable, binary_op, etc.).
-        attrs: Dictionary of attributes specific to the expression type.
-    """
+    type: Any  # Type of expression (literal, variable, binary_op, etc.)
+    attrs: dict[str, Any]  # Dictionary of attributes specific to the expression type
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> "Expression":

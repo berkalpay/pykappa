@@ -17,16 +17,12 @@ Partner = str | SiteType | int | Union["Site"]
 
 
 class Site(Counted):
-    """Represents a site on an agent with state and binding partner information.
+    """A site on an agent with state and binding partner information."""
 
-    Attributes:
-        agent: The agent this site belongs to (set after initialization).
-        label: Name of the site.
-        state: Internal state of the site.
-        partner: Binding partner specification.
-    """
-
-    agent: "Agent"  # Expected to be set after initialization
+    agent: "Agent"  #: The agent this site belongs to (set after initialization)
+    label: str  #: Name of the site
+    state: str  #: Internal state of the site
+    partner: Partner
 
     def __init__(self, label: str, state: str, partner: Partner):
         """Initialize a site with label, state, and partner.
@@ -119,12 +115,10 @@ class Site(Counted):
 
 
 class Agent(Counted):
-    """Represents an agent with a type and collection of sites.
+    """Represents an agent with a type and collection of sites."""
 
-    Attributes:
-        type: Type name of the agent.
-        interface: Dictionary mapping site labels to Site objects.
-    """
+    type: str  #: Type name of the agent
+    interface: dict[str, Site]  #: Maps site labels to Site objects
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
@@ -438,11 +432,7 @@ class Component(Counted):
 
 
 class Pattern:
-    """A pattern consisting of multiple agents, some of which may be None (empty slots).
-
-    Attributes:
-        agents: List of agents, where None represents empty slots in rules.
-    """
+    """A pattern consisting of multiple agents, some of which may be None (empty slots)."""
 
     agents: list[Optional[Agent]]
 

@@ -16,27 +16,16 @@ from pykappa._utils import str_table
 
 
 class System:
-    """A Kappa system containing agents, rules, observables, and variables for simulation.
+    """A Kappa system containing agents, rules, observables, and variables for simulation."""
 
-    Attributes:
-        mixture: The current state of agents and their connections.
-        rules: Dictionary mapping rule names to Rule objects.
-        observables: Dictionary mapping observable names to expressions.
-        variables: Dictionary mapping variable names to expressions.
-        monitor: Optional Monitor object for tracking simulation history.
-        time: Current simulation time.
-        tallies: Dictionary tracking rule application counts.
-        _rng: Random number generator for reproducibility of updates.
-    """
-
-    mixture: Mixture
-    rules: dict[str, Rule]
-    observables: dict[str, Expression]
-    variables: dict[str, Expression]
-    monitor: Optional["Monitor"]
-    time: float
-    tallies: defaultdict[str, dict[str, int]]
-    _rng: random.Random
+    mixture: Mixture  #: The current state of agents and their connections
+    rules: dict[str, Rule]  #: Maps rule names to Rule objects
+    observables: dict[str, Expression]  #: Maps observable names to expressions
+    variables: dict[str, Expression]  #: Maps variable names to expressions
+    monitor: Optional["Monitor"]  #: Optionally tracks simulation history
+    time: float  #: Current simulation time
+    tallies: defaultdict[str, dict[str, int]]  #: Tracks rule applications
+    _rng: random.Random  # Random number generator for reproducibility of updates
 
     @classmethod
     def read_ka(cls, filepath: str, seed: Optional[int] = None) -> Self:
