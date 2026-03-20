@@ -295,7 +295,6 @@ class BimolecularRule(Rule):
     _component_weights: dict[Component, int]  # Cache of embedding weights per component
 
     def __post_init__(self):
-        """Initialize the rule and validate it has exactly 2 components."""
         super().__post_init__()
         self._component_weights = {}
         assert (

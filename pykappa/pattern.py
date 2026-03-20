@@ -25,8 +25,7 @@ class Site(Counted):
     partner: Partner
 
     def __init__(self, label: str, state: str, partner: Partner):
-        """Initialize a site with label, state, and partner.
-
+        """
         Args:
             label: Name of the site.
             state: Internal state of the site.
@@ -54,7 +53,6 @@ class Site(Counted):
 
     @property
     def kappa_str(self) -> str:
-        """The site representation in Kappa format."""
         return f"{self.label}{self.kappa_partner_str}{self.kappa_state_str}"
 
     @property
@@ -78,7 +76,6 @@ class Site(Counted):
 
     @property
     def bound(self) -> bool:
-        """Check if the site is bound."""
         return (
             self.partner == "_"
             or isinstance(self.partner, SiteType)
@@ -142,7 +139,6 @@ class Agent(Counted):
         return KappaTransformer().transform(agent_tree)
 
     def __init__(self, type: str, sites: Iterable[Site]):
-        """Initialize an agent with given type and sites."""
         super().__init__()
         self.type = type
         self.interface = {site.label: site for site in sites}
@@ -151,7 +147,6 @@ class Agent(Counted):
         yield from self.sites
 
     def __getitem__(self, key: str) -> Site:
-        """Get a site by its label."""
         return self.interface[key]
 
     def __repr__(self):
@@ -159,12 +154,10 @@ class Agent(Counted):
 
     @property
     def kappa_str(self):
-        """The agent representation in Kappa format."""
         return f"{self.type}({" ".join(site.kappa_str for site in self)})"
 
     @property
     def sites(self) -> Iterable[Site]:
-        """All sites of this agent."""
         yield from self.interface.values()
 
     @cached_property
@@ -192,7 +185,6 @@ class Agent(Counted):
 
     @property
     def instantiable(self) -> bool:
-        """Check if this agent pattern can be instantiated."""
         return not any(site.underspecified for site in self)
 
     def detached(self) -> Self:
@@ -274,8 +266,7 @@ class Component(Counted):
         return parsed_pattern.components[0]
 
     def __init__(self, agents: Iterable[Agent], n_copies: int = 1):
-        """Initialize a component with agents.
-
+        """
         Raises:
             AssertionError: If agents list is empty or n_copies < 1.
             NotImplementedError: If n_copies != 1 (not yet supported).
@@ -304,15 +295,12 @@ class Component(Counted):
 
     @property
     def kappa_str(self) -> str:
-        """The component representation in Kappa format."""
         return Pattern.agents_to_kappa_str(self.agents)
 
     def add(self, agent: Agent):
-        """Add an agent to this component."""
         self.agents.add(agent)
 
     def isomorphic(self, other: Self) -> bool:
-        """Check if two components are isomorphic."""
         return next(self.isomorphisms(other), None) is not None
 
     def embeddings(
@@ -438,8 +426,7 @@ class Pattern:
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
-        """Parse a pattern from a Kappa string.
-
+        """
         Raises:
             AssertionError: If the string doesn't describe exactly one pattern.
         """
@@ -533,7 +520,6 @@ class Pattern:
 
     @property
     def kappa_str(self) -> str:
-        """The pattern representation in Kappa format."""
         return type(self).agents_to_kappa_str(self.agents)
 
     @cached_property

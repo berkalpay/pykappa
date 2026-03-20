@@ -92,7 +92,6 @@ class Monitor:
     history: dict[str, list[Optional[float]]]  #: Maps observable names to their history
 
     def __init__(self, system: "System"):
-        """Initialize a monitor for the given system."""
         self.system = system
         self.history = {"time": []} | {obs_name: [] for obs_name in system.observables}
 

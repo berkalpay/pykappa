@@ -72,8 +72,7 @@ class Expression:
 
     @property
     def kappa_str(self) -> str:
-        """Get the expression representation in Kappa format.
-
+        """
         Raises:
             ValueError: If expression type is not supported for string conversion.
         """

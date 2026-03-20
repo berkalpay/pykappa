@@ -14,7 +14,6 @@ class KappaParser:
     """
 
     def __init__(self):
-        """Initialize the Lark parser with Kappa grammar."""
         self._parser = Lark.open(
             str(Path(__file__).parent / "kappa.lark"),
             rel_to=__file__,
