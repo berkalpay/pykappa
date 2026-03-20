@@ -252,7 +252,6 @@ class Component(Counted):
     """
 
     agents: IndexedSet[Agent]
-    n_copies: int
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
@@ -265,23 +264,16 @@ class Component(Counted):
         assert len(parsed_pattern.components) == 1
         return parsed_pattern.components[0]
 
-    def __init__(self, agents: Iterable[Agent], n_copies: int = 1):
+    def __init__(self, agents: Iterable[Agent]):
         """
         Raises:
-            AssertionError: If agents list is empty or n_copies < 1.
-            NotImplementedError: If n_copies != 1 (not yet supported).
+            AssertionError: If agents list is empty.
         """
         super().__init__()
         assert agents
-        assert n_copies >= 1
-        if n_copies != 1:
-            raise NotImplementedError(
-                "Simulations won't handle n_copies correctly in counting embeddings."
-            )
-
         self.agents = IndexedSet(agents)  # TODO: order by graph traversal
         self.agents.create_index("type", lambda a: [a.type])
-        self.n_copies = n_copies
+
         self.plot = _ComponentPlot(self)
 
     def __iter__(self):
