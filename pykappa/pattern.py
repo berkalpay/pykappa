@@ -440,12 +440,6 @@ class Pattern:
     def from_kappa(cls, kappa_str: str) -> Self:
         """Parse a pattern from a Kappa string.
 
-        Args:
-            kappa_str: Kappa string describing a pattern.
-
-        Returns:
-            Parsed Pattern object.
-
         Raises:
             AssertionError: If the string doesn't describe exactly one pattern.
         """
