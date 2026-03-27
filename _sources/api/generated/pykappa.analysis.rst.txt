@@ -9,6 +9,7 @@
    .. autosummary::
    
       binding_kinetics_table
+      contact_map
       equilibrated
       equilibration_time
       equilibrium_value
