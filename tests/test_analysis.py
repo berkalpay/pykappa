@@ -5,7 +5,6 @@ import shutil
 from pathlib import Path
 
 from pykappa.system import System
-from pykappa.analysis import StaticAnalyzer
 
 from test_system import heterodimerization_system
 
@@ -15,9 +14,8 @@ def test_contact_map():
     system = heterodimerization_system()
     pattern = re.compile(r"\s+")
 
-    with StaticAnalyzer(system) as analyzer:
-        # strip whitespace
-        src = re.sub(pattern, "", analyzer.contact_map().unflatten().source)
+    # strip whitespace
+    src = re.sub(pattern, "", system.contact_map().unflatten().source)
 
     with open(str(Path(__file__).parent / "hdimer_cm.dot")) as f:
         cg = re.sub(pattern, "", f.read())

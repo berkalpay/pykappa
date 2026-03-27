@@ -6,6 +6,7 @@ import warnings
 from collections import defaultdict
 from functools import cached_property
 from typing import Optional, Iterable, Self
+from graphviz import Source
 
 from pykappa.mixture import Mixture
 from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
@@ -504,5 +505,20 @@ class System:
             self.monitor.update()
 
     def contact_map(self):
-        with StaticAnalyzer(self) as analyzer:
-            return analyzer.contact_map()
+        assert shutil.which("KaSa"), "KaSa not found in the PATH."
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            inp = os.path.join(tmpdir, "in.ka")
+            with open(inp, "w") as f:
+                f.write(self.kappa_str)
+
+            os.system(
+                f"KaSa {inp} --reset-all --compute-contact-map "
+                f"--output-directory {tmpdir} "
+                f"--output-contact-map out"
+            )
+
+            with open(os.path.join(tmpdir, "out.dot")) as f:
+                dot = f.read()
+
+        return Source(dot, engine="neato")
