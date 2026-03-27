@@ -326,3 +326,23 @@ def binding_kinetics_table(system, volume: float = 1.0) -> str:
                 )
 
     return str_table(rows, header)
+
+
+def contact_map(system: "System"):
+    assert shutil.which("KaSa"), "KaSa not found in the PATH."
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        inp = os.path.join(tmpdir, "in.ka")
+        with open(inp, "w") as f:
+            f.write(system.kappa_str)
+
+        os.system(
+            f"KaSa {inp} --reset-all --compute-contact-map "
+            f"--output-directory {tmpdir} "
+            f"--output-contact-map out"
+        )
+
+        with open(os.path.join(tmpdir, "out.dot")) as f:
+            dot = f.read()
+
+    return Source(dot, engine="neato")
