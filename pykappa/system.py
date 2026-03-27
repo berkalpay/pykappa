@@ -502,3 +502,7 @@ class System:
         self.time += time
         if self.monitor:
             self.monitor.update()
+
+    def contact_map(self):
+        with StaticAnalyzer(self) as analyzer:
+            return analyzer.contact_map()
