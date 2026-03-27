@@ -1,10 +1,6 @@
-import random
 import re
 import pytest
 import shutil
-from pathlib import Path
-
-from pykappa.system import System
 
 from test_system import heterodimerization_system
 
@@ -17,6 +13,32 @@ def test_contact_map():
     # strip whitespace
     src = re.sub(pattern, "", system.contact_map().unflatten().source)
 
-    with open(str(Path(__file__).parent / "hdimer_cm.dot")) as f:
-        cg = re.sub(pattern, "", f.read())
-        assert cg == src
+    reference = """
+        graph G {
+                subgraph cluster0 {
+                        graph [color=blue,
+                                label=A,
+                                shape=box
+                        ];
+                        0.0     [color=yellow,
+                                label=x,
+                                shape=circle,
+                                size=5,
+                                style=filled];
+                }
+                subgraph cluster1 {
+                        graph [color=blue,
+                                label=B,
+                                shape=box
+                        ];
+                        1.0     [color=yellow,
+                                label=x,
+                                shape=circle,
+                                size=5,
+                                style=filled];
+                }
+                0.0 -- 1.0;
+        }
+    """
+
+    assert src == re.sub(pattern, "", reference)
