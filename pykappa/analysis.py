@@ -328,7 +328,7 @@ def binding_kinetics_table(system, volume: float = 1.0) -> str:
     return str_table(rows, header)
 
 
-def contact_map(system: "System"):
+def contact_map(system: "System") -> Source:
     assert shutil.which("KaSa"), "KaSa not found in the PATH."
 
     with tempfile.TemporaryDirectory() as tmpdir:

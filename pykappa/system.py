@@ -504,7 +504,7 @@ class System:
         if self.monitor:
             self.monitor.update()
 
-    def contact_map(self):
+    def contact_map(self) -> Source:
         from pykappa.analysis import contact_map
 
         return contact_map(self)
