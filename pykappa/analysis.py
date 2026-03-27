@@ -340,6 +340,7 @@ def contact_map(system: "System") -> Source:
             f"KaSa {inp} --reset-all --compute-contact-map "
             f"--output-directory {tmpdir} "
             f"--output-contact-map out"
+            "> /dev/null"
         )
 
         with open(os.path.join(tmpdir, "out.dot")) as f:
