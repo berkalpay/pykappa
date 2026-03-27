@@ -329,6 +329,8 @@ def binding_kinetics_table(system, volume: float = 1.0) -> str:
 
 
 def contact_map(system: "System") -> Source:
+    """Generate a graphviz contact map using the KaSa static analyzer."""
+
     assert shutil.which("KaSa"), "KaSa not found in the PATH."
 
     with tempfile.TemporaryDirectory() as tmpdir:
