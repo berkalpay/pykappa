@@ -345,4 +345,4 @@ def contact_map(system: "System") -> Source:
         with open(os.path.join(tmpdir, "out.dot")) as f:
             dot = f.read()
 
-    return Source(dot, engine="neato")
+    return Source(dot)
