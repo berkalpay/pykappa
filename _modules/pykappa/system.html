@@ -551,21 +551,27 @@
             <span class="p">)</span>
 
         <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdirname</span><span class="p">:</span>
-            <span class="c1"># Run KaSim on the current system</span>
             <span class="n">output_ka_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;out.ka&quot;</span><span class="p">)</span>
             <span class="n">output_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;%mod: alarm </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1"> do $SNAPSHOT &quot;</span><span class="si">{</span><span class="n">output_ka_path</span><span class="si">}</span><span class="s1">&quot;;&#39;</span>
             <span class="n">input_ka_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;in.ka&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Run KaSim</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_ka_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">output_cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KaSim </span><span class="si">{</span><span class="n">input_ka_path</span><span class="si">}</span><span class="s2"> -l </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2"> -d </span><span class="si">{</span><span class="n">tmpdirname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KaSim </span><span class="si">{</span><span class="n">input_ka_path</span><span class="si">}</span><span class="s2"> -l </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2"> -d </span><span class="si">{</span><span class="n">tmpdirname</span><span class="si">}</span><span class="s2"> &gt; /dev/null&quot;</span><span class="p">)</span>
 
-            <span class="c1"># Read the KaSim output</span>
-            <span class="n">output_kappa_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="c1"># Read KaSim output</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_ka_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">nit&quot;</span><span class="p">):</span>
-                        <span class="n">split</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-                        <span class="n">output_kappa_str</span> <span class="o">+=</span> <span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">split</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span>
+        <span class="p">)</span>  <span class="c1"># KaSim splits long components across lines</span>
+        <span class="n">output_kappa_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="n">keepends</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">nit&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="c1"># Apply the update</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_mixture</span><span class="p">(</span><span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">output_kappa_str</span><span class="p">)</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span>
