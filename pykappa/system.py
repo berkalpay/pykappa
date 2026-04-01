@@ -482,21 +482,27 @@ class System:
             )
 
         with tempfile.TemporaryDirectory() as tmpdirname:
-            # Run KaSim on the current system
             output_ka_path = os.path.join(tmpdirname, "out.ka")
             output_cmd = f'%mod: alarm {time} do $SNAPSHOT "{output_ka_path}";'
             input_ka_path = os.path.join(tmpdirname, "in.ka")
+
+            # Run KaSim
             with open(input_ka_path, "w") as f:
                 f.write(f"{self.kappa_str}\n{output_cmd}")
             os.system(f"KaSim {input_ka_path} -l {time} -d {tmpdirname} > /dev/null")
 
-            # Read the KaSim output
-            output_kappa_str = ""
+            # Read KaSim output
             with open(output_ka_path) as f:
-                for line in f:
-                    if line.startswith("%init"):
-                        split = line.split("/")
-                        output_kappa_str += split[0] + split[-1]
+                content = f.read()
+
+        content = content.replace(
+            ",\n", ", "
+        )  # KaSim splits long components across lines
+        output_kappa_str = "".join(
+            line.split("/")[0] + line.split("/")[-1]
+            for line in content.splitlines(keepends=True)
+            if line.startswith("%init")
+        )
 
         # Apply the update
         self._set_mixture(System.from_ka(output_kappa_str).mixture)

@@ -119,6 +119,19 @@ def test_heterodimerization(k_on, expected, via_kasim):
     assert abs(measured - expected) < expected / 5
 
 
+@pytest.mark.skipif(not shutil.which("KaSim"), reason="KaSim not found in PATH")
+def test_polymerization_via_kasim():
+    system = System.from_ka(
+        """
+        %init: 100 M(h[.] t[.])
+        M(h[.]), M(t[.]) <-> M(h[1]), M(t[1]) @ 0.02, 0.3
+        """,
+        seed=42,
+    )
+    system.update_via_kasim(1)
+    assert len(system.mixture.agents) == 100
+
+
 @pytest.mark.parametrize(
     "kd, a_init, b_init",
     itertools.product([10**-9], [2000], [2000, 3500]),
