@@ -16,8 +16,7 @@ def heterodimerization_system(k_on: float = 2.5e9) -> System:
     return System.from_kappa(
         {"A(x[.])": n_a, "B(x[.])": n_b},
         rules=[
-            f"A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ {k_on / (avogadro * volume)}",
-            "A(x[1]), B(x[1]) -> A(x[.]), B(x[.]) @ 2.5",
+            f"A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ {k_on / (avogadro * volume)}, 2.5"
         ],
         observables=[f"|A(x[1]),B(x[1])|"],
     )
