@@ -488,7 +488,7 @@ class System:
             input_ka_path = os.path.join(tmpdirname, "in.ka")
             with open(input_ka_path, "w") as f:
                 f.write(f"{self.kappa_str}\n{output_cmd}")
-            os.system(f"KaSim {input_ka_path} -l {time} -d {tmpdirname}")
+            os.system(f"KaSim {input_ka_path} -l {time} -d {tmpdirname} > /dev/null")
 
             # Read the KaSim output
             output_kappa_str = ""
