@@ -418,12 +418,7 @@ class System:
         """The total reactivity of the system."""
         return sum(rule.reactivity(self) for rule in self.rules.values())
 
-    def wait(self) -> None:
-        """Advance simulation time according to exponential distribution.
-
-        Raises:
-            RuntimeWarning: If system has no reactivity (infinite wait time).
-        """
+    def _wait(self) -> None:
         try:
             self.time += self._rng.expovariate(self.reactivity)
         except ZeroDivisionError:
@@ -462,7 +457,7 @@ class System:
         if self.monitor is not None and not self.monitor.history["time"]:
             self.monitor.update()  # Record initial state
 
-        self.wait()
+        self._wait()
         if (rule := self._choose_rule()) is not None:
             self._apply_rule(rule)
 
