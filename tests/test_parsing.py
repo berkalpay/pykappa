@@ -95,6 +95,15 @@ def test_ambi_fr_rule_from_kappa():
     assert rules[2].stochastic_rate.evaluate() == 3.0
 
 
+def test_token_updates_parsed():
+    rule = Rule.from_kappa("A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) | -1.0 X +1.0 Y @ 1.0")
+    assert len(rule.token_updates) == 2
+    assert rule.token_updates[0][1] == "X"
+    assert rule.token_updates[0][0].evaluate() == pytest.approx(-1.0)
+    assert rule.token_updates[1][1] == "Y"
+    assert rule.token_updates[1][0].evaluate() == pytest.approx(1.0)
+
+
 # System
 
 

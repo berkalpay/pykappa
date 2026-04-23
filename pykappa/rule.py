@@ -27,6 +27,7 @@ class Rule:
     left: Pattern
     right: Pattern
     stochastic_rate: Expression
+    token_updates: list[tuple[Expression, str]]
 
     @classmethod
     def list_from_kappa(cls, kappa_str: str) -> list[Self]:
@@ -55,10 +56,17 @@ class Rule:
         ), "The given rule expression represents more than one rule."
         return rules[0]
 
-    def __init__(self, left: Pattern, right: Pattern, stochastic_rate: Expression):
+    def __init__(
+        self,
+        left: Pattern,
+        right: Pattern,
+        stochastic_rate: Expression,
+        token_updates: Optional[list[tuple[Expression, str]]] = None,
+    ):
         self.left = left
         self.right = right
         self.stochastic_rate = stochastic_rate
+        self.token_updates = token_updates or []
 
     def __post_init__(self):
         l = len(self.left.agents)
@@ -85,7 +93,13 @@ class Rule:
 
     @property
     def kappa_str(self) -> str:
-        return f"{self.left.kappa_str} -> {self.right.kappa_str} @ {self._rate_str}"
+        token_part = ""
+        if self.token_updates:
+            updates_str = " ".join(
+                f"{expr.kappa_str} {name}" for expr, name in self.token_updates
+            )
+            token_part = f" | {updates_str}"
+        return f"{self.left.kappa_str} -> {self.right.kappa_str}{token_part} @ {self._rate_str}"
 
     def reactivity(self, system: "System") -> float:
         """Calculate the total reactivity of this rule in the given system,

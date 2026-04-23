@@ -125,6 +125,9 @@ class Expression:
         elif self.type == "component_pattern":
             return f"|{self.attrs['value'].kappa_str}|"
 
+        elif self.type == "token_value":
+            return f"|{self.attrs['name']}|"
+
         raise ValueError(f"Unsupported node type: {self.type}")
 
     def evaluate(self, system: Optional["System"] = None) -> int | float:
@@ -205,6 +208,12 @@ class Expression:
                 raise NotImplementedError(
                     f"Reserved variable {value.type} not implemented yet."
                 )
+
+        elif self.type == "token_value":
+            name = self.attrs["name"]
+            if system is None:
+                raise ValueError(f"{self} needs a System to evaluate token '{name}'")
+            return system.tokens.get(name, 0.0)
 
         raise ValueError(f"Unsupported node type: {self.type}")
 
