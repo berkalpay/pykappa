@@ -189,8 +189,8 @@ init_declaration : "%init:" algebraic_expression pattern
 
 // token expressions
 
-token : algebraic_expression declared_token_name _another_token 
-_another_token : [ "," token ]
+token : token_update+
+token_update : algebraic_expression declared_token_name
 declared_token : "%token:" declared_token_name 
 declared_token_name : NAME
 
