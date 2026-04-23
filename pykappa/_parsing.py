@@ -151,89 +151,85 @@ class KappaTransformer(Transformer):
     def rev_rule_expression(self, children):
         return self.rule_expression(children)
 
-    def f_rule(self, children):
-        # children: [optional label], patterns tuple, [optional token], rate
+    def declared_token_name(self, children):
+        return str(children[0])
+
+    def declared_token(self, children):
+        return ("declare_token", str(children[0]))
+
+    def token_update(self, children):
+        expr = ExpressionTransformer().transform(children[0])
+        return (expr, children[1])
+
+    def token(self, children):
+        return children
+
+    def _extract_rule_parts(self, children):
         patterns = None
         rates = []
-
+        token_updates = []
         for child in children:
-            if isinstance(child, tuple):
+            if (
+                isinstance(child, tuple)
+                and len(child) == 2
+                and isinstance(child[0], Pattern)
+            ):
                 patterns = child
+            elif (
+                isinstance(child, list)
+                and child
+                and isinstance(child[0], tuple)
+                and isinstance(child[0][0], Expression)
+            ):
+                token_updates = child
             elif isinstance(child, Expression):
                 rates.append(child)
+        return patterns, rates, token_updates
 
+    def f_rule(self, children):
+        patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
-        return [Rule(left, right, rates[0])]
+        return [Rule(left, right, rates[0], token_updates)]
 
     def fr_rule(self, children):
-        patterns = None
-        rates = []
-
-        for child in children:
-            if isinstance(child, tuple):
-                patterns = child
-            elif isinstance(child, Expression):
-                rates.append(child)
-
+        patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
-        return [Rule(left, right, rates[0]), Rule(right, left, rates[1])]
+        return [
+            Rule(left, right, rates[0], token_updates),
+            Rule(right, left, rates[1], token_updates),
+        ]
 
     def ambi_rule(self, children):
-        patterns = None
-        rates = []
-
-        for child in children:
-            if isinstance(child, tuple):
-                patterns = child
-            elif isinstance(child, Expression):
-                rates.append(child)
-
+        patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
         rules = []
-
         try:
             if rates[0].evaluate() != 0:
-                rules.append(BimolecularRule(left, right, rates[0]))
+                rules.append(BimolecularRule(left, right, rates[0], token_updates))
         except:
-            rules.append(BimolecularRule(left, right, rates[0]))
-
+            rules.append(BimolecularRule(left, right, rates[0], token_updates))
         try:
             if rates[1].evaluate() != 0:
-                rules.append(UnimolecularRule(left, right, rates[1]))
+                rules.append(UnimolecularRule(left, right, rates[1], token_updates))
         except:
-            rules.append(UnimolecularRule(left, right, rates[1]))
-
+            rules.append(UnimolecularRule(left, right, rates[1], token_updates))
         return rules
 
     def ambi_fr_rule(self, children):
-        patterns = None
-        rates = []
-
-        for child in children:
-            if isinstance(child, str):
-                label = child
-            elif isinstance(child, tuple):
-                patterns = child
-            elif isinstance(child, Expression):
-                rates.append(child)
-
+        patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
         rules = []
-
         try:
             if rates[0].evaluate() != 0:
-                rules.append(BimolecularRule(left, right, rates[0]))
+                rules.append(BimolecularRule(left, right, rates[0], token_updates))
         except:
-            rules.append(BimolecularRule(left, right, rates[0]))
-
+            rules.append(BimolecularRule(left, right, rates[0], token_updates))
         try:
             if rates[1].evaluate() != 0:
-                rules.append(UnimolecularRule(left, right, rates[1]))
+                rules.append(UnimolecularRule(left, right, rates[1], token_updates))
         except:
-            rules.append(UnimolecularRule(left, right, rates[1]))
-
-        rules.append(Rule(right, left, rates[2]))
-
+            rules.append(UnimolecularRule(left, right, rates[1], token_updates))
+        rules.append(Rule(right, left, rates[2], token_updates))
         return rules
 
 
@@ -265,6 +261,15 @@ class ExpressionTransformer(Transformer):
 
     def reserved_variable_name(self, children):
         return Expression("reserved_variable", value=children[0])
+
+    def declared_token_name(self, children):
+        return str(children[0])
+
+    def reserved_variable_name(self, children):
+        child = children[0]
+        if isinstance(child, str):
+            return Expression("token_value", name=child)
+        return Expression("reserved_variable", value=child)
 
     def pattern(self, children):
         # Use KappaTransformer for pattern parsing
