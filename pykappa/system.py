@@ -414,14 +414,9 @@ class System:
             self.mixture._track_component(component_expr.attrs["value"])
 
     @property
-    def rule_reactivities(self) -> list[float]:
-        """The reactivity of each rule in the system."""
-        return [rule.reactivity(self) for rule in self.rules.values()]
-
-    @property
     def reactivity(self) -> float:
         """The total reactivity of the system."""
-        return sum(self.rule_reactivities)
+        return sum(rule.reactivity(self) for rule in self.rules.values())
 
     def wait(self) -> None:
         """Advance simulation time according to exponential distribution.
@@ -444,7 +439,8 @@ class System:
         """
         try:
             return self._rng.choices(
-                list(self.rules.values()), weights=self.rule_reactivities
+                list(self.rules.values()),
+                weights=[rule.reactivity(self) for rule in self.rules.values()],
             )[0]
         except ValueError:
             warnings.warn("system has no reactivity: no rule applied", RuntimeWarning)
