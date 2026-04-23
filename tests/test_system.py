@@ -324,6 +324,62 @@ def test_uniqueness_and_persistence_of_agent_ids():
     assert initial_ids == current_ids
 
 
+def test_token_updating():
+    system = System.from_ka(
+        """
+        %token: ATP
+        %token: ADP
+
+        %init: 1000 A(x[.])
+        %init: 1000 B(x[.])
+        %init: 100 ATP
+        %init: 0 ADP
+
+        %obs: 'AB' |A(x[1]), B(x[1])|
+
+        A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) | -1.0 ATP +1.0 ADP @ 1.0
+        """,
+        seed=42,
+    )
+
+    assert system.tokens["ATP"] == 100
+    assert system.tokens["ADP"] == 0
+
+    n_steps = 50
+    for _ in range(n_steps):
+        system.update()
+
+    ab = system["AB"]
+    assert system.tokens["ATP"] == pytest.approx(100 - ab)
+    assert system.tokens["ADP"] == pytest.approx(ab)
+    assert system.tokens["ATP"] + system.tokens["ADP"] == pytest.approx(100)
+
+
+def test_token_in_rate_expression():
+    system = System.from_ka(
+        """
+        %token: fuel
+
+        %init: 100 A(x[.])
+        %init: 100 B(x[.])
+        %init: 0 fuel
+
+        %obs: 'AB' |A(x[1]), B(x[1])|
+
+        A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ |fuel|
+        """,
+        seed=42,
+    )
+
+    system.update()
+    assert system["AB"] == 0
+
+    system.tokens["fuel"] = 10
+    for _ in range(200):
+        system.update()
+    assert system["AB"] > 0
+
+
 def test_monitor_measure():
     """Test that Monitor.measure() retrieves observable values at specific times."""
     system = System.from_ka(

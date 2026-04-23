@@ -23,6 +23,7 @@ class System:
     rules: dict[str, Rule]  #: Maps rule names to Rule objects
     observables: dict[str, Expression]  #: Maps observable names to expressions
     variables: dict[str, Expression]  #: Maps variable names to expressions
+    tokens: dict[str, float]  #: Maps token names to their current values
     monitor: Optional["Monitor"]  #: Optionally tracks simulation history
     time: float  #: Current simulation time
     tallies: defaultdict[str, dict[str, int]]  #: Tracks rule applications
@@ -58,6 +59,8 @@ class System:
 
         variables: dict[str, Expression] = {}
         observables: dict[str, Expression] = {}
+        token_declarations: list[str] = []
+        token_inits: list[tuple[str, Expression]] = []
         rules: list[Rule] = []
         system_params: dict[str, int] = {}
         inits: list[tuple[Expression, Pattern]] = []
@@ -97,21 +100,17 @@ class System:
             elif tag == "signature_declaration":
                 raise NotImplementedError
 
-            elif tag == "init_declaration":
-                expr_tree = child.children[0]
-                assert expr_tree.data == "algebraic_expression"
-                amount = ExpressionTransformer.from_tree(expr_tree)
-
-                pattern_tree = child.children[1]
-                if pattern_tree.data == "declared_token_name":
-                    raise NotImplementedError
-                assert pattern_tree.data == "pattern"
-                pattern = KappaTransformer().transform(pattern_tree)
-
-                inits.append((amount, pattern))
-
             elif tag == "declared_token":
-                raise NotImplementedError
+                token_declarations.append(str(child.children[0].children[0]))
+
+            elif tag == "init_declaration":
+                amount = ExpressionTransformer.from_tree(child.children[0])
+                target = child.children[1]
+                if target.data == "declared_token_name":
+                    token_inits.append((str(target.children[0]), amount))
+                else:
+                    pattern = KappaTransformer().transform(target)
+                    inits.append((amount, pattern))
 
             elif tag == "definition":
                 reserved_name_tree = child.children[0]
@@ -130,9 +129,12 @@ class System:
             else:
                 raise TypeError(f"Unsupported input type: {tag}")
 
+        tokens = {name: 0.0 for name in token_declarations}
         system = cls(None, rules, observables, variables, seed=seed)
         for init in inits:
             system.mixture.add(init[1], int(init[0].evaluate(system)))
+        for token_name, amount_expr in token_inits:
+            system.tokens[token_name] = float(amount_expr.evaluate(system))
         return system
 
     @classmethod
@@ -192,6 +194,7 @@ class System:
         rules: Optional[Iterable[Rule]] = None,
         observables: Optional[dict[str, Expression]] = None,
         variables: Optional[dict[str, Expression]] = None,
+        tokens: Optional[dict[str, float]] = None,
         monitor: bool = True,
         seed: Optional[int] = None,
     ):
@@ -201,6 +204,7 @@ class System:
             rules: Collection of rules to apply.
             observables: Dictionary of observable expressions.
             variables: Dictionary of variable expressions.
+            tokens: Dictionary of token names to initial values.
             monitor: Whether to enable monitoring of simulation history.
             seed: Random seed for reproducibility.
         """
@@ -222,6 +226,8 @@ class System:
 
         self._set_mixture(mixture)
         self.time = 0
+
+        self.tokens = {} if tokens is None else dict(tokens)
 
         self.tallies = defaultdict(lambda: {"applied": 0, "failed": 0})
         self.monitor = Monitor(self) if monitor else None
@@ -450,6 +456,8 @@ class System:
         if update is not None:
             self.tallies[str(rule)]["applied"] += 1
             self.mixture._apply_update(update)
+            for expr, name in rule.token_updates:
+                self.tokens[name] += expr.evaluate(self)
             del self.__dict__["rule_reactivities"]
         else:
             self.tallies[str(rule)]["failed"] += 1
