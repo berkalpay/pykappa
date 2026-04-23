@@ -413,7 +413,7 @@ class System:
         for component_expr in expression.filter("component_pattern"):
             self.mixture._track_component(component_expr.attrs["value"])
 
-    @cached_property
+    @property
     def rule_reactivities(self) -> list[float]:
         """The reactivity of each rule in the system."""
         return [rule.reactivity(self) for rule in self.rules.values()]
@@ -458,7 +458,6 @@ class System:
             self.mixture._apply_update(update)
             for expr, name in rule.token_updates:
                 self.tokens[name] += expr.evaluate(self)
-            del self.__dict__["rule_reactivities"]
         else:
             self.tallies[str(rule)]["failed"] += 1
 
