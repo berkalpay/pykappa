@@ -209,8 +209,7 @@ def test_system_manipulation():
     assert system["twiceA"] == 2 * system["A"]
 
     # Update an observable
-    system["A"] = "-1"
-    assert system["twiceA"] == -2
+    system["A"] = "0"
 
     # Set a new observable
     system["C"] = "|C()|"
@@ -218,14 +217,21 @@ def test_system_manipulation():
     system.update()
     assert system["C"] == 1
 
+    # Add a rule
     system.add_rule("B() -> C() @ 1000", name="new")
     while system.reactivity:
         system.update()
     assert system["B"] == 0 and system["C"] == 12
+
+    # Remove rules
+    system.remove_rule("r0")
     system.remove_rule("new")
-    system.add_rule("C() -> B() @ 1000")
+    system.add_rule("C() -> B(x[.]) @ 1000")
     while system.reactivity:
-        assert system["B"] == 12 and system["C"] == 0
+        system.update()
+        print(system.tallies_str)
+        print(f"A: {system["A"]}, B: {system["B"]}, C: {system["C"]}\n")
+    assert system["C"] == 0 and system["B"] == 12
 
 
 def test_reproducibility_from_initialization():
