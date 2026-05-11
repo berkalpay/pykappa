@@ -200,13 +200,17 @@ class Monitor:
             plt.margins(0, 0)
         else:
             fig, axs = plt.subplots(
-                len(self.system.observables), 1, sharex=True, layout="constrained"
+                len(self.system.observables),
+                1,
+                sharex=True,
+                layout="constrained",
+                figsize=figsize,
             )
             if len(self.system.observables) == 1:
                 axs = [axs]
             for i, obs_name in enumerate(self.system.observables):
                 axs[i].plot(self.history["time"], self.history[obs_name], color="black")
-                axs[i].set_title(obs_name)
+                axs[i].set_ylabel(obs_name)
                 if i == len(self.system.observables) - 1:
                     axs[i].set_xlabel("Time")
         return fig
