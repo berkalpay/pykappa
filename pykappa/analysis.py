@@ -3,6 +3,7 @@ import colorsys
 import shutil
 import tempfile
 import os
+import re
 from typing import TYPE_CHECKING, Optional
 
 import numpy as np
@@ -347,5 +348,9 @@ def contact_map(system: "System") -> Source:
 
         with open(os.path.join(tmpdir, "out.dot")) as f:
             dot = f.read()
+
+    # Remove color formatting
+    dot = re.sub(r"\s*color\s*=\s*\w+", "", dot)
+    dot = re.sub(r"\s*style\s*=\s*filled", "", dot)
 
     return Source(dot)
