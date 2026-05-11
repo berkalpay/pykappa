@@ -184,14 +184,17 @@ class Monitor:
         assert all(t is not None for t in times)
         return equilibrated(values=values, times=times, **equilibration_kwargs)
 
-    def plot(self, combined: bool = False) -> matplotlib.figure.Figure:
+    def plot(
+        self, combined: bool = False, figsize: Optional[tuple[float, float]] = None
+    ) -> matplotlib.figure.Figure:
         """Make a plot of all observables over time.
 
         Args:
             combined: Whether to plot all observables on the same axes.
+            figsize: The figure size (width, height) in inches.
         """
         if combined:
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=figsize)
             for obs_name in self.system.observables:
                 ax.plot(self.history["time"], self.history[obs_name], label=obs_name)
             plt.legend()
