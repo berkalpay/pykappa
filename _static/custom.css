@@ -1,3 +1,8 @@
 .logo {
     max-width: 70%;
 }
+
+div.nboutput.container div.output_area:not(.rendered_html)>img {
+    max-width: 100%;
+    box-sizing: border-box;
+}
