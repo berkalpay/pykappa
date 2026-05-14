@@ -43,7 +43,7 @@
                 "\n",
                 "    %obs: 'Extracellular lactose' |L(loc{out})| / 100\n",
                 "    %obs: 'LacY' |Y()|\n",
-                "    %obs: 'Free Lac operon' |O(i[.])|\n",
+                "    %obs: 'Free lac operon' |O(i[.])|\n",
                 "\n",
                 "    I(o[.]), O(i[.]) <-> I(o[1]), O(i[1]) @ 1, 0.1      // Repress the lac operon\n",
                 "    Y(), L(loc{out}) -> Y(), L(loc{in}) @ 0.01          // Transport lactose into the cell\n",
@@ -89,7 +89,7 @@
             "metadata": {},
             "outputs": [],
             "source": [
-                "system.monitor.plot();"
+                "system.monitor.plot(figsize=(4.5, 4.5));"
             ]
         },
         {

@@ -68,7 +68,7 @@
 
 <span class="sd">    %obs: &#39;Extracellular lactose&#39; |L(loc{out})| / 100</span>
 <span class="sd">    %obs: &#39;LacY&#39; |Y()|</span>
-<span class="sd">    %obs: &#39;Free Lac operon&#39; |O(i[.])|</span>
+<span class="sd">    %obs: &#39;Free lac operon&#39; |O(i[.])|</span>
 
 <span class="sd">    I(o[.]), O(i[.]) &lt;-&gt; I(o[1]), O(i[1]) @ 1, 0.1      // Repress the lac operon</span>
 <span class="sd">    Y(), L(loc{out}) -&gt; Y(), L(loc{in}) @ 0.01          // Transport lactose into the cell</span>
@@ -106,7 +106,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">));</span>
 </pre></div>
 </div>
 </div>
@@ -114,7 +114,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_lac_operon_5_0.png" src="../_images/examples_lac_operon_5_0.png" />
+<img alt="../_images/examples_lac_operon_5_0.svg" src="../_images/examples_lac_operon_5_0.svg" />
 </div>
 </div>
 <p>Without lactose, the operon remains mostly repressed. When extracellular lactose is added,</p>
