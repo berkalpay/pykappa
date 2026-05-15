@@ -63,6 +63,9 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pykappa.analysis.relative_slope" title="pykappa.analysis.relative_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relative_slope</span></code></a>(values[, times, tail_fraction])</p></td>
 <td><p>Computes the magnitude of the slope of the tail of the series.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.analysis.rule_graph" title="pykappa.analysis.rule_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rule_graph</span></code></a>(system)</p></td>
+<td><p>Visualize a ruleset as a site graph of local transformations.</p></td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Classes</p>
@@ -282,6 +285,28 @@ given volume in liters.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykappa.analysis.rule_graph">
+<span class="sig-prename descclassname"><span class="pre">pykappa.analysis.</span></span><span class="sig-name descname"><span class="pre">rule_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/analysis.html#rule_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.analysis.rule_graph" title="Link to this definition">¶</a></dt>
+<dd><p>Visualize a ruleset as a site graph of local transformations.</p>
+<p>Solid edges = bond formation; dashed edges = bond breaking. Sites that
+change state show their transition as <code class="docutils literal notranslate"><span class="pre">site</span> <span class="pre">{old→new}</span></code>. Creation and
+degradation are shown as directed edges to/from a sink node (∅).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a lossy projection that neglects conditions of transformations;
+multiple rulesets can yield the same graph.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>system</strong> (<a class="reference internal" href="pykappa.system.html#pykappa.system.System" title="pykappa.system.System"><em>System</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Source</em></p>
 </dd>
 </dl>
 </dd></dl>

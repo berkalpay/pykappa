@@ -14,6 +14,7 @@
       equilibration_time
       equilibrium_value
       relative_slope
+      rule_graph
    
    .. rubric:: Classes
 
