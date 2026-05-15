@@ -508,6 +508,11 @@ class System:
         if self.monitor:
             self.monitor.update()
 
+    def rule_graph(self) -> Source:
+        from pykappa.analysis import rule_graph
+
+        return rule_graph(self)
+
     def contact_map(self) -> Source:
         from pykappa.analysis import contact_map
 

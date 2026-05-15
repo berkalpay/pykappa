@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import os
 import re
+from collections import defaultdict
 from typing import TYPE_CHECKING, Optional
 
 import numpy as np
@@ -334,6 +335,90 @@ def binding_kinetics_table(system, volume: float = 1.0) -> str:
                 )
 
     return str_table(rows, header)
+
+
+def rule_graph(system: "System") -> Source:
+    """Visualize a ruleset as a site graph of local transformations.
+
+    Solid edges = bond formation; dashed edges = bond breaking. Sites that
+    change state show their transition as ``site {old→new}``. Creation and
+    degradation are shown as directed edges to/from a sink node (∅).
+
+    Note:
+        This is a lossy projection that neglects conditions of transformations;
+        multiple rulesets can yield the same graph.
+    """
+    agent_sites: dict[str, set[str]] = defaultdict(set)
+    state_transitions: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(set)
+    bonds_formed: set[tuple] = set()
+    bonds_broken: set[tuple] = set()
+    created: set[str] = set()
+    degraded: set[str] = set()
+
+    for rule in system.rules.values():
+        for l, r in zip(rule.left.agents, rule.right.agents):
+            if l is None and r is not None:
+                created.add(r.type)
+                continue
+            if l is not None and r is None:
+                degraded.add(l.type)
+                continue
+
+            for r_site in r:
+                if r_site.label not in l.interface:
+                    continue
+                l_site = l[r_site.label]
+
+                if r_site.stated and l_site.stated and r_site.state != l_site.state:
+                    agent_sites[l.type].add(r_site.label)
+                    state_transitions[(l.type, r_site.label)].add(
+                        (l_site.state, r_site.state)
+                    )
+
+                if r_site.coupled and not l_site.coupled:
+                    p = r_site.partner
+                    agent_sites[l.type].add(r_site.label)
+                    agent_sites[p.agent.type].add(p.label)
+                    bonds_formed.add(
+                        tuple(sorted([(l.type, r_site.label), (p.agent.type, p.label)]))
+                    )
+                elif l_site.coupled and r_site.partner == ".":
+                    p = l_site.partner
+                    agent_sites[l.type].add(l_site.label)
+                    agent_sites[p.agent.type].add(p.label)
+                    bonds_broken.add(
+                        tuple(sorted([(l.type, l_site.label), (p.agent.type, p.label)]))
+                    )
+
+    lines = ["digraph {", "  node [shape=record];"]
+
+    for agent_type in sorted(agent_sites.keys() | created | degraded):
+        site_cells = ""
+        for s in sorted(agent_sites.get(agent_type, [])):
+            transitions = state_transitions.get((agent_type, s))
+            if transitions:
+                trans_str = ", ".join(f"{a}→{b}" for a, b in sorted(transitions))
+                site_cells += f'<TD PORT="{s}">{s} {{{trans_str}}}</TD>'
+            else:
+                site_cells += f'<TD PORT="{s}">{s}</TD>'
+        label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD><B>{agent_type}</B></TD>{site_cells}</TR></TABLE>>'
+        lines.append(f"  {agent_type} [label={label}, shape=none];")
+
+    if created or degraded:
+        lines.append('  sink [label="∅", shape=plain];')
+        for agent_type in sorted(created):
+            lines.append(f"  sink -> {agent_type};")
+        for agent_type in sorted(degraded):
+            lines.append(f"  {agent_type} -> sink;")
+
+    for (t1, s1), (t2, s2) in bonds_formed:
+        lines.append(f"  {t1}:{s1} -> {t2}:{s2} [dir=none];")
+
+    for (t1, s1), (t2, s2) in bonds_broken:
+        lines.append(f"  {t1}:{s1} -> {t2}:{s2} [dir=none, style=dashed];")
+
+    lines.append("}")
+    return Source("\n".join(lines))
 
 
 def contact_map(system: "System") -> Source:
