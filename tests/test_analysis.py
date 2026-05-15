@@ -16,26 +16,20 @@ def test_contact_map():
     reference = """
         graph G {
                 subgraph cluster0 {
-                        graph [color=blue,
-                                label=A,
+                        graph [label=A,
                                 shape=box
                         ];
-                        0.0     [color=yellow,
-                                label=x,
+                        0.0     [label=x,
                                 shape=circle,
-                                size=5,
-                                style=filled];
+                                size=5];
                 }
                 subgraph cluster1 {
-                        graph [color=blue,
-                                label=B,
+                        graph [label=B,
                                 shape=box
                         ];
-                        1.0     [color=yellow,
-                                label=x,
+                        1.0     [label=x,
                                 shape=circle,
-                                size=5,
-                                style=filled];
+                                size=5];
                 }
                 0.0 -- 1.0;
         }
