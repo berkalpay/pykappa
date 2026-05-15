@@ -19,6 +19,8 @@ jobs:
         python-version-file: ".python-version"
     - name: Install Pandoc
       uses: pandoc/actions/setup@v1
+    - name: Install Graphviz
+      run: sudo apt-get install -y graphviz
     - name: Install dependencies
       run: |
         pip install sphinx matplotlib nbsphinx ipykernel
