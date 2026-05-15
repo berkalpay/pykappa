@@ -64,8 +64,8 @@
             "cell_type": "markdown",
             "metadata": {},
             "source": [
-                "Let us illustrate the local transformations the rules specify.\n",
-                "(Note, however, that the conditions for these transformations are not detailed in the graph representation.)"
+                "The rule graph illustrates the local transformations that the rules specify.\n",
+                "The conditions for these transformations are not detailed in the graph as they are in the Kappa string representation."
             ]
         },
         {
