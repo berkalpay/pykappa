@@ -481,7 +481,9 @@
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2"> [label=</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">, shape=none];&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">created</span> <span class="ow">or</span> <span class="n">degraded</span><span class="p">:</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;  sink [label=&quot;∅&quot;, shape=plain];&#39;</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;  sink [label=&quot;&quot;, shape=circle, width=0.125, height=0.125, style=filled, fillcolor=black, color=white, penwidth=4];&#39;</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">created</span><span class="p">):</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  sink -&gt; </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2">;&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">degraded</span><span class="p">):</span>
