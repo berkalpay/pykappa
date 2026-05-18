@@ -405,7 +405,9 @@ def rule_graph(system: "System") -> Source:
         lines.append(f"  {agent_type} [label={label}, shape=none];")
 
     if created or degraded:
-        lines.append('  sink [label="∅", shape=plain];')
+        lines.append(
+            '  sink [label="", shape=circle, width=0.125, height=0.125, style=filled, fillcolor=black, color=white, penwidth=4];'
+        )
         for agent_type in sorted(created):
             lines.append(f"  sink -> {agent_type};")
         for agent_type in sorted(degraded):
