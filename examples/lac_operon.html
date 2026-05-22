@@ -70,14 +70,14 @@
 <span class="sd">    %obs: &#39;LacY&#39; |Y()|</span>
 <span class="sd">    %obs: &#39;Free lac operon&#39; |O(i[.])|</span>
 
-<span class="sd">    I(o[.]), O(i[.]) &lt;-&gt; I(o[1]), O(i[1]) @ 1, 0.1      // Repress the lac operon</span>
-<span class="sd">    Y(), L(loc{out}) -&gt; Y(), L(loc{in}) @ 0.01          // Transport lactose into the cell</span>
-<span class="sd">    Z(), L(loc{in}) -&gt; Z(), A(z[.], i[.]) @ 1           // Convert lactose into allolactose</span>
-<span class="sd">    A(i[.]), I(o[.]) &lt;-&gt; A(i[1]), I(o[1]) @ 1, 0.1      // Deactivate the repressor by allolactose</span>
-<span class="sd">    O(i[.]), ., . -&gt; O(i[.]), Z(), Y() @ 1              // Express the lac operon</span>
-<span class="sd">    L(loc{in}) -&gt; . @ 1                                 // Metabolize lactose</span>
+<span class="sd">    I(o[.]), O(i[.]) &lt;-&gt; I(o[1]), O(i[1]) @ 1, 0.1   // lac repression</span>
+<span class="sd">    Y(), L(loc{out}) -&gt; Y(), L(loc{in}) @ 0.01       // lactose transport</span>
+<span class="sd">    Z(), L(loc{in}) -&gt; Z(), A(z[.], i[.]) @ 1        // lactose to allolactose</span>
+<span class="sd">    A(i[.]), I(o[.]) &lt;-&gt; A(i[1]), I(o[1]) @ 1, 0.1   // derepression</span>
+<span class="sd">    O(i[.]), ., . -&gt; O(i[.]), Z(), Y() @ 1           // lac expression</span>
+<span class="sd">    L(loc{in}) -&gt; . @ 1                              // lactose metabolism</span>
 
-<span class="sd">    // Degradation</span>
+<span class="sd">    // degradation</span>
 <span class="sd">    A() -&gt; . @ 0.1</span>
 <span class="sd">    Y() -&gt; . @ 0.5</span>
 <span class="sd">    Z() -&gt; . @ 0.5</span>
@@ -108,7 +108,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a while with no extracellular lactose</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate with no lactose</span>
 <span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">300</span><span class="p">:</span>
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 
