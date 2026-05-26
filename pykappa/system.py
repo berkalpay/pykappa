@@ -506,6 +506,11 @@ class System:
         if self.monitor:
             self.monitor.update()
 
+    def kd_table(self, volume: float = 1.0) -> str:
+        from pykappa.analysis import kd_table
+
+        return kd_table(self, volume=volume)
+
     def rule_graph(self) -> Source:
         from pykappa.analysis import rule_graph
 
