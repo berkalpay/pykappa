@@ -513,7 +513,7 @@ class System:
 
         Solid edges = bond formation; dashed edges = bond breaking. Sites that
         change state show their transition as ``site {old→new}``. Creation and
-        degradation are shown as directed edges to/from a sink node (∅).
+        degradation are shown as directed edges to/from a sink node.
 
         Note:
             This is a lossy projection that neglects conditions of transformations;
