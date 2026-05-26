@@ -128,7 +128,6 @@ class System:
             else:
                 raise TypeError(f"Unsupported input type: {tag}")
 
-        tokens = {name: 0.0 for name in token_declarations}
         system = cls(None, rules, observables, variables, seed=seed)
         for init in inits:
             system.mixture.add(init[1], int(init[0].evaluate(system)))
