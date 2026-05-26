@@ -4,7 +4,6 @@ import tempfile
 import random
 import warnings
 from collections import defaultdict
-from functools import cached_property
 from typing import Optional, Iterable, Self
 from graphviz import Source
 
