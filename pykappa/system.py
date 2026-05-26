@@ -416,7 +416,14 @@ class System:
         """The total reactivity of the system."""
         return sum(rule.reactivity(self) for rule in self.rules.values())
 
-    def _wait(self) -> None:
+    def update(self) -> None:
+        """Perform one simulation step."""
+
+        # Initialize monitor if required
+        if self.monitor is not None and not self.monitor.history["time"]:
+            self.monitor.update()
+
+        # Wait
         try:
             self.time += self._rng.expovariate(self.reactivity)
         except ZeroDivisionError:
@@ -424,41 +431,28 @@ class System:
                 "system has no reactivity: infinite wait time", RuntimeWarning
             )
 
-    def _choose_rule(self) -> Optional[Rule]:
-        """Choose a rule to apply based on reactivity weights.
-
-        Returns:
-            Selected rule, or None if no rules have positive reactivity.
-        """
+        # Choose a rule
         try:
-            return self._rng.choices(
+            rule = self._rng.choices(
                 list(self.rules.values()),
                 weights=[rule.reactivity(self) for rule in self.rules.values()],
             )[0]
         except ValueError:
+            rule = None
             warnings.warn("system has no reactivity: no rule applied", RuntimeWarning)
-            return None
 
-    def _apply_rule(self, rule: Rule) -> None:
-        """Apply a rule to the mixture and update tallies."""
-        update = rule._select(self.mixture)
-        if update is not None:
-            self.tallies[str(rule)]["applied"] += 1
-            self.mixture._apply_update(update)
-            for expr, name in rule.token_updates:
-                self.tokens[name] += expr.evaluate(self)
-        else:
-            self.tallies[str(rule)]["failed"] += 1
+        # Apply the rule
+        if rule is not None:
+            update = rule._select(self.mixture)
+            if update is not None:
+                self.tallies[str(rule)]["applied"] += 1
+                self.mixture._apply_update(update)
+                for expr, name in rule.token_updates:
+                    self.tokens[name] += expr.evaluate(self)
+            else:
+                self.tallies[str(rule)]["failed"] += 1
 
-    def update(self) -> None:
-        """Perform one simulation step."""
-        if self.monitor is not None and not self.monitor.history["time"]:
-            self.monitor.update()  # Record initial state
-
-        self._wait()
-        if (rule := self._choose_rule()) is not None:
-            self._apply_rule(rule)
-
+        # Update monitor
         if self.monitor is not None:
             self.monitor.update()
 
