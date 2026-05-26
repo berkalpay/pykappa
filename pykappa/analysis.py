@@ -90,6 +90,158 @@ class _ComponentPlot:
         return Source("\n".join(lines), engine="neato")
 
 
+# --- System functions ---
+
+
+def _kd_table(system, volume: float = 1.0) -> str:
+    from pykappa.rule import AVOGADRO
+    from pykappa._utils import str_table
+
+    header = ["name", "rule", "k_on", "k_off", "K_D"]
+    rows = []
+
+    for fwd_name, rev_name in system._reversible_rules:
+        fwd = system.rules[fwd_name]
+        rev = system.rules[rev_name]
+
+        fwd_mol = len(fwd.left.components)
+        rev_mol = len(rev.left.components)
+
+        if (fwd_mol == 2 and rev_mol == 1) or (fwd_mol == 1 and rev_mol == 2):
+            is_fwd_binding = fwd_mol == 2
+            binding_rxn = fwd if is_fwd_binding else rev
+            unbinding_rxn = rev if is_fwd_binding else fwd
+
+            binding_types = sorted(
+                comp.agents[0].type for comp in binding_rxn.left.components
+            )
+            unbinding_types = sorted(
+                agent.type
+                for comp in unbinding_rxn.left.components
+                for agent in comp.agents
+                if agent is not None
+            )
+            if binding_types == unbinding_types:
+                k_on = binding_rxn.rate(system) * AVOGADRO * volume
+                k_off = unbinding_rxn.rate(system)
+                kd = k_off / k_on
+                rows.append(
+                    [
+                        f"{fwd_name}/{rev_name}",
+                        f"{fwd.left.kappa_str} <-> {fwd.right.kappa_str}",
+                        f"{k_on:.2e}",
+                        f"{k_off:.2e}",
+                        f"{kd:.2e}",
+                    ]
+                )
+
+    return str_table(rows, header)
+
+
+def _rule_graph(system: "System") -> Source:
+    agent_sites: dict[str, set[str]] = defaultdict(set)
+    state_transitions: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(set)
+    bonds_formed: set[tuple] = set()
+    bonds_broken: set[tuple] = set()
+    created: set[str] = set()
+    degraded: set[str] = set()
+
+    for rule in system.rules.values():
+        for l, r in zip(rule.left.agents, rule.right.agents):
+            if l is None and r is not None:
+                created.add(r.type)
+                continue
+            if l is not None and r is None:
+                degraded.add(l.type)
+                continue
+
+            for r_site in r:
+                if r_site.label not in l.interface:
+                    continue
+                l_site = l[r_site.label]
+
+                if r_site.stated and l_site.stated and r_site.state != l_site.state:
+                    agent_sites[l.type].add(r_site.label)
+                    state_transitions[(l.type, r_site.label)].add(
+                        (l_site.state, r_site.state)
+                    )
+
+                if r_site.coupled and not l_site.coupled:
+                    p = r_site.partner
+                    agent_sites[l.type].add(r_site.label)
+                    agent_sites[p.agent.type].add(p.label)
+                    bonds_formed.add(
+                        tuple(sorted([(l.type, r_site.label), (p.agent.type, p.label)]))
+                    )
+                elif l_site.coupled and r_site.partner == ".":
+                    p = l_site.partner
+                    agent_sites[l.type].add(l_site.label)
+                    agent_sites[p.agent.type].add(p.label)
+                    bonds_broken.add(
+                        tuple(sorted([(l.type, l_site.label), (p.agent.type, p.label)]))
+                    )
+
+    lines = ["digraph {", "  node [shape=record];"]
+
+    for agent_type in sorted(agent_sites.keys() | created | degraded):
+        site_cells = ""
+        for s in sorted(agent_sites.get(agent_type, [])):
+            transitions = state_transitions.get((agent_type, s))
+            if transitions:
+                trans_str = ", ".join(f"{a}→{b}" for a, b in sorted(transitions))
+                site_cells += f'<TD PORT="{s}">{s} {{{trans_str}}}</TD>'
+            else:
+                site_cells += f'<TD PORT="{s}">{s}</TD>'
+        label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD><B>{agent_type}</B></TD>{site_cells}</TR></TABLE>>'
+        lines.append(f"  {agent_type} [label={label}, shape=none];")
+
+    if created or degraded:
+        lines.append(
+            '  sink [label="", shape=circle, width=0.125, height=0.125, style=filled, fillcolor=black, color=white, penwidth=4];'
+        )
+        for agent_type in sorted(created):
+            lines.append(f"  sink -> {agent_type};")
+        for agent_type in sorted(degraded):
+            lines.append(f"  {agent_type} -> sink;")
+
+    for (t1, s1), (t2, s2) in bonds_formed:
+        lines.append(f"  {t1}:{s1} -> {t2}:{s2} [dir=none];")
+
+    for (t1, s1), (t2, s2) in bonds_broken:
+        lines.append(f"  {t1}:{s1} -> {t2}:{s2} [dir=none, style=dashed];")
+
+    lines.append("}")
+    return Source("\n".join(lines))
+
+
+def _contact_map(system: "System") -> Source:
+    assert shutil.which("KaSa"), "KaSa not found in the PATH."
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        inp = os.path.join(tmpdir, "in.ka")
+        with open(inp, "w") as f:
+            f.write(system.kappa_str)
+
+        os.system(
+            f"KaSa {inp} --reset-all --compute-contact-map "
+            f"--output-directory {tmpdir} "
+            f"--output-contact-map out"
+            "> /dev/null"
+        )
+
+        with open(os.path.join(tmpdir, "out.dot")) as f:
+            dot = f.read()
+
+    # Remove color formatting
+    dot = re.sub(r"\s*color\s*=\s*\w+", "", dot)
+    dot = re.sub(r"\s*style\s*=\s*filled", "", dot)
+
+    return Source(dot)
+
+
+# --- Monitoring ---
+
+
 class Monitor:
     """Records the history of the values of observables in a system."""
 
@@ -285,149 +437,3 @@ def equilibrium_value(
     eq_time = equilibration_time(values, times, min_tail_length, tolerance)
     eq_index = next(i for i, t in enumerate(times) if t >= eq_time)
     return float(np.mean(values[eq_index:]))
-
-
-def _kd_table(system, volume: float = 1.0) -> str:
-    from pykappa.rule import AVOGADRO
-    from pykappa._utils import str_table
-
-    header = ["name", "rule", "k_on", "k_off", "K_D"]
-    rows = []
-
-    for fwd_name, rev_name in system._reversible_rules:
-        fwd = system.rules[fwd_name]
-        rev = system.rules[rev_name]
-
-        fwd_mol = len(fwd.left.components)
-        rev_mol = len(rev.left.components)
-
-        if (fwd_mol == 2 and rev_mol == 1) or (fwd_mol == 1 and rev_mol == 2):
-            is_fwd_binding = fwd_mol == 2
-            binding_rxn = fwd if is_fwd_binding else rev
-            unbinding_rxn = rev if is_fwd_binding else fwd
-
-            binding_types = sorted(
-                comp.agents[0].type for comp in binding_rxn.left.components
-            )
-            unbinding_types = sorted(
-                agent.type
-                for comp in unbinding_rxn.left.components
-                for agent in comp.agents
-                if agent is not None
-            )
-            if binding_types == unbinding_types:
-                k_on = binding_rxn.rate(system) * AVOGADRO * volume
-                k_off = unbinding_rxn.rate(system)
-                kd = k_off / k_on
-                rows.append(
-                    [
-                        f"{fwd_name}/{rev_name}",
-                        f"{fwd.left.kappa_str} <-> {fwd.right.kappa_str}",
-                        f"{k_on:.2e}",
-                        f"{k_off:.2e}",
-                        f"{kd:.2e}",
-                    ]
-                )
-
-    return str_table(rows, header)
-
-
-def _rule_graph(system: "System") -> Source:
-    agent_sites: dict[str, set[str]] = defaultdict(set)
-    state_transitions: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(set)
-    bonds_formed: set[tuple] = set()
-    bonds_broken: set[tuple] = set()
-    created: set[str] = set()
-    degraded: set[str] = set()
-
-    for rule in system.rules.values():
-        for l, r in zip(rule.left.agents, rule.right.agents):
-            if l is None and r is not None:
-                created.add(r.type)
-                continue
-            if l is not None and r is None:
-                degraded.add(l.type)
-                continue
-
-            for r_site in r:
-                if r_site.label not in l.interface:
-                    continue
-                l_site = l[r_site.label]
-
-                if r_site.stated and l_site.stated and r_site.state != l_site.state:
-                    agent_sites[l.type].add(r_site.label)
-                    state_transitions[(l.type, r_site.label)].add(
-                        (l_site.state, r_site.state)
-                    )
-
-                if r_site.coupled and not l_site.coupled:
-                    p = r_site.partner
-                    agent_sites[l.type].add(r_site.label)
-                    agent_sites[p.agent.type].add(p.label)
-                    bonds_formed.add(
-                        tuple(sorted([(l.type, r_site.label), (p.agent.type, p.label)]))
-                    )
-                elif l_site.coupled and r_site.partner == ".":
-                    p = l_site.partner
-                    agent_sites[l.type].add(l_site.label)
-                    agent_sites[p.agent.type].add(p.label)
-                    bonds_broken.add(
-                        tuple(sorted([(l.type, l_site.label), (p.agent.type, p.label)]))
-                    )
-
-    lines = ["digraph {", "  node [shape=record];"]
-
-    for agent_type in sorted(agent_sites.keys() | created | degraded):
-        site_cells = ""
-        for s in sorted(agent_sites.get(agent_type, [])):
-            transitions = state_transitions.get((agent_type, s))
-            if transitions:
-                trans_str = ", ".join(f"{a}→{b}" for a, b in sorted(transitions))
-                site_cells += f'<TD PORT="{s}">{s} {{{trans_str}}}</TD>'
-            else:
-                site_cells += f'<TD PORT="{s}">{s}</TD>'
-        label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD><B>{agent_type}</B></TD>{site_cells}</TR></TABLE>>'
-        lines.append(f"  {agent_type} [label={label}, shape=none];")
-
-    if created or degraded:
-        lines.append(
-            '  sink [label="", shape=circle, width=0.125, height=0.125, style=filled, fillcolor=black, color=white, penwidth=4];'
-        )
-        for agent_type in sorted(created):
-            lines.append(f"  sink -> {agent_type};")
-        for agent_type in sorted(degraded):
-            lines.append(f"  {agent_type} -> sink;")
-
-    for (t1, s1), (t2, s2) in bonds_formed:
-        lines.append(f"  {t1}:{s1} -> {t2}:{s2} [dir=none];")
-
-    for (t1, s1), (t2, s2) in bonds_broken:
-        lines.append(f"  {t1}:{s1} -> {t2}:{s2} [dir=none, style=dashed];")
-
-    lines.append("}")
-    return Source("\n".join(lines))
-
-
-def _contact_map(system: "System") -> Source:
-    assert shutil.which("KaSa"), "KaSa not found in the PATH."
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        inp = os.path.join(tmpdir, "in.ka")
-        with open(inp, "w") as f:
-            f.write(system.kappa_str)
-
-        os.system(
-            f"KaSa {inp} --reset-all --compute-contact-map "
-            f"--output-directory {tmpdir} "
-            f"--output-contact-map out"
-            "> /dev/null"
-        )
-
-        with open(os.path.join(tmpdir, "out.dot")) as f:
-            dot = f.read()
-
-    # Remove color formatting
-    dot = re.sub(r"\s*color\s*=\s*\w+", "", dot)
-    dot = re.sub(r"\s*style\s*=\s*filled", "", dot)
-
-    return Source(dot)
