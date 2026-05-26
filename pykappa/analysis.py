@@ -287,7 +287,7 @@ def equilibrium_value(
     return float(np.mean(values[eq_index:]))
 
 
-def binding_kinetics_table(system, volume: float = 1.0) -> str:
+def kd_table(system, volume: float = 1.0) -> str:
     """Summarize kinetic constants of two-component binding/unbinding rules
     given volume in liters.
     """
@@ -306,7 +306,6 @@ def binding_kinetics_table(system, volume: float = 1.0) -> str:
         rev_mol = len(rev.left.components)
 
         if (fwd_mol == 2 and rev_mol == 1) or (fwd_mol == 1 and rev_mol == 2):
-            # Determine binding and unbinding reactions
             is_fwd_binding = fwd_mol == 2
             binding_rxn = fwd if is_fwd_binding else rev
             unbinding_rxn = rev if is_fwd_binding else fwd
