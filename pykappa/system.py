@@ -507,16 +507,29 @@ class System:
             self.monitor.update()
 
     def kd_table(self, volume: float = 1.0) -> str:
-        from pykappa.analysis import kd_table
+        """Summarize kinetic constants of two-component binding/unbinding rules
+        given volume in liters."""
+        from pykappa.analysis import _kd_table
 
-        return kd_table(self, volume=volume)
+        return _kd_table(self, volume=volume)
 
     def rule_graph(self) -> Source:
-        from pykappa.analysis import rule_graph
+        """Visualize a ruleset as a site graph of local transformations.
 
-        return rule_graph(self)
+        Solid edges = bond formation; dashed edges = bond breaking. Sites that
+        change state show their transition as ``site {old→new}``. Creation and
+        degradation are shown as directed edges to/from a sink node (∅).
+
+        Note:
+            This is a lossy projection that neglects conditions of transformations;
+            multiple rulesets can yield the same graph.
+        """
+        from pykappa.analysis import _rule_graph
+
+        return _rule_graph(self)
 
     def contact_map(self) -> Source:
-        from pykappa.analysis import contact_map
+        """Generate a graphviz contact map using the KaSa static analyzer."""
+        from pykappa.analysis import _contact_map
 
-        return contact_map(self)
+        return _contact_map(self)

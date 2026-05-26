@@ -287,11 +287,7 @@ def equilibrium_value(
     return float(np.mean(values[eq_index:]))
 
 
-def kd_table(system, volume: float = 1.0) -> str:
-    """Summarize kinetic constants of two-component binding/unbinding rules
-    given volume in liters.
-    """
-
+def _kd_table(system, volume: float = 1.0) -> str:
     from pykappa.rule import AVOGADRO
     from pykappa._utils import str_table
 
@@ -336,17 +332,7 @@ def kd_table(system, volume: float = 1.0) -> str:
     return str_table(rows, header)
 
 
-def rule_graph(system: "System") -> Source:
-    """Visualize a ruleset as a site graph of local transformations.
-
-    Solid edges = bond formation; dashed edges = bond breaking. Sites that
-    change state show their transition as ``site {old→new}``. Creation and
-    degradation are shown as directed edges to/from a sink node (∅).
-
-    Note:
-        This is a lossy projection that neglects conditions of transformations;
-        multiple rulesets can yield the same graph.
-    """
+def _rule_graph(system: "System") -> Source:
     agent_sites: dict[str, set[str]] = defaultdict(set)
     state_transitions: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(set)
     bonds_formed: set[tuple] = set()
@@ -422,9 +408,7 @@ def rule_graph(system: "System") -> Source:
     return Source("\n".join(lines))
 
 
-def contact_map(system: "System") -> Source:
-    """Generate a graphviz contact map using the KaSa static analyzer."""
-
+def _contact_map(system: "System") -> Source:
     assert shutil.which("KaSa"), "KaSa not found in the PATH."
 
     with tempfile.TemporaryDirectory() as tmpdir:
