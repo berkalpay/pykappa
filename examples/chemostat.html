@@ -48,7 +48,7 @@
 <h1>Chemostat<a class="headerlink" href="#Chemostat" title="Link to this heading">¶</a></h1>
 <p>A chemostat can maintain a concentration of nutrients in a container by flowing in and flowing out nutrients each at a constant rate. Here we will set up a simulatable chemostat with a clonal and unevolving unicellular organism, and adjust the flow rate to observe the effect on the growth rate of the cells. More specifically, we will assume that a cell <code class="docutils literal notranslate"><span class="pre">C</span></code> replicates following metabolism of three units of the nutrient <code class="docutils literal notranslate"><span class="pre">N</span></code>, and that cells die memorylessly at a constant stochastic rate.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
@@ -69,7 +69,8 @@
 
 <span class="sd">    C(n{3}), . -&gt; C(n{0}), C(n{0}) @ 0.1 // Cell division</span>
 <span class="sd">    C() -&gt; . @ 0.01  // Cell death</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -77,7 +78,7 @@
 <p>If we started with only, say, one cell, it would be reasonably likely that the population would die out before replicating sufficiently to virtually preclude extinction.</p>
 <p>Let’s start the chemostat and observe the population size:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">3</span><span class="p">:</span>
@@ -90,12 +91,12 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_chemostat_5_0.svg" src="../_images/examples_chemostat_5_0.svg" />
+<img alt="../_images/examples_chemostat_4_0.svg" src="../_images/examples_chemostat_4_0.svg" />
 </div>
 </div>
 <p>Now let’s increase inflow of the nutrient without changing the outflow rate and observe that the population size increases:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="s2">&quot;. -&gt; N() @ 1&quot;</span><span class="p">)</span>
@@ -110,7 +111,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_chemostat_7_0.svg" src="../_images/examples_chemostat_7_0.svg" />
+<img alt="../_images/examples_chemostat_6_0.svg" src="../_images/examples_chemostat_6_0.svg" />
 </div>
 </div>
 </section>

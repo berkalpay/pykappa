@@ -8,18 +8,6 @@
             ]
         },
         {
-            "cell_type": "code",
-            "execution_count": 1,
-            "metadata": {
-                "nbsphinx": "hidden"
-            },
-            "outputs": [],
-            "source": [
-                "import random\n",
-                "random.seed(0)"
-            ]
-        },
-        {
             "cell_type": "markdown",
             "metadata": {},
             "source": [
@@ -28,7 +16,7 @@
         },
         {
             "cell_type": "code",
-            "execution_count": 2,
+            "execution_count": null,
             "metadata": {},
             "outputs": [],
             "source": [
@@ -41,6 +29,7 @@
                 "        \"A(x[1]), B(x[1]) -> A(x[.]), B(x[.]) @ 1\",\n",
                 "    ],\n",
                 "    observables={\"AB\": \"|A(x[1]), B(x[1])|\"},\n",
+                "    seed=42\n",
                 ")"
             ]
         },
@@ -53,7 +42,7 @@
         },
         {
             "cell_type": "code",
-            "execution_count": 3,
+            "execution_count": null,
             "metadata": {},
             "outputs": [],
             "source": [
@@ -65,7 +54,8 @@
                 "    %obs: 'AB' |A(x[1]), B(x[1])|\n",
                 "\n",
                 "    A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1, 1\n",
-                "    \"\"\"\n",
+                "    \"\"\",\n",
+                "    seed=42\n",
                 ")"
             ]
         },
@@ -80,7 +70,7 @@
         },
         {
             "cell_type": "code",
-            "execution_count": 4,
+            "execution_count": null,
             "metadata": {},
             "outputs": [],
             "source": [
@@ -99,7 +89,7 @@
         },
         {
             "cell_type": "code",
-            "execution_count": 5,
+            "execution_count": null,
             "metadata": {},
             "outputs": [],
             "source": [
@@ -120,7 +110,7 @@
         },
         {
             "cell_type": "code",
-            "execution_count": 6,
+            "execution_count": null,
             "metadata": {},
             "outputs": [],
             "source": [
@@ -171,7 +161,7 @@
     ],
     "metadata": {
         "kernelspec": {
-            "display_name": "kappa",
+            "display_name": "standard",
             "language": "python",
             "name": "python3"
         },

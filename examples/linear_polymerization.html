@@ -48,7 +48,7 @@
 <h1>Linear polymerization<a class="headerlink" href="#Linear-polymerization" title="Link to this heading">¶</a></h1>
 <p>This example demonstrates a simple polymerization process in which monomers <code class="docutils literal notranslate"><span class="pre">M</span></code> can bind each other to form linear chains. There’s a lower rate of depolymerization, and chains can be terminated by capping agents <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
@@ -69,14 +69,15 @@
 <span class="sd">    // Cap removal</span>
 <span class="sd">    M(r[1]), C(m[1]) -&gt; M(r[.]), C(m[.]) @ 0.01</span>
 <span class="sd">    M(l[1]), C(m[1]) -&gt; M(l[.]), C(m[.]) @ 0.01</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>Simulate for a bit:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
@@ -85,7 +86,7 @@
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -112,12 +113,12 @@ Free monomers: 0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_linear_polymerization_5_1.svg" src="../_images/examples_linear_polymerization_5_1.svg" />
+<img alt="../_images/examples_linear_polymerization_4_1.svg" src="../_images/examples_linear_polymerization_4_1.svg" />
 </div>
 </div>
 <p>Now let’s add some of the capping agent:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;C(m[.])&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
@@ -142,7 +143,7 @@ Free monomers: 0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_linear_polymerization_7_1.svg" src="../_images/examples_linear_polymerization_7_1.svg" />
+<img alt="../_images/examples_linear_polymerization_6_1.svg" src="../_images/examples_linear_polymerization_6_1.svg" />
 </div>
 </div>
 </section>

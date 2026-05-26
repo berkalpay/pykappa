@@ -48,7 +48,7 @@
 <h1>The prozone effect<a class="headerlink" href="#The-prozone-effect" title="Link to this heading">¶</a></h1>
 <p>The prozone effect, also called the hook effect, refers to when the abundance of a molecular complex first increases then decreases as the relative concentration of a constituent molecule <code class="docutils literal notranslate"><span class="pre">E</span></code> increases. In this example, we will say that a complex is composed of an <code class="docutils literal notranslate"><span class="pre">L</span></code> molecule, an <code class="docutils literal notranslate"><span class="pre">M</span></code> molecule, and an <code class="docutils literal notranslate"><span class="pre">E</span></code> molecule, which connects the former two together.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
@@ -65,14 +65,15 @@
 <span class="sd">    E(l[.]), L(e[.]) &lt;-&gt; E(l[1]), L(e[1]) @ 1, 1  // Bind L to E</span>
 <span class="sd">    E(m[.]), M(e[.]) &lt;-&gt; E(m[1]), M(e[1]) @ 1, 1  // Bind M to E</span>
 <span class="sd">    . -&gt; E(l[.], m[.]) @ 1  // Inflow of E</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>We’ve set up the system so that there’s no <code class="docutils literal notranslate"><span class="pre">E</span></code> to start but that it flows in at a constant stochastic rate. Let’s now simulate while tracking the corresponding number of complexes:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">2</span><span class="p">:</span>
@@ -85,7 +86,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_prozone_effect_4_0.svg" src="../_images/examples_prozone_effect_4_0.svg" />
+<img alt="../_images/examples_prozone_effect_3_0.svg" src="../_images/examples_prozone_effect_3_0.svg" />
 </div>
 </div>
 <p>As we introduce more <code class="docutils literal notranslate"><span class="pre">E</span></code>, at first more complexes can be formed but eventually there are so many <code class="docutils literal notranslate"><span class="pre">E</span></code> that the other components of the complex become more likely to bind separate <code class="docutils literal notranslate"><span class="pre">E</span></code> molecules. The result is that the full complex is less likely to form.</p>

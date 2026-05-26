@@ -17,18 +17,6 @@
         {
             "cell_type": "code",
             "execution_count": null,
-            "metadata": {
-                "nbsphinx": "hidden"
-            },
-            "outputs": [],
-            "source": [
-                "import random\n",
-                "random.seed(0)"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": null,
             "metadata": {},
             "outputs": [],
             "source": [
@@ -56,7 +44,8 @@
                 "    A() -> . @ 0.1\n",
                 "    Y() -> . @ 0.5\n",
                 "    Z() -> . @ 0.5\n",
-                "    \"\"\"\n",
+                "    \"\"\",\n",
+                "    seed=42\n",
                 ")"
             ]
         },
