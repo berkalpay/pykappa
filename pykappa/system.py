@@ -424,33 +424,34 @@ class System:
             self.monitor.update()
 
         # Wait
-        try:
-            self.time += self._rng.expovariate(self.reactivity)
-        except ZeroDivisionError:
+        if (reactivity := self.reactivity) == 0:
             warnings.warn(
                 "system has no reactivity: infinite wait time", RuntimeWarning
             )
+        else:
+            self.time += self._rng.expovariate(reactivity)
 
-        # Choose a rule
-        try:
+        # Check for reactivity
+        if reactivity == 0:
+            rule = None
+            warnings.warn("system has no reactivity: no rule applied", RuntimeWarning)
+        else:
+            # Choose a rule
             rule = self._rng.choices(
                 list(self.rules.values()),
                 weights=[rule.reactivity(self) for rule in self.rules.values()],
             )[0]
-        except ValueError:
-            rule = None
-            warnings.warn("system has no reactivity: no rule applied", RuntimeWarning)
 
-        # Apply the rule
-        if rule is not None:
-            update = rule._select(self.mixture)
-            if update is not None:
-                self.tallies[str(rule)]["applied"] += 1
-                self.mixture._apply_update(update)
-                for expr, name in rule.token_updates:
-                    self.tokens[name] += expr.evaluate(self)
-            else:
-                self.tallies[str(rule)]["failed"] += 1
+            # Apply the rule
+            if rule is not None:
+                update = rule._select(self.mixture)
+                if update is not None:
+                    self.tallies[str(rule)]["applied"] += 1
+                    self.mixture._apply_update(update)
+                    for expr, name in rule.token_updates:
+                        self.tokens[name] += expr.evaluate(self)
+                else:
+                    self.tallies[str(rule)]["failed"] += 1
 
         # Update monitor
         if self.monitor is not None:
