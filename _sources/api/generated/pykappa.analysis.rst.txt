@@ -8,13 +8,10 @@
 
    .. autosummary::
    
-      binding_kinetics_table
-      contact_map
       equilibrated
       equilibration_time
       equilibrium_value
       relative_slope
-      rule_graph
    
    .. rubric:: Classes
 

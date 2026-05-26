@@ -573,20 +573,41 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="System.kd_table">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.kd_table">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">kd_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Summarize kinetic constants of two-component binding/unbinding rules</span>
+<span class="sd">        given volume in liters.&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">_kd_table</span>
+
+        <span class="k">return</span> <span class="n">_kd_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="System.rule_graph">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.rule_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rule_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Source</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">rule_graph</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualize a ruleset as a site graph of local transformations.</span>
 
-        <span class="k">return</span> <span class="n">rule_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+<span class="sd">        Solid edges = bond formation; dashed edges = bond breaking. Sites that</span>
+<span class="sd">        change state show their transition as ``site {old→new}``. Creation and</span>
+<span class="sd">        degradation are shown as directed edges to/from a sink node (∅).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This is a lossy projection that neglects conditions of transformations;</span>
+<span class="sd">            multiple rulesets can yield the same graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">_rule_graph</span>
+
+        <span class="k">return</span> <span class="n">_rule_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="System.contact_map">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.contact_map">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">contact_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Source</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">contact_map</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a graphviz contact map using the KaSa static analyzer.&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">_contact_map</span>
 
-        <span class="k">return</span> <span class="n">contact_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">_contact_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

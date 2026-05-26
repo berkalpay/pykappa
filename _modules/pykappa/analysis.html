@@ -131,6 +131,158 @@
         <span class="k">return</span> <span class="n">Source</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;neato&quot;</span><span class="p">)</span>
 
 
+<span class="c1"># --- System functions ---</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_kd_table</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">AVOGADRO</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_table</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span> <span class="s2">&quot;k_on&quot;</span><span class="p">,</span> <span class="s2">&quot;k_off&quot;</span><span class="p">,</span> <span class="s2">&quot;K_D&quot;</span><span class="p">]</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">fwd_name</span><span class="p">,</span> <span class="n">rev_name</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">_reversible_rules</span><span class="p">:</span>
+        <span class="n">fwd</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">fwd_name</span><span class="p">]</span>
+        <span class="n">rev</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rev_name</span><span class="p">]</span>
+
+        <span class="n">fwd_mol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+        <span class="n">rev_mol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rev</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">rev_mol</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">rev_mol</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">is_fwd_binding</span> <span class="o">=</span> <span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">2</span>
+            <span class="n">binding_rxn</span> <span class="o">=</span> <span class="n">fwd</span> <span class="k">if</span> <span class="n">is_fwd_binding</span> <span class="k">else</span> <span class="n">rev</span>
+            <span class="n">unbinding_rxn</span> <span class="o">=</span> <span class="n">rev</span> <span class="k">if</span> <span class="n">is_fwd_binding</span> <span class="k">else</span> <span class="n">fwd</span>
+
+            <span class="n">binding_types</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">comp</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">binding_rxn</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
+            <span class="p">)</span>
+            <span class="n">unbinding_types</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">type</span>
+                <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">unbinding_rxn</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
+                <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">comp</span><span class="o">.</span><span class="n">agents</span>
+                <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">binding_types</span> <span class="o">==</span> <span class="n">unbinding_types</span><span class="p">:</span>
+                <span class="n">k_on</span> <span class="o">=</span> <span class="n">binding_rxn</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span> <span class="o">*</span> <span class="n">AVOGADRO</span> <span class="o">*</span> <span class="n">volume</span>
+                <span class="n">k_off</span> <span class="o">=</span> <span class="n">unbinding_rxn</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+                <span class="n">kd</span> <span class="o">=</span> <span class="n">k_off</span> <span class="o">/</span> <span class="n">k_on</span>
+                <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fwd_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">rev_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k_on</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k_off</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kd</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">str_table</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_rule_graph</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Source</span><span class="p">:</span>
+    <span class="n">agent_sites</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">state_transitions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">bonds_formed</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">bonds_broken</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">created</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">degraded</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span><span class="p">,</span> <span class="n">rule</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">agents</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">created</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">degraded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">r_site</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l</span><span class="o">.</span><span class="n">interface</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">l_site</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">stated</span> <span class="ow">and</span> <span class="n">l_site</span><span class="o">.</span><span class="n">stated</span> <span class="ow">and</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">l_site</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">state_transitions</span><span class="p">[(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">l_site</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">coupled</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">l_site</span><span class="o">.</span><span class="n">coupled</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">r_site</span><span class="o">.</span><span class="n">partner</span>
+                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">bonds_formed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)]))</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">l_site</span><span class="o">.</span><span class="n">coupled</span> <span class="ow">and</span> <span class="n">r_site</span><span class="o">.</span><span class="n">partner</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">l_site</span><span class="o">.</span><span class="n">partner</span>
+                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l_site</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">bonds_broken</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">l_site</span><span class="o">.</span><span class="n">label</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)]))</span>
+                    <span class="p">)</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;digraph {&quot;</span><span class="p">,</span> <span class="s2">&quot;  node [shape=record];&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">agent_sites</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">|</span> <span class="n">created</span> <span class="o">|</span> <span class="n">degraded</span><span class="p">):</span>
+        <span class="n">site_cells</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">agent_sites</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_type</span><span class="p">,</span> <span class="p">[])):</span>
+            <span class="n">transitions</span> <span class="o">=</span> <span class="n">state_transitions</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">agent_type</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">transitions</span><span class="p">:</span>
+                <span class="n">trans_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">→</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">transitions</span><span class="p">))</span>
+                <span class="n">site_cells</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&lt;TD PORT=&quot;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1"> </span><span class="se">{{</span><span class="si">{</span><span class="n">trans_str</span><span class="si">}</span><span class="se">}}</span><span class="s1">&lt;/TD&gt;&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">site_cells</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&lt;TD PORT=&quot;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&lt;/TD&gt;&#39;</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;&lt;TR&gt;&lt;TD&gt;&lt;B&gt;</span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s1">&lt;/B&gt;&lt;/TD&gt;</span><span class="si">{</span><span class="n">site_cells</span><span class="si">}</span><span class="s1">&lt;/TR&gt;&lt;/TABLE&gt;&gt;&#39;</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2"> [label=</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">, shape=none];&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">created</span> <span class="ow">or</span> <span class="n">degraded</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;  sink [label=&quot;&quot;, shape=circle, width=0.125, height=0.125, style=filled, fillcolor=black, color=white, penwidth=4];&#39;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">created</span><span class="p">):</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  sink -&gt; </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2">;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">degraded</span><span class="p">):</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2"> -&gt; sink;&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bonds_formed</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s1</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s2</span><span class="si">}</span><span class="s2"> [dir=none];&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bonds_broken</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s1</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s2</span><span class="si">}</span><span class="s2"> [dir=none, style=dashed];&quot;</span><span class="p">)</span>
+
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Source</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_contact_map</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Source</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;KaSa&quot;</span><span class="p">),</span> <span class="s2">&quot;KaSa not found in the PATH.&quot;</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+        <span class="n">inp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;in.ka&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;KaSa </span><span class="si">{</span><span class="n">inp</span><span class="si">}</span><span class="s2"> --reset-all --compute-contact-map &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--output-directory </span><span class="si">{</span><span class="n">tmpdir</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--output-contact-map out&quot;</span>
+            <span class="s2">&quot;&gt; /dev/null&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;out.dot&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">dot</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="c1"># Remove color formatting</span>
+    <span class="n">dot</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*color\s*=\s*\w+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dot</span><span class="p">)</span>
+    <span class="n">dot</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*style\s*=\s*filled&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dot</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Source</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+
+
+<span class="c1"># --- Monitoring ---</span>
+
+
 <div class="viewcode-block" id="Monitor">
 <a class="viewcode-back" href="../../api/generated/pykappa.analysis.html#pykappa.analysis.Monitor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Monitor</span><span class="p">:</span>
@@ -355,178 +507,6 @@
     <span class="n">eq_time</span> <span class="o">=</span> <span class="n">equilibration_time</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">min_tail_length</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
     <span class="n">eq_index</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">eq_time</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">eq_index</span><span class="p">:]))</span></div>
-
-
-
-<div class="viewcode-block" id="binding_kinetics_table">
-<a class="viewcode-back" href="../../api/generated/pykappa.analysis.html#pykappa.analysis.binding_kinetics_table">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">binding_kinetics_table</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Summarize kinetic constants of two-component binding/unbinding rules</span>
-<span class="sd">    given volume in liters.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">AVOGADRO</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_table</span>
-
-    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span> <span class="s2">&quot;k_on&quot;</span><span class="p">,</span> <span class="s2">&quot;k_off&quot;</span><span class="p">,</span> <span class="s2">&quot;K_D&quot;</span><span class="p">]</span>
-    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">fwd_name</span><span class="p">,</span> <span class="n">rev_name</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">_reversible_rules</span><span class="p">:</span>
-        <span class="n">fwd</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">fwd_name</span><span class="p">]</span>
-        <span class="n">rev</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rev_name</span><span class="p">]</span>
-
-        <span class="n">fwd_mol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
-        <span class="n">rev_mol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rev</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">rev_mol</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">rev_mol</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="c1"># Determine binding and unbinding reactions</span>
-            <span class="n">is_fwd_binding</span> <span class="o">=</span> <span class="n">fwd_mol</span> <span class="o">==</span> <span class="mi">2</span>
-            <span class="n">binding_rxn</span> <span class="o">=</span> <span class="n">fwd</span> <span class="k">if</span> <span class="n">is_fwd_binding</span> <span class="k">else</span> <span class="n">rev</span>
-            <span class="n">unbinding_rxn</span> <span class="o">=</span> <span class="n">rev</span> <span class="k">if</span> <span class="n">is_fwd_binding</span> <span class="k">else</span> <span class="n">fwd</span>
-
-            <span class="n">binding_types</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-                <span class="n">comp</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">binding_rxn</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
-            <span class="p">)</span>
-            <span class="n">unbinding_types</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-                <span class="n">agent</span><span class="o">.</span><span class="n">type</span>
-                <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">unbinding_rxn</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
-                <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">comp</span><span class="o">.</span><span class="n">agents</span>
-                <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="n">binding_types</span> <span class="o">==</span> <span class="n">unbinding_types</span><span class="p">:</span>
-                <span class="n">k_on</span> <span class="o">=</span> <span class="n">binding_rxn</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span> <span class="o">*</span> <span class="n">AVOGADRO</span> <span class="o">*</span> <span class="n">volume</span>
-                <span class="n">k_off</span> <span class="o">=</span> <span class="n">unbinding_rxn</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
-                <span class="n">kd</span> <span class="o">=</span> <span class="n">k_off</span> <span class="o">/</span> <span class="n">k_on</span>
-                <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fwd_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">rev_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k_on</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k_off</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kd</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="p">]</span>
-                <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">str_table</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="rule_graph">
-<a class="viewcode-back" href="../../api/generated/pykappa.analysis.html#pykappa.analysis.rule_graph">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">rule_graph</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Source</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize a ruleset as a site graph of local transformations.</span>
-
-<span class="sd">    Solid edges = bond formation; dashed edges = bond breaking. Sites that</span>
-<span class="sd">    change state show their transition as ``site {old→new}``. Creation and</span>
-<span class="sd">    degradation are shown as directed edges to/from a sink node (∅).</span>
-
-<span class="sd">    Note:</span>
-<span class="sd">        This is a lossy projection that neglects conditions of transformations;</span>
-<span class="sd">        multiple rulesets can yield the same graph.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">agent_sites</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
-    <span class="n">state_transitions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
-    <span class="n">bonds_formed</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">bonds_broken</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">created</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">degraded</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span><span class="p">,</span> <span class="n">rule</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">agents</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">created</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
-                <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">degraded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
-                <span class="k">continue</span>
-
-            <span class="k">for</span> <span class="n">r_site</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l</span><span class="o">.</span><span class="n">interface</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="n">l_site</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
-
-                <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">stated</span> <span class="ow">and</span> <span class="n">l_site</span><span class="o">.</span><span class="n">stated</span> <span class="ow">and</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">l_site</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
-                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
-                    <span class="n">state_transitions</span><span class="p">[(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                        <span class="p">(</span><span class="n">l_site</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
-                    <span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">coupled</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">l_site</span><span class="o">.</span><span class="n">coupled</span><span class="p">:</span>
-                    <span class="n">p</span> <span class="o">=</span> <span class="n">r_site</span><span class="o">.</span><span class="n">partner</span>
-                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
-                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
-                    <span class="n">bonds_formed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                        <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)]))</span>
-                    <span class="p">)</span>
-                <span class="k">elif</span> <span class="n">l_site</span><span class="o">.</span><span class="n">coupled</span> <span class="ow">and</span> <span class="n">r_site</span><span class="o">.</span><span class="n">partner</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
-                    <span class="n">p</span> <span class="o">=</span> <span class="n">l_site</span><span class="o">.</span><span class="n">partner</span>
-                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l_site</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
-                    <span class="n">agent_sites</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
-                    <span class="n">bonds_broken</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                        <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="n">l</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">l_site</span><span class="o">.</span><span class="n">label</span><span class="p">),</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)]))</span>
-                    <span class="p">)</span>
-
-    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;digraph {&quot;</span><span class="p">,</span> <span class="s2">&quot;  node [shape=record];&quot;</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">agent_sites</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">|</span> <span class="n">created</span> <span class="o">|</span> <span class="n">degraded</span><span class="p">):</span>
-        <span class="n">site_cells</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">agent_sites</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_type</span><span class="p">,</span> <span class="p">[])):</span>
-            <span class="n">transitions</span> <span class="o">=</span> <span class="n">state_transitions</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">agent_type</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">transitions</span><span class="p">:</span>
-                <span class="n">trans_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">→</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">transitions</span><span class="p">))</span>
-                <span class="n">site_cells</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&lt;TD PORT=&quot;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1"> </span><span class="se">{{</span><span class="si">{</span><span class="n">trans_str</span><span class="si">}</span><span class="se">}}</span><span class="s1">&lt;/TD&gt;&#39;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">site_cells</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&lt;TD PORT=&quot;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&lt;/TD&gt;&#39;</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot;&gt;&lt;TR&gt;&lt;TD&gt;&lt;B&gt;</span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s1">&lt;/B&gt;&lt;/TD&gt;</span><span class="si">{</span><span class="n">site_cells</span><span class="si">}</span><span class="s1">&lt;/TR&gt;&lt;/TABLE&gt;&gt;&#39;</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2"> [label=</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">, shape=none];&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">created</span> <span class="ow">or</span> <span class="n">degraded</span><span class="p">:</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="s1">&#39;  sink [label=&quot;&quot;, shape=circle, width=0.125, height=0.125, style=filled, fillcolor=black, color=white, penwidth=4];&#39;</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">created</span><span class="p">):</span>
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  sink -&gt; </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2">;&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">agent_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">degraded</span><span class="p">):</span>
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">agent_type</span><span class="si">}</span><span class="s2"> -&gt; sink;&quot;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bonds_formed</span><span class="p">:</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s1</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s2</span><span class="si">}</span><span class="s2"> [dir=none];&quot;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bonds_broken</span><span class="p">:</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s1</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">s2</span><span class="si">}</span><span class="s2"> [dir=none, style=dashed];&quot;</span><span class="p">)</span>
-
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Source</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span></div>
-
-
-
-<div class="viewcode-block" id="contact_map">
-<a class="viewcode-back" href="../../api/generated/pykappa.analysis.html#pykappa.analysis.contact_map">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">contact_map</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Source</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a graphviz contact map using the KaSa static analyzer.&quot;&quot;&quot;</span>
-
-    <span class="k">assert</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;KaSa&quot;</span><span class="p">),</span> <span class="s2">&quot;KaSa not found in the PATH.&quot;</span>
-
-    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
-        <span class="n">inp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;in.ka&quot;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span>
-
-        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;KaSa </span><span class="si">{</span><span class="n">inp</span><span class="si">}</span><span class="s2"> --reset-all --compute-contact-map &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;--output-directory </span><span class="si">{</span><span class="n">tmpdir</span><span class="si">}</span><span class="s2"> &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;--output-contact-map out&quot;</span>
-            <span class="s2">&quot;&gt; /dev/null&quot;</span>
-        <span class="p">)</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;out.dot&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">dot</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-    <span class="c1"># Remove color formatting</span>
-    <span class="n">dot</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*color\s*=\s*\w+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dot</span><span class="p">)</span>
-    <span class="n">dot</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*style\s*=\s*filled&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dot</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">Source</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span></div>
 
 </pre></div>
 
