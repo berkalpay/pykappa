@@ -69,11 +69,20 @@ class Mixture:
     @property
     def kappa_str(self) -> str:
         """The mixture in Kappa format with %init declarations."""
+
+        # Group components by isomorphism
+        grouped: dict[Component, list[Component]] = {}
+        for component in self:
+            for group in grouped:
+                if component.isomorphic(group):
+                    grouped[group].append(component)
+                    break
+            else:
+                grouped[component] = [component]
+
         return "\n".join(
             f"%init: {len(components)} {group.kappa_str}"
-            for group, components in _group_by_isomorphism(
-                list(component for component in self)
-            ).items()
+            for group, components in grouped.items()
         )
 
     @property
@@ -384,20 +393,3 @@ class _MixtureUpdate:
                 touched.add(b)
 
         return touched
-
-
-def _group_by_isomorphism(
-    components: Iterable[Component],
-) -> dict[Component, list[Component]]:
-    """Returns a dictionary mapping representative components to lists
-    of isomorphic components.
-    """
-    grouped: dict[Component, list[Component]] = {}
-    for component in components:
-        for group in grouped:
-            if component.isomorphic(group):
-                grouped[group].append(component)
-                break
-        else:
-            grouped[component] = [component]
-    return grouped
