@@ -117,6 +117,25 @@ class Agent(Counted):
     type: str  #: Type name of the agent
     interface: dict[str, Site]  #: Maps site labels to Site objects
 
+    @staticmethod
+    def neighborhood(agents: Iterable["Agent"], radius: int) -> set["Agent"]:
+        """Get all agents within a distance radius of the given agents."""
+        frontier = set(agents)
+        seen = set(frontier)
+
+        for _ in range(radius):
+            next_frontier = set()
+            for cur in frontier:
+                for n in cur.neighbors:
+                    if n not in seen:
+                        seen.add(n)
+                        next_frontier.add(n)
+            frontier = next_frontier
+            if not frontier:
+                break
+
+        return seen
+
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
         """Parse a single agent from a Kappa string.

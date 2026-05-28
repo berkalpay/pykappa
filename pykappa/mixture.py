@@ -208,7 +208,9 @@ class Mixture:
         for edge in update.edges_to_add:
             self._add_edge(edge)
 
-        update_region = neighborhood(update.touched_after, self._max_embedding_width)
+        update_region = Agent.neighborhood(
+            update.touched_after, self._max_embedding_width
+        )
 
         update_region = IndexedSet(update_region)
         update_region.create_index("type", lambda a: [a.type])
@@ -382,25 +384,6 @@ class _MixtureUpdate:
                 touched.add(b)
 
         return touched
-
-
-def neighborhood(agents: Iterable[Agent], radius: int) -> set[Agent]:
-    """Get all agents within a distance radius of the given agents."""
-    frontier = set(agents)
-    seen = set(frontier)
-
-    for _ in range(radius):
-        next_frontier = set()
-        for cur in frontier:
-            for n in cur.neighbors:
-                if n not in seen:
-                    seen.add(n)
-                    next_frontier.add(n)
-        frontier = next_frontier
-        if not frontier:
-            break
-
-    return seen
 
 
 def _group_by_isomorphism(

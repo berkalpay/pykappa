@@ -1,7 +1,6 @@
 import pytest
 
-from pykappa import Pattern, Component, Mixture
-from pykappa.mixture import neighborhood
+from pykappa import Agent, Component, Pattern, Mixture
 
 
 def test_neighborhood_requires_frontier_growth_for_radius_gt_1():
@@ -9,10 +8,10 @@ def test_neighborhood_requires_frontier_growth_for_radius_gt_1():
     comp = Component.from_kappa("A(x[1]), B(x[1], y[2]), C(y[2])")
     a = next(agent for agent in comp if agent.type == "A")
 
-    types_r1 = {ag.type for ag in neighborhood([a], radius=1)}
+    types_r1 = {ag.type for ag in Agent.neighborhood([a], radius=1)}
     assert types_r1 == {"A", "B"}
 
-    types_r2 = {ag.type for ag in neighborhood([a], radius=2)}
+    types_r2 = {ag.type for ag in Agent.neighborhood([a], radius=2)}
     assert types_r2 == {"A", "B", "C"}
 
 
