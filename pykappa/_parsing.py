@@ -218,17 +218,7 @@ class KappaTransformer(Transformer):
     def ambi_fr_rule(self, children):
         patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
-        rules = []
-        try:
-            if rates[0].evaluate() != 0:
-                rules.append(BimolecularRule(left, right, rates[0], token_updates))
-        except:
-            rules.append(BimolecularRule(left, right, rates[0], token_updates))
-        try:
-            if rates[1].evaluate() != 0:
-                rules.append(UnimolecularRule(left, right, rates[1], token_updates))
-        except:
-            rules.append(UnimolecularRule(left, right, rates[1], token_updates))
+        rules = self.ambi_rule(children)
         rules.append(Rule(right, left, rates[2], token_updates))
         return rules
 
