@@ -4,12 +4,6 @@
 .. automodule:: pykappa.mixture
 
    
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      neighborhood
-   
    .. rubric:: Classes
 
    .. autosummary::

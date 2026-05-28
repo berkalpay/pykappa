@@ -166,6 +166,28 @@
     <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1">#: Type name of the agent</span>
     <span class="n">interface</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Site</span><span class="p">]</span>  <span class="c1">#: Maps site labels to Site objects</span>
 
+<div class="viewcode-block" id="Agent.neighborhood">
+<a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Agent.neighborhood">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">neighborhood</span><span class="p">(</span><span class="n">agents</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="s2">&quot;Agent&quot;</span><span class="p">],</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="s2">&quot;Agent&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all agents within a distance radius of the given agents.&quot;&quot;&quot;</span>
+        <span class="n">frontier</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">frontier</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">radius</span><span class="p">):</span>
+            <span class="n">next_frontier</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">cur</span> <span class="ow">in</span> <span class="n">frontier</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">neighbors</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                        <span class="n">next_frontier</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">frontier</span> <span class="o">=</span> <span class="n">next_frontier</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">frontier</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">seen</span></div>
+
+
 <div class="viewcode-block" id="Agent.from_kappa">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Agent.from_kappa">[docs]</a>
     <span class="nd">@classmethod</span>
