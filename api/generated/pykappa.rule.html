@@ -46,27 +46,27 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.rule.BimolecularRule" title="pykappa.rule.BimolecularRule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BimolecularRule</span></code></a>(left, right, stochastic_rate)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.rule.BimolecularRule" title="pykappa.rule.BimolecularRule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BimolecularRule</span></code></a>(left, right, rate_expression)</p></td>
 <td><p>Rule that acts between two distinct components.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.rule.Rule" title="pykappa.rule.Rule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rule</span></code></a>(left, right, stochastic_rate[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykappa.rule.Rule" title="pykappa.rule.Rule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rule</span></code></a>(left, right, rate_expression[, ...])</p></td>
 <td><p>Standard Kappa rule with left-hand side, right-hand side, and rate.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.rule.UnimolecularRule" title="pykappa.rule.UnimolecularRule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnimolecularRule</span></code></a>(left, right, stochastic_rate)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykappa.rule.UnimolecularRule" title="pykappa.rule.UnimolecularRule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnimolecularRule</span></code></a>(left, right, rate_expression)</p></td>
 <td><p>Rule that acts within a single component.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.rule.Rule">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">Rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stochastic_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">Rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule" title="Link to this definition">¶</a></dt>
 <dd><p>Standard Kappa rule with left-hand side, right-hand side, and rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>left</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
 <li><p><strong>right</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
-<li><p><strong>stochastic_rate</strong> (<em>Expression</em>)</p></li>
+<li><p><strong>rate_expression</strong> (<em>Expression</em>)</p></li>
 <li><p><strong>token_updates</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>Expression</em><em>, </em><em>str</em><em>]</em><em>]</em>)</p></li>
 </ul>
 </dd>
@@ -117,8 +117,8 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.stochastic_rate">
-<span class="sig-name descname"><span class="pre">stochastic_rate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Expression</span></span><a class="headerlink" href="#pykappa.rule.Rule.stochastic_rate" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.rule.Rule.rate_expression">
+<span class="sig-name descname"><span class="pre">rate_expression</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Expression</span></span><a class="headerlink" href="#pykappa.rule.Rule.rate_expression" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -194,14 +194,14 @@ applies this correction when calculating rule reactivities.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.rule.UnimolecularRule">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">UnimolecularRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stochastic_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#UnimolecularRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.UnimolecularRule" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">UnimolecularRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#UnimolecularRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.UnimolecularRule" title="Link to this definition">¶</a></dt>
 <dd><p>Rule that acts within a single component.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>left</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
 <li><p><strong>right</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
-<li><p><strong>stochastic_rate</strong> (<em>Expression</em>)</p></li>
+<li><p><strong>rate_expression</strong> (<em>Expression</em>)</p></li>
 <li><p><strong>token_updates</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>Expression</em><em>, </em><em>str</em><em>]</em><em>]</em>)</p></li>
 </ul>
 </dd>
@@ -224,14 +224,14 @@ applies this correction when calculating rule reactivities.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.rule.BimolecularRule">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">BimolecularRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stochastic_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#BimolecularRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.BimolecularRule" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">BimolecularRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#BimolecularRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.BimolecularRule" title="Link to this definition">¶</a></dt>
 <dd><p>Rule that acts between two distinct components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>left</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
 <li><p><strong>right</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
-<li><p><strong>stochastic_rate</strong> (<em>Expression</em>)</p></li>
+<li><p><strong>rate_expression</strong> (<em>Expression</em>)</p></li>
 <li><p><strong>token_updates</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>Expression</em><em>, </em><em>str</em><em>]</em><em>]</em>)</p></li>
 </ul>
 </dd>

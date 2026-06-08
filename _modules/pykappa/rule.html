@@ -69,7 +69,7 @@
 
     <span class="n">left</span><span class="p">:</span> <span class="n">Pattern</span>
     <span class="n">right</span><span class="p">:</span> <span class="n">Pattern</span>
-    <span class="n">stochastic_rate</span><span class="p">:</span> <span class="n">Expression</span>
+    <span class="n">rate_expression</span><span class="p">:</span> <span class="n">Expression</span>
     <span class="n">token_updates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 
 <div class="viewcode-block" id="Rule.list_from_kappa">
@@ -109,12 +109,12 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">left</span><span class="p">:</span> <span class="n">Pattern</span><span class="p">,</span>
         <span class="n">right</span><span class="p">:</span> <span class="n">Pattern</span><span class="p">,</span>
-        <span class="n">stochastic_rate</span><span class="p">:</span> <span class="n">Expression</span><span class="p">,</span>
+        <span class="n">rate_expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">,</span>
         <span class="n">token_updates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stochastic_rate</span> <span class="o">=</span> <span class="n">stochastic_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate_expression</span> <span class="o">=</span> <span class="n">rate_expression</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token_updates</span> <span class="o">=</span> <span class="n">token_updates</span> <span class="ow">or</span> <span class="p">[]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -138,7 +138,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_rate_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stochastic_rate</span><span class="o">.</span><span class="n">kappa_str</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_expression</span><span class="o">.</span><span class="n">kappa_str</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -197,7 +197,7 @@
 <div class="viewcode-block" id="Rule.rate">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.rate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stochastic_rate</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_expression</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Rule.n_embeddings">
@@ -321,7 +321,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_rate_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;0 </span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stochastic_rate</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;0 </span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rate_expression</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="UnimolecularRule.n_embeddings">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.UnimolecularRule.n_embeddings">[docs]</a>
