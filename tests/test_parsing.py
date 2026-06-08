@@ -61,8 +61,8 @@ def test_ambi_rule_from_kappa():
     assert len(rules) == 2
     assert isinstance(rules[0], BimolecularRule)
     assert isinstance(rules[1], UnimolecularRule)
-    assert rules[0].stochastic_rate.evaluate() == 1.0
-    assert rules[1].stochastic_rate.evaluate() == 2.0
+    assert rules[0].rate_expression.evaluate() == 1.0
+    assert rules[1].rate_expression.evaluate() == 2.0
 
 
 def test_uni_rule_from_kappa():
@@ -71,7 +71,7 @@ def test_uni_rule_from_kappa():
     )
     assert len(rules) == 1
     assert isinstance(rules[0], UnimolecularRule)
-    assert rules[0].stochastic_rate.evaluate() == 2.0
+    assert rules[0].rate_expression.evaluate() == 2.0
 
 
 def test_bi_rule_from_kappa():
@@ -80,7 +80,7 @@ def test_bi_rule_from_kappa():
     )
     assert len(rules) == 1
     assert isinstance(rules[0], BimolecularRule)
-    assert rules[0].stochastic_rate.evaluate() == 1.0
+    assert rules[0].rate_expression.evaluate() == 1.0
 
 
 def test_ambi_fr_rule_from_kappa():
@@ -90,9 +90,9 @@ def test_ambi_fr_rule_from_kappa():
     assert len(rules) == 3
     assert isinstance(rules[0], BimolecularRule)
     assert isinstance(rules[1], UnimolecularRule)
-    assert rules[0].stochastic_rate.evaluate() == 1.0
-    assert rules[1].stochastic_rate.evaluate() == 2.0
-    assert rules[2].stochastic_rate.evaluate() == 3.0
+    assert rules[0].rate_expression.evaluate() == 1.0
+    assert rules[1].rate_expression.evaluate() == 2.0
+    assert rules[2].rate_expression.evaluate() == 3.0
 
 
 def test_token_updates_parsed():

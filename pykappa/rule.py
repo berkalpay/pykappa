@@ -26,7 +26,7 @@ class Rule:
 
     left: Pattern
     right: Pattern
-    stochastic_rate: Expression
+    rate_expression: Expression
     token_updates: list[tuple[Expression, str]]
 
     @classmethod
@@ -60,12 +60,12 @@ class Rule:
         self,
         left: Pattern,
         right: Pattern,
-        stochastic_rate: Expression,
+        rate_expression: Expression,
         token_updates: Optional[list[tuple[Expression, str]]] = None,
     ):
         self.left = left
         self.right = right
-        self.stochastic_rate = stochastic_rate
+        self.rate_expression = rate_expression
         self.token_updates = token_updates or []
 
     def __post_init__(self):
@@ -89,7 +89,7 @@ class Rule:
 
     @property
     def _rate_str(self) -> str:
-        return self.stochastic_rate.kappa_str
+        return self.rate_expression.kappa_str
 
     @property
     def kappa_str(self) -> str:
@@ -143,7 +143,7 @@ class Rule:
         return pattern.n_isomorphisms(pattern)
 
     def rate(self, system: "System") -> float:
-        return self.stochastic_rate.evaluate(system)
+        return self.rate_expression.evaluate(system)
 
     def n_embeddings(self, mixture: Mixture) -> int:
         """Count embeddings in the mixture.
@@ -260,7 +260,7 @@ class UnimolecularRule(Rule):
 
     @property
     def _rate_str(self) -> str:
-        return f"0 {{{self.stochastic_rate.kappa_str}}}"
+        return f"0 {{{self.rate_expression.kappa_str}}}"
 
     def n_embeddings(self, mixture: Mixture) -> int:
         """Count the total number of embeddings in the mixture."""

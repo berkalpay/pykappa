@@ -391,7 +391,7 @@ class System:
         """
         assert self.rules[name].rate(self) > 0, "Rule {name} is already null"
         try:
-            self.rules[name].stochastic_rate = Expression.from_kappa("0")
+            self.rules[name].rate_expression = Expression.from_kappa("0")
         except KeyError as e:
             e.add_note("No rule {name} exists in the system")
             raise e
