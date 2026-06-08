@@ -386,6 +386,31 @@ def test_token_in_rate_expression():
     assert system["AB"] > 0
 
 
+def test_rule_with_variable_rate():
+    system = System.from_ka(
+        """
+        %init: 20 A(x[.])
+        %init: 0  B(x[.])
+
+        %obs: 'n_B' |B(x[.])|
+
+        A(x[.]) -> B(x[.]) @ 'n_B'
+        """
+    )
+
+    # With no B, there is no reactivity
+    assert system["n_B"] == 0
+    system.update()
+    assert system["n_B"] == 0
+
+    # Add B and check for reactivity
+    system.mixture.add("B(x[.])")
+    assert system["n_B"] == 1
+    for _ in range(10):
+        system.update()
+    assert system["n_B"] == 11
+
+
 def test_monitor_measure():
     """Test that Monitor.measure() retrieves observable values at specific times."""
     system = System.from_ka(
