@@ -338,17 +338,25 @@ class Monitor:
         return equilibrated(values=values, times=times, **equilibration_kwargs)
 
     def plot(
-        self, combined: bool = False, figsize: Optional[tuple[float, float]] = None
+        self,
+        observables: Optional[list[str]] = None,
+        combined: bool = False,
+        figsize: Optional[tuple[float, float]] = None,
     ) -> matplotlib.figure.Figure:
         """Make a plot of all observables over time.
 
         Args:
             combined: Whether to plot all observables on the same axes.
             figsize: The figure size (width, height) in inches.
+            observables: Specific observables to plot. If None, plots all observables.
         """
+        observables = (
+            list(self.system.observables) if observables is None else list(observables)
+        )
+
         if combined:
             fig, ax = plt.subplots(figsize=figsize)
-            for obs_name in self.system.observables:
+            for obs_name in observables:
                 ax.plot(self.history["time"], self.history[obs_name], label=obs_name)
             plt.legend()
             plt.xlabel("Time")
@@ -356,18 +364,18 @@ class Monitor:
             plt.margins(0, 0)
         else:
             fig, axs = plt.subplots(
-                len(self.system.observables),
+                len(observables),
                 1,
                 sharex=True,
                 layout="constrained",
                 figsize=figsize,
             )
-            if len(self.system.observables) == 1:
+            if len(observables) == 1:
                 axs = [axs]
-            for i, obs_name in enumerate(self.system.observables):
+            for i, obs_name in enumerate(observables):
                 axs[i].plot(self.history["time"], self.history[obs_name], color="black")
                 axs[i].set_ylabel(obs_name)
-                if i == len(self.system.observables) - 1:
+                if i == len(observables) - 1:
                     axs[i].set_xlabel("Time")
         return fig
 
