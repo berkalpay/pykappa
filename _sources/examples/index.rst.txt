@@ -9,3 +9,4 @@ Examples
    linear_polymerization
    lac_operon
    chemostat
+   michaelis_menten
