@@ -248,14 +248,18 @@ class System:
                 f"Name {name} doesn't correspond to a declared observable or variable"
             )
 
-    def __setitem__(self, name: str, kappa_str: str):
-        """Set or update an observable or variable from a Kappa string.
+    def __setitem__(self, name: str, value: str | float):
+        """Set or update an observable or variable from a Kappa string or float value.
 
         Args:
             name: Name to assign to the expression.
-            kappa_str: Kappa expression string.
+            value: Kappa expression string or float value.
         """
-        expr = Expression.from_kappa(kappa_str)
+        expr = (
+            Expression("literal", value=value)
+            if isinstance(value, (int, float))
+            else Expression.from_kappa(value)
+        )
         self._track_expression(expr)
         if name in self.variables:
             self.variables[name] = expr

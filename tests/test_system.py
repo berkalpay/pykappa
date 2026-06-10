@@ -209,7 +209,7 @@ def test_system_manipulation():
     assert system["twiceA"] == 2 * system["A"]
 
     # Update an observable
-    system["A"] = "0"
+    system["A"] = 0
 
     # Set a new observable
     system["C"] = "|C()|"
