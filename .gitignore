@@ -1,4 +1,31 @@
-.direnv/
-tests/cpu-profiles/results/
-.DS_store
+# Python
 __pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Environments
+.venv/
+venv/
+.direnv/
+.env
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Tools
+.vscode/
+.DS_Store
+
+# Project-specific
+docs/build/
+docs/source/api/generated/
+tests/cpu-profiles/results/
