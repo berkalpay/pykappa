@@ -5,7 +5,7 @@
    "id": "c85766b3-356b-46a9-a6cf-931ba307f1c1",
    "metadata": {},
    "source": [
-    "# Epidemic Modeling"
+    "# Vector-borne disease"
    ]
   },
   {
