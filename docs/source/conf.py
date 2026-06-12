@@ -32,10 +32,7 @@ autodoc_member_order = "bysource"
 autoclass_content = "class"
 napoleon_google_docstring = True
 nbsphinx_execute = "always"
-nbsphinx_execute_arguments = [
-    "--InlineBackend.figure_formats={'svg'}",
-    "--KernelManager.transport='ipc'",
-]
+nbsphinx_execute_arguments = ["--InlineBackend.figure_formats={'svg'}"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
