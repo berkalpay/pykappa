@@ -27,7 +27,7 @@ from pykappa._expression import Expression
     ],
 )
 def test_rule_n_embeddings_at_system_initialiation(test_case):
-    (mixture_pattern_str, n_copies, rule_class, rule_pattern_str, n_embeddings) = (
+    mixture_pattern_str, n_copies, rule_class, rule_pattern_str, n_embeddings = (
         test_case
     )
     rule_pattern = Pattern.from_kappa(rule_pattern_str)

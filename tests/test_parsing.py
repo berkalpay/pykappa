@@ -108,8 +108,7 @@ def test_token_updates_parsed():
 
 
 def test_system_kappa_str():
-    system_in = System.from_ka(
-        """
+    system_in = System.from_ka("""
     %var: 'x'     0.03
     %var: 'k_on'  'x' * 10
     %var: 'g_on'  'k_on' / 100
@@ -124,8 +123,7 @@ def test_system_kappa_str():
     %obs: 'pairs'   |A(a[1]), B(b[1])|
 
     A(a{p}), B(b[_]) -> A(a{u}), B() @ 'g_on'
-        """
-    )
+        """)
     system_out = System.from_ka(system_in.kappa_str)
     for system in (system_in, system_out):
         assert system["pairs"] == system["n"] == system["m"] == 300
