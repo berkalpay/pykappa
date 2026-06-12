@@ -10,3 +10,4 @@ Examples
    lac_operon
    chemostat
    michaelis_menten
+   epidemic
