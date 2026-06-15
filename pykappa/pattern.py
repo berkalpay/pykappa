@@ -61,9 +61,9 @@ class Site(Counted):
         return self.state == "?" and self.partner in ("?", ".")
 
     @property
-    def underspecified(self) -> bool:
+    def instantiable(self) -> bool:
         """Check if a concrete Site can be created from this pattern."""
-        return (
+        return not (
             self.state == "#"
             or self.partner in ("#", "_")
             or isinstance(self.partner, SiteType)
@@ -182,7 +182,7 @@ class Agent(Counted):
     @cached_property
     def instantiable(self) -> bool:
         """Check if a concrete Agent can be created from this pattern."""
-        return not any(site.underspecified for site in self)
+        return all(site.instantiable for site in self)
 
     @property
     def neighbors(self) -> list[Self]:
