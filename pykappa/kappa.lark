@@ -1,7 +1,4 @@
-// Walter Fontana 2024
-//
-// Kappa syntax EBNF
-//
+// Kappa syntax (EBNF) — Walter Fontana 2024
 
 kappa_input : ( f_rule
             | fr_rule
@@ -24,7 +21,6 @@ NAME : LETTER (LETTER | INT | "_" | "~" | "-" | "+")*
 LABEL : ("'" /[^\n']+/ "'") | ("\"" /[^\n'\"]+/ "\"")
 COMMENT: "//" /[^\n]/*
 
-// */ Fix syntax highlighting
 // symbols
 HASH : "#"
 DOT : "."
@@ -80,12 +76,11 @@ interface : [ site ([","] site)* ]
 site : site_name state partner   
      | site_name partner state
 state : "{" NAME "}"
-               | "{" HASH "}" // NOTE: It seems like this kind of stuff is allowed in initial condition declarations
-               // You just tell user that it's underspecified for initialized
-               | "{" INT  "}" // TODO: This is still unsupported as of Apr. 17 2025
+               | "{" HASH "}"  // allowed in init declarations (underspecified)
+               | "{" INT  "}"  // unsupported
                | undetermined
 partner : "[" INT "]"
-           | "[" site_name "." agent_name "]" // NOTE: What about agent_name with unspecified site_name? Not allowed
+           | "[" site_name "." agent_name "]"
            | "[" DOT "]"
            | "[" UNDERSCORE "]" 
            | "[" HASH "]"
@@ -100,10 +95,8 @@ fr_rule : [ label ] rev_rule_expression [ "|" token ] "@" rate "," rate
 ambi_rule : [ label ] rule_expression [ "|" token ] "@" rate "{" rate "}"
 ambi_fr_rule : [ label ] rev_rule_expression [ "|" token ] "@" rate "{" rate "}" "," rate
 
-// NOTE: Should there be an implicit condition that agents in different slot must be distinct agents?
-// Yeah
-rule_expression : ( agent | DOT ) _more ( agent | DOT )  // this form of recursion ensures a rule 
-_more : "," ( agent | DOT ) _more ( agent | DOT ) ","    // has the same number of "slots" L and R
+rule_expression : ( agent | DOT ) _more ( agent | DOT )  // recursion ensures equal number of L/R slots
+_more : "," ( agent | DOT ) _more ( agent | DOT ) ","
       | RARROW
 
 rev_rule_expression : ( agent |DOT ) _revmore ( agent | DOT )
@@ -146,8 +139,6 @@ reserved_variable_name : "[E]"    -> productive_events
                        | "[T]"    -> simulated_time
                        | "[Tsim]" -> cpu_time
                        | "|" declared_token_name "|"
-                       // NOTE: Think about rectangular approx. with observation patterns.
-                       // If we overcount, we don't have the quick fix of dropping invalid matches later
                        | "|" pattern "|"
                        | "inf"    -> infinity
 !boolean_expression : algebraic_expression ("=" | "<" | ">") algebraic_expression 
@@ -174,16 +165,13 @@ signature_declaration : "%agent:" signature_expression
 signature_expression : agent_name "(" signature_interface ")"
 signature_interface : site_name set_of_states set_of_partners ([","] signature_interface)* 
                     | site_name set_of_partners set_of_states ([","] signature_interface)* 
-// NOTE: Which of these is the default when initializing an agent but leaving an internal state unspecified?
-// Seems sensible to just use the first in the list, but it might be nice to be able to explicitly specify a default.
-// Yeah just use first
+// unspecified internal state defaults to the first in the list
 set_of_states : [ "{" [ state_value (" " state_value)* ] "}" ]
 state_value : NAME | HASH
 set_of_partners : [ "[" [ site_name "." agent_name (" " site_name "." agent_name)* ] "]" ]
 
 // initial condition
 
-// NOTE: Mind the distinction between initialized agents and agent patterns
 init_declaration : "%init:" algebraic_expression pattern
                  | "%init:" algebraic_expression declared_token_name
 
