@@ -530,9 +530,9 @@ class Pattern:
         return type(self).agents_to_kappa_str(self.agents)
 
     @cached_property
-    def underspecified(self) -> bool:
-        """Check if any agents in the pattern are underspecified."""
-        return any(agent is None or not agent.instantiable for agent in self.agents)
+    def instantiable(self) -> bool:
+        """Check if all agents in the pattern are specific enough to instantiate."""
+        return all(agent is not None and agent.instantiable for agent in self.agents)
 
     def n_isomorphisms(self, other: Self) -> int:
         """Counts the number of bijections which respect links in the site graph.

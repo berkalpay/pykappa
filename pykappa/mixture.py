@@ -135,9 +135,7 @@ class Mixture:
         if isinstance(pattern, str):
             pattern = Pattern.from_kappa(pattern)
 
-        assert (
-            not pattern.underspecified
-        ), "Pattern isn't specific enough to instantiate."
+        assert pattern.instantiable, "Pattern isn't specific enough to instantiate."
         for _ in range(n_copies):
             for component in pattern.components:
                 self._add_component(component)
