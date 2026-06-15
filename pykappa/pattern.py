@@ -180,9 +180,9 @@ class Agent(Counted):
         yield from self.interface.values()
 
     @cached_property
-    def underspecified(self) -> bool:
+    def instantiable(self) -> bool:
         """Check if a concrete Agent can be created from this pattern."""
-        return any(site.underspecified for site in self)
+        return not any(site.underspecified for site in self)
 
     @property
     def neighbors(self) -> list[Self]:
@@ -201,10 +201,6 @@ class Agent(Counted):
                 traversal.append(agent)
                 stack.extend(agent.neighbors)
         return traversal
-
-    @property
-    def instantiable(self) -> bool:
-        return not any(site.underspecified for site in self)
 
     def detached(self) -> Self:
         """Create a clone with all sites emptied of partners."""
@@ -536,7 +532,7 @@ class Pattern:
     @cached_property
     def underspecified(self) -> bool:
         """Check if any agents in the pattern are underspecified."""
-        return any(agent is None or agent.underspecified for agent in self.agents)
+        return any(agent is None or not agent.instantiable for agent in self.agents)
 
     def n_isomorphisms(self, other: Self) -> int:
         """Counts the number of bijections which respect links in the site graph.
