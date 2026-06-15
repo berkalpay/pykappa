@@ -186,9 +186,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">Pattern</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="p">(</span>
-            <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">underspecified</span>
-        <span class="p">),</span> <span class="s2">&quot;Pattern isn&#39;t specific enough to instantiate.&quot;</span>
+        <span class="k">assert</span> <span class="n">pattern</span><span class="o">.</span><span class="n">instantiable</span><span class="p">,</span> <span class="s2">&quot;Pattern isn&#39;t specific enough to instantiate.&quot;</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_copies</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">pattern</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_add_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span></div>

@@ -149,8 +149,8 @@
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.underspecified">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.underspecified" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.pattern.Site.instantiable">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.instantiable" title="Link to this definition">¶</a></dt>
 <dd><p>Check if a concrete Site can be created from this pattern.</p>
 </dd></dl>
 
@@ -256,8 +256,8 @@
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.underspecified">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.underspecified" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.instantiable">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.instantiable" title="Link to this definition">¶</a></dt>
 <dd><p>Check if a concrete Agent can be created from this pattern.</p>
 </dd></dl>
 
@@ -272,11 +272,6 @@
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">depth_first_traversal</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.depth_first_traversal" title="Link to this definition">¶</a></dt>
 <dd><p>Perform depth-first traversal starting from this agent.</p>
 </dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.instantiable">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.instantiable" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.pattern.Agent.detached">
@@ -507,9 +502,9 @@ Do not use this for components in a mixture that can change.</p>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.underspecified">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">underspecified</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.underspecified" title="Link to this definition">¶</a></dt>
-<dd><p>Check if any agents in the pattern are underspecified.</p>
+<dt class="sig sig-object py" id="pykappa.pattern.Pattern.instantiable">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.instantiable" title="Link to this definition">¶</a></dt>
+<dd><p>Check if all agents in the pattern are specific enough to instantiate.</p>
 </dd></dl>
 
 <dl class="py method">
