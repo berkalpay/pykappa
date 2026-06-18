@@ -178,11 +178,14 @@ class System:
             else {name: Expression.from_kappa(var) for name, var in variables.items()}
         )
 
-        system = cls(None, real_rules, real_observables, real_variables, *args, **kwargs)
+        system = cls(
+            None, real_rules, real_observables, real_variables, *args, **kwargs
+        )
         if mixture is not None:
             for pattern_str, count in mixture.items():
                 system.mixture.add(pattern_str, count)
         return system
+
     def __init__(
         self,
         mixture: Optional[Mixture] = None,
@@ -382,7 +385,9 @@ class System:
             known = new_sig.get(agent.type)
             if known is None:
                 continue
-            for label in known - old_sig.get(agent.type, frozenset()) - {s.label for s in agent}:
+            for label in (
+                known - old_sig.get(agent.type, frozenset()) - {s.label for s in agent}
+            ):
                 site = Site(label, "?", ".")
                 site.agent = agent
                 agent.interface[label] = site
