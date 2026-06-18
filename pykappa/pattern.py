@@ -444,7 +444,6 @@ class Pattern:
         assert (
             len(input_tree.children) == 1
         ), "Zero or more than one patterns were specified."
-        assert len(input_tree.children) == 1
         pattern_tree = input_tree.children[0]
         return KappaTransformer().transform(pattern_tree)
 
