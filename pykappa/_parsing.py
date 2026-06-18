@@ -249,9 +249,6 @@ class ExpressionTransformer(Transformer):
     def declared_variable_name(self, children):
         return Expression("variable", name=children[0].value.strip("'\""))
 
-    def reserved_variable_name(self, children):
-        return Expression("reserved_variable", value=children[0])
-
     def declared_token_name(self, children):
         return str(children[0])
 
