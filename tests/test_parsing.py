@@ -10,8 +10,8 @@ from pykappa._parsing import kappa_parser
 
 
 def test_parse_file_without_error():
-    kappa_parser.parse_file(
-        str(Path(__file__).parent / "wnt_v8.ka")
+    kappa_parser.parse(
+        (Path(__file__).parent / "wnt_v8.ka").read_text()
     )  # 121 rules, 10 agents
 
 

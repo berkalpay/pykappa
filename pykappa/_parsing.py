@@ -27,10 +27,6 @@ class KappaParser:
     def parse(self, text: str) -> ParseTree:
         return self._parser.parse(text)
 
-    def parse_file(self, filepath: str) -> ParseTree:
-        with open(filepath, "r") as file:
-            return self._parser.parse(file.read())
-
 
 kappa_parser = KappaParser()
 
