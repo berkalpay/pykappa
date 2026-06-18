@@ -68,7 +68,6 @@ class Rule:
         self.rate_expression = rate_expression
         self.token_updates = token_updates or []
 
-    def __post_init__(self):
         l = len(self.left.agents)
         r = len(self.right.agents)
         assert (
@@ -254,8 +253,8 @@ class UnimolecularRule(Rule):
 
     _component_weights: dict[Component, int]  # Cache of embedding weights per component
 
-    def __post_init__(self):
-        super().__post_init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._component_weights = {}
 
     @property
@@ -308,8 +307,8 @@ class BimolecularRule(Rule):
 
     _component_weights: dict[Component, int]  # Cache of embedding weights per component
 
-    def __post_init__(self):
-        super().__post_init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._component_weights = {}
         assert (
             len(self.left.components) == 2
