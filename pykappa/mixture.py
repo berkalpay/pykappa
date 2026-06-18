@@ -55,6 +55,7 @@ class Mixture:
         self._components = None
         self._embeddings = {}
         self._max_embedding_width = 0
+        self.signature: Optional[dict[str, frozenset[str]]] = None
 
         if track_components:
             self.enable_component_tracking()
@@ -140,9 +141,37 @@ class Mixture:
             for component in pattern.components:
                 self._add_component(component)
 
+    def _instantiate_agent(self, agent: Agent) -> Agent:
+        """Create a mixture agent from a pattern agent.
+
+        If a signature is set, validates that all sites are known and fills in
+        missing sites with default state (partner='.', state='?').
+        Agent types not present in the signature are unconstrained.
+        """
+        if self.signature is None:
+            return agent.detached()
+
+        known = self.signature.get(agent.type)
+        if known is None:  # type not in signature → unconstrained
+            return agent.detached()
+
+        unknown = {s.label for s in agent} - known
+        if unknown:
+            raise ValueError(
+                f"Agent '{agent.type}' has unknown site(s) {unknown}. "
+                f"Known sites for this type: {known}"
+            )
+
+        existing = {s.label: Site(s.label, s.state, ".") for s in agent}
+        missing = [Site(label, "?", ".") for label in known if label not in existing]
+        new_agent = Agent(agent.type, list(existing.values()) + missing)
+        for site in new_agent:
+            site.agent = new_agent
+        return new_agent
+
     def _add_component(self, component: Component) -> None:
         component_ordered = list(component.agents)
-        new_agents = [agent.detached() for agent in component_ordered]
+        new_agents = [self._instantiate_agent(agent) for agent in component_ordered]
         new_edges = set()
 
         for i, agent in enumerate(component_ordered):
