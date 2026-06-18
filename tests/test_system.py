@@ -4,7 +4,7 @@ import itertools
 import random
 from collections import defaultdict
 
-from pykappa import System
+from pykappa import System, Mixture
 from pykappa.rule import AVOGADRO, DIFFUSION_RATE
 
 
@@ -411,3 +411,157 @@ def test_monitor_measure():
     first_time = system.monitor.history["time"][0]
     assert system.monitor.measure("A", first_time) == 100
     assert system.monitor.measure("A") == system["A"]
+
+
+# Signature inference
+
+
+def test_signature_inferred_from_rule_sites():
+    s = System.from_kappa(rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"])
+    assert s.signature == {"A": frozenset({"x"}), "B": frozenset({"x"})}
+
+
+def test_signature_union_across_rules():
+    """All sites mentioned for a type across any rule are collected."""
+    s = System.from_kappa(
+        rules=[
+            "A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0",
+            "A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0",
+        ]
+    )
+    assert s.signature["A"] == frozenset({"x", "y"})
+
+
+def test_signature_excludes_types_with_no_sites():
+    """Agent types that only appear as A() (no sites) are not constrained."""
+    s = System.from_kappa(rules=["A(), B() -> A(), B() @ 1.0"])
+    assert "A" not in s.signature
+    assert "B" not in s.signature
+
+
+def test_signature_empty_when_no_rules():
+    s = System.from_kappa()
+    assert s.signature == {}
+
+
+def test_signature_updates_after_add_rule():
+    s = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"])
+    assert "y" not in s.signature.get("A", frozenset())
+    s.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
+    assert "y" in s.signature["A"]
+
+
+# Signature: completion of interfaces
+
+
+def test_completion_fills_missing_site():
+    """Adding A() to mixture when signature declares A has site x → A(x[.])."""
+    s = System.from_kappa(rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"])
+    s.mixture.add("A()", 1)
+    a = next(iter(s.mixture.agents))
+    assert "x" in a.interface
+
+
+def test_completion_fills_multiple_missing_sites():
+    s = System.from_kappa(
+        rules=[
+            "A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0",
+            "A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0",
+        ]
+    )
+    s.mixture.add("A()", 1)
+    a = next(iter(s.mixture.agents))
+    assert {"x", "y"} <= set(a.interface)
+
+
+def test_completion_preserves_specified_site_state():
+    s = System.from_kappa(rules=["A(x[.] y[.]) <-> A(x[1] y[1]) @ 1.0, 1.0"])
+    s.mixture.add("A(x[.])", 1)
+    a = next(iter(s.mixture.agents))
+    # x was specified; y was missing and should have been added
+    assert "x" in a.interface
+    assert "y" in a.interface
+
+
+def test_completion_via_from_kappa_init():
+    """Agents added via from_kappa mixture dict are also completed."""
+    s = System.from_kappa(
+        {"A()": 3},
+        rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"],
+    )
+    for agent in s.mixture.agents:
+        if agent.type == "A":
+            assert "x" in agent.interface
+
+
+def test_completed_site_defaults_to_unbound():
+    """A site added by completion should default to unbound ('.')."""
+    s = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"])
+    s.mixture.add("A()", 1)
+    a = next(iter(s.mixture.agents))
+    assert a["x"].partner == "."
+
+
+def test_unconstrained_type_accepts_any_site():
+    """A type that appears only as A() in rules has no site constraint."""
+    s = System.from_kappa(rules=["A(), B() -> A(), B() @ 1.0"])
+    s.mixture.add("A(z[.])", 1)  # no error
+
+
+def test_no_signature_mixture_unconstrained():
+    """A bare Mixture (no system, no signature) accepts any agent."""
+    m = Mixture()
+    m.add("A(x[1]), B(y[1])")  # no error
+
+
+# Signatures: reject unknown sites
+
+
+def test_reject_unknown_site():
+    s = System.from_kappa(rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"])
+    with pytest.raises(ValueError, match="unknown site"):
+        s.mixture.add("A(y[.])", 1)
+
+
+def test_reject_unknown_site_from_kappa_init():
+    with pytest.raises(ValueError, match="unknown site"):
+        System.from_kappa(
+            {"A(y[.])": 1},
+            rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"],
+        )
+
+
+def test_reject_unknown_site_from_ka_init():
+    with pytest.raises(ValueError, match="unknown site"):
+        System.from_ka("""
+            A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0
+            %init: 1 A(y[.])
+        """)
+
+
+def test_reject_unknown_site_after_add_rule():
+    """Signature grows when a rule is added; prior unknown sites stay invalid."""
+    s = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"])
+    # y is unknown before add_rule
+    with pytest.raises(ValueError, match="unknown site"):
+        s.mixture.add("A(y[.])", 1)
+    # add a rule that declares y
+    s.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
+    s.mixture.add("A(y[.])", 1)  # now valid
+
+
+def test_backfill_existing_agents_after_add_rule():
+    """Existing mixture agents get missing sites when the signature expands."""
+    s = System.from_kappa(
+        {"A()": 2},
+        rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"],
+    )
+    for a in s.mixture.agents:
+        if a.type == "A":
+            assert "x" in a.interface
+            assert "y" not in a.interface
+    s.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
+    for a in s.mixture.agents:
+        if a.type == "A":
+            assert "y" in a.interface
+            assert a["y"].partner == "."
