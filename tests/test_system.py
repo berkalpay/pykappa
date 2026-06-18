@@ -356,8 +356,8 @@ def test_token_in_rate_expression():
         """
         %token: fuel
 
-        %init: 100 A(x[.])
-        %init: 100 B(x[.])
+        %init: 5 A(x[.])
+        %init: 5 B(x[.])
         %init: 0 fuel
 
         %obs: 'AB' |A(x[1]), B(x[1])|
@@ -367,13 +367,12 @@ def test_token_in_rate_expression():
         seed=42,
     )
 
-    system.update()
-    assert system["AB"] == 0
+    assert not system.reactivity
 
-    system.tokens["fuel"] = 10
-    for _ in range(200):
+    system.tokens["fuel"] = 5
+    for _ in range(5):
         system.update()
-    assert system["AB"] > 0
+    assert system["AB"] == 5
 
 
 def test_rule_with_variable_rate():
@@ -386,12 +385,8 @@ def test_rule_with_variable_rate():
         A(x[.]) -> B(x[.]) @ 'n_B'
         """)
 
-    # With no B, there is no reactivity
-    assert system["n_B"] == 0
-    system.update()
-    assert system["n_B"] == 0
+    assert not system.reactivity
 
-    # Add B and check for reactivity
     system.mixture.add("B(x[.])")
     assert system["n_B"] == 1
     for _ in range(10):
