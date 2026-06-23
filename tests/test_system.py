@@ -458,9 +458,9 @@ def test_signature_rejects_unknown_sites(make_system):
         make_system().mixture.add("A(y[.])", 1)
 
 
-def test_undeclared_agent_type_rejected():
-    system = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"])
+def test_undeclared_agent_and_site_rejected():
+    system = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1"])
+    with pytest.raises(ValueError, match="unknown site"):
+        system.mixture.add("A(y[.])")
     with pytest.raises(ValueError, match="not declared"):
-        system.mixture.add("A(y[.])", 1)
-    with pytest.raises(ValueError, match="not declared"):
-        system.mixture.add("C()", 1)
+        system.mixture.add("C()")
