@@ -142,23 +142,31 @@ class Mixture:
                 self._add_component(component)
 
     def _instantiate_agent(self, agent: Agent) -> Agent:
-        """Create a mixture agent from a pattern agent, completing its interface from the signature."""
-        known = None if self.signature is None else self.signature.get(agent.type)
-        if known is None:
+        """Create a mixture agent from a pattern agent, completing its interface from the signature.
+
+        Raises:
+            ValueError: If agent has unknown sites not in the signature.
+        """
+        known_sites = None if self.signature is None else self.signature.get(agent.type)
+        if known_sites is None:
             return agent.detached()
 
-        unknown = {s.label for s in agent} - known
-        if unknown:
+        unknown_sites = {s.label for s in agent} - known_sites
+        if unknown_sites:
             raise ValueError(
-                f"Agent '{agent.type}' has unknown site(s) {unknown}. "
-                f"Known sites for this type: {known}"
+                f"Agent '{agent.type}' has unknown site(s) {unknown_sites}. "
+                f"Known sites for this type: {known_sites}"
             )
 
-        existing = {s.label: Site(s.label, s.state, ".") for s in agent}
+        existing_sites = {s.label: Site(s.label, s.state, ".") for s in agent}
         new_agent = Agent(
             agent.type,
-            list(existing.values())
-            + [Site(label, "?", ".") for label in known if label not in existing],
+            list(existing_sites.values())
+            + [
+                Site(label, "?", ".")
+                for label in known_sites
+                if label not in existing_sites
+            ],
         )
         for site in new_agent:
             site.agent = new_agent

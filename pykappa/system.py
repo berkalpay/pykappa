@@ -275,15 +275,17 @@ class System:
         }
 
     @property
-    def signature(self) -> dict[str, frozenset[str]]:
+    def signatures(self) -> dict[str, frozenset[str]]:
         """The complete site interface for each agent type inferrred from all rules."""
-        sig: dict[str, set[str]] = defaultdict(set)
+        sites_by_type: dict[str, set[str]] = defaultdict(set)
         for rule in self.rules.values():
             for pattern in (rule.left, rule.right):
                 for agent in pattern.agents:
                     if agent is not None:
-                        sig[agent.type].update(site.label for site in agent)
-        return {t: frozenset(sites) for t, sites in sig.items()}
+                        sites_by_type[agent.type].update(site.label for site in agent)
+        return {
+            agent_type: frozenset(sites) for agent_type, sites in sites_by_type.items()
+        }
 
     @property
     def tallies_str(self) -> str:
@@ -365,7 +367,7 @@ class System:
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
         self.mixture = mixture
-        self.mixture.signature = self.signature
+        self.mixture.signature = self.signatures
         for rule in self.rules.values():
             self._track_rule(rule)
         for observable in self.observables.values():
@@ -395,22 +397,24 @@ class System:
         if type(rule) in [UnimolecularRule, BimolecularRule]:
             self.mixture.enable_component_tracking()
 
-        old_sig = self.signature
+        old_signature = self.signatures
         self.rules[name] = rule
-        new_sig = self.signature
+        new_signature = self.signatures
 
         # Backfill mixture with new sites for existing agents
         for agent in self.mixture.agents:
-            known = new_sig.get(agent.type)
-            if known is None:
+            known_sites = new_signature.get(agent.type)
+            if known_sites is None:
                 continue
             for label in (
-                known - old_sig.get(agent.type, frozenset()) - {s.label for s in agent}
+                known_sites
+                - old_signature.get(agent.type, frozenset())
+                - {s.label for s in agent}
             ):
                 agent.interface[label] = site = Site(label, "?", ".")
                 site.agent = agent
 
-        self.mixture.signature = new_sig
+        self.mixture.signature = new_signature
         self._track_rule(rule)
 
     def remove_rule(self, name: str) -> None:
