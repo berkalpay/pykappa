@@ -142,17 +142,9 @@ class Mixture:
                 self._add_component(component)
 
     def _instantiate_agent(self, agent: Agent) -> Agent:
-        """Create a mixture agent from a pattern agent.
-
-        If a signature is set, validates that all sites are known and fills in
-        missing sites with default state (partner='.', state='?').
-        Agent types not present in the signature are unconstrained.
-        """
-        if self.signature is None:
-            return agent.detached()
-
-        known = self.signature.get(agent.type)
-        if known is None:  # type not in signature → unconstrained
+        """Create a mixture agent from a pattern agent, completing its interface from the signature."""
+        known = None if self.signature is None else self.signature.get(agent.type)
+        if known is None:
             return agent.detached()
 
         unknown = {s.label for s in agent} - known
@@ -163,8 +155,11 @@ class Mixture:
             )
 
         existing = {s.label: Site(s.label, s.state, ".") for s in agent}
-        missing = [Site(label, "?", ".") for label in known if label not in existing]
-        new_agent = Agent(agent.type, list(existing.values()) + missing)
+        new_agent = Agent(
+            agent.type,
+            list(existing.values())
+            + [Site(label, "?", ".") for label in known if label not in existing],
+        )
         for site in new_agent:
             site.agent = new_agent
         return new_agent

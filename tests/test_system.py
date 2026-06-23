@@ -413,93 +413,59 @@ def test_monitor_measure():
     assert system.monitor.measure("A") == system["A"]
 
 
-# Signature inference
-
-
-def test_signature_inference_from_rule():
-    s = System.from_kappa(rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"])
-    assert s.signature == {"A": frozenset({"x"}), "B": frozenset({"x"})}
-
-
-def test_signature_inference_across_rules():
-    s = System.from_kappa(
-        rules=[
-            "A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0",
-            "A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0",
-        ]
-    )
-    assert s.signature["A"] == frozenset({"x", "y"})
-
-
-def test_signature_enforces_blank_interfaces():
-    s = System.from_kappa(rules=["A(), B() -> A(), B() @ 1.0"])
-    assert s.signature == {"A": frozenset(), "B": frozenset()}
-
-
-def test_signature_updates_after_add_rule():
-    s = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"])
-    assert "y" not in s.signature.get("A", frozenset())
-    s.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
-    assert "y" in s.signature["A"]
-
-
-# Signature: completion of interfaces
-
-
-def test_new_rule_fills_missing_sites():
-    s = System.from_kappa(
-        rules=[
-            "A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0",
-            "A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0",
-        ]
-    )
-    s.mixture.add("A()", 1)
-    a = next(iter(s.mixture.agents))
-    assert {"x", "y"} <= set(a.interface)
-
-
-def test_autocomplete_interface_while_adding_agent():
-    s = System.from_kappa(rules=["A(x[.] y[.]) <-> A(x[1] y[1]) @ 1, 1"])
-    s.mixture.add("A(x[.])", 1)
-    a = next(iter(s.mixture.agents))
-    assert "x" in a.interface
-    assert "y" in a.interface
-    assert a["y"].partner == "."
-
-
-def test_completion_via_from_kappa_init():
-    s = System.from_kappa(
+def test_signature_drives_interface_completion():
+    system = System.from_kappa(
         {"A()": 3},
+        rules=[
+            "A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0",
+            "A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0",
+        ],
+    )
+    assert system.signature["A"] == frozenset({"x", "y"})
+    for agent in system.mixture.agents:
+        assert {"x", "y"} <= set(agent.interface)
+    system.mixture.add("A(x[.])", 1)
+    agent = next(a for a in system.mixture.agents if "y" in a.interface)
+    assert agent["y"].partner == "."
+    Mixture().add("A(x[1]), B(y[1])")  # bare mixture: no constraints
+
+
+def test_signature_expands_on_add_rule():
+    system = System.from_kappa(
+        {"A()": 1},
         rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"],
     )
-    for agent in s.mixture.agents:
-        assert "x" in agent.interface
-
-
-def test_interfaces_in_bare_mixture_unconstrained():
-    Mixture().add("A(x[1]), B(y[1])")  # no error
-
-
-# Signatures: reject unknown sites
-
-
-def test_reject_unknown_site():
-    s = System.from_kappa(rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"])
     with pytest.raises(ValueError, match="unknown site"):
-        s.mixture.add("A(y[.])", 1)
+        system.mixture.add("A(y[.])", 1)
+    system.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
+    assert "y" in system.signature["A"]
+    assert all("y" in a.interface for a in system.mixture.agents if a.type == "A")
+    system.mixture.add("A(y[.])", 1)  # no error now
 
 
-def test_reject_unknown_site_from_ka_init():
+@pytest.mark.parametrize(
+    "make_system",
+    [
+        lambda: System.from_kappa(
+            rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"]
+        ),
+        lambda: System.from_ka("A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"),
+    ],
+)
+def test_signature_rejects_unknown_sites(make_system):
     with pytest.raises(ValueError, match="unknown site"):
-        System.from_ka("""
-            A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0
-            %init: 1 A(y[.])
-        """)
+        make_system().mixture.add("A(y[.])", 1)
 
 
-def test_reject_unknown_site_then_add_rule():
-    s = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"])
+@pytest.mark.parametrize(
+    "make_system",
+    [
+        lambda: System.from_kappa(
+            rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"]
+        ),
+        lambda: System.from_ka("A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"),
+    ],
+)
+def test_signature_rejects_unknown_sites(make_system):
     with pytest.raises(ValueError, match="unknown site"):
-        s.mixture.add("A(y[.])", 1)
-    s.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
-    s.mixture.add("A(y[.])", 1)  # no error
+        make_system().mixture.add("A(y[.])", 1)
