@@ -431,9 +431,9 @@ def test_signature_inference_across_rules():
     assert s.signature["A"] == frozenset({"x", "y"})
 
 
-def test_signature_excludes_types_with_no_sites():
+def test_signature_enforces_blank_interfaces():
     s = System.from_kappa(rules=["A(), B() -> A(), B() @ 1.0"])
-    assert s.signature == {}
+    assert s.signature == {"A": frozenset(), "B": frozenset()}
 
 
 def test_signature_updates_after_add_rule():
@@ -474,11 +474,6 @@ def test_completion_via_from_kappa_init():
     )
     for agent in s.mixture.agents:
         assert "x" in agent.interface
-
-
-def test_unconstrained_type_accepts_any_site():
-    s = System.from_kappa(rules=["A(), B() -> A(), B() @ 1.0"])
-    s.mixture.add("A(z[.])", 1)  # no error
 
 
 def test_interfaces_in_bare_mixture_unconstrained():

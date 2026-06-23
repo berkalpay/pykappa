@@ -276,19 +276,14 @@ class System:
 
     @property
     def signature(self) -> dict[str, frozenset[str]]:
-        """Infer the complete site interface for each agent type from all rules.
-
-        Only agent types with at least one explicitly named site in any rule are
-        included. Types that appear only as ``A()`` (no sites) are unconstrained.
-        """
+        """The complete site interface for each agent type inferrred from all rules."""
         sig: dict[str, set[str]] = defaultdict(set)
         for rule in self.rules.values():
             for pattern in (rule.left, rule.right):
                 for agent in pattern.agents:
                     if agent is not None:
                         sig[agent.type].update(site.label for site in agent)
-        # ponytail: only constrain types that have at least one declared site
-        return {t: frozenset(sites) for t, sites in sig.items() if sites}
+        return {t: frozenset(sites) for t, sites in sig.items()}
 
     @property
     def tallies_str(self) -> str:

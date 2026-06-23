@@ -32,7 +32,14 @@ def test_rule_n_embeddings_at_system_initialiation(test_case):
     )
     rule_pattern = Pattern.from_kappa(rule_pattern_str)
     rule = rule_class(rule_pattern, rule_pattern, Expression.from_kappa("1.0"))
-    system = System.from_kappa({mixture_pattern_str: n_copies}, [rule.kappa_str])
+    system = System.from_kappa(
+        {mixture_pattern_str: n_copies},
+        [
+            rule.kappa_str,
+            "., . -> A(a[.], a1[.], a2[.]), B(b[.], b1[.], b2[.]) @ 1",
+        ],  # the second rule is to specify the agent signatures
+        [],
+    )
     assert system.rules["r0"].n_embeddings(system.mixture) == n_embeddings
 
 
