@@ -373,20 +373,6 @@ class System:
         for variable in self.variables.values():
             self._track_expression(variable)
 
-    def _backfill_mixture(self, old_sig: dict[str, frozenset[str]]) -> None:
-        """Add missing sites to existing agents when the signature expands."""
-        new_sig = self.signature
-        for agent in self.mixture.agents:
-            known = new_sig.get(agent.type)
-            if known is None:
-                continue
-            for label in (
-                known - old_sig.get(agent.type, frozenset()) - {s.label for s in agent}
-            ):
-                site = Site(label, "?", ".")
-                site.agent = agent
-                agent.interface[label] = site
-
     def add_rule(self, rule: Rule | str, name: Optional[str] = None) -> None:
         """Add a new rule to the system.
 
@@ -411,8 +397,20 @@ class System:
 
         old_sig = self.signature
         self.rules[name] = rule
-        self._backfill_mixture(old_sig)
-        self.mixture.signature = self.signature
+        new_sig = self.signature
+
+        # Backfill mixture with new sites for existing agents
+        for agent in self.mixture.agents:
+            known = new_sig.get(agent.type)
+            if known is None:
+                continue
+            for label in (
+                known - old_sig.get(agent.type, frozenset()) - {s.label for s in agent}
+            ):
+                agent.interface[label] = site = Site(label, "?", ".")
+                site.agent = agent
+
+        self.mixture.signature = new_sig
         self._track_rule(rule)
 
     def remove_rule(self, name: str) -> None:
