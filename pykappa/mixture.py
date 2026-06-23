@@ -55,6 +55,7 @@ class Mixture:
         self._components = None
         self._embeddings = {}
         self._max_embedding_width = 0
+        self.signature: Optional[dict[str, frozenset[str]]] = None
 
         if track_components:
             self.enable_component_tracking()
@@ -140,9 +141,46 @@ class Mixture:
             for component in pattern.components:
                 self._add_component(component)
 
+    def _instantiate_agent(self, agent: Agent) -> Agent:
+        """Create a mixture agent from a pattern agent, completing its interface from the signature.
+
+        Raises:
+            ValueError: If agent has unknown sites or an undeclared type.
+        """
+        if not self.signature:
+            return agent.detached()
+
+        known_sites = self.signature.get(agent.type)
+        if known_sites is None:
+            raise ValueError(
+                f"Agent type '{agent.type}' is not declared by any rule. "
+                f"Known agent types: {set(self.signature)}"
+            )
+
+        unknown_sites = {s.label for s in agent} - known_sites
+        if unknown_sites:
+            raise ValueError(
+                f"Agent '{agent.type}' has unknown site(s) {unknown_sites}. "
+                f"Known sites for this type: {known_sites}"
+            )
+
+        existing_sites = {s.label: Site(s.label, s.state, ".") for s in agent}
+        new_agent = Agent(
+            agent.type,
+            list(existing_sites.values())
+            + [
+                Site(label, "?", ".")
+                for label in known_sites
+                if label not in existing_sites
+            ],
+        )
+        for site in new_agent:
+            site.agent = new_agent
+        return new_agent
+
     def _add_component(self, component: Component) -> None:
         component_ordered = list(component.agents)
-        new_agents = [agent.detached() for agent in component_ordered]
+        new_agents = [self._instantiate_agent(agent) for agent in component_ordered]
         new_edges = set()
 
         for i, agent in enumerate(component_ordered):

@@ -9,7 +9,7 @@ from graphviz import Source
 
 from pykappa.mixture import Mixture
 from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
-from pykappa.pattern import Component, Pattern
+from pykappa.pattern import Component, Pattern, Site
 from pykappa.analysis import Monitor
 from pykappa._expression import Expression
 from pykappa._utils import str_table
@@ -177,14 +177,13 @@ class System:
             else {name: Expression.from_kappa(var) for name, var in variables.items()}
         )
 
-        return cls(
-            None if mixture is None else Mixture.from_kappa(mixture),
-            real_rules,
-            real_observables,
-            real_variables,
-            *args,
-            **kwargs,
+        system = cls(
+            None, real_rules, real_observables, real_variables, *args, **kwargs
         )
+        if mixture is not None:
+            for pattern_str, count in mixture.items():
+                system.mixture.add(pattern_str, count)
+        return system
 
     def __init__(
         self,
@@ -275,6 +274,19 @@ class System:
         }
 
     @property
+    def signatures(self) -> dict[str, frozenset[str]]:
+        """The complete site interface for each agent type inferrred from all rules."""
+        sites_by_type: dict[str, set[str]] = defaultdict(set)
+        for rule in self.rules.values():
+            for pattern in (rule.left, rule.right):
+                for agent in pattern.agents:
+                    if agent is not None:
+                        sites_by_type[agent.type].update(site.label for site in agent)
+        return {
+            agent_type: frozenset(sites) for agent_type, sites in sites_by_type.items()
+        }
+
+    @property
     def tallies_str(self) -> str:
         """A formatted string showing how many times each rule has been applied."""
         return str_table(
@@ -354,6 +366,7 @@ class System:
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
         self.mixture = mixture
+        self.mixture.signature = self.signatures
         for rule in self.rules.values():
             self._track_rule(rule)
         for observable in self.observables.values():
@@ -383,8 +396,25 @@ class System:
         if type(rule) in [UnimolecularRule, BimolecularRule]:
             self.mixture.enable_component_tracking()
 
-        self._track_rule(rule)
+        old_signature = self.signatures
         self.rules[name] = rule
+        new_signature = self.signatures
+
+        # Backfill mixture with new sites for existing agents
+        for agent in self.mixture.agents:
+            known_sites = new_signature.get(agent.type)
+            if known_sites is None:
+                continue
+            for label in (
+                known_sites
+                - old_signature.get(agent.type, frozenset())
+                - {s.label for s in agent}
+            ):
+                agent.interface[label] = site = Site(label, "?", ".")
+                site.agent = agent
+
+        self.mixture.signature = new_signature
+        self._track_rule(rule)
 
     def remove_rule(self, name: str) -> None:
         """Remove a rule by setting its rate to zero.
