@@ -421,7 +421,7 @@ def test_signature_drives_interface_completion():
             "A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0",
         ],
     )
-    assert system.signature["A"] == frozenset({"x", "y"})
+    assert system.signatures["A"] == frozenset({"x", "y"})
     for agent in system.mixture.agents:
         assert {"x", "y"} <= set(agent.interface)
     system.mixture.add("A(x[.])", 1)
@@ -438,7 +438,7 @@ def test_signature_expands_on_add_rule():
     with pytest.raises(ValueError, match="unknown site"):
         system.mixture.add("A(y[.])", 1)
     system.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
-    assert "y" in system.signature["A"]
+    assert "y" in system.signatures["A"]
     assert all("y" in a.interface for a in system.mixture.agents if a.type == "A")
     system.mixture.add("A(y[.])", 1)  # no error now
 
