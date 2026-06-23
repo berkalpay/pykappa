@@ -145,11 +145,17 @@ class Mixture:
         """Create a mixture agent from a pattern agent, completing its interface from the signature.
 
         Raises:
-            ValueError: If agent has unknown sites not in the signature.
+            ValueError: If agent has unknown sites or an undeclared type.
         """
-        known_sites = None if self.signature is None else self.signature.get(agent.type)
-        if known_sites is None:
+        if not self.signature:
             return agent.detached()
+
+        known_sites = self.signature.get(agent.type)
+        if known_sites is None:
+            raise ValueError(
+                f"Agent type '{agent.type}' is not declared by any rule. "
+                f"Known agent types: {set(self.signature)}"
+            )
 
         unknown_sites = {s.label for s in agent} - known_sites
         if unknown_sites:

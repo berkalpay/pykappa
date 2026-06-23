@@ -165,7 +165,6 @@ def test_system_manipulation():
     system = System.from_ka("""
         %init: 10 A(x[.])
         %init: 10 B(x[.])
-        %init: 1 C()
 
         %obs: 'A' |A(x[.])|
         %obs: 'B' |B(x[.])|
@@ -205,15 +204,15 @@ def test_system_manipulation():
 
     # Set a new observable
     system["C"] = "|C()|"
-    assert system["C"] == 1
+    assert system["C"] == 0
     system.update()
-    assert system["C"] == 1
+    assert system["C"] == 0
 
     # Add a rule
     system.add_rule("B() -> C() @ 1000", name="new")
     while system.reactivity:
         system.update()
-    assert system["B"] == 0 and system["C"] == 12
+    assert system["B"] == 0 and system["C"] == 11
 
     # Remove rules
     system.remove_rule("r0")
@@ -223,7 +222,7 @@ def test_system_manipulation():
         system.update()
         print(system.tallies_str)
         print(f"A: {system["A"]}, B: {system["B"]}, C: {system["C"]}\n")
-    assert system["C"] == 0 and system["B"] == 12
+    assert system["C"] == 0 and system["B"] == 11
 
 
 def test_reproducibility_from_initialization():
@@ -437,6 +436,8 @@ def test_signature_expands_on_add_rule():
     )
     with pytest.raises(ValueError, match="unknown site"):
         system.mixture.add("A(y[.])", 1)
+    with pytest.raises(ValueError, match="not declared"):
+        system.mixture.add("D()", 1)
     system.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
     assert "y" in system.signatures["A"]
     assert all("y" in a.interface for a in system.mixture.agents if a.type == "A")
@@ -457,15 +458,9 @@ def test_signature_rejects_unknown_sites(make_system):
         make_system().mixture.add("A(y[.])", 1)
 
 
-@pytest.mark.parametrize(
-    "make_system",
-    [
-        lambda: System.from_kappa(
-            rules=["A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1.0, 1.0"]
-        ),
-        lambda: System.from_ka("A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"),
-    ],
-)
-def test_signature_rejects_unknown_sites(make_system):
-    with pytest.raises(ValueError, match="unknown site"):
-        make_system().mixture.add("A(y[.])", 1)
+def test_undeclared_agent_type_rejected():
+    system = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"])
+    with pytest.raises(ValueError, match="not declared"):
+        system.mixture.add("A(y[.])", 1)
+    with pytest.raises(ValueError, match="not declared"):
+        system.mixture.add("C()", 1)
