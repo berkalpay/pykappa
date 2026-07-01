@@ -50,7 +50,7 @@
 <ul class="simple">
 <li><p>LacI (<code class="docutils literal notranslate"><span class="pre">I</span></code>) repression of the lac operon via blocking of the operator (<code class="docutils literal notranslate"><span class="pre">O</span></code>),</p></li>
 <li><p>lactose (<code class="docutils literal notranslate"><span class="pre">L</span></code>) transport by LacY (<code class="docutils literal notranslate"><span class="pre">Y</span></code>) permease,</p></li>
-<li><p>conversion of lactose to allolactose (<code class="docutils literal notranslate"><span class="pre">A</span></code>) by LacZ β-galactosidase (<code class="docutils literal notranslate"><span class="pre">Z</span></code>),</p></li>
+<li><p>conversion of lactose to allolactose (<code class="docutils literal notranslate"><span class="pre">A</span></code>) by LacZ (<code class="docutils literal notranslate"><span class="pre">Z</span></code>),</p></li>
 <li><p>and allolactose-mediated derepression of the operon.</p></li>
 </ul>
 <div class="nbinput nblast docutils container">
@@ -71,11 +71,11 @@
 <span class="sd">    %obs: &#39;Free lac operon&#39; |O(i[.])|</span>
 
 <span class="sd">    I(o[.]), O(i[.]) &lt;-&gt; I(o[1]), O(i[1]) @ 1, 0.1   // lac repression</span>
-<span class="sd">    Y(), L(loc{out}) -&gt; Y(), L(loc{in}) @ 0.01       // lactose transport</span>
-<span class="sd">    Z(), L(loc{in}) -&gt; Z(), A(z[.], i[.]) @ 1        // lactose to allolactose</span>
-<span class="sd">    A(i[.]), I(o[.]) &lt;-&gt; A(i[1]), I(o[1]) @ 1, 0.1   // derepression</span>
-<span class="sd">    O(i[.]), ., . -&gt; O(i[.]), Z(), Y() @ 1           // lac expression</span>
-<span class="sd">    L(loc{in}) -&gt; . @ 1                              // lactose metabolism</span>
+<span class="sd">    Y(), L(loc{out})  -&gt; Y(), L(loc{in}) @ 0.01      // lactose transport</span>
+<span class="sd">    Z(), L(loc{in})   -&gt; Z(), A(z[.], i[.]) @ 1      // lactose to allolactose</span>
+<span class="sd">    A(i[.]), I(o[.]) &lt;-&gt; A(i[1]), I(o[1]) @ 1, 0.1   // lac derepression</span>
+<span class="sd">    O(i[.]), ., .     -&gt; O(i[.]), Z(), Y() @ 1       // lac expression</span>
+<span class="sd">    L(loc{in})        -&gt; . @ 1                       // lactose metabolism</span>
 
 <span class="sd">    // degradation</span>
 <span class="sd">    A() -&gt; . @ 0.1</span>
