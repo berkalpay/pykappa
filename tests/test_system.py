@@ -465,3 +465,15 @@ def test_undeclared_agent_and_site_rejected():
         system.mixture.add("A(y[.])")
     with pytest.raises(ValueError, match="not declared"):
         system.mixture.add("C()")
+
+
+def test_site_defaults():
+    system = System.from_kappa({"A()": 1})
+    system.set_site_defaults("A", x="x", y="p", z="u")
+    system.add_rule("A(x[.]), A(y[.]) -> A(x[1]), A(y[1]) @ 1")
+    system.add_rule("A(z[.]), B(z[.]) -> A(z[1]), B(z[1]) @ 1")
+
+    agent = system.mixture.agents[0]
+    assert agent["x"].state == "x"
+    assert agent["y"].state == "p"
+    assert agent["z"].state == "u"

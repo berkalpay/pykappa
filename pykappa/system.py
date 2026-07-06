@@ -23,6 +23,7 @@ class System:
     rules: dict[str, Rule]  #: Maps rule names to Rule objects
     observables: dict[str, Expression]  #: Maps observable names to expressions
     variables: dict[str, Expression]  #: Maps variable names to expressions
+    site_defaults: dict[str, dict[str, str]]  #: Maps agent types to site default states
     tokens: dict[str, float]  #: Maps token names to their current values
     monitor: Optional["Monitor"]  #: Optionally tracks simulation history
     time: float  #: Current simulation time
@@ -221,6 +222,7 @@ class System:
 
         self.observables = {} if observables is None else observables
         self.variables = {} if variables is None else variables
+        self.site_defaults = {}
 
         self._set_mixture(mixture)
         self.time = 0
@@ -375,6 +377,15 @@ class System:
         for variable in self.variables.values():
             self._track_expression(variable)
 
+    def set_site_defaults(self, agent_type: str, **sites) -> None:
+        """Set default states for sites of an agent type.
+
+        Args:
+            agent_type: Name of the agent type.
+            **sites: Site name → default state mapping (e.g., a="p", b="u").
+        """
+        self.site_defaults[agent_type] = sites
+
     def add_rule(self, rule: Rule | str, name: Optional[str] = None) -> None:
         """Add a new rule to the system.
 
@@ -419,7 +430,8 @@ class System:
                 )
                 warned_types.add(agent.type)
             for label in new_sites:
-                agent.interface[label] = site = Site(label, "?", ".")
+                default_state = self.site_defaults.get(agent.type, {}).get(label, "?")
+                agent.interface[label] = site = Site(label, default_state, ".")
                 site.agent = agent
 
         self.mixture.signature = new_signature
