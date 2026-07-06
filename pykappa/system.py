@@ -402,6 +402,7 @@ class System:
         new_signature = self.signatures
 
         # Backfill mixture with new sites for existing agents
+        warned_types = set()
         for agent in self.mixture.agents:
             known_sites = new_signature.get(agent.type)
             if known_sites is None:
@@ -411,11 +412,12 @@ class System:
                 - old_signature.get(agent.type, frozenset())
                 - {s.label for s in agent}
             )
-            if new_sites:
+            if new_sites and agent.type not in warned_types:
                 warnings.warn(
                     f"Adding rule '{name}' introduced new sites to {agent.type}: {', '.join(sorted(new_sites))}",
                     RuntimeWarning,
                 )
+                warned_types.add(agent.type)
             for label in new_sites:
                 agent.interface[label] = site = Site(label, "?", ".")
                 site.agent = agent
