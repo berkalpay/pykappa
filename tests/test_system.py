@@ -438,7 +438,8 @@ def test_signature_expands_on_add_rule():
         system.mixture.add("A(y[.])", 1)
     with pytest.raises(ValueError, match="not declared"):
         system.mixture.add("D()", 1)
-    system.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
+    with pytest.warns(RuntimeWarning, match="introduced new sites to A: y"):
+        system.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
     assert "y" in system.signatures["A"]
     assert all("y" in a.interface for a in system.mixture.agents if a.type == "A")
     system.mixture.add("A(y[.])", 1)  # no error now
