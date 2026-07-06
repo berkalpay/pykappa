@@ -406,11 +406,17 @@ class System:
             known_sites = new_signature.get(agent.type)
             if known_sites is None:
                 continue
-            for label in (
+            new_sites = (
                 known_sites
                 - old_signature.get(agent.type, frozenset())
                 - {s.label for s in agent}
-            ):
+            )
+            if new_sites:
+                warnings.warn(
+                    f"Adding rule '{name}' introduced new sites to {agent.type}: {', '.join(sorted(new_sites))}",
+                    RuntimeWarning,
+                )
+            for label in new_sites:
                 agent.interface[label] = site = Site(label, "?", ".")
                 site.agent = agent
 
