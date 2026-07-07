@@ -29,6 +29,7 @@ class Mixture:
     """
 
     agents: IndexedSet[Agent]
+    signature: Optional[dict[str, frozenset[str]]]  # Agent types and their sites
     _components: Optional[IndexedSet[Component]]  # Components if tracking is enabled
     _embeddings: dict[Component, IndexedSet[Embedding]]  # Cache of embeddings
     _max_embedding_width: int  # Maximum diameter of tracked components
@@ -52,10 +53,10 @@ class Mixture:
     ):
         self.agents = IndexedSet()
         self.agents.create_index("type", lambda a: [a.type])
+        self.signature = None
         self._components = None
         self._embeddings = {}
         self._max_embedding_width = 0
-        self.signature: Optional[dict[str, frozenset[str]]] = None
 
         if track_components:
             self.enable_component_tracking()
