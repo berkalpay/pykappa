@@ -193,6 +193,7 @@ class System:
         observables: Optional[dict[str, Expression]] = None,
         variables: Optional[dict[str, Expression]] = None,
         tokens: Optional[dict[str, float]] = None,
+        site_defaults: Optional[dict[str, dict[str, str]]] = None,
         monitor: bool = True,
         seed: Optional[int] = None,
     ):
@@ -203,6 +204,7 @@ class System:
             observables: Dictionary of observable expressions.
             variables: Dictionary of variable expressions.
             tokens: Dictionary of token names to initial values.
+            site_defaults: Maps agent types to site default states.
             monitor: Whether to enable monitoring of simulation history.
             seed: Random seed for reproducibility.
         """
@@ -221,7 +223,7 @@ class System:
 
         self.observables = {} if observables is None else observables
         self.variables = {} if variables is None else variables
-        self.site_defaults = {}
+        self.site_defaults = {} if site_defaults is None else dict(site_defaults)
 
         self._set_mixture(mixture)
         self.time = 0
