@@ -75,10 +75,12 @@ def test_automorphism_counting(test_case):
 
 
 def test_pattern_creation():
-    Pattern.from_kappa("""
+    Pattern.from_kappa(
+        """
         A(a[.]{blah}, b[_]{bleh}, c[#], d[some_site_name.some_agent_name], e[13]),
         B(f[13], e[1], z[3]),
         C(x[1]),
         D(w[3]),
         E()
-        """)
+        """
+    )

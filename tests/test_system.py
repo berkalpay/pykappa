@@ -44,19 +44,22 @@ def test_basic_system():
 
 
 def test_basic_observable_symmetry():
-    system = System.from_ka("""
+    system = System.from_ka(
+        """
         %init: 1 V(v[1]), V(v[1])
         %init: 100 V(v[.])
         
         %obs: 'dimer' |V(v[1]), V(v[1])|
         %obs: 'total' 2 * 'dimer' + |V(v[.])|
-        """)
+        """
+    )
     assert system["dimer"] == 1
     assert system["total"] == 102
 
 
 def test_system_from_kappa():
-    system = System.from_ka("""
+    system = System.from_ka(
+        """
     %def: "maxConsecutiveClash" "20"
     %def: "seed" "365457"
 
@@ -76,7 +79,8 @@ def test_system_from_kappa():
     %obs: 'pairs'     |A(a[1]), B(b[1])|
 
     A(a{p}), B(b[_]) -> A(a{u}), B() @ 'g_on'
-    """)
+    """
+    )
     n = system["n"]
     assert n == 300
     assert system["g_on"] == 0.003
@@ -140,14 +144,16 @@ def test_equilibrium_matches_kd(kd, a_init, b_init):
     on_rate = DIFFUSION_RATE / (AVOGADRO * volume)
     kd = 10**-9
     off_rate = DIFFUSION_RATE * kd
-    system = System.from_ka(f"""
+    system = System.from_ka(
+        f"""
         %init: {a_init} A(x[.])
         %init: {b_init} B(x[.])
         %obs: 'A' |A(x[.])|
         %obs: 'B' |B(x[.])|
         %obs: 'AB' |B(x[_])|
         A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ {on_rate}, {off_rate}
-        """)
+        """
+    )
 
     empirical_kds = []
     while system.time < 2:
@@ -162,7 +168,8 @@ def test_equilibrium_matches_kd(kd, a_init, b_init):
 
 
 def test_system_manipulation():
-    system = System.from_ka("""
+    system = System.from_ka(
+        """
         %init: 10 A(x[.])
         %init: 10 B(x[.])
         %init: 1 C()
@@ -174,7 +181,8 @@ def test_system_manipulation():
         %var: 'total_agents' 'A' + 'B' + (2 * 'AB')
 
         A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1 {1}
-        """)
+        """
+    )
     assert not system["AB"]
     system.update()
     assert system["AB"] == 1
@@ -302,13 +310,15 @@ def test_equilibrated():
 
 
 def test_uniqueness_and_persistence_of_agent_ids():
-    system = System.from_ka("""
+    system = System.from_ka(
+        """
         %init: 50 A(x{u}[.])
         %init: 50 B(x{u}[.])
 
         A(x[.]), B(x[.]) <-> A(x[1]), B(x[1]) @ 1, 1
         A(x{u}) <-> A(x{p}) @ 1, 1
-        """)
+        """
+    )
 
     initial_ids = {agent.id for agent in system.mixture.agents}
     assert len(initial_ids) == 100
@@ -376,14 +386,16 @@ def test_token_in_rate_expression():
 
 
 def test_rule_with_variable_rate():
-    system = System.from_ka("""
+    system = System.from_ka(
+        """
         %init: 20 A(x[.])
         %init: 0  B(x[.])
 
         %obs: 'n_B' |B(x[.])|
 
         A(x[.]) -> B(x[.]) @ 'n_B'
-        """)
+        """
+    )
 
     assert not system.reactivity
 
