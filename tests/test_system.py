@@ -423,7 +423,7 @@ def test_signature_drives_interface_completion():
     assert system.signatures["A"] == frozenset({"x", "y"})
     for agent in system.mixture.agents:
         assert {"x", "y"} <= set(agent.interface)
-    system.mixture.add("A(x[.])", 1)
+    system.add("A(x[.])", 1)
     agent = next(a for a in system.mixture.agents if "y" in a.interface)
     assert agent["y"].partner == "."
     Mixture().add("A(x[1]), B(y[1])")  # bare mixture: no constraints
@@ -435,14 +435,14 @@ def test_signature_expands_on_add_rule():
         rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"],
     )
     with pytest.raises(ValueError, match="unknown site"):
-        system.mixture.add("A(y[.])", 1)
+        system.add("A(y[.])", 1)
     with pytest.raises(ValueError, match="not declared"):
-        system.mixture.add("D()", 1)
+        system.add("D()", 1)
     with pytest.warns(RuntimeWarning, match="introduced new sites to A: y"):
         system.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
     assert "y" in system.signatures["A"]
     assert all("y" in a.interface for a in system.mixture.agents if a.type == "A")
-    system.mixture.add("A(y[.])", 1)  # no error now
+    system.add("A(y[.])", 1)  # no error now
 
 
 @pytest.mark.parametrize(
@@ -456,15 +456,15 @@ def test_signature_expands_on_add_rule():
 )
 def test_signature_rejects_unknown_sites(make_system):
     with pytest.raises(ValueError, match="unknown site"):
-        make_system().mixture.add("A(y[.])", 1)
+        make_system().add("A(y[.])", 1)
 
 
 def test_undeclared_agent_and_site_rejected():
     system = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1"])
     with pytest.raises(ValueError, match="unknown site"):
-        system.mixture.add("A(y[.])")
+        system.add("A(y[.])")
     with pytest.raises(ValueError, match="not declared"):
-        system.mixture.add("C()")
+        system.add("C()")
 
 
 def test_site_defaults():

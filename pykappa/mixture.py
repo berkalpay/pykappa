@@ -29,7 +29,6 @@ class Mixture:
     """
 
     agents: IndexedSet[Agent]
-    signature: Optional[dict[str, frozenset[str]]]  # Agent types and their sites
     _components: Optional[IndexedSet[Component]]  # Components if tracking is enabled
     _embeddings: dict[Component, IndexedSet[Embedding]]  # Cache of embeddings
     _max_embedding_width: int  # Maximum diameter of tracked components
@@ -53,7 +52,6 @@ class Mixture:
     ):
         self.agents = IndexedSet()
         self.agents.create_index("type", lambda a: [a.type])
-        self.signature = None
         self._components = None
         self._embeddings = {}
         self._max_embedding_width = 0
@@ -123,7 +121,13 @@ class Mixture:
                 lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
             )
 
-    def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
+    def add(
+        self,
+        pattern: Pattern | Component | str,
+        n_copies: int = 1,
+        *,
+        signature: Optional[dict[str, frozenset[str]]] = None,
+    ) -> None:
         """Add instances of a pattern or component to the mixture.
 
         Raises:
@@ -131,7 +135,7 @@ class Mixture:
         """
         if isinstance(pattern, Component):
             for _ in range(n_copies):
-                self._add_component(pattern)
+                self._add_component(pattern, signature)
             return
 
         if isinstance(pattern, str):
@@ -140,22 +144,24 @@ class Mixture:
         assert pattern.instantiable, "Pattern isn't specific enough to instantiate."
         for _ in range(n_copies):
             for component in pattern.components:
-                self._add_component(component)
+                self._add_component(component, signature)
 
-    def _instantiate_agent(self, agent: Agent) -> Agent:
+    def _instantiate_agent(
+        self, agent: Agent, signature: Optional[dict[str, frozenset[str]]]
+    ) -> Agent:
         """Create a mixture agent from a pattern agent, completing its interface from the signature.
 
         Raises:
             ValueError: If agent has unknown sites or an undeclared type.
         """
-        if not self.signature:
+        if not signature:
             return agent.detached()
 
-        known_sites = self.signature.get(agent.type)
+        known_sites = signature.get(agent.type)
         if known_sites is None:
             raise ValueError(
                 f"Agent type '{agent.type}' is not declared by any rule. "
-                f"Known agent types: {set(self.signature)}"
+                f"Known agent types: {set(signature)}"
             )
 
         unknown_sites = {s.label for s in agent} - known_sites
@@ -179,9 +185,15 @@ class Mixture:
             site.agent = new_agent
         return new_agent
 
-    def _add_component(self, component: Component) -> None:
+    def _add_component(
+        self,
+        component: Component,
+        signature: Optional[dict[str, frozenset[str]]] = None,
+    ) -> None:
         component_ordered = list(component.agents)
-        new_agents = [self._instantiate_agent(agent) for agent in component_ordered]
+        new_agents = [
+            self._instantiate_agent(agent, signature) for agent in component_ordered
+        ]
         new_edges = set()
 
         for i, agent in enumerate(component_ordered):

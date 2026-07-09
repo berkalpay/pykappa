@@ -132,7 +132,7 @@ class System:
 
         system = cls(None, rules, observables, variables, seed=seed)
         for init in inits:
-            system.mixture.add(init[1], int(init[0].evaluate(system)))
+            system.add(init[1], int(init[0].evaluate(system)))
         for token_name, amount_expr in token_inits:
             system.tokens[token_name] = float(amount_expr.evaluate(system))
         return system
@@ -184,7 +184,7 @@ class System:
         )
         if mixture is not None:
             for pattern_str, count in mixture.items():
-                system.mixture.add(pattern_str, count)
+                system.add(pattern_str, count)
         return system
 
     def __init__(
@@ -371,7 +371,6 @@ class System:
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
         self.mixture = mixture
-        self.mixture.signature = self.signatures
         for rule in self.rules.values():
             self._track_rule(rule)
         for observable in self.observables.values():
@@ -387,6 +386,10 @@ class System:
             **sites: Site name → default state mapping (e.g., a="p", b="u").
         """
         self.site_defaults[agent_type] = sites
+
+    def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
+        """Add instances of a pattern or component to the mixture using inferred agent signatures."""
+        self.mixture.add(pattern, n_copies, signature=self.signatures)
 
     def add_rule(self, rule: Rule | str, name: Optional[str] = None) -> None:
         """Add a new rule to the system.
@@ -436,7 +439,6 @@ class System:
                 agent.interface[label] = site = Site(label, default_state, ".")
                 site.agent = agent
 
-        self.mixture.signature = new_signature
         self._track_rule(rule)
 
     def remove_rule(self, name: str) -> None:
