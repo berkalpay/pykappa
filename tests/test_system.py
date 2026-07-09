@@ -477,3 +477,30 @@ def test_site_defaults():
     assert agent["x"].state == "x"
     assert agent["y"].state == "p"
     assert agent["z"].state == "u"
+
+
+def test_apply_state_change():
+    system = System.from_ka("""
+        %init: 5 A(x{u})
+        %obs: 'phospho' |A(x{p})|
+        A(x{u}) -> A(x{p}) @ 1
+    """)
+    assert system["phospho"] == 0
+    system.apply("A(x{u}) -> A(x{p})")
+    assert system["phospho"] == 1
+    system.apply("A(x{u}) -> A(x{p})", n=4)
+    assert system["phospho"] == 5
+    assert system.time == 0  # time must not advance
+
+
+def test_apply_bond_formation_and_breaking():
+    system = System.from_ka("""
+        %init: 4 A(x[.])
+        %init: 4 B(x[.])
+        %obs: 'AB' |A(x[1]), B(x[1])|
+    """)
+    assert system["AB"] == 0
+    system.apply("A(x[.]), B(x[.]) -> A(x[1]), B(x[1])", n=3)
+    assert system["AB"] == 3
+    system.apply("A(x[1]), B(x[1]) -> A(x[.]), B(x[.])", n=2)
+    assert system["AB"] == 1

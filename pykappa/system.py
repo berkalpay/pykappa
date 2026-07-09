@@ -458,8 +458,8 @@ class System:
     def _track_rule(self, rule: Rule) -> None:
         """Track components mentioned in the left hand side of a Rule."""
         for component in rule.left.components:
-            # TODO: For efficiency check for isomorphism with already-tracked components
-            self.mixture._track_component(component)
+            if component not in self.mixture._embeddings:
+                self.mixture._track_component(component)
 
     def _track_expression(self, expression: Expression) -> None:
         """Track the Components in the given expression.
@@ -515,6 +515,23 @@ class System:
         # Update monitor
         if self.monitor is not None:
             self.monitor.update()
+
+    def apply(self, transformation: str, n: int = 1) -> None:
+        """Apply a transformation immediately for a specified number of times.
+
+        Unlike `update`, this does not advance simulation time or use stochastic
+        selection — the rule fires exactly ``n`` times using randomly chosen
+        embeddings.
+
+        Args:
+            transformation: Kappa string representation of the rule.
+            n: Number of times to apply the rule.
+        """
+        rule = Rule.from_kappa(transformation + " @ 0")
+        for _ in range(n):
+            update = Rule._select(rule, self.mixture)
+            if update is not None:
+                self.mixture._apply_update(update)
 
     def update_via_kasim(self, time: float) -> None:
         """Simulate for a given amount of time using KaSim.
