@@ -165,10 +165,13 @@ class Rule:
         rule_embedding: dict[Agent, Agent] = {}
 
         for component in self.left.components:
-            component_embeddings = mixture.embeddings(component)
-            assert (
-                len(component_embeddings) > 0
-            ), f"A rule with no valid embeddings was selected: {self}"
+            component_embeddings = (
+                mixture.embeddings(component)
+                if component in mixture._embeddings
+                else list(component.embeddings(mixture))
+            )
+            if not component_embeddings:
+                return None
             component_embedding = random.choice(component_embeddings)
 
             for rule_agent in component_embedding:
