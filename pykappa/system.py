@@ -494,7 +494,7 @@ class System:
                 f.write(f"{self.kappa_str}\n{output_cmd}")
 
             os.system(
-                f"KaSim {input_ka_path} -l {time}" 
+                f"KaSim {input_ka_path} -l {time}"
                 f" -d {tmpdirname} -o {obs_ka_path} > /dev/null"
             )
 
