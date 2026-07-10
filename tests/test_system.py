@@ -129,7 +129,7 @@ def test_polymerization_via_kasim():
 
 @pytest.mark.parametrize(
     "kd, a_init, b_init",
-    itertools.product([10**-9], [2000], [2000, 3500]),
+    list(itertools.product([10**-9], [2000], [2000, 3500])),
 )
 def test_equilibrium_matches_kd(kd, a_init, b_init):
     """
@@ -470,8 +470,10 @@ def test_undeclared_agent_and_site_rejected():
 def test_site_defaults():
     system = System.from_kappa({"A()": 1})
     system.set_site_defaults("A", x="x", y="p", z="u")
-    system.add_rule("A(x[.]), A(y[.]) -> A(x[1]), A(y[1]) @ 1")
-    system.add_rule("A(z[.]), B(z[.]) -> A(z[1]), B(z[1]) @ 1")
+    with pytest.warns(RuntimeWarning, match="introduced new sites to A: x, y"):
+        system.add_rule("A(x[.]), A(y[.]) -> A(x[1]), A(y[1]) @ 1")
+    with pytest.warns(RuntimeWarning, match="introduced new sites to A: z"):
+        system.add_rule("A(z[.]), B(z[.]) -> A(z[1]), B(z[1]) @ 1")
 
     agent = system.mixture.agents[0]
     assert agent["x"].state == "x"

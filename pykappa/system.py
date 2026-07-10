@@ -99,7 +99,7 @@ class System:
                 observables[name] = value
 
             elif tag == "signature_declaration":
-                raise NotImplementedError
+                pass  # ignore agent signatures
 
             elif tag == "declared_token":
                 token_declarations.append(str(child.children[0].children[0]))
