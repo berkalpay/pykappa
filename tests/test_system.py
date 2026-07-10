@@ -506,3 +506,12 @@ def test_apply_bond_formation_and_breaking():
     assert system["AB"] == 3
     system.apply("A(x[1]), B(x[1]) -> A(x[.]), B(x[.])", n=2)
     assert system["AB"] == 1
+
+
+def test_apply_creation_completes_interface():
+    system = System.from_ka(". -> A(x{u}, y[.]) @ 1")
+    system.apply(". -> A(x{u})")
+    agent = next(iter(system.mixture.agents))
+    assert set(agent.interface) == {"x", "y"}
+    with pytest.raises(ValueError, match="unknown site"):
+        system.apply(". -> A(z[.])")

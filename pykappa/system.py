@@ -392,51 +392,50 @@ class System:
         """
         self.site_defaults[agent_type] = sites
 
+    def _enforce_signature(self, agent: "Agent") -> None:
+        """Validate agent type and sites against the inferred signature and fill missing sites.
+
+        Raises:
+            ValueError: If the agent type is unknown or has sites not in the signature.
+        """
+        sig = self.signatures
+        if not sig:
+            return
+        known = sig.get(agent.type)
+        if known is None:
+            raise ValueError(
+                f"Agent type '{agent.type}' is not declared by any rule. "
+                f"Known agent types: {set(sig)}"
+            )
+        unknown = {s.label for s in agent} - known
+        if unknown:
+            raise ValueError(
+                f"Agent '{agent.type}' has unknown site(s) {unknown}. "
+                f"Known sites for this type: {known}"
+            )
+        for label in known - agent.interface.keys():
+            agent.interface[label] = site = Site(
+                label, self.site_defaults.get(agent.type, {}).get(label, "?"), "."
+            )
+            site.agent = agent
+
     def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
         """Add instances of a pattern or component to the mixture using inferred agent signatures."""
         if isinstance(pattern, str):
             pattern = Pattern.from_kappa(pattern)
         components = [pattern] if isinstance(pattern, Component) else pattern.components
         for component in components:
-            self.mixture.add(self._complete(component), n_copies)
-
-    def _complete(self, component: Component) -> Component:
-        """Return a copy of the component with agent interfaces filled in from inferred signatures.
-
-        Raises:
-            ValueError: If an agent type is undeclared or has sites not in the signature.
-        """
-        sig = self.signatures
-        ordered = list(component.agents)
-        agent_map: dict = {}
-        for agent in ordered:
-            new = agent.detached()
-            if sig:
-                known = sig.get(agent.type)
-                if known is None:
-                    raise ValueError(
-                        f"Agent type '{agent.type}' is not declared by any rule. "
-                        f"Known agent types: {set(sig)}"
-                    )
-                unknown = {s.label for s in agent} - known
-                if unknown:
-                    raise ValueError(
-                        f"Agent '{agent.type}' has unknown site(s) {unknown}. "
-                        f"Known sites for this type: {known}"
-                    )
-                for label in known:
-                    if label not in new.interface:
-                        state = self.site_defaults.get(agent.type, {}).get(label, "?")
-                        new.interface[label] = site = Site(label, state, ".")
-                        site.agent = new
-            agent_map[agent] = new
-        for agent in ordered:
-            for site in agent:
-                if site.coupled:
-                    agent_map[agent][site.label].partner = agent_map[
-                        site.partner.agent
-                    ][site.partner.label]
-        return Component(list(agent_map.values()))
+            agent_map = {agent: agent.detached() for agent in component.agents}
+            for agent in component.agents:
+                for site in agent:
+                    if site.coupled:
+                        agent_map[agent][site.label].partner = agent_map[
+                            site.partner.agent
+                        ][site.partner.label]
+            copied = Component(list(agent_map.values()))
+            for agent in copied.agents:
+                self._enforce_signature(agent)
+            self.mixture.add(copied, n_copies)
 
     def add_rule(self, rule: Rule | str, name: Optional[str] = None) -> None:
         """Add a new rule to the system.
@@ -460,20 +459,11 @@ class System:
         if type(rule) in [UnimolecularRule, BimolecularRule]:
             self.mixture.enable_component_tracking()
 
-        old_signature = self.signatures
         self.rules[name] = rule
-        new_signature = self.signatures
-
-        # Backfill mixture with new sites for existing agents
-        warned_types = set()
+        warned_types: set[str] = set()
         for agent in self.mixture.agents:
-            known_sites = new_signature.get(agent.type)
-            if known_sites is None:
-                continue
             new_sites = (
-                known_sites
-                - old_signature.get(agent.type, frozenset())
-                - {s.label for s in agent}
+                self.signatures.get(agent.type, frozenset()) - agent.interface.keys()
             )
             if new_sites and agent.type not in warned_types:
                 warnings.warn(
@@ -481,11 +471,7 @@ class System:
                     RuntimeWarning,
                 )
                 warned_types.add(agent.type)
-            for label in new_sites:
-                default_state = self.site_defaults.get(agent.type, {}).get(label, "?")
-                agent.interface[label] = site = Site(label, default_state, ".")
-                site.agent = agent
-
+            self._enforce_signature(agent)
         self._track_rule(rule)
 
     def remove_rule(self, name: str) -> None:
@@ -553,6 +539,8 @@ class System:
                 update = rule._select(self.mixture)
                 if update is not None:
                     self.tallies[str(rule)]["applied"] += 1
+                    for agent in update.agents_to_add:
+                        self._enforce_signature(agent)
                     self.mixture._apply_update(update)
                     for expr, name in rule.token_updates:
                         self.tokens[name] += expr.evaluate(self)
@@ -578,6 +566,8 @@ class System:
         for _ in range(n):
             update = Rule._select(rule, self.mixture)
             if update is not None:
+                for agent in update.agents_to_add:
+                    self._enforce_signature(agent)
                 self.mixture._apply_update(update)
 
     def update_via_kasim(self, time: float) -> None:
