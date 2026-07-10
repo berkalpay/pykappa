@@ -433,7 +433,9 @@ class System:
         for agent in ordered:
             for site in agent:
                 if site.coupled:
-                    agent_map[agent][site.label].partner = agent_map[site.partner.agent][site.partner.label]
+                    agent_map[agent][site.label].partner = agent_map[
+                        site.partner.agent
+                    ][site.partner.label]
         return Component(list(agent_map.values()))
 
     def add_rule(self, rule: Rule | str, name: Optional[str] = None) -> None:
