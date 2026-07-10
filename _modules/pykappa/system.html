@@ -51,7 +51,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Site</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Monitor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._expression</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_table</span>
@@ -66,6 +66,7 @@
     <span class="n">rules</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Rule</span><span class="p">]</span>  <span class="c1">#: Maps rule names to Rule objects</span>
     <span class="n">observables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span>  <span class="c1">#: Maps observable names to expressions</span>
     <span class="n">variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span>  <span class="c1">#: Maps variable names to expressions</span>
+    <span class="n">site_defaults</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>  <span class="c1">#: Maps agent types to site default states</span>
     <span class="n">tokens</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>  <span class="c1">#: Maps token names to their current values</span>
     <span class="n">monitor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Monitor&quot;</span><span class="p">]</span>  <span class="c1">#: Optionally tracks simulation history</span>
     <span class="n">time</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1">#: Current simulation time</span>
@@ -179,7 +180,7 @@
 
         <span class="n">system</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rules</span><span class="p">,</span> <span class="n">observables</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">init</span> <span class="ow">in</span> <span class="n">inits</span><span class="p">:</span>
-            <span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">init</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">init</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">system</span><span class="p">)))</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">init</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">init</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">system</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">token_name</span><span class="p">,</span> <span class="n">amount_expr</span> <span class="ow">in</span> <span class="n">token_inits</span><span class="p">:</span>
             <span class="n">system</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">token_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">amount_expr</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">system</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">system</span></div>
@@ -229,14 +230,13 @@
             <span class="k">else</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="kc">None</span> <span class="k">if</span> <span class="n">mixture</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Mixture</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">mixture</span><span class="p">),</span>
-            <span class="n">real_rules</span><span class="p">,</span>
-            <span class="n">real_observables</span><span class="p">,</span>
-            <span class="n">real_variables</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="n">system</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span> <span class="n">real_rules</span><span class="p">,</span> <span class="n">real_observables</span><span class="p">,</span> <span class="n">real_variables</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">mixture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pattern_str</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pattern_str</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">system</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -246,6 +246,7 @@
         <span class="n">observables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">tokens</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">site_defaults</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">monitor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
@@ -256,6 +257,7 @@
 <span class="sd">            observables: Dictionary of observable expressions.</span>
 <span class="sd">            variables: Dictionary of variable expressions.</span>
 <span class="sd">            tokens: Dictionary of token names to initial values.</span>
+<span class="sd">            site_defaults: Maps agent types to site default states.</span>
 <span class="sd">            monitor: Whether to enable monitoring of simulation history.</span>
 <span class="sd">            seed: Random seed for reproducibility.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -274,6 +276,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">observables</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">observables</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">observables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">variables</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">site_defaults</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">site_defaults</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">site_defaults</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_mixture</span><span class="p">(</span><span class="n">mixture</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
@@ -325,6 +328,19 @@
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;observables&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">),</span>
             <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The complete site interface for each agent type inferrred from all rules.&quot;&quot;&quot;</span>
+        <span class="n">sites_by_type</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">rule</span><span class="o">.</span><span class="n">right</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">pattern</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">sites_by_type</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">agent_type</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">sites</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent_type</span><span class="p">,</span> <span class="n">sites</span> <span class="ow">in</span> <span class="n">sites_by_type</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
 
     <span class="nd">@property</span>
@@ -417,6 +433,25 @@
         <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_track_expression</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
 
+<div class="viewcode-block" id="System.set_site_defaults">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.set_site_defaults">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_site_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">sites</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set default states for sites of an agent type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            agent_type: Name of the agent type.</span>
+<span class="sd">            **sites: Site name → default state mapping (e.g., a=&quot;p&quot;, b=&quot;u&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">site_defaults</span><span class="p">[</span><span class="n">agent_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sites</span></div>
+
+
+<div class="viewcode-block" id="System.add">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="n">Pattern</span> <span class="o">|</span> <span class="n">Component</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_copies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add instances of a pattern or component to the mixture using inferred agent signatures.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">n_copies</span><span class="p">,</span> <span class="n">signature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">signatures</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="System.add_rule">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.add_rule">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -441,8 +476,33 @@
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">enable_component_tracking</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_track_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule</span></div>
+        <span class="n">old_signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule</span>
+        <span class="n">new_signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span>
+
+        <span class="c1"># Backfill mixture with new sites for existing agents</span>
+        <span class="n">warned_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">known_sites</span> <span class="o">=</span> <span class="n">new_signature</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">known_sites</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">new_sites</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">known_sites</span>
+                <span class="o">-</span> <span class="n">old_signature</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">())</span>
+                <span class="o">-</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">}</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_sites</span> <span class="ow">and</span> <span class="n">agent</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">warned_types</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Adding rule &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; introduced new sites to </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">new_sites</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="ne">RuntimeWarning</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">warned_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">new_sites</span><span class="p">:</span>
+                <span class="n">default_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">interface</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">default_state</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="n">site</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_track_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="System.remove_rule">
@@ -465,8 +525,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_track_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Track components mentioned in the left hand side of a Rule.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
-            <span class="c1"># TODO: For efficiency check for isomorphism with already-tracked components</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_track_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Track the Components in the given expression.</span>
@@ -524,6 +584,26 @@
         <span class="c1"># Update monitor</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="System.apply">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply a transformation immediately for a specified number of times.</span>
+
+<span class="sd">        Unlike `update`, this does not advance simulation time or use stochastic</span>
+<span class="sd">        selection — the rule fires exactly ``n`` times using randomly chosen</span>
+<span class="sd">        embeddings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            transformation: Kappa string representation of the rule.</span>
+<span class="sd">            n: Number of times to apply the rule.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rule</span> <span class="o">=</span> <span class="n">Rule</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">transformation</span> <span class="o">+</span> <span class="s2">&quot; @ 0&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">update</span> <span class="o">=</span> <span class="n">Rule</span><span class="o">.</span><span class="n">_select</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">update</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_apply_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="System.update_via_kasim">

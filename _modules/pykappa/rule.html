@@ -223,10 +223,13 @@
         <span class="n">rule_embedding</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
-            <span class="n">component_embeddings</span> <span class="o">=</span> <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
-            <span class="k">assert</span> <span class="p">(</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">component_embeddings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;A rule with no valid embeddings was selected: </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">component_embeddings</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">_embeddings</span>
+                <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">mixture</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">component_embeddings</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="n">component_embedding</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">component_embeddings</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">rule_agent</span> <span class="ow">in</span> <span class="n">component_embedding</span><span class="p">:</span>
