@@ -44,6 +44,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Self</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
@@ -542,19 +543,41 @@
                 <span class="s2">&quot;PyKappa normalizes reactivities accordingly: results may differ from KaSim.&quot;</span>
             <span class="p">)</span>
 
+        <span class="n">history</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the observable history</span>
+
         <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdirname</span><span class="p">:</span>
-            <span class="n">output_ka_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;out.ka&quot;</span><span class="p">)</span>
-            <span class="n">output_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;%mod: alarm </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1"> do $SNAPSHOT &quot;</span><span class="si">{</span><span class="n">output_ka_path</span><span class="si">}</span><span class="s1">&quot;;&#39;</span>
-            <span class="n">input_ka_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;in.ka&quot;</span><span class="p">)</span>
+            <span class="n">snap_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;snap.ka&quot;</span><span class="p">)</span>
+            <span class="n">out_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;out.csv&quot;</span><span class="p">)</span>
+            <span class="n">in_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;in.ka&quot;</span><span class="p">)</span>
+
+            <span class="n">output_cmd</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;%mod: alarm </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1"> do $SNAPSHOT &quot;</span><span class="si">{</span><span class="n">snap_path</span><span class="si">}</span><span class="s1">&quot;;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s2">&quot;%mod: [true] do $PLOTENTRY; repeat [true]&quot;</span>
+            <span class="p">)</span>
 
             <span class="c1"># Run KaSim</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_ka_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">output_cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KaSim </span><span class="si">{</span><span class="n">input_ka_path</span><span class="si">}</span><span class="s2"> -l </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2"> -d </span><span class="si">{</span><span class="n">tmpdirname</span><span class="si">}</span><span class="s2"> &gt; /dev/null&quot;</span><span class="p">)</span>
+
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;KaSim </span><span class="si">{</span><span class="n">in_path</span><span class="si">}</span><span class="s2"> -l </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot; -d </span><span class="si">{</span><span class="n">tmpdirname</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="s2"> &gt; /dev/null&quot;</span>
+            <span class="p">)</span>
 
             <span class="c1"># Read KaSim output</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_ka_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">snap_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">header</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;[T]&quot;</span><span class="p">)</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">header</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+                <span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span>
+
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                    <span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+                        <span class="n">history</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 
         <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span>
@@ -568,8 +591,11 @@
         <span class="c1"># Apply the update</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_mixture</span><span class="p">(</span><span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">output_kappa_str</span><span class="p">)</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="n">time</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+        <span class="c1"># Update the monitor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">history</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">values</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="System.kd_table">
