@@ -125,8 +125,6 @@ class Mixture:
         self,
         pattern: Pattern | Component | str,
         n_copies: int = 1,
-        *,
-        signature: Optional[dict[str, frozenset[str]]] = None,
     ) -> None:
         """Add instances of a pattern or component to the mixture.
 
@@ -135,7 +133,7 @@ class Mixture:
         """
         if isinstance(pattern, Component):
             for _ in range(n_copies):
-                self._add_component(pattern, signature)
+                self._add_component(pattern)
             return
 
         if isinstance(pattern, str):
@@ -144,56 +142,11 @@ class Mixture:
         assert pattern.instantiable, "Pattern isn't specific enough to instantiate."
         for _ in range(n_copies):
             for component in pattern.components:
-                self._add_component(component, signature)
+                self._add_component(component)
 
-    def _instantiate_agent(
-        self, agent: Agent, signature: Optional[dict[str, frozenset[str]]]
-    ) -> Agent:
-        """Create a mixture agent from a pattern agent, completing its interface from the signature.
-
-        Raises:
-            ValueError: If agent has unknown sites or an undeclared type.
-        """
-        if not signature:
-            return agent.detached()
-
-        known_sites = signature.get(agent.type)
-        if known_sites is None:
-            raise ValueError(
-                f"Agent type '{agent.type}' is not declared by any rule. "
-                f"Known agent types: {set(signature)}"
-            )
-
-        unknown_sites = {s.label for s in agent} - known_sites
-        if unknown_sites:
-            raise ValueError(
-                f"Agent '{agent.type}' has unknown site(s) {unknown_sites}. "
-                f"Known sites for this type: {known_sites}"
-            )
-
-        existing_sites = {s.label: Site(s.label, s.state, ".") for s in agent}
-        new_agent = Agent(
-            agent.type,
-            list(existing_sites.values())
-            + [
-                Site(label, "?", ".")
-                for label in known_sites
-                if label not in existing_sites
-            ],
-        )
-        for site in new_agent:
-            site.agent = new_agent
-        return new_agent
-
-    def _add_component(
-        self,
-        component: Component,
-        signature: Optional[dict[str, frozenset[str]]] = None,
-    ) -> None:
+    def _add_component(self, component: Component) -> None:
         component_ordered = list(component.agents)
-        new_agents = [
-            self._instantiate_agent(agent, signature) for agent in component_ordered
-        ]
+        new_agents = [agent.detached() for agent in component_ordered]
         new_edges = set()
 
         for i, agent in enumerate(component_ordered):

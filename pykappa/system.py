@@ -394,7 +394,47 @@ class System:
 
     def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
         """Add instances of a pattern or component to the mixture using inferred agent signatures."""
-        self.mixture.add(pattern, n_copies, signature=self.signatures)
+        if isinstance(pattern, str):
+            pattern = Pattern.from_kappa(pattern)
+        components = [pattern] if isinstance(pattern, Component) else pattern.components
+        for component in components:
+            self.mixture.add(self._complete(component), n_copies)
+
+    def _complete(self, component: Component) -> Component:
+        """Return a copy of the component with agent interfaces filled in from inferred signatures.
+
+        Raises:
+            ValueError: If an agent type is undeclared or has sites not in the signature.
+        """
+        sig = self.signatures
+        ordered = list(component.agents)
+        agent_map: dict = {}
+        for agent in ordered:
+            new = agent.detached()
+            if sig:
+                known = sig.get(agent.type)
+                if known is None:
+                    raise ValueError(
+                        f"Agent type '{agent.type}' is not declared by any rule. "
+                        f"Known agent types: {set(sig)}"
+                    )
+                unknown = {s.label for s in agent} - known
+                if unknown:
+                    raise ValueError(
+                        f"Agent '{agent.type}' has unknown site(s) {unknown}. "
+                        f"Known sites for this type: {known}"
+                    )
+                for label in known:
+                    if label not in new.interface:
+                        state = self.site_defaults.get(agent.type, {}).get(label, "?")
+                        new.interface[label] = site = Site(label, state, ".")
+                        site.agent = new
+            agent_map[agent] = new
+        for agent in ordered:
+            for site in agent:
+                if site.coupled:
+                    agent_map[agent][site.label].partner = agent_map[site.partner.agent][site.partner.label]
+        return Component(list(agent_map.values()))
 
     def add_rule(self, rule: Rule | str, name: Optional[str] = None) -> None:
         """Add a new rule to the system.
