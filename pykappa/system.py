@@ -603,8 +603,8 @@ class System:
             in_path = os.path.join(tmpdirname, "in.ka")
 
             output_lines = [
-                self.kappa_str, 
-                f'%mod: alarm {time} do $SNAPSHOT "{snap_path}";'
+                self.kappa_str,
+                f'%mod: alarm {time} do $SNAPSHOT "{snap_path}";',
             ]
             if self.observables:
                 output_lines.append("%mod: [true] do $PLOTENTRY; repeat [true]")
