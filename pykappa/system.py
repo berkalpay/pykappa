@@ -480,29 +480,29 @@ class System:
         history = None  # the observable history
 
         with tempfile.TemporaryDirectory() as tmpdirname:
-            snap_ka_path = os.path.join(tmpdirname, "snap.ka")
-            obs_ka_path = os.path.join(tmpdirname, "obs.ka")
-            input_ka_path = os.path.join(tmpdirname, "in.ka")
+            snap_path = os.path.join(tmpdirname, "snap.ka")
+            out_path = os.path.join(tmpdirname, "out.csv")
+            in_path = os.path.join(tmpdirname, "in.ka")
 
             output_cmd = (
-                f'%mod: alarm {time} do $SNAPSHOT "{snap_ka_path}";\n'
+                f'%mod: alarm {time} do $SNAPSHOT "{snap_path}";\n'
                 "%mod: [true] do $PLOTENTRY; repeat [true]"
             )
 
             # Run KaSim
-            with open(input_ka_path, "w") as f:
+            with open(in_path, "w") as f:
                 f.write(f"{self.kappa_str}\n{output_cmd}")
 
             os.system(
-                f"KaSim {input_ka_path} -l {time}"
-                f" -d {tmpdirname} -o {obs_ka_path} > /dev/null"
+                f"KaSim {in_path} -l {time}"
+                f" -d {tmpdirname} -o {out_path} > /dev/null"
             )
 
             # Read KaSim output
-            with open(snap_ka_path) as f:
+            with open(snap_path) as f:
                 content = f.read()
 
-            with open(obs_ka_path) as f:
+            with open(out_path) as f:
                 reader = csv.reader(f)
                 header = next(row for row in reader if row and row[0] == "[T]")
                 columns = ["time", *header[1:]]
