@@ -335,6 +335,11 @@ class System:
 
         kappa_list = []
 
+        # Append the inferred agent signature at the top
+        for agent, sites in self.signatures.items():
+            sig = ", ".join(sites)
+            kappa_list.append(f"%agent: {agent}({sig})")
+
         # Format reversible rules with <-> notation
         pairs = self._reversible_rules
         paired = {name for pair in pairs for name in pair}
