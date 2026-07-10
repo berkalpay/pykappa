@@ -599,17 +599,19 @@ class System:
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             snap_path = os.path.join(tmpdirname, "snap.ka")
-            out_path = os.path.join(tmpdirname, "out.csv")
+            out_path = os.path.join(tmpdirname, "out.ka")
             in_path = os.path.join(tmpdirname, "in.ka")
 
-            output_cmd = (
-                f'%mod: alarm {time} do $SNAPSHOT "{snap_path}";\n'
-                "%mod: [true] do $PLOTENTRY; repeat [true]"
-            )
+            output_lines = [
+                self.kappa_str, 
+                f'%mod: alarm {time} do $SNAPSHOT "{snap_path}";'
+            ]
+            if self.observables:
+                output_lines.append("%mod: [true] do $PLOTENTRY; repeat [true]")
 
             # Run KaSim
             with open(in_path, "w") as f:
-                f.write(f"{self.kappa_str}\n{output_cmd}")
+                f.write("\n".join(output_lines))
 
             os.system(
                 f"KaSim {in_path} -l {time}"
@@ -620,16 +622,17 @@ class System:
             with open(snap_path) as f:
                 content = f.read()
 
-            with open(out_path) as f:
-                reader = csv.reader(f)
-                header = next(row for row in reader if row and row[0] == "[T]")
-                columns = ["time", *header[1:]]
-                history = {name: [] for name in columns}
+            if self.observables:
+                with open(out_path) as f:
+                    reader = csv.reader(f)
+                    header = next(row for row in reader if row and row[0] == "[T]")
+                    columns = ["time", *header[1:]]
+                    history = {name: [] for name in columns}
 
-                for row in reader:
-                    history["time"].append(self.time + float(row[0]))
-                    for name, value in zip(columns[1:], row[1:]):
-                        history[name].append(float(value))
+                    for row in reader:
+                        history["time"].append(self.time + float(row[0]))
+                        for name, value in zip(columns[1:], row[1:]):
+                            history[name].append(float(value))
 
         content = content.replace(
             ",\n", ", "
@@ -645,7 +648,7 @@ class System:
         self.time += time
 
         # Update the monitor
-        if self.monitor is not None:
+        if self.monitor is not None and history is not None:
             for name, values in history.items():
                 self.monitor.history[name].extend(values)
 
