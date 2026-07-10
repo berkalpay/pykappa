@@ -678,8 +678,8 @@
             <span class="n">in_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;in.ka&quot;</span><span class="p">)</span>
 
             <span class="n">output_lines</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">,</span> 
-                <span class="sa">f</span><span class="s1">&#39;%mod: alarm </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1"> do $SNAPSHOT &quot;</span><span class="si">{</span><span class="n">snap_path</span><span class="si">}</span><span class="s1">&quot;;&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;%mod: alarm </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1"> do $SNAPSHOT &quot;</span><span class="si">{</span><span class="n">snap_path</span><span class="si">}</span><span class="s1">&quot;;&#39;</span><span class="p">,</span>
             <span class="p">]</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">:</span>
                 <span class="n">output_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;%mod: [true] do $PLOTENTRY; repeat [true]&quot;</span><span class="p">)</span>
