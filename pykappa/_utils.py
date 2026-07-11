@@ -51,12 +51,6 @@ class Counted:
         self.id = Counted.counter
         Counted.counter += 1
 
-    def __hash__(self):
-        return self.id
-
-    def __eq__(self, other):
-        return hash(self) == hash(other)
-
 
 T = TypeVar("T")  # Member type of `IndexedSet`
 Property = Callable[[T], Iterable[Hashable]]  # Returns the property values of an item
