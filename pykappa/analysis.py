@@ -2,6 +2,7 @@ import math
 import bisect
 import colorsys
 import shutil
+import subprocess
 import tempfile
 import os
 import re
@@ -223,11 +224,11 @@ def _contact_map(system: "System") -> Source:
         with open(inp, "w") as f:
             f.write(system.kappa_str)
 
-        os.system(
-            f"KaSa {inp} --reset-all --compute-contact-map "
-            f"--output-directory {tmpdir} "
-            f"--output-contact-map out"
-            "> /dev/null"
+        subprocess.run(
+            ["KaSa", inp, "--reset-all", "--compute-contact-map",
+             "--output-directory", tmpdir, "--output-contact-map", "out"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
         )
 
         with open(os.path.join(tmpdir, "out.dot")) as f:

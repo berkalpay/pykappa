@@ -4,6 +4,7 @@ import tempfile
 import random
 import warnings
 import csv
+import subprocess
 from collections import defaultdict
 from typing import Optional, Iterable, Self
 from graphviz import Source
@@ -593,9 +594,10 @@ class System:
             with open(in_path, "w") as f:
                 f.write("\n".join(output_lines))
 
-            os.system(
-                f"KaSim {in_path} -l {time}"
-                f" -d {tmpdirname} -o {out_path} > /dev/null"
+            subprocess.run(
+                ["KaSim", in_path, "-l", str(time), "-d", tmpdirname, "-o", out_path],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
             )
 
             # Read KaSim output
