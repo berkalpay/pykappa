@@ -1,4 +1,5 @@
 import math
+import bisect
 import colorsys
 import shutil
 import tempfile
@@ -270,8 +271,6 @@ class Monitor:
         Raises:
             AssertionError: If simulation hasn't reached the specified time.
         """
-        import bisect
-
         times: list[int] = list(self.history["time"])
         if time is None:
             time = times[-1]
