@@ -1,34 +1,19 @@
 from pathlib import Path
-from lark import Lark, ParseTree, Tree, Token, Transformer
+from lark import Lark, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, SiteType
 from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa._expression import Expression
 
-
-class KappaParser:
-    """Parser for Kappa language files and expressions.
-
-    Note:
-        Don't instantiate directly: use the global kappa_parser instance.
-    """
-
-    def __init__(self):
-        self._parser = Lark.open(
-            str(Path(__file__).parent / "kappa.lark"),
-            rel_to=__file__,
-            parser="earley",
-            lexer="dynamic",
-            start="kappa_input",
-            propagate_positions=False,
-            maybe_placeholders=False,
-        )
-
-    def parse(self, text: str) -> ParseTree:
-        return self._parser.parse(text)
-
-
-kappa_parser = KappaParser()
+kappa_parser = Lark.open(
+    str(Path(__file__).parent / "kappa.lark"),
+    rel_to=__file__,
+    parser="earley",
+    lexer="dynamic",
+    start="kappa_input",
+    propagate_positions=False,
+    maybe_placeholders=False,
+)
 
 
 class KappaTransformer(Transformer):
