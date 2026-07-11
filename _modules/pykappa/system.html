@@ -314,14 +314,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">expr</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The names of all observables and variables.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;observables&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">),</span>
-            <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">),</span>
-        <span class="p">}</span>
-
-    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The complete site interface for each agent type inferrred from all rules.&quot;&quot;&quot;</span>
         <span class="n">sites_by_type</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
@@ -571,43 +563,34 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform one simulation step.&quot;&quot;&quot;</span>
 
-        <span class="c1"># Initialize monitor if required</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 
-        <span class="c1"># Wait</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">reactivity</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactivity</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;system has no reactivity: infinite wait time&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span>
-            <span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;system has no reactivity&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">expovariate</span><span class="p">(</span><span class="n">reactivity</span><span class="p">)</span>
+
+        <span class="n">rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="n">rule</span><span class="o">.</span><span class="n">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Apply the rule</span>
+        <span class="n">update</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">_select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">update</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tallies</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)][</span><span class="s2">&quot;applied&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">update</span><span class="o">.</span><span class="n">agents_to_add</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_signature</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_apply_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">expr</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">token_updates</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="n">expr</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">expovariate</span><span class="p">(</span><span class="n">reactivity</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tallies</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)][</span><span class="s2">&quot;failed&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="c1"># Check for reactivity</span>
-        <span class="k">if</span> <span class="n">reactivity</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">rule</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;system has no reactivity: no rule applied&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Choose a rule</span>
-            <span class="n">rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
-                <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
-                <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="n">rule</span><span class="o">.</span><span class="n">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span>
-            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-            <span class="c1"># Apply the rule</span>
-            <span class="k">if</span> <span class="n">rule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">update</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">_select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">update</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">tallies</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)][</span><span class="s2">&quot;applied&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">update</span><span class="o">.</span><span class="n">agents_to_add</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_signature</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_apply_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">expr</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">token_updates</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="n">expr</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">tallies</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)][</span><span class="s2">&quot;failed&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="c1"># Update monitor</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
 
