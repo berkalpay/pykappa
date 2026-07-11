@@ -494,43 +494,34 @@ class System:
     def update(self) -> None:
         """Perform one simulation step."""
 
-        # Initialize monitor if required
         if self.monitor is not None and not self.monitor.history["time"]:
             self.monitor.update()
 
-        # Wait
         if (reactivity := self.reactivity) == 0:
-            warnings.warn(
-                "system has no reactivity: infinite wait time", RuntimeWarning
-            )
+            warnings.warn("system has no reactivity", RuntimeWarning)
+            if self.monitor is not None:
+                self.monitor.update()
+            return
+
+        self.time += self._rng.expovariate(reactivity)
+
+        rule = self._rng.choices(
+            list(self.rules.values()),
+            weights=[rule.reactivity(self) for rule in self.rules.values()],
+        )[0]
+
+        # Apply the rule
+        update = rule._select(self.mixture)
+        if update is not None:
+            self.tallies[str(rule)]["applied"] += 1
+            for agent in update.agents_to_add:
+                self._enforce_signature(agent)
+            self.mixture._apply_update(update)
+            for expr, name in rule.token_updates:
+                self.tokens[name] += expr.evaluate(self)
         else:
-            self.time += self._rng.expovariate(reactivity)
+            self.tallies[str(rule)]["failed"] += 1
 
-        # Check for reactivity
-        if reactivity == 0:
-            rule = None
-            warnings.warn("system has no reactivity: no rule applied", RuntimeWarning)
-        else:
-            # Choose a rule
-            rule = self._rng.choices(
-                list(self.rules.values()),
-                weights=[rule.reactivity(self) for rule in self.rules.values()],
-            )[0]
-
-            # Apply the rule
-            if rule is not None:
-                update = rule._select(self.mixture)
-                if update is not None:
-                    self.tallies[str(rule)]["applied"] += 1
-                    for agent in update.agents_to_add:
-                        self._enforce_signature(agent)
-                    self.mixture._apply_update(update)
-                    for expr, name in rule.token_updates:
-                        self.tokens[name] += expr.evaluate(self)
-                else:
-                    self.tallies[str(rule)]["failed"] += 1
-
-        # Update monitor
         if self.monitor is not None:
             self.monitor.update()
 
