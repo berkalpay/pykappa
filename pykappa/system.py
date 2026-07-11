@@ -262,14 +262,6 @@ class System:
             self.observables[name] = expr
 
     @property
-    def names(self) -> dict[str, set[str]]:
-        """The names of all observables and variables."""
-        return {
-            "observables": set(self.observables),
-            "variables": set(self.variables),
-        }
-
-    @property
     def signatures(self) -> dict[str, frozenset[str]]:
         """The complete site interface for each agent type inferrred from all rules."""
         sites_by_type: dict[str, set[str]] = defaultdict(set)
