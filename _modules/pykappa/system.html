@@ -45,6 +45,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Self</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
@@ -108,10 +109,8 @@
 
         <span class="n">variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">observables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">token_declarations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">token_inits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">rules</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Rule</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">system_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">inits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Expression</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
@@ -150,7 +149,7 @@
                 <span class="k">pass</span>  <span class="c1"># ignore agent signatures</span>
 
             <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;declared_token&quot;</span><span class="p">:</span>
-                <span class="n">token_declarations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="k">pass</span>  <span class="c1"># token declarations are handled via init_declaration</span>
 
             <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;init_declaration&quot;</span><span class="p">:</span>
                 <span class="n">amount</span> <span class="o">=</span> <span class="n">ExpressionTransformer</span><span class="o">.</span><span class="n">from_tree</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -162,15 +161,7 @@
                     <span class="n">inits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">amount</span><span class="p">,</span> <span class="n">pattern</span><span class="p">))</span>
 
             <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;definition&quot;</span><span class="p">:</span>
-                <span class="n">reserved_name_tree</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">assert</span> <span class="n">reserved_name_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;reserved_name&quot;</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">reserved_name_tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
-
-                <span class="n">value_tree</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">assert</span> <span class="n">value_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value_tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-
-                <span class="n">system_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">pass</span>  <span class="c1"># %def: directives not used</span>
 
             <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;pattern&quot;</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -678,9 +669,10 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_lines</span><span class="p">))</span>
 
-            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;KaSim </span><span class="si">{</span><span class="n">in_path</span><span class="si">}</span><span class="s2"> -l </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot; -d </span><span class="si">{</span><span class="n">tmpdirname</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="s2"> &gt; /dev/null&quot;</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;KaSim&quot;</span><span class="p">,</span> <span class="n">in_path</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">out_path</span><span class="p">],</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
             <span class="p">)</span>
 
             <span class="c1"># Read KaSim output</span>
