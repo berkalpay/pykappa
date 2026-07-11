@@ -225,8 +225,16 @@ def _contact_map(system: "System") -> Source:
             f.write(system.kappa_str)
 
         subprocess.run(
-            ["KaSa", inp, "--reset-all", "--compute-contact-map",
-             "--output-directory", tmpdir, "--output-contact-map", "out"],
+            [
+                "KaSa",
+                inp,
+                "--reset-all",
+                "--compute-contact-map",
+                "--output-directory",
+                tmpdir,
+                "--output-contact-map",
+                "out",
+            ],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
