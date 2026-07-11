@@ -125,7 +125,9 @@ class IndexedSet(set[T], Generic[T]):
 
         self._item_list.append(item)
         self._item_to_pos[item] = len(self._item_list) - 1
-        self._update_indices_for_item(item, adding=True)
+        for prop_name, prop in self.properties.items():
+            for val in prop(item):
+                self.indices[prop_name][val].add(item)
 
     def remove(self, item: T):
         assert item in self
@@ -137,20 +139,12 @@ class IndexedSet(set[T], Generic[T]):
             self._item_list[pos] = last_item
             self._item_to_pos[last_item] = pos
 
-        self._update_indices_for_item(item, adding=False)
-
-    def _update_indices_for_item(self, item: T, adding: bool):
-        """Update property indices when adding or removing an item."""
         for prop_name, prop in self.properties.items():
             for val in prop(item):
                 index = self.indices[prop_name][val]
-
-                if adding:
-                    index.add(item)
-                else:
-                    index.remove(item)
-                    if not index:
-                        del self.indices[prop_name][val]
+                index.remove(item)
+                if not index:
+                    del self.indices[prop_name][val]
 
     def remove_by(self, prop_name: str, value: Any):
         """Remove all set members whose given property matches `value`."""
