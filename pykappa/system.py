@@ -60,10 +60,8 @@ class System:
 
         variables: dict[str, Expression] = {}
         observables: dict[str, Expression] = {}
-        token_declarations: list[str] = []
         token_inits: list[tuple[str, Expression]] = []
         rules: list[Rule] = []
-        system_params: dict[str, int] = {}
         inits: list[tuple[Expression, Pattern]] = []
 
         for child in input_tree.children:
@@ -102,7 +100,7 @@ class System:
                 pass  # ignore agent signatures
 
             elif tag == "declared_token":
-                token_declarations.append(str(child.children[0].children[0]))
+                pass  # token declarations are handled via init_declaration
 
             elif tag == "init_declaration":
                 amount = ExpressionTransformer.from_tree(child.children[0])
@@ -114,15 +112,7 @@ class System:
                     inits.append((amount, pattern))
 
             elif tag == "definition":
-                reserved_name_tree = child.children[0]
-                assert reserved_name_tree.data == "reserved_name"
-                name = reserved_name_tree.children[0].value.strip("'\"")
-
-                value_tree = child.children[1]
-                assert value_tree.data == "value"
-                value = int(value_tree.children[0].value)
-
-                system_params[name] = value
+                pass  # %def: directives not used
 
             elif tag == "pattern":
                 raise NotImplementedError
