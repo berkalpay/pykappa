@@ -193,36 +193,17 @@ def test_system_manipulation():
     system.mixture.add(component_to_remove)
     assert system["total_agents"] == total_agents_pre_removal
 
-    # Set a new variable
-    system["twiceA"] = "2 * 'A'"
-    assert system["twiceA"] == 2 * system["A"]
+    # Update an existing variable to a new numeric value
+    system["total_agents"] = 0
+    assert system["total_agents"] == 0
     system.update()
-    assert system["twiceA"] == 2 * system["A"]
+    assert system["total_agents"] == 0
 
-    # Update an observable
-    system["A"] = 0
+    with pytest.raises(KeyError):
+        system["A"] = 0
 
-    # Set a new observable
-    system["C"] = "|C()|"
-    assert system["C"] == 0
-    system.update()
-    assert system["C"] == 0
-
-    # Add a rule
-    system.add_rule("B() -> C() @ 1000", name="new")
-    while system.reactivity:
-        system.update()
-    assert system["B"] == 0 and system["C"] == 11
-
-    # Remove rules
-    system.remove_rule("r0")
-    system.remove_rule("new")
-    system.add_rule("C() -> B(x[.]) @ 1000")
-    while system.reactivity:
-        system.update()
-        print(system.tallies_str)
-        print(f"A: {system["A"]}, B: {system["B"]}, C: {system["C"]}\n")
-    assert system["C"] == 0 and system["B"] == 11
+    with pytest.raises(KeyError):
+        system["new_obs"] = "|A()|"
 
 
 def test_reproducibility_from_initialization():
@@ -429,22 +410,6 @@ def test_signature_drives_interface_completion():
     Mixture().add("A(x[1]), B(y[1])")  # bare mixture: no constraints
 
 
-def test_signature_expands_on_add_rule():
-    system = System.from_kappa(
-        {"A()": 1},
-        rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0"],
-    )
-    with pytest.raises(ValueError, match="unknown site"):
-        system.add("A(y[.])", 1)
-    with pytest.raises(ValueError, match="not declared"):
-        system.add("D()", 1)
-    with pytest.warns(RuntimeWarning, match="introduced new sites to A: y"):
-        system.add_rule("A(y[.]), C(y[.]) -> A(y[1]), C(y[1]) @ 1.0")
-    assert "y" in system.signatures["A"]
-    assert all("y" in a.interface for a in system.mixture.agents if a.type == "A")
-    system.add("A(y[.])", 1)  # no error now
-
-
 @pytest.mark.parametrize(
     "make_system",
     [
@@ -468,13 +433,14 @@ def test_undeclared_agent_and_site_rejected():
 
 
 def test_site_defaults():
-    system = System.from_kappa({"A()": 1})
-    system.set_site_defaults("A", x="x", y="p", z="u")
-    with pytest.warns(RuntimeWarning, match="introduced new sites to A: x, y"):
-        system.add_rule("A(x[.]), A(y[.]) -> A(x[1]), A(y[1]) @ 1")
-    with pytest.warns(RuntimeWarning, match="introduced new sites to A: z"):
-        system.add_rule("A(z[.]), B(z[.]) -> A(z[1]), B(z[1]) @ 1")
-
+    system = System.from_kappa(
+        {"A()": 1},
+        rules=[
+            "A(x[.]), A(y[.]) -> A(x[1]), A(y[1]) @ 1",
+            "A(z[.]), B(z[.]) -> A(z[1]), B(z[1]) @ 1",
+        ],
+        site_defaults={"A": {"x": "x", "y": "p", "z": "u"}},
+    )
     agent = system.mixture.agents[0]
     assert agent["x"].state == "x"
     assert agent["y"].state == "p"

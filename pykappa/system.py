@@ -6,6 +6,7 @@ import warnings
 import csv
 import subprocess
 from collections import defaultdict
+from functools import cached_property
 from typing import Optional, Iterable, Self
 from graphviz import Source
 
@@ -243,25 +244,21 @@ class System:
                 f"Name {name} doesn't correspond to a declared observable or variable"
             )
 
-    def __setitem__(self, name: str, value: str | float):
-        """Set or update an observable or variable from a Kappa string or float value.
+    def __setitem__(self, name: str, value: float) -> None:
+        """Update an existing variable to a new numeric value.
 
         Args:
-            name: Name to assign to the expression.
-            value: Kappa expression string or float value.
-        """
-        expr = (
-            Expression("literal", value=value)
-            if isinstance(value, (int, float))
-            else Expression.from_kappa(value)
-        )
-        self._track_expression(expr)
-        if name in self.variables:
-            self.variables[name] = expr
-        else:  # Set new expressions as observables
-            self.observables[name] = expr
+            name: Name of a declared variable.
+            value: New numeric value.
 
-    @property
+        Raises:
+            KeyError: If the name is not a declared variable.
+        """
+        if name not in self.variables:
+            raise KeyError(f"'{name}' is not a declared variable")
+        self.variables[name] = Expression("literal", value=value)
+
+    @cached_property
     def signatures(self) -> dict[str, frozenset[str]]:
         """The complete site interface for each agent type inferrred from all rules."""
         sites_by_type: dict[str, set[str]] = defaultdict(set)
@@ -285,7 +282,7 @@ class System:
             header=["Rule", "Applied", "Failed"],
         )
 
-    @property
+    @cached_property
     def _reversible_rules(self) -> list[tuple[str, str]]:
         """Find forward/reverse rule pairs by checking pattern symmetry."""
         names = list(self.rules.keys())
@@ -360,20 +357,12 @@ class System:
         """Set the system's mixture and update tracking."""
         self.mixture = mixture
         for rule in self.rules.values():
-            self._track_rule(rule)
-        for observable in self.observables.values():
-            self._track_expression(observable)
-        for variable in self.variables.values():
-            self._track_expression(variable)
-
-    def set_site_defaults(self, agent_type: str, **sites) -> None:
-        """Set default states for sites of an agent type.
-
-        Args:
-            agent_type: Name of the agent type.
-            **sites: Site name → default state mapping (e.g., a="p", b="u").
-        """
-        self.site_defaults[agent_type] = sites
+            for component in rule.left.components:
+                if component not in mixture._embeddings:
+                    mixture._track_component(component)
+        for expr in [*self.observables.values(), *self.variables.values()]:
+            for component_expr in expr.filter("component_pattern"):
+                mixture._track_component(component_expr.attrs["value"])
 
     def _enforce_signature(self, agent: "Agent") -> None:
         """Validate agent type and sites against the inferred signature and fill missing sites.
@@ -419,72 +408,6 @@ class System:
             for agent in copied.agents:
                 self._enforce_signature(agent)
             self.mixture.add(copied, n_copies)
-
-    def add_rule(self, rule: Rule | str, name: Optional[str] = None) -> None:
-        """Add a new rule to the system.
-
-        Args:
-            rule: Rule object or Kappa string representation.
-            name: Name to assign to the rule. If None, a default name is generated.
-
-        Raises:
-            AssertionError: If a rule with the given name already exists.
-        """
-        if name is None:
-            i = 0
-            while (name := f"r{i}") in self.rules:
-                i += 1
-        assert name not in self.rules, "Rule {name} already exists in the system"
-
-        if isinstance(rule, str):
-            rule = Rule.from_kappa(rule)
-
-        if type(rule) in [UnimolecularRule, BimolecularRule]:
-            self.mixture.enable_component_tracking()
-
-        self.rules[name] = rule
-        warned_types: set[str] = set()
-        for agent in self.mixture.agents:
-            new_sites = (
-                self.signatures.get(agent.type, frozenset()) - agent.interface.keys()
-            )
-            if new_sites and agent.type not in warned_types:
-                warnings.warn(
-                    f"Adding rule '{name}' introduced new sites to {agent.type}: {', '.join(sorted(new_sites))}",
-                    RuntimeWarning,
-                )
-                warned_types.add(agent.type)
-            self._enforce_signature(agent)
-        self._track_rule(rule)
-
-    def remove_rule(self, name: str) -> None:
-        """Remove a rule by setting its rate to zero.
-
-        Raises:
-            AssertionError: If the rule already has zero rate.
-            KeyError: If no rule with the given name exists.
-        """
-        assert self.rules[name].rate(self) > 0, "Rule {name} is already null"
-        try:
-            self.rules[name].rate_expression = Expression.from_kappa("0")
-        except KeyError as e:
-            e.add_note("No rule {name} exists in the system")
-            raise e
-
-    def _track_rule(self, rule: Rule) -> None:
-        """Track components mentioned in the left hand side of a Rule."""
-        for component in rule.left.components:
-            if component not in self.mixture._embeddings:
-                self.mixture._track_component(component)
-
-    def _track_expression(self, expression: Expression) -> None:
-        """Track the Components in the given expression.
-
-        Note:
-            Doesn't track patterns nested by indirection - see the filter method.
-        """
-        for component_expr in expression.filter("component_pattern"):
-            self.mixture._track_component(component_expr.attrs["value"])
 
     @property
     def reactivity(self) -> float:

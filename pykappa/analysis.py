@@ -270,8 +270,6 @@ class Monitor:
         """Record current time and observable values."""
         self.history["time"].append(self.system.time)
         for obs_name in self.system.observables:
-            if obs_name not in self.history:
-                self.history[obs_name] = [None] * (len(self.history["time"]) - 1)
             self.history[obs_name].append(self.system[obs_name])
 
     def measure(self, observable_name: str, time: Optional[float] = None):
