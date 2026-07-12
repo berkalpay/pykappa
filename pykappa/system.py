@@ -370,14 +370,13 @@ class System:
         Raises:
             ValueError: If the agent type is unknown or has sites not in the signature.
         """
-        sig = self.signatures
-        if not sig:
+        if not self.signatures:
             return
-        known = sig.get(agent.type)
+        known = self.signatures.get(agent.type)
         if known is None:
             raise ValueError(
                 f"Agent type '{agent.type}' is not declared by any rule. "
-                f"Known agent types: {set(sig)}"
+                f"Known agent types: {set(self.signatures)}"
             )
         unknown = {s.label for s in agent} - known
         if unknown:
