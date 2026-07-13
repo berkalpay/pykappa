@@ -54,54 +54,36 @@ def test_rule_len_from_kappa(rule_str, rule_len):
     assert len(Rule.list_from_kappa(rule_str)) == rule_len
 
 
-def test_ambi_rule_from_kappa():
-    rules = Rule.list_from_kappa(
-        "A(a{p}), B(b[1]), C(c[1]) -> A(a{u}), B(b[.]), C(c[.]) @ 1.0 {2.0}"
-    )
-    assert len(rules) == 2
-    assert isinstance(rules[0], BimolecularRule)
-    assert isinstance(rules[1], UnimolecularRule)
-    assert rules[0].rate_expression.evaluate() == 1.0
-    assert rules[1].rate_expression.evaluate() == 2.0
-
-
-def test_uni_rule_from_kappa():
-    rules = Rule.list_from_kappa(
-        "A(a{p}), B(b[1]), C(c[1]) -> A(a{u}), B(b[.]), C(c[.]) @ 0.0 {2.0}"
-    )
-    assert len(rules) == 1
-    assert isinstance(rules[0], UnimolecularRule)
-    assert rules[0].rate_expression.evaluate() == 2.0
-
-
-def test_bi_rule_from_kappa():
-    rules = Rule.list_from_kappa(
-        "A(a{p}), B(b[1]), C(c[1]) -> A(a{u}), B(b[.]), C(c[.]) @ 1.0 {0.0}"
-    )
-    assert len(rules) == 1
-    assert isinstance(rules[0], BimolecularRule)
-    assert rules[0].rate_expression.evaluate() == 1.0
-
-
-def test_ambi_fr_rule_from_kappa():
-    rules = Rule.list_from_kappa(
-        "A(a{p}), B(b[1]), C(c[1]) <-> A(a{u}), B(b[.]), C(c[.]) @ 1.0 {2.0}, 3.0"
-    )
-    assert len(rules) == 3
-    assert isinstance(rules[0], BimolecularRule)
-    assert isinstance(rules[1], UnimolecularRule)
-    assert rules[0].rate_expression.evaluate() == 1.0
-    assert rules[1].rate_expression.evaluate() == 2.0
-    assert rules[2].rate_expression.evaluate() == 3.0
+@pytest.mark.parametrize(
+    "arrow, rates, expected",
+    [
+        ("->", "1.0 {2.0}", [(BimolecularRule, 1.0), (UnimolecularRule, 2.0)]),
+        ("->", "0.0 {2.0}", [(UnimolecularRule, 2.0)]),
+        ("->", "1.0 {0.0}", [(BimolecularRule, 1.0)]),
+        (
+            "<->",
+            "1.0 {2.0}, 3.0",
+            [(BimolecularRule, 1.0), (UnimolecularRule, 2.0), (None, 3.0)],
+        ),
+    ],
+    ids=["ambiguous", "unimolecular", "bimolecular", "reversible-ambiguous"],
+)
+def test_rule_types_and_rates_from_kappa(arrow, rates, expected):
+    left = "A(a{p}), B(b[1]), C(c[1])"
+    right = "A(a{u}), B(b[.]), C(c[.])"
+    rule_str = f"{left} {arrow} {right} @ {rates}"
+    rules = Rule.list_from_kappa(rule_str)
+    assert len(rules) == len(expected)
+    for rule, (expected_type, expected_rate) in zip(rules, expected, strict=True):
+        if expected_type is not None:
+            assert isinstance(rule, expected_type)
+        assert rule.rate_expression.evaluate() == expected_rate
 
 
 def test_token_updates_parsed():
     rule = Rule.from_kappa("A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) | -1.0 X +1.0 Y @ 1.0")
-    assert len(rule.token_updates) == 2
-    assert rule.token_updates[0][1] == "X"
-    assert rule.token_updates[0][0].evaluate() == pytest.approx(-1.0)
-    assert rule.token_updates[1][1] == "Y"
-    assert rule.token_updates[1][0].evaluate() == pytest.approx(1.0)
+    updates = [(name, expression.evaluate()) for expression, name in rule.token_updates]
+    assert updates == [("X", pytest.approx(-1.0)), ("Y", pytest.approx(1.0))]
 
 
 # System
