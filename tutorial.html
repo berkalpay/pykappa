@@ -169,8 +169,8 @@ Mixture as a Kappa string:
 <div class="highlight"><pre>
 Components in mixture:
 A(x[.])
-B(x[1]), A(x[1])
 A(x[.])
+A(x[1]), B(x[1])
 
 Embeddings in the AB complex: 1
 </pre></div></div>
@@ -239,7 +239,7 @@ AB count after one binding event: 3
 <div class="highlight"><pre>
 Literal expression value: 42
 Math expression value: 20
-Pattern expression: |B(x[1]), A(x[1])|
+Pattern expression: |A(x[1]), B(x[1])|
 </pre></div></div>
 </div>
 <p>The last expression represents the number of AB complexes; it can be evaluated given a system as <code class="docutils literal notranslate"><span class="pre">pattern_expr.evaluate(system)</span></code>.</p>

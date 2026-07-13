@@ -33,9 +33,9 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "INIT_M=50_000           # intial number of mosquitoes;\n",
-    "INIT_N=10_000           # total host population, of which...\n",
-    "INIT_I=100              # are initially infectious, and\n",
+    "INIT_M=5_000            # intial number of mosquitoes;\n",
+    "INIT_N=1_000            # total host population, of which...\n",
+    "INIT_I=10               # are initially infectious, and\n",
     "INIT_S=INIT_N - INIT_I  # are initially susceptible\n",
     "\n",
     "variables = {\n",
@@ -207,7 +207,7 @@
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
+   "display_name": "standard",
    "language": "python",
    "name": "python3"
   },
@@ -221,7 +221,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.14.5"
+   "version": "3.12.3"
   }
  },
  "nbformat": 4,

@@ -47,6 +47,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Self</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
 
@@ -295,25 +296,26 @@
                 <span class="sa">f</span><span class="s2">&quot;Name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> doesn&#39;t correspond to a declared observable or variable&quot;</span>
             <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or update an observable or variable from a Kappa string or float value.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an existing variable to a new numeric value.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name: Name to assign to the expression.</span>
-<span class="sd">            value: Kappa expression string or float value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">expr</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
-            <span class="k">else</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_track_expression</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">expr</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Set new expressions as observables</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">expr</span>
+<span class="sd">            name: Name of a declared variable.</span>
+<span class="sd">            value: New numeric value.</span>
 
-    <span class="nd">@property</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: If the name is not a declared variable.</span>
+<span class="sd">            ValueError: If the declared variable is not a numeric literal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not a declared variable&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;literal&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not a numeric literal and cannot be reassigned&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The complete site interface for each agent type inferrred from all rules.&quot;&quot;&quot;</span>
         <span class="n">sites_by_type</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
@@ -337,7 +339,7 @@
             <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Rule&quot;</span><span class="p">,</span> <span class="s2">&quot;Applied&quot;</span><span class="p">,</span> <span class="s2">&quot;Failed&quot;</span><span class="p">],</span>
         <span class="p">)</span>
 
-    <span class="nd">@property</span>
+    <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_reversible_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find forward/reverse rule pairs by checking pattern symmetry.&quot;&quot;&quot;</span>
         <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -415,23 +417,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the system&#39;s mixture and update tracking.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span> <span class="o">=</span> <span class="n">mixture</span>
         <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_track_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">observable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_track_expression</span><span class="p">(</span><span class="n">observable</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_track_expression</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
-
-<div class="viewcode-block" id="System.set_site_defaults">
-<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.set_site_defaults">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_site_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">sites</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set default states for sites of an agent type.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            agent_type: Name of the agent type.</span>
-<span class="sd">            **sites: Site name → default state mapping (e.g., a=&quot;p&quot;, b=&quot;u&quot;).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">site_defaults</span><span class="p">[</span><span class="n">agent_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">sites</span></div>
-
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
+                    <span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">observables</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">values</span><span class="p">()]:</span>
+            <span class="k">for</span> <span class="n">component_expr</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;component_pattern&quot;</span><span class="p">):</span>
+                <span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component_expr</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_enforce_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate agent type and sites against the inferred signature and fill missing sites.</span>
@@ -439,14 +430,13 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If the agent type is unknown or has sites not in the signature.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sig</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="n">known</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+        <span class="n">known</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">known</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Agent type &#39;</span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39; is not declared by any rule. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Known agent types: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Known agent types: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signatures</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="n">unknown</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">}</span> <span class="o">-</span> <span class="n">known</span>
         <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
@@ -480,78 +470,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_signature</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">copied</span><span class="p">,</span> <span class="n">n_copies</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="System.add_rule">
-<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.add_rule">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new rule to the system.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            rule: Rule object or Kappa string representation.</span>
-<span class="sd">            name: Name to assign to the rule. If None, a default name is generated.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            AssertionError: If a rule with the given name already exists.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">while</span> <span class="p">(</span><span class="n">name</span> <span class="o">:=</span> <span class="sa">f</span><span class="s2">&quot;r</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
-                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">,</span> <span class="s2">&quot;Rule </span><span class="si">{name}</span><span class="s2"> already exists in the system&quot;</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">rule</span> <span class="o">=</span> <span class="n">Rule</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">enable_component_tracking</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule</span>
-        <span class="n">warned_types</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
-            <span class="n">new_sites</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">())</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="n">new_sites</span> <span class="ow">and</span> <span class="n">agent</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">warned_types</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Adding rule &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; introduced new sites to </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">new_sites</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="ne">RuntimeWarning</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">warned_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_signature</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_track_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="System.remove_rule">
-<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.remove_rule">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a rule by setting its rate to zero.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            AssertionError: If the rule already has zero rate.</span>
-<span class="sd">            KeyError: If no rule with the given name exists.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Rule </span><span class="si">{name}</span><span class="s2"> is already null&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">rate_expression</span> <span class="o">=</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">e</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span><span class="s2">&quot;No rule </span><span class="si">{name}</span><span class="s2"> exists in the system&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">e</span></div>
-
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_track_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Rule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Track components mentioned in the left hand side of a Rule.&quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_track_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Track the Components in the given expression.</span>
-
-<span class="sd">        Note:</span>
-<span class="sd">            Doesn&#39;t track patterns nested by indirection - see the filter method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">component_expr</span> <span class="ow">in</span> <span class="n">expression</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;component_pattern&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component_expr</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>

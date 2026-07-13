@@ -1,7 +1,7 @@
 PyKappa is a Python package for simulating and analyzing rule-based models of the variety specified by the `Kappa language <https://kappalanguage.org/>`_.
 It supports
    * programatic construction of :class:`systems <pykappa.system.System>` from Kappa strings;
-   * manipulation of systems such as by :class:`adding <pykappa.mixture.Mixture.add>` and :class:`removing <pykappa.mixture.Mixture.remove>` agents and :class:`editing <pykappa.system.System.add_rule>` rules;
+   * manipulation of systems such as by :class:`adding <pykappa.mixture.Mixture.add>` and :class:`removing <pykappa.mixture.Mixture.remove>` agents, and tuning parameters via declared :class:`variables <pykappa.system.System>`;
    * :class:`monitoring <pykappa.analysis.Monitor>` the history of observables;
    * cached :class:`tracking <pykappa.mixture.Mixture>` of rule embeddings for algorithmically efficient simulation :class:`updates <pykappa.system.System.update>`; and
    * :class:`passing systems<pykappa.system.System.update_via_kasim>` to `KaSim <https://github.com/Kappa-Dev/KappaTools>`_ for faster compiled execution.

@@ -59,7 +59,8 @@
 
 <span class="sd">    %obs: &#39;C&#39; |C()|</span>
 
-<span class="sd">    . -&gt; N() @ 1  // Nutrient inflow</span>
+<span class="sd">    %var: &#39;inflow&#39; 1  // Nutrient inflow rate</span>
+<span class="sd">    . -&gt; N() @ &#39;inflow&#39;</span>
 <span class="sd">    N() -&gt; . @ 0.1  // Nutrient outflow</span>
 
 <span class="sd">    // Metabolism</span>
@@ -94,12 +95,12 @@
 <img alt="../_images/examples_chemostat_4_0.svg" src="../_images/examples_chemostat_4_0.svg" />
 </div>
 </div>
-<p>Now let’s increase inflow of the nutrient without changing the outflow rate and observe that the population size increases:</p>
+<p>Now let’s double inflow of the nutrient without changing outflow. The population size increases.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="s2">&quot;. -&gt; N() @ 1&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="p">[</span><span class="s2">&quot;inflow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 
 <span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">3</span><span class="p">:</span>
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>

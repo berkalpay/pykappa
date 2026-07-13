@@ -75,6 +75,7 @@
 <span class="sd">    %init: 100 A(x[.])</span>
 <span class="sd">    %init: 100 B(x[.])</span>
 
+<span class="sd">    %obs: &#39;A&#39; |A(x[.])|</span>
 <span class="sd">    %obs: &#39;AB&#39; |A(x[1]), B(x[1])|</span>
 
 <span class="sd">    A(x[.]), B(x[.]) &lt;-&gt; A(x[1]), B(x[1]) @ 1, 1</span>
@@ -97,14 +98,13 @@
 </pre></div>
 </div>
 </div>
-<p>We’ll now manually add 50 new <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> molecules each, start tracking the number of free <code class="docutils literal notranslate"><span class="pre">A</span></code>, and simulate until there are no more than 10 free <code class="docutils literal notranslate"><span class="pre">A</span></code> in the mixture:</p>
+<p>We’ll now manually add 50 new <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> molecules each and simulate until there are no more than 10 free <code class="docutils literal notranslate"><span class="pre">A</span></code> in the mixture:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;A(x[.]), B(x[.])&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 
-<span class="n">system</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;|A(x[.])|&quot;</span>
 <span class="k">while</span> <span class="n">system</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>

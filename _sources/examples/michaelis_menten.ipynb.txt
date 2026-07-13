@@ -135,7 +135,7 @@
     "nqe_system = System.from_ka(kastr, seed=42)\n",
     "\n",
     "# disrupt the quasi-equilibrium\n",
-    "nqe_system[\"k2\"] = \"0.1\"\n",
+    "nqe_system[\"k2\"] = 0.1\n",
     "\n",
     "nqe_system.mixture.add(\"E(s[.])\", 10000)\n",
     "nqe_system.mixture.add(\"S(e[.], x{u})\", 1000)\n",
