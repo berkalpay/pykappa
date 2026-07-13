@@ -1,6 +1,6 @@
 import random
 from math import prod
-from typing import Optional, Self, TYPE_CHECKING
+from typing import Literal, Optional, Self, TYPE_CHECKING
 from functools import cached_property
 from copy import deepcopy
 
@@ -19,11 +19,12 @@ DIFFUSION_RATE = 1e9
 
 
 class Rule:
-    """Standard Kappa rule with left-hand side, right-hand side, and rate."""
+    """A Kappa rule, specifying the transformation of a pattern at a stochastic rate."""
 
     left: Pattern
     right: Pattern
     rate_expression: Expression
+    component_constraint: Literal["any", "same", "different"]
     token_updates: list[tuple[Expression, str]]
 
     @classmethod
@@ -58,18 +59,25 @@ class Rule:
         left: Pattern,
         right: Pattern,
         rate_expression: Expression,
+        component_constraint: Literal["any", "same", "different"] = "any",
         token_updates: Optional[list[tuple[Expression, str]]] = None,
     ):
         self.left = left
         self.right = right
         self.rate_expression = rate_expression
+        self.component_constraint = component_constraint
         self.token_updates = token_updates or []
+        self._component_weights: dict[Component, int] = {}
 
         l = len(self.left.agents)
         r = len(self.right.agents)
         assert (
             l == r
         ), f"The left-hand side of this rule has {l} slots, but the right-hand side has {r}."
+        assert component_constraint in {"any", "same", "different"}
+        assert (
+            component_constraint != "different" or len(self.left.components) == 2
+        ), "A different-component constraint requires exactly 2 pattern components."
 
     def __len__(self):
         return len(self.left.agents)
@@ -85,7 +93,12 @@ class Rule:
 
     @property
     def _rate_str(self) -> str:
-        return self.rate_expression.kappa_str
+        rate = self.rate_expression.kappa_str
+        if self.component_constraint == "same":
+            return f"0 {{{rate}}}"
+        if self.component_constraint == "different":
+            return f"{rate} {{0}}"
+        return rate
 
     @property
     def kappa_str(self) -> str:
@@ -148,6 +161,28 @@ class Rule:
             This doesn't do any symmetry correction, though `System`
             applies this correction when calculating rule reactivities.
         """
+        if self.component_constraint == "same":
+            self._component_weights = {
+                component: prod(
+                    len(mixture.embeddings_in_component(pattern, component))
+                    for pattern in self.left.components
+                )
+                for component in mixture.components
+            }
+            return sum(self._component_weights.values())
+
+        if self.component_constraint == "different":
+            first, second = self.left.components
+            self._component_weights = {
+                component: len(mixture.embeddings_in_component(first, component))
+                * (
+                    len(mixture.embeddings(second))
+                    - len(mixture.embeddings_in_component(second, component))
+                )
+                for component in mixture.components
+            }
+            return sum(self._component_weights.values())
+
         return prod(
             len(mixture.embeddings(component)) for component in self.left.components
         )
@@ -159,11 +194,36 @@ class Rule:
             Can change the internal states of agents in the mixture but
             records everything else in the MixtureUpdate.
         """
+        if self.component_constraint != "any":
+            components = list(self._component_weights)
+            selected_component = random.choices(
+                components, [self._component_weights[c] for c in components]
+            )[0]
+
+            if self.component_constraint == "different":
+                first, second = self.left.components
+                return self._produce_update(
+                    random.choice(
+                        mixture.embeddings_in_component(first, selected_component)
+                    )
+                    | rejection_sample(
+                        mixture.embeddings(second),
+                        mixture.embeddings_in_component(second, selected_component),
+                    ),
+                    mixture,
+                )
+
+            embeddings = lambda component: mixture.embeddings_in_component(
+                component, selected_component
+            )
+        else:
+            embeddings = mixture.embeddings
+
         rule_embedding: dict[Agent, Agent] = {}
 
         for component in self.left.components:
             component_embeddings = (
-                mixture.embeddings(component)
+                embeddings(component)
                 if component in mixture._embeddings
                 else list(component.embeddings(mixture))
             )
@@ -246,116 +306,3 @@ class Rule:
                         )
 
         return update
-
-
-class UnimolecularRule(Rule):
-    """Rule that acts within a single component."""
-
-    _component_weights: dict[Component, int]  # Cache of embedding weights per component
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._component_weights = {}
-
-    @property
-    def _rate_str(self) -> str:
-        return f"0 {{{self.rate_expression.kappa_str}}}"
-
-    def n_embeddings(self, mixture: Mixture) -> int:
-        """Count the total number of embeddings in the mixture."""
-        count = 0
-        self._component_weights = {}
-        for component in mixture.components:
-            weight = prod(
-                len(mixture.embeddings_in_component(match_component, component))
-                for match_component in self.left.components
-            )
-            self._component_weights[component] = weight
-            count += weight
-        return count
-
-    def _select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
-        """Select agents and specify the update (or None for invalid match).
-
-        Note:
-            n_embeddings must be called before this method so that the
-            component_weights cache is up-to-date.
-        """
-        components_ordered = list(self._component_weights)
-        weights = [self._component_weights[c] for c in components_ordered]
-        selected_component = random.choices(components_ordered, weights)[0]
-
-        selection_map: dict[Agent, Agent] = {}
-        for component in self.left.components:
-            choices = mixture.embeddings_in_component(component, selected_component)
-            assert (
-                len(choices) > 0
-            ), f"A rule with no valid embeddings was selected: {self}"
-            component_selection = random.choice(choices)
-
-            for agent in component_selection:
-                if component_selection[agent] in selection_map.values():
-                    return None
-                else:
-                    selection_map[agent] = component_selection[agent]
-
-        return self._produce_update(selection_map, mixture)
-
-
-class BimolecularRule(Rule):
-    """Rule that acts between two distinct components."""
-
-    _component_weights: dict[Component, int]  # Cache of embedding weights per component
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._component_weights = {}
-        assert (
-            len(self.left.components) == 2
-        ), "Bimolecular rule patterns must consist of exactly 2 components."
-
-    @property
-    def _rate_str(self) -> str:
-        return super()._rate_str + " {0}"
-
-    def n_embeddings(self, mixture: Mixture) -> int:
-        """Count the total number of embeddings in the mixture."""
-        count = 0
-        self._component_weights = {}
-
-        for component in mixture.components:
-            n_match1 = len(
-                mixture.embeddings_in_component(self.left.components[0], component)
-            )
-            n_match2 = len(mixture.embeddings(self.left.components[1])) - len(
-                mixture.embeddings_in_component(self.left.components[1], component)
-            )
-
-            weight = n_match1 * n_match2
-            self._component_weights[component] = weight
-            count += weight
-
-        return count
-
-    def _select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
-        """Select agents and specify the update (or None for invalid match).
-
-        Note:
-            n_embeddings must be called before this method so that the
-            component_weights cache is up-to-date.
-        """
-        components_ordered = list(self._component_weights.keys())
-        weights = [self._component_weights[c] for c in components_ordered]
-        selected_component = random.choices(components_ordered, weights)[0]
-
-        match1 = random.choice(
-            mixture.embeddings_in_component(self.left.components[0], selected_component)
-        )
-        match2 = rejection_sample(
-            mixture.embeddings(self.left.components[1]),
-            mixture.embeddings_in_component(
-                self.left.components[1], selected_component
-            ),
-        )
-
-        return self._produce_update(match1 | match2, mixture)

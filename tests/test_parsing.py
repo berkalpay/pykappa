@@ -3,7 +3,6 @@ import math
 from pathlib import Path
 
 from pykappa import Pattern, Rule, System
-from pykappa.rule import UnimolecularRule, BimolecularRule
 from pykappa._parsing import kappa_parser
 
 # Parser
@@ -57,13 +56,13 @@ def test_rule_len_from_kappa(rule_str, rule_len):
 @pytest.mark.parametrize(
     "arrow, rates, expected",
     [
-        ("->", "1.0 {2.0}", [(BimolecularRule, 1.0), (UnimolecularRule, 2.0)]),
-        ("->", "0.0 {2.0}", [(UnimolecularRule, 2.0)]),
-        ("->", "1.0 {0.0}", [(BimolecularRule, 1.0)]),
+        ("->", "1.0 {2.0}", [("different", 1.0), ("same", 2.0)]),
+        ("->", "0.0 {2.0}", [("same", 2.0)]),
+        ("->", "1.0 {0.0}", [("different", 1.0)]),
         (
             "<->",
             "1.0 {2.0}, 3.0",
-            [(BimolecularRule, 1.0), (UnimolecularRule, 2.0), (None, 3.0)],
+            [("different", 1.0), ("same", 2.0), ("any", 3.0)],
         ),
     ],
     ids=["ambiguous", "unimolecular", "bimolecular", "reversible-ambiguous"],
@@ -74,9 +73,8 @@ def test_rule_types_and_rates_from_kappa(arrow, rates, expected):
     rule_str = f"{left} {arrow} {right} @ {rates}"
     rules = Rule.list_from_kappa(rule_str)
     assert len(rules) == len(expected)
-    for rule, (expected_type, expected_rate) in zip(rules, expected, strict=True):
-        if expected_type is not None:
-            assert isinstance(rule, expected_type)
+    for rule, (expected_constraint, expected_rate) in zip(rules, expected, strict=True):
+        assert rule.component_constraint == expected_constraint
         assert rule.rate_expression.evaluate() == expected_rate
 
 

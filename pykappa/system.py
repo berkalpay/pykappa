@@ -11,7 +11,7 @@ from typing import Optional, Iterable, Self
 from graphviz import Source
 
 from pykappa.mixture import Mixture
-from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
+from pykappa.rule import Rule
 from pykappa.pattern import Component, Pattern, Site
 from pykappa.analysis import Monitor
 from pykappa._expression import Expression
@@ -208,10 +208,7 @@ class System:
         )
 
         mixture = Mixture() if mixture is None else mixture
-        if any(
-            type(rule) in [UnimolecularRule, BimolecularRule]
-            for rule in self.rules.values()
-        ):
+        if any(rule.component_constraint != "any" for rule in self.rules.values()):
             mixture.enable_component_tracking()
 
         self.observables = {} if observables is None else observables

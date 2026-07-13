@@ -1,7 +1,7 @@
 from lark import Lark, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, SiteType
-from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
+from pykappa.rule import Rule
 from pykappa._expression import Expression
 
 kappa_parser = Lark.open(
@@ -150,14 +150,14 @@ class KappaTransformer(Transformer):
     def f_rule(self, children):
         patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
-        return [Rule(left, right, rates[0], token_updates)]
+        return [Rule(left, right, rates[0], "any", token_updates)]
 
     def fr_rule(self, children):
         patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
         return [
-            Rule(left, right, rates[0], token_updates),
-            Rule(right, left, rates[1], token_updates),
+            Rule(left, right, rates[0], "any", token_updates),
+            Rule(right, left, rates[1], "any", token_updates),
         ]
 
     def ambi_rule(self, children):
@@ -166,21 +166,21 @@ class KappaTransformer(Transformer):
         rules = []
         try:
             if rates[0].evaluate() != 0:
-                rules.append(BimolecularRule(left, right, rates[0], token_updates))
+                rules.append(Rule(left, right, rates[0], "different", token_updates))
         except:
-            rules.append(BimolecularRule(left, right, rates[0], token_updates))
+            rules.append(Rule(left, right, rates[0], "different", token_updates))
         try:
             if rates[1].evaluate() != 0:
-                rules.append(UnimolecularRule(left, right, rates[1], token_updates))
+                rules.append(Rule(left, right, rates[1], "same", token_updates))
         except:
-            rules.append(UnimolecularRule(left, right, rates[1], token_updates))
+            rules.append(Rule(left, right, rates[1], "same", token_updates))
         return rules
 
     def ambi_fr_rule(self, children):
         patterns, rates, token_updates = self._extract_rule_parts(children)
         left, right = patterns
         rules = self.ambi_rule(children)
-        rules.append(Rule(right, left, rates[2], token_updates))
+        rules.append(Rule(right, left, rates[2], "any", token_updates))
         return rules
 
 

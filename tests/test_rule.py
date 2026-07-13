@@ -2,36 +2,41 @@ import pytest
 from math import comb
 
 from pykappa import System, Pattern, Rule
-from pykappa.rule import UnimolecularRule, BimolecularRule
 from pykappa._expression import Expression
 
 
 @pytest.mark.parametrize(
     "test_case",
     [
-        ("A(), B()", 10, Rule, "B(), A()", 100),
-        ("A(), B()", 10, UnimolecularRule, "B(), A()", 0),
-        ("A(), B()", 10, BimolecularRule, "B(), A()", 100),
-        ("A()", 10, Rule, "A(), A()", 100),  # No automorphism checks currently
-        ("A(a[1]), B(b[1]), C()", 10, Rule, "A(a[1]), B(b[1]), C()", 100),
-        ("A(a[1]), B(b[1]), C()", 10, Rule, "A(), B(), C()", 1000),
-        ("A(a[1]), B(b[1])", 10, UnimolecularRule, "B(), A()", 10),
-        ("A(a[1]), B(b[1])", 10, BimolecularRule, "B(), A()", 90),
+        ("A(), B()", 10, "any", "B(), A()", 100),
+        ("A(), B()", 10, "same", "B(), A()", 0),
+        ("A(), B()", 10, "different", "B(), A()", 100),
+        ("A()", 10, "any", "A(), A()", 100),  # No automorphism checks currently
+        ("A(a[1]), B(b[1]), C()", 10, "any", "A(a[1]), B(b[1]), C()", 100),
+        ("A(a[1]), B(b[1]), C()", 10, "any", "A(), B(), C()", 1000),
+        ("A(a[1]), B(b[1])", 10, "same", "B(), A()", 10),
+        ("A(a[1]), B(b[1])", 10, "different", "B(), A()", 90),
         (
             "A(a1[1]), B(b1[1], b2[2]), B(b1[2], b2[3]) A(a2[3])",
             10,
-            UnimolecularRule,
+            "same",
             "B(), A()",
             40,
         ),
     ],
 )
 def test_rule_n_embeddings_at_system_initialiation(test_case):
-    mixture_pattern_str, n_copies, rule_class, rule_pattern_str, n_embeddings = (
-        test_case
-    )
+    (
+        mixture_pattern_str,
+        n_copies,
+        component_constraint,
+        rule_pattern_str,
+        n_embeddings,
+    ) = test_case
     rule_pattern = Pattern.from_kappa(rule_pattern_str)
-    rule = rule_class(rule_pattern, rule_pattern, Expression.from_kappa("1.0"))
+    rule = Rule(
+        rule_pattern, rule_pattern, Expression.from_kappa("1.0"), component_constraint
+    )
     system = System.from_kappa(
         {mixture_pattern_str: n_copies},
         [
@@ -141,8 +146,8 @@ def test_simple_unimolecular_rule_application(n_copies):
 
     rule1 = system.rules["r0"]
     rule2 = system.rules["r1"]
-    assert isinstance(rule1, UnimolecularRule)
-    assert isinstance(rule2, Rule)
+    assert rule1.component_constraint == "same"
+    assert rule2.component_constraint == "any"
 
     assert system["o0"] == n_copies
     n_rule1_applications = n_copies // 2
@@ -158,7 +163,7 @@ def test_simple_unimolecular_rule_application(n_copies):
     for i in range(1, n_rule1_applications + 1):
         rule1.n_embeddings(
             system.mixture
-        )  # Uni/bimolecular rules use this to weight choices
+        )  # Contextual rules use this to weight choices
         update = rule1._select(system.mixture)
         system.mixture._apply_update(update)
         assert rule1.n_embeddings(system.mixture) == n_copies - n_rule2_applications - i
@@ -174,13 +179,13 @@ def test_simple_bimolecular_rule_application(n_copies):
     )
 
     rule1 = system.rules["r0"]
-    assert isinstance(rule1, BimolecularRule)
+    assert rule1.component_constraint == "different"
 
     n_rule1_applications = n_copies // 2
     for i in range(1, n_rule1_applications + 1):
         rule1.n_embeddings(
             system.mixture
-        )  # Uni/bimolecular rules use this to weight choices
+        )  # Contextual rules use this to weight choices
         update = rule1._select(system.mixture)
         system.mixture._apply_update(update)
         assert rule1.n_embeddings(system.mixture) == 2 * comb(n_copies - 2 * i, 2)
