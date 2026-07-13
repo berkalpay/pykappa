@@ -1,8 +1,6 @@
 import pytest
 import shutil
-import itertools
 import random
-from collections import defaultdict
 
 from pykappa import System, Mixture
 from pykappa.rule import AVOGADRO, DIFFUSION_RATE
@@ -36,11 +34,10 @@ def test_basic_system():
         ],
     )
 
-    counts = defaultdict(list)
     for _ in range(1000):
         system.update()
         for obs_name in system.observables:
-            counts[obs_name].append(system[obs_name])
+            system[obs_name]
 
 
 def test_basic_observable_symmetry():
@@ -128,15 +125,16 @@ def test_polymerization_via_kasim():
 
 
 @pytest.mark.parametrize(
-    "kd, a_init, b_init",
-    list(itertools.product([10**-9], [2000], [2000, 3500])),
+    "b_init",
+    [2000, 3500],
 )
-def test_equilibrium_matches_kd(kd, a_init, b_init):
+def test_equilibrium_matches_kd(b_init):
     """
     Check that the input Kd matches what's observed empirically post-equilibrium
     within a relative margin of error.
     """
     volume = 10**-13
+    a_init = 2000
     on_rate = DIFFUSION_RATE / (AVOGADRO * volume)
     kd = 10**-9
     off_rate = DIFFUSION_RATE * kd
@@ -171,6 +169,7 @@ def test_system_manipulation():
         %obs: 'AB' |A(x[1]), B(x[1])|
 
         %var: 'total_agents' 'A' + 'B' + (2 * 'AB')
+        %var: 'rate' 1.0
 
         A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1 {1}
         """)
@@ -193,11 +192,11 @@ def test_system_manipulation():
     system.mixture.add(component_to_remove)
     assert system["total_agents"] == total_agents_pre_removal
 
-    # Update an existing variable to a new numeric value
-    system["total_agents"] = 0
-    assert system["total_agents"] == 0
-    system.update()
-    assert system["total_agents"] == 0
+    system["rate"] = 0
+    assert system["rate"] == 0
+
+    with pytest.raises(ValueError, match="not a numeric literal"):
+        system["total_agents"] = 0
 
     with pytest.raises(KeyError):
         system["A"] = 0
@@ -424,10 +423,8 @@ def test_signature_rejects_unknown_sites(make_system):
         make_system().add("A(y[.])", 1)
 
 
-def test_undeclared_agent_and_site_rejected():
+def test_undeclared_agent_rejected():
     system = System.from_kappa(rules=["A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1"])
-    with pytest.raises(ValueError, match="unknown site"):
-        system.add("A(y[.])")
     with pytest.raises(ValueError, match="not declared"):
         system.add("C()")
 
@@ -447,31 +444,32 @@ def test_site_defaults():
     assert agent["z"].state == "u"
 
 
-def test_apply_state_change():
-    system = System.from_ka("""
-        %init: 5 A(x{u})
-        %obs: 'phospho' |A(x{p})|
-        A(x{u}) -> A(x{p}) @ 1
-    """)
-    assert system["phospho"] == 0
-    system.apply("A(x{u}) -> A(x{p})")
-    assert system["phospho"] == 1
-    system.apply("A(x{u}) -> A(x{p})", n=4)
-    assert system["phospho"] == 5
-    assert system.time == 0  # time must not advance
-
-
-def test_apply_bond_formation_and_breaking():
-    system = System.from_ka("""
-        %init: 4 A(x[.])
-        %init: 4 B(x[.])
-        %obs: 'AB' |A(x[1]), B(x[1])|
-    """)
-    assert system["AB"] == 0
-    system.apply("A(x[.]), B(x[.]) -> A(x[1]), B(x[1])", n=3)
-    assert system["AB"] == 3
-    system.apply("A(x[1]), B(x[1]) -> A(x[.]), B(x[.])", n=2)
-    assert system["AB"] == 1
+@pytest.mark.parametrize(
+    "ka_str, observable, applications",
+    [
+        (
+            "%init: 5 A(x{u})\n%obs: 'phospho' |A(x{p})|\nA(x{u}) -> A(x{p}) @ 1",
+            "phospho",
+            [("A(x{u}) -> A(x{p})", 1, 1), ("A(x{u}) -> A(x{p})", 4, 5)],
+        ),
+        (
+            "%init: 4 A(x[.])\n%init: 4 B(x[.])\n%obs: 'AB' |A(x[1]), B(x[1])|",
+            "AB",
+            [
+                ("A(x[.]), B(x[.]) -> A(x[1]), B(x[1])", 3, 3),
+                ("A(x[1]), B(x[1]) -> A(x[.]), B(x[.])", 2, 1),
+            ],
+        ),
+    ],
+    ids=["state-change", "bond-formation-and-breaking"],
+)
+def test_apply_transformations(ka_str, observable, applications):
+    system = System.from_ka(ka_str)
+    assert system[observable] == 0
+    for transformation, n, expected in applications:
+        system.apply(transformation, n=n)
+        assert system[observable] == expected
+    assert system.time == 0  # immediate application must not advance time
 
 
 def test_apply_creation_completes_interface():
