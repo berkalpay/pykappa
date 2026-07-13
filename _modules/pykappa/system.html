@@ -52,7 +52,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mixture</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Site</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Monitor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._expression</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expression</span>
@@ -260,10 +260,7 @@
         <span class="p">)</span>
 
         <span class="n">mixture</span> <span class="o">=</span> <span class="n">Mixture</span><span class="p">()</span> <span class="k">if</span> <span class="n">mixture</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mixture</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-            <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">UnimolecularRule</span><span class="p">,</span> <span class="n">BimolecularRule</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">&quot;any&quot;</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="n">mixture</span><span class="o">.</span><span class="n">enable_component_tracking</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">observables</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">observables</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">observables</span>

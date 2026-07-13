@@ -81,10 +81,10 @@
    "source": [
     "qe_system = System.from_ka(kastr, seed=42)\n",
     "\n",
-    "qe_system.mixture.add(\"E(s[.])\", 100)\n",
-    "qe_system.mixture.add(\"S(e[.], x{u})\", 100000)\n",
-    "qe_system.mixture.add(\"_E(s[.])\", 100)\n",
-    "qe_system.mixture.add(\"_S(e[.], x{u})\", 100000)\n",
+    "qe_system.mixture.add(\"E(s[.])\", 50)\n",
+    "qe_system.mixture.add(\"S(e[.], x{u})\", 50000)\n",
+    "qe_system.mixture.add(\"_E(s[.])\", 50)\n",
+    "qe_system.mixture.add(\"_S(e[.], x{u})\", 50000)\n",
     "\n",
     "while qe_system.reactivity:\n",
     "    qe_system.update()"
@@ -181,7 +181,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.14.5"
+   "version": "3.12.3"
   }
  },
  "nbformat": 4,
