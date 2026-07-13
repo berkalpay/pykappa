@@ -78,54 +78,38 @@ class Expression:
         """
         if self.type == "literal":
             return str(self.evaluate())
-
-        elif self.type == "boolean_literal":
+        if self.type == "boolean_literal":
             return "[true]" if self.attrs["value"] else "[false]"
-
-        elif self.type == "variable":
-            return f"'{self.attrs["name"]}'"
-
-        elif self.type in ("binary_op", "comparison"):
-            left_str = self.attrs["left"].kappa_str
-            right_str = self.attrs["right"].kappa_str
-            return f"({left_str}) {self.attrs['operator']} ({right_str})"
-
-        elif self.type == "unary_op":
-            return f"{self.attrs['operator']} ({self.attrs['child'].kappa_str})"
-
-        elif self.type == "list_op":
-            children_str = " ".join(
+        if self.type == "variable":
+            return f"'{self.attrs['name']}'"
+        if self.type in ("binary_op", "comparison", "logical_or", "logical_and"):
+            operator = {
+                "logical_or": "||",
+                "logical_and": "&&",
+            }.get(self.type, self.attrs.get("operator"))
+            return f"({self.attrs['left'].kappa_str}) {operator} ({self.attrs['right'].kappa_str})"
+        if self.type in ("unary_op", "logical_not"):
+            operator = "[not]" if self.type == "logical_not" else self.attrs["operator"]
+            return f"{operator} ({self.attrs['child'].kappa_str})"
+        if self.type == "list_op":
+            children = " ".join(
                 f"({child.kappa_str})" for child in self.attrs["children"]
             )
-            return f"{self.attrs["operator"]} {children_str}"
-
-        elif self.type == "defined_constant":
-            return f"{self.attrs["name"]}"
-
-        elif self.type == "parentheses":
+            return f"{self.attrs['operator']} {children}"
+        if self.type == "defined_constant":
+            return self.attrs["name"]
+        if self.type == "parentheses":
             return self.attrs["child"].kappa_str
-
-        elif self.type == "conditional":
-            true_expr_str = self.attrs["true_expr"].kappa_str
-            false_expr_str = self.attrs["false_expr"].kappa_str
-            return f"{self.attrs["condition"].kappa_str} [?] {true_expr_str} [:] {false_expr_str}"
-
-        elif self.type in ("logical_or", "logical_and"):
-            left_str = self.attrs["left"].kappa_str
-            right_str = self.attrs["right"].kappa_str
-            op = {"logical_or": "||", "logical_and": "&&"}
-            return f"({left_str}) {op[self.type]} ({right_str})"
-
-        elif self.type == "logical_not":
-            return f"[not] ({self.attrs['child'].kappa_str})"
-
-        elif self.type == "reserved_variable":
+        if self.type == "conditional":
+            return (
+                f"{self.attrs['condition'].kappa_str} [?] {self.attrs['true_expr'].kappa_str} "
+                f"[:] {self.attrs['false_expr'].kappa_str}"
+            )
+        if self.type == "reserved_variable":
             return self.attrs["value"].kappa_str
-
-        elif self.type == "component_pattern":
+        if self.type == "component_pattern":
             return f"|{self.attrs['value'].kappa_str}|"
-
-        elif self.type == "token_value":
+        if self.type == "token_value":
             return f"|{self.attrs['name']}|"
 
         raise ValueError(f"Unsupported node type: {self.type}")
@@ -141,58 +125,43 @@ class Expression:
         """
         if self.type in ("literal", "boolean_literal"):
             return self.attrs["value"]
-
-        elif self.type == "variable":
+        if self.type == "variable":
             name = self.attrs["name"]
             if system is None:
                 raise ValueError(f"{self} needs a System to evaluate variable '{name}'")
             return system[name]
-
-        elif self.type in ("binary_op", "comparison"):
-            left_val = self.attrs["left"].evaluate(system)
-            right_val = self.attrs["right"].evaluate(system)
-            return parse_operator(self.attrs["operator"])(left_val, right_val)
-
-        elif self.type == "unary_op":
-            child_val = self.attrs["child"].evaluate(system)
-            return parse_operator(self.attrs["operator"])(child_val)
-
-        elif self.type == "list_op":
-            children_vals = [child.evaluate(system) for child in self.attrs["children"]]
-            return parse_operator(self.attrs["operator"])(children_vals)
-
-        elif self.type == "defined_constant":
+        if self.type in ("binary_op", "comparison", "logical_or", "logical_and"):
+            left = self.attrs["left"].evaluate(system)
+            right = self.attrs["right"].evaluate(system)
+            if self.type == "logical_or":
+                return left or right
+            if self.type == "logical_and":
+                return left and right
+            return parse_operator(self.attrs["operator"])(left, right)
+        if self.type in ("unary_op", "logical_not"):
+            child = self.attrs["child"].evaluate(system)
+            return (
+                not child
+                if self.type == "logical_not"
+                else parse_operator(self.attrs["operator"])(child)
+            )
+        if self.type == "list_op":
+            children = [child.evaluate(system) for child in self.attrs["children"]]
+            return parse_operator(self.attrs["operator"])(children)
+        if self.type == "defined_constant":
             const = self.attrs["name"]
             if const == "[pi]":
                 return math.pi
-            else:
-                raise ValueError(f"Unknown constant: {const}")
-
-        elif self.type == "parentheses":
+            raise ValueError(f"Unknown constant: {const}")
+        if self.type == "parentheses":
             return self.attrs["child"].evaluate(system)
-
-        elif self.type == "conditional":
-            cond_val = self.attrs["condition"].evaluate(system)
+        if self.type == "conditional":
             return (
                 self.attrs["true_expr"].evaluate(system)
-                if cond_val
+                if self.attrs["condition"].evaluate(system)
                 else self.attrs["false_expr"].evaluate(system)
             )
-
-        elif self.type == "logical_or":
-            left_val = self.attrs["left"].evaluate(system)
-            right_val = self.attrs["right"].evaluate(system)
-            return left_val or right_val
-
-        elif self.type == "logical_and":
-            left_val = self.attrs["left"].evaluate(system)
-            right_val = self.attrs["right"].evaluate(system)
-            return left_val and right_val
-
-        elif self.type == "logical_not":
-            return not self.attrs["child"].evaluate(system)
-
-        elif self.type == "reserved_variable":
+        if self.type == "reserved_variable":
             value = self.attrs["value"]
             if value.type == "component_pattern":
                 component: Component = value.attrs["value"]
@@ -204,12 +173,10 @@ class Expression:
                     len(system.mixture.embeddings(component))
                     // component.n_automorphisms
                 )
-            else:
-                raise NotImplementedError(
-                    f"Reserved variable {value.type} not implemented yet."
-                )
-
-        elif self.type == "token_value":
+            raise NotImplementedError(
+                f"Reserved variable {value.type} not implemented yet."
+            )
+        if self.type == "token_value":
             name = self.attrs["name"]
             if system is None:
                 raise ValueError(f"{self} needs a System to evaluate token '{name}'")
