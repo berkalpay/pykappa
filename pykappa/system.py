@@ -253,9 +253,14 @@ class System:
 
         Raises:
             KeyError: If the name is not a declared variable.
+            ValueError: If the declared variable is not a numeric literal.
         """
         if name not in self.variables:
             raise KeyError(f"'{name}' is not a declared variable")
+        if self.variables[name].type != "literal":
+            raise ValueError(
+                f"'{name}' is not a numeric literal and cannot be reassigned"
+            )
         self.variables[name] = Expression("literal", value=value)
 
     @cached_property
