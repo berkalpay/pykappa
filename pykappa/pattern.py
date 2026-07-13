@@ -1,6 +1,7 @@
 from collections import defaultdict
 from functools import cached_property
 from itertools import permutations
+from math import prod
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
 from pykappa.analysis import _ComponentPlot
@@ -43,7 +44,7 @@ class Site(Counted):
     def kappa_partner_str(self) -> str:
         if self.partner == "?":
             return ""
-        elif self.coupled:
+        if self.coupled:
             return "[_]"
         return f"[{self.partner}]"
 
@@ -124,13 +125,8 @@ class Agent(Counted):
         seen = set(frontier)
 
         for _ in range(radius):
-            next_frontier = set()
-            for cur in frontier:
-                for n in cur.neighbors:
-                    if n not in seen:
-                        seen.add(n)
-                        next_frontier.add(n)
-            frontier = next_frontier
+            frontier = {n for cur in frontier for n in cur.neighbors} - seen
+            seen.update(frontier)
             if not frontier:
                 break
 
@@ -492,11 +488,11 @@ class Pattern:
     @cached_property
     def components(self) -> list[Component]:
         """The connected components in this pattern."""
-        unseen = set(agent for agent in self.agents if agent is not None)
+        unseen = {agent for agent in self.agents if agent is not None}
         components = []
         while unseen:
             component = Component(next(iter(unseen)).depth_first_traversal)
-            unseen = unseen.difference(component)
+            unseen.difference_update(component)
             components.append(component)
         return components
 
@@ -542,10 +538,10 @@ class Pattern:
         if len(self.components) != len(other.components):
             return 0
 
-        res = 0
-        for perm in permutations(other.components):
-            temp = 1
-            for l, r in zip(self.components, perm):
-                temp *= len(list(l.isomorphisms(r)))
-            res += temp
-        return res
+        return sum(
+            prod(
+                len(list(left.isomorphisms(right)))
+                for left, right in zip(self.components, perm)
+            )
+            for perm in permutations(other.components)
+        )
