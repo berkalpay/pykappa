@@ -1,4 +1,3 @@
-from pathlib import Path
 from lark import Lark, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, SiteType
@@ -6,13 +5,7 @@ from pykappa.rule import Rule, UnimolecularRule, BimolecularRule
 from pykappa._expression import Expression
 
 kappa_parser = Lark.open(
-    str(Path(__file__).parent / "kappa.lark"),
-    rel_to=__file__,
-    parser="earley",
-    lexer="dynamic",
-    start="kappa_input",
-    propagate_positions=False,
-    maybe_placeholders=False,
+    "kappa.lark", rel_to=__file__, start="kappa_input", maybe_placeholders=False
 )
 
 
@@ -69,8 +62,7 @@ class KappaTransformer(Transformer):
                 elif tag == "partner":
                     partner = value
 
-        site = Site(label=site_name, state=state, partner=partner)
-        return site
+        return Site(label=site_name, state=state, partner=partner)
 
     def undetermined(self, children):
         return Tree("unspecified", [])
@@ -104,29 +96,17 @@ class KappaTransformer(Transformer):
         return ExpressionTransformer().transform(expr_tree)
 
     def rule_expression(self, children):
-        mid_idx = next(
-            (i for i, child in enumerate(children) if child in ["->", "<->"])
-        )
+        mid_idx = next(i for i, child in enumerate(children) if child in ("->", "<->"))
 
-        left_agents = []
-        right_agents = []
+        def agents(items):
+            return [
+                None if child == "." else child
+                for child in items
+                if child == "." or isinstance(child, Agent)
+            ]
 
-        for i, child in enumerate(children):
-            if i == mid_idx:
-                continue
-
-            if child == ".":
-                agent = None
-            elif isinstance(child, Agent):
-                agent = child
-            else:
-                continue
-
-            if i < mid_idx:
-                left_agents.append(agent)
-            else:
-                right_agents.append(agent)
-
+        left_agents = agents(children[:mid_idx])
+        right_agents = agents(children[mid_idx + 1 :])
         return (Pattern(left_agents), Pattern(right_agents))
 
     def rev_rule_expression(self, children):
@@ -214,10 +194,9 @@ class ExpressionTransformer(Transformer):
     def algebraic_expression(self, children):
         if len(children) == 1:
             return children[0]
-        elif len(children) == 3 and children[0] == "(" and children[2] == ")":
+        if len(children) == 3 and children[0] == "(" and children[2] == ")":
             return children[1]
-        else:
-            raise Exception(f"Invalid algebraic expression: {children}")
+        raise Exception(f"Invalid algebraic expression: {children}")
 
     # --- Literals ---
     def SIGNED_FLOAT(self, token):
