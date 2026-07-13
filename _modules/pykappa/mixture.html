@@ -140,18 +140,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">components</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Component</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_tracking</span><span class="p">:</span>  <span class="c1"># Use cached components if tracking</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_components</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Find connected components among the existing agents</span>
-            <span class="n">components</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">()</span>
-            <span class="n">unassigned</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
 
-            <span class="k">while</span> <span class="n">unassigned</span><span class="p">:</span>
-                <span class="n">seed</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">unassigned</span><span class="p">))</span>
-                <span class="n">component_agents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">depth_first_traversal</span><span class="p">)</span>
-                <span class="n">component_agents</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
-                <span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Component</span><span class="p">(</span><span class="n">component_agents</span><span class="p">))</span>
-                <span class="n">unassigned</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">component_agents</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">components</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">()</span>
+        <span class="n">unassigned</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">unassigned</span><span class="p">:</span>
+            <span class="n">component_agents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">unassigned</span><span class="p">))</span><span class="o">.</span><span class="n">depth_first_traversal</span><span class="p">)</span>
+            <span class="n">component_agents</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Component</span><span class="p">(</span><span class="n">component_agents</span><span class="p">))</span>
+            <span class="n">unassigned</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">component_agents</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span>
 
 <div class="viewcode-block" id="Mixture.enable_component_tracking">
 <a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.Mixture.enable_component_tracking">[docs]</a>
