@@ -94,18 +94,15 @@ class Mixture:
     def components(self) -> IndexedSet[Component]:
         if self.component_tracking:  # Use cached components if tracking
             return self._components
-        else:  # Find connected components among the existing agents
-            components = IndexedSet()
-            unassigned = set(self.agents)
 
-            while unassigned:
-                seed = next(iter(unassigned))
-                component_agents = set(seed.depth_first_traversal)
-                component_agents.intersection_update(self.agents)
-                components.add(Component(component_agents))
-                unassigned.difference_update(component_agents)
-
-            return components
+        components = IndexedSet()
+        unassigned = set(self.agents)
+        while unassigned:
+            component_agents = set(next(iter(unassigned)).depth_first_traversal)
+            component_agents.intersection_update(self.agents)
+            components.add(Component(component_agents))
+            unassigned.difference_update(component_agents)
+        return components
 
     def enable_component_tracking(self) -> None:
         """Turn on connected-component tracking for this mixture."""
