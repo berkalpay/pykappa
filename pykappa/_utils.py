@@ -85,8 +85,8 @@ class IndexedSet(set[T], Generic[T]):
     properties: dict[str, Property]
     indices: dict[str, defaultdict[Hashable, Self]]
 
-    def __init__(self, iterable: Iterable[T] = []):
-        iterable = list(iterable)
+    def __init__(self, iterable: Optional[Iterable[T]] = None):
+        iterable = [] if iterable is None else list(iterable)
         super().__init__(iterable)
 
         self._item_list = iterable
