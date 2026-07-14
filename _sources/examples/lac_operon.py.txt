@@ -10,6 +10,7 @@
 
 # %%
 from pykappa import System
+import matplotlib.pyplot as plt
 
 system = System.from_ka(
     """
@@ -59,6 +60,7 @@ while system.time < 800:
 
 # %%
 system.monitor.plot(figsize=(4.5, 4.5))
+plt.show()
 
 # %% [markdown]
 # Without lactose, the operon remains mostly repressed.

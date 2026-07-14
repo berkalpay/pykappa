@@ -52,6 +52,7 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykappa</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -85,22 +86,15 @@
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">:</span>
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 <span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_chemostat_4_0.svg" src="../_images/examples_chemostat_4_0.svg" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_chemostat_4_1.svg" src="../_images/examples_chemostat_4_1.svg" />
+<img alt="../_images/examples_chemostat_4_0.svg" src="../_images/examples_chemostat_4_0.svg" />
 </div>
 </div>
 <p>Now let’s double inflow of the nutrient without changing outflow. The population size increases.</p>
@@ -113,22 +107,15 @@
 <span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">:</span>
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 <span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_chemostat_6_0.svg" src="../_images/examples_chemostat_6_0.svg" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_chemostat_6_1.svg" src="../_images/examples_chemostat_6_1.svg" />
+<img alt="../_images/examples_chemostat_6_0.svg" src="../_images/examples_chemostat_6_0.svg" />
 </div>
 </div>
 </section>

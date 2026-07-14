@@ -6,6 +6,7 @@
 
 # %%
 from pykappa import System
+import matplotlib.pyplot as plt
 
 system = System.from_ka(
     """
@@ -31,6 +32,7 @@ system = System.from_ka(
 while system.time < 5 * 10**2:
     system.update()
 system.monitor.plot()
+plt.show()
 
 # %% [markdown]
 # As we introduce more `E`, at first more complexes can be formed but eventually there are so many `E` that the other components of the complex become more likely to bind separate `E` molecules.
