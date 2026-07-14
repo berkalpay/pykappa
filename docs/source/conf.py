@@ -23,7 +23,7 @@ extensions = [
 ]
 
 templates_path = ["_templates"]
-exclude_patterns = []
+exclude_patterns = ["conf.py"]
 
 autosummary_generate = True
 autodoc_typehints = "description"
@@ -33,6 +33,9 @@ autoclass_content = "class"
 napoleon_google_docstring = True
 nbsphinx_execute = "always"
 nbsphinx_execute_arguments = ["--InlineBackend.figure_formats={'svg'}"]
+nbsphinx_custom_formats = {
+    ".py": ["jupytext.reads", {"fmt": "py:percent"}],
+}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
