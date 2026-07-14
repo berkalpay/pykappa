@@ -59,32 +59,30 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">INIT_M</span><span class="o">=</span><span class="mi">5_000</span>            <span class="c1"># intial number of mosquitoes;</span>
-<span class="n">INIT_N</span><span class="o">=</span><span class="mi">1_000</span>            <span class="c1"># total host population, of which...</span>
-<span class="n">INIT_I</span><span class="o">=</span><span class="mi">10</span>               <span class="c1"># are initially infectious, and</span>
-<span class="n">INIT_S</span><span class="o">=</span><span class="n">INIT_N</span> <span class="o">-</span> <span class="n">INIT_I</span>  <span class="c1"># are initially susceptible</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">INIT_M</span> <span class="o">=</span> <span class="mi">5_000</span>  <span class="c1"># intial number of mosquitoes;</span>
+<span class="n">INIT_N</span> <span class="o">=</span> <span class="mi">1_000</span>  <span class="c1"># total host population, of which...</span>
+<span class="n">INIT_I</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># are initially infectious, and</span>
+<span class="n">INIT_S</span> <span class="o">=</span> <span class="n">INIT_N</span> <span class="o">-</span> <span class="n">INIT_I</span>  <span class="c1"># are initially susceptible</span>
 
 <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;0.036&quot;</span><span class="p">,</span>    <span class="c1"># probability of infection from a bite</span>
-    <span class="s2">&quot;bprime&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>      <span class="c1"># proabability of a vector becoming infectious</span>
-    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2&quot;</span><span class="p">,</span>     <span class="c1"># progression from exposed to infectious</span>
+    <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;0.036&quot;</span><span class="p">,</span>  <span class="c1"># probability of infection from a bite</span>
+    <span class="s2">&quot;bprime&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>  <span class="c1"># proabability of a vector becoming infectious</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2&quot;</span><span class="p">,</span>  <span class="c1"># progression from exposed to infectious</span>
     <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1429&quot;</span><span class="p">,</span>  <span class="c1"># progression from infectious to removed</span>
-    <span class="s2">&quot;kappa&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>     <span class="c1"># bites per day per mosquito</span>
-    <span class="s2">&quot;kb&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1429&quot;</span><span class="p">,</span>     <span class="c1"># birth rate</span>
-    <span class="s2">&quot;kd&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1429&quot;</span><span class="p">,</span>     <span class="c1"># death rate</span>
-    <span class="s2">&quot;water&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>        <span class="c1"># amount of breeding habitat available</span>
+    <span class="s2">&quot;kappa&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>  <span class="c1"># bites per day per mosquito</span>
+    <span class="s2">&quot;kb&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1429&quot;</span><span class="p">,</span>  <span class="c1"># birth rate</span>
+    <span class="s2">&quot;kd&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1429&quot;</span><span class="p">,</span>  <span class="c1"># death rate</span>
+    <span class="s2">&quot;water&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>  <span class="c1"># amount of breeding habitat available</span>
 <span class="p">}</span>
 
 <span class="n">rules</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;P(x</span><span class="si">{e}</span><span class="s2">) -&gt; P(x</span><span class="si">{i}</span><span class="s2">) @ &#39;alpha&#39;&quot;</span><span class="p">,</span>  <span class="c1"># disease progression</span>
     <span class="s2">&quot;P(x</span><span class="si">{i}</span><span class="s2">) -&gt; P(x</span><span class="si">{r}</span><span class="s2">) @ &#39;gamma&#39;&quot;</span><span class="p">,</span>  <span class="c1"># disease recovery</span>
-
     <span class="s2">&quot;V(), . -&gt; V(), V(x</span><span class="si">{s}</span><span class="s2">) @ &#39;water&#39; * &#39;kb&#39;&quot;</span><span class="p">,</span>  <span class="c1"># vector birth</span>
-    <span class="s2">&quot;V()    -&gt; .            @ &#39;kd&#39;&quot;</span><span class="p">,</span>            <span class="c1"># vector annihilation</span>
-
+    <span class="s2">&quot;V()    -&gt; .            @ &#39;kd&#39;&quot;</span><span class="p">,</span>  <span class="c1"># vector annihilation</span>
     <span class="c1"># both hosts and vectors can be infected from a bite event</span>
     <span class="s2">&quot;P(x</span><span class="si">{i}</span><span class="s2">), V(x</span><span class="si">{s}</span><span class="s2">) -&gt; P(x</span><span class="si">{i}</span><span class="s2">), V(x</span><span class="si">{i}</span><span class="s2">) @ &#39;bprime&#39; * &#39;kappa&#39; / &#39;M&#39;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;V(x</span><span class="si">{i}</span><span class="s2">), P(x</span><span class="si">{s}</span><span class="s2">) -&gt; V(x</span><span class="si">{i}</span><span class="s2">), P(x</span><span class="si">{e}</span><span class="s2">) @ &#39;beta&#39; * &#39;kappa&#39; / &#39;N&#39;&quot;</span>
+    <span class="s2">&quot;V(x</span><span class="si">{i}</span><span class="s2">), P(x</span><span class="si">{s}</span><span class="s2">) -&gt; V(x</span><span class="si">{i}</span><span class="s2">), P(x</span><span class="si">{e}</span><span class="s2">) @ &#39;beta&#39; * &#39;kappa&#39; / &#39;N&#39;&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="n">observables</span> <span class="o">=</span> <span class="p">{</span>
@@ -93,10 +91,9 @@
     <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;|P(x</span><span class="si">{e}</span><span class="s2">)|&quot;</span><span class="p">,</span>
     <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="s2">&quot;|P(x</span><span class="si">{i}</span><span class="s2">)|&quot;</span><span class="p">,</span>
     <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;|P(x</span><span class="si">{r}</span><span class="s2">)|&quot;</span><span class="p">,</span>
-
     <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;|V()|&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Vs&quot;</span><span class="p">:</span> <span class="s2">&quot;|V(x</span><span class="si">{s}</span><span class="s2">)|&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Vi&quot;</span><span class="p">:</span> <span class="s2">&quot;|V(x</span><span class="si">{i}</span><span class="s2">)|&quot;</span>
+    <span class="s2">&quot;Vi&quot;</span><span class="p">:</span> <span class="s2">&quot;|V(x</span><span class="si">{i}</span><span class="s2">)|&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span>
@@ -104,7 +101,7 @@
     <span class="n">rules</span><span class="o">=</span><span class="n">rules</span><span class="p">,</span>
     <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
     <span class="n">observables</span><span class="o">=</span><span class="n">observables</span><span class="p">,</span>
-    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -124,15 +121,23 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">]);</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">])</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_vector_borne_disease_7_0.svg" src="../_images/examples_vector_borne_disease_7_0.svg" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_vector_borne_disease_7_0.svg" src="../_images/examples_vector_borne_disease_7_0.svg" />
+<img alt="../_images/examples_vector_borne_disease_7_1.svg" src="../_images/examples_vector_borne_disease_7_1.svg" />
 </div>
 </div>
 <p>All infected vectors eventually perish:</p>
@@ -140,15 +145,23 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Vs&quot;</span><span class="p">,</span> <span class="s2">&quot;Vi&quot;</span><span class="p">]);</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Vs&quot;</span><span class="p">,</span> <span class="s2">&quot;Vi&quot;</span><span class="p">])</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_vector_borne_disease_9_0.svg" src="../_images/examples_vector_borne_disease_9_0.svg" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_vector_borne_disease_9_0.svg" src="../_images/examples_vector_borne_disease_9_0.svg" />
+<img alt="../_images/examples_vector_borne_disease_9_1.svg" src="../_images/examples_vector_borne_disease_9_1.svg" />
 </div>
 </div>
 <p>Now we regenerate the system from scratch in order to demonstrate the impact of an environmental intervention.</p>
@@ -161,7 +174,7 @@
     <span class="n">rules</span><span class="o">=</span><span class="n">rules</span><span class="p">,</span>
     <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
     <span class="n">observables</span><span class="o">=</span><span class="n">observables</span><span class="p">,</span>
-    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -186,23 +199,31 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">]);</span>
-<span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Vs&quot;</span><span class="p">,</span> <span class="s2">&quot;Vi&quot;</span><span class="p">]);</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">])</span>
+<span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Vs&quot;</span><span class="p">,</span> <span class="s2">&quot;Vi&quot;</span><span class="p">])</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_vector_borne_disease_15_0.svg" src="../_images/examples_vector_borne_disease_15_0.svg" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_vector_borne_disease_15_0.svg" src="../_images/examples_vector_borne_disease_15_0.svg" />
+<img alt="../_images/examples_vector_borne_disease_15_1.svg" src="../_images/examples_vector_borne_disease_15_1.svg" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_vector_borne_disease_15_1.svg" src="../_images/examples_vector_borne_disease_15_1.svg" />
+<img alt="../_images/examples_vector_borne_disease_15_2.svg" src="../_images/examples_vector_borne_disease_15_2.svg" />
 </div>
 </div>
 </section>
@@ -287,7 +308,7 @@
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="../_sources/examples/vector_borne_disease.ipynb.txt"
+      <a href="../_sources/examples/vector_borne_disease.py.txt"
           rel="nofollow">Page source</a>
     </div>
 

@@ -66,7 +66,7 @@
 <span class="sd">    E(m[.]), M(e[.]) &lt;-&gt; E(m[1]), M(e[1]) @ 1, 1  // Bind M to E</span>
 <span class="sd">    . -&gt; E(l[.], m[.]) @ 1  // Inflow of E</span>
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -76,17 +76,25 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">2</span><span class="p">:</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span>
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-<span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+<span class="n">system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_prozone_effect_3_0.svg" src="../_images/examples_prozone_effect_3_0.svg" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_prozone_effect_3_0.svg" src="../_images/examples_prozone_effect_3_0.svg" />
+<img alt="../_images/examples_prozone_effect_3_1.svg" src="../_images/examples_prozone_effect_3_1.svg" />
 </div>
 </div>
 <p>As we introduce more <code class="docutils literal notranslate"><span class="pre">E</span></code>, at first more complexes can be formed but eventually there are so many <code class="docutils literal notranslate"><span class="pre">E</span></code> that the other components of the complex become more likely to bind separate <code class="docutils literal notranslate"><span class="pre">E</span></code> molecules. The result is that the full complex is less likely to form.</p>
@@ -172,7 +180,7 @@
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="../_sources/examples/prozone_effect.ipynb.txt"
+      <a href="../_sources/examples/prozone_effect.py.txt"
           rel="nofollow">Page source</a>
     </div>
 
