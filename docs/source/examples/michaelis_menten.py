@@ -71,6 +71,7 @@ ax_twin.plot(
 lines1, labels1 = ax.get_legend_handles_labels()
 lines2, labels2 = ax_twin.get_legend_handles_labels()
 ax.legend(lines1 + lines2, labels1 + labels2, loc="center left")
+plt.show()
 
 # %% [markdown]
 # Note that the green line (`~P`, the number of phosphorylated agents under a less detailed ruleset) closely tracks the blue line (`P`, the higher-fidelity model). This model breaks down when the quasi steady-state dynamics are not satisfied, which can occur under an overabundance of enzymes compared to substrates:
@@ -91,6 +92,7 @@ while nqe_system.time < 25:
 
 # %%
 nqe_system.monitor.plot(combined=True, observables=["P", "S", "~P", "ES"])
+plt.show()
 
 # %% [markdown]
 # Note that `~P` no longer tracks the more correct estimate `P`.

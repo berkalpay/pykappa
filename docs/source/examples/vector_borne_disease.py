@@ -3,6 +3,7 @@
 
 # %%
 from pykappa import System
+import matplotlib.pyplot as plt
 
 # %% [markdown]
 # The following model is adapted from ["Rule-based epidemic models"](https://doi.org/10.1016/j.jtbi.2021.110851) by Waites et al. We simulate a simple vector-borne disease which can travel between both mosquitoes (`V(x{s i})`) and hosts (`P(x{s e i r})`). The disease progresses: hosts are initially susceptible (`x{s}`) to the disease, later become exposed after coming in contact with a mosquito (`x{e}`), are infected (`x{i}`), and eventually recover (`x{r}`).
@@ -65,12 +66,14 @@ while system.time < 375:
 
 # %%
 system.monitor.plot(combined=True, observables=["S", "E", "I", "R"])
+plt.show()
 
 # %% [markdown]
 # All infected vectors eventually perish:
 
 # %%
 system.monitor.plot(combined=True, observables=["Vs", "Vi"])
+plt.show()
 
 # %% [markdown]
 # Now we regenerate the system from scratch in order to demonstrate the impact of an environmental intervention.
@@ -102,3 +105,4 @@ while system["M"] > 0:
 # %%
 system.monitor.plot(combined=True, observables=["S", "E", "I", "R"])
 system.monitor.plot(combined=True, observables=["Vs", "Vi"])
+plt.show()

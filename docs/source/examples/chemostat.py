@@ -7,6 +7,7 @@
 
 # %%
 from pykappa import System
+import matplotlib.pyplot as plt
 
 system = System.from_ka(
     """
@@ -39,6 +40,7 @@ system = System.from_ka(
 while system.time < 10**3:
     system.update()
 system.monitor.plot()
+plt.show()
 
 # %% [markdown]
 # Now let's double inflow of the nutrient without changing outflow.
@@ -50,3 +52,4 @@ system["inflow"] = 2
 while system.time < 5 * 10**3:
     system.update()
 system.monitor.plot()
+plt.show()
