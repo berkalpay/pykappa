@@ -136,4 +136,5 @@ print("Pattern expression:", pattern_expr.kappa_str)
 # ## Systems
 #
 # A system bundles a mixture with rules and observables and is used for simulation.
-# Start with the reversible binding system in the Examples gallery to see how the API works at this highest level.
+# Start with the [reversible binding system](examples/reversible_binding.html) in the
+# [Examples gallery](examples/index.html) to see how the API works at this highest level.
