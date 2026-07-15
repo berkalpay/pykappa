@@ -6,6 +6,7 @@
 
 # %%
 from pykappa import System
+import matplotlib.pyplot as plt
 
 system = System.from_ka(
     """
@@ -34,10 +35,8 @@ system = System.from_ka(
 while system.time < 100:
     system.update()
 
+
 # %%
-import matplotlib.pyplot as plt
-
-
 def polymer_len_plot(system):
     plt.hist([len(component) for component in system.mixture if len(component) > 1])
     plt.xlabel("Polymer length")
