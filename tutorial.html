@@ -133,9 +133,9 @@ Embeddings of complex in itself: 1
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Mixture as a Kappa string:
-%init: 3 A(x[.])
 %init: 2 B(x[.])
 %init: 2 A(x[1]), B(x[1])
+%init: 3 A(x[.])
 
 #AB embeddings (cached): 2
 </pre></div></div>
@@ -169,8 +169,8 @@ Mixture as a Kappa string:
 <div class="highlight"><pre>
 Components in mixture:
 A(x[.])
+A(x[1]), B(x[1])
 A(x[.])
-B(x[1]), A(x[1])
 
 Embeddings in the AB complex: 1
 </pre></div></div>
@@ -239,14 +239,14 @@ AB count after one binding event: 3
 <div class="highlight"><pre>
 Literal expression value: 42
 Math expression value: 20
-Pattern expression: |A(x[1]), B(x[1])|
+Pattern expression: |B(x[1]), A(x[1])|
 </pre></div></div>
 </div>
 <p>The last expression represents the number of AB complexes; it can be evaluated given a system as <code class="docutils literal notranslate"><span class="pre">pattern_expr.evaluate(system)</span></code>.</p>
 </section>
 <section id="Systems">
 <h2>Systems<a class="headerlink" href="#Systems" title="Link to this heading">¶</a></h2>
-<p>A system bundles a mixture with rules and observables and is used for simulation. Start with the reversible binding system in the Examples gallery to see how the API works at this highest level.</p>
+<p>A system bundles a mixture with rules and observables and is used for simulation. Start with the <a class="reference external" href="examples/reversible_binding.html">reversible binding system</a> in the <a class="reference external" href="examples/index.html">Examples gallery</a> to see how the API works at this highest level.</p>
 </section>
 </section>
 
