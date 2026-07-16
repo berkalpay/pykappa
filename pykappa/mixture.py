@@ -31,7 +31,7 @@ class Mixture:
     agents: IndexedSet[Agent]
     _components: Optional[IndexedSet[Component]]  # Components if tracking is enabled
     _embeddings: dict[Component, IndexedSet[Embedding]]  # Cache of embeddings
-    _max_embedding_width: int  # Maximum diameter of tracked components
+    _max_embedding_width: int  # Max diameter, to compute re-embedding neighborhoods
 
     @classmethod
     def from_kappa(cls, patterns: dict[str, int]) -> Self:
@@ -146,8 +146,8 @@ class Mixture:
         new_agents = [agent.detached() for agent in component_ordered]
         new_edges = set()
 
+        # Reconstruct the bond structure in the copied agents
         for i, agent in enumerate(component_ordered):
-            # Duplicate the proper link structure
             for site in agent:
                 if site.coupled:
                     partner = site.partner
@@ -203,10 +203,12 @@ class Mixture:
 
     def _apply_update(self, update: "_MixtureUpdate") -> None:
         """Apply a collection of changes to the mixture."""
+        # Clear embeddings involving agents that will change
         for agent in update.touched_before:
             for tracked in self._embeddings:
                 self._embeddings[tracked].remove_by("agent", agent)
 
+        # Modify the graph structure
         for edge in update.edges_to_remove:
             self._remove_edge(edge)
         for agent in update.agents_to_remove:
@@ -216,10 +218,10 @@ class Mixture:
         for edge in update.edges_to_add:
             self._add_edge(edge)
 
+        # Re-embed tracked components in the updated region around modified agents
         update_region = Agent.neighborhood(
             update.touched_after, self._max_embedding_width
         )
-
         update_region = IndexedSet(update_region)
         update_region.create_index("type", lambda a: [a.type])
         for component_pattern in self._embeddings:
@@ -255,14 +257,15 @@ class Mixture:
         if not self.component_tracking:
             return
 
+        # Check if the edge merges two components
         component1 = self.components.lookup_one("agent", edge.site1.agent)
         component2 = self.components.lookup_one("agent", edge.site2.agent)
         if component1 == component2:
             return
 
+        # Merge smaller component into larger for efficiency
         if len(component2) > len(component1):
             component1, component2 = component2, component1
-
         with self._relocate_embeddings(component2):
             self.components.remove(component2)
             for agent in component2:
@@ -284,12 +287,14 @@ class Mixture:
         old_component = self.components.lookup_one("agent", agent1)
         assert old_component == self.components.lookup_one("agent", agent2)
 
+        # Check if edge removal splits the component
         maybe_new_component = Component(agent1.depth_first_traversal)
         if agent2 in maybe_new_component:
             return
+
+        # Handle the split
         new_component1 = maybe_new_component
         new_component2 = Component(agent2.depth_first_traversal)
-
         with self._relocate_embeddings(old_component):
             self.components.remove(old_component)
             self.components.add(new_component1)
@@ -299,6 +304,7 @@ class Mixture:
     def _relocate_embeddings(self, component: Component):
         """Temporarily evacuate and restore embeddings during component restructuring."""
         relocated = {}
+        # Save and remove embeddings that reference the restructured component
         for tracked in self._embeddings:
             relocated[tracked] = list(
                 self._embeddings[tracked].lookup("component", component)
@@ -309,6 +315,7 @@ class Mixture:
         try:
             yield
         finally:
+            # Restore embeddings after restructuring
             for tracked in self._embeddings:
                 for e in relocated.get(tracked, []):
                     self._embeddings[tracked].add(e)
