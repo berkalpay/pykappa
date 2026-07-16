@@ -74,7 +74,7 @@
     <span class="n">agents</span><span class="p">:</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span>
     <span class="n">_components</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IndexedSet</span><span class="p">[</span><span class="n">Component</span><span class="p">]]</span>  <span class="c1"># Components if tracking is enabled</span>
     <span class="n">_embeddings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Embedding</span><span class="p">]]</span>  <span class="c1"># Cache of embeddings</span>
-    <span class="n">_max_embedding_width</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Maximum diameter of tracked components</span>
+    <span class="n">_max_embedding_width</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Max diameter, to compute re-embedding neighborhoods</span>
 
 <div class="viewcode-block" id="Mixture.from_kappa">
 <a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.Mixture.from_kappa">[docs]</a>
@@ -198,8 +198,8 @@
         <span class="n">new_agents</span> <span class="o">=</span> <span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">detached</span><span class="p">()</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">component_ordered</span><span class="p">]</span>
         <span class="n">new_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
+        <span class="c1"># Reconstruct the bond structure in the copied agents</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">agent</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">component_ordered</span><span class="p">):</span>
-            <span class="c1"># Duplicate the proper link structure</span>
             <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">site</span><span class="o">.</span><span class="n">coupled</span><span class="p">:</span>
                     <span class="n">partner</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">partner</span>
@@ -264,10 +264,12 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_apply_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="s2">&quot;_MixtureUpdate&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply a collection of changes to the mixture.&quot;&quot;&quot;</span>
+        <span class="c1"># Clear embeddings involving agents that will change</span>
         <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">update</span><span class="o">.</span><span class="n">touched_before</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">remove_by</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
 
+        <span class="c1"># Modify the graph structure</span>
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">update</span><span class="o">.</span><span class="n">edges_to_remove</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_remove_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">update</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="p">:</span>
@@ -277,10 +279,10 @@
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">update</span><span class="o">.</span><span class="n">edges_to_add</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
 
+        <span class="c1"># Re-embed tracked components in the updated region around modified agents</span>
         <span class="n">update_region</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">neighborhood</span><span class="p">(</span>
             <span class="n">update</span><span class="o">.</span><span class="n">touched_after</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_embedding_width</span>
         <span class="p">)</span>
-
         <span class="n">update_region</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">(</span><span class="n">update_region</span><span class="p">)</span>
         <span class="n">update_region</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">component_pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
@@ -316,14 +318,15 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_tracking</span><span class="p">:</span>
             <span class="k">return</span>
 
+        <span class="c1"># Check if the edge merges two components</span>
         <span class="n">component1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
         <span class="n">component2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">site2</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">component1</span> <span class="o">==</span> <span class="n">component2</span><span class="p">:</span>
             <span class="k">return</span>
 
+        <span class="c1"># Merge smaller component into larger for efficiency</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">component2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">component1</span><span class="p">):</span>
             <span class="n">component1</span><span class="p">,</span> <span class="n">component2</span> <span class="o">=</span> <span class="n">component2</span><span class="p">,</span> <span class="n">component1</span>
-
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_relocate_embeddings</span><span class="p">(</span><span class="n">component2</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">component2</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">component2</span><span class="p">:</span>
@@ -345,12 +348,14 @@
         <span class="n">old_component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">agent1</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">old_component</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="n">agent2</span><span class="p">)</span>
 
+        <span class="c1"># Check if edge removal splits the component</span>
         <span class="n">maybe_new_component</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">agent1</span><span class="o">.</span><span class="n">depth_first_traversal</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">agent2</span> <span class="ow">in</span> <span class="n">maybe_new_component</span><span class="p">:</span>
             <span class="k">return</span>
+
+        <span class="c1"># Handle the split</span>
         <span class="n">new_component1</span> <span class="o">=</span> <span class="n">maybe_new_component</span>
         <span class="n">new_component2</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">agent2</span><span class="o">.</span><span class="n">depth_first_traversal</span><span class="p">)</span>
-
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_relocate_embeddings</span><span class="p">(</span><span class="n">old_component</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">old_component</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_component1</span><span class="p">)</span>
@@ -360,6 +365,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_relocate_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Temporarily evacuate and restore embeddings during component restructuring.&quot;&quot;&quot;</span>
         <span class="n">relocated</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Save and remove embeddings that reference the restructured component</span>
         <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
             <span class="n">relocated</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;component&quot;</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
@@ -370,6 +376,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">yield</span>
         <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Restore embeddings after restructuring</span>
             <span class="k">for</span> <span class="n">tracked</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">relocated</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tracked</span><span class="p">,</span> <span class="p">[]):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">[</span><span class="n">tracked</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
