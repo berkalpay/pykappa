@@ -363,10 +363,6 @@ class _MixtureUpdate:
         if site.coupled:
             self.edges_to_remove.add(_Edge(site, site.partner))
 
-    def register_changed_agent(self, agent: Agent) -> None:
-        """Register an agent as having internal state changes."""
-        self.agents_changed.add(agent)
-
     @property
     def touched_before(self) -> set[Agent]:
         """The agents that will be changed or removed by this update."""
