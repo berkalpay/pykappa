@@ -128,16 +128,6 @@
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_partner_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_partner_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_partner_str" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_state_str">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_state_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_state_str" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Site.kappa_str">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.kappa_str" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -265,23 +255,6 @@
 <dt class="sig sig-object py" id="pykappa.pattern.Agent.neighbors">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">neighbors</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.neighbors" title="Link to this definition">¶</a></dt>
 <dd><p>The agents directly connected to this one.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.depth_first_traversal">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">depth_first_traversal</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.depth_first_traversal" title="Link to this definition">¶</a></dt>
-<dd><p>Perform depth-first traversal starting from this agent.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.detached">
-<span class="sig-name descname"><span class="pre">detached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.detached"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.detached" title="Link to this definition">¶</a></dt>
-<dd><p>Create a clone with all sites emptied of partners.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Self</em></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -480,20 +453,6 @@ Do not use this for components in a mixture that can change.</p>
 <dt class="sig sig-object py" id="pykappa.pattern.Pattern.components">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">components</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Component" title="pykappa.pattern.Component"><span class="pre">Component</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Pattern.components" title="Link to this definition">¶</a></dt>
 <dd><p>The connected components in this pattern.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.agents_to_kappa_str">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">agents_to_kappa_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Pattern.agents_to_kappa_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Pattern.agents_to_kappa_str" title="Link to this definition">¶</a></dt>
-<dd><p>Convert a collection of agents to Kappa string representation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agents</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em> | </em><em>None</em><em>]</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py property">
