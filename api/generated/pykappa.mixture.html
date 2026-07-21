@@ -55,7 +55,7 @@
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.mixture.</span></span><span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">patterns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture" title="Link to this definition">¶</a></dt>
 <dd><p>A collection of agents and their connections.</p>
-<p>Optionally tracks connected components, enabled via <cite>enable_component_tracking()</cite>.</p>
+<p>Optionally tracks connected components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -99,17 +99,6 @@
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture.components">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">components</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IndexedSet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Component" title="pykappa.pattern.Component"><span class="pre">Component</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.mixture.Mixture.components" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.mixture.Mixture.enable_component_tracking">
-<span class="sig-name descname"><span class="pre">enable_component_tracking</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/mixture.html#Mixture.enable_component_tracking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.mixture.Mixture.enable_component_tracking" title="Link to this definition">¶</a></dt>
-<dd><p>Turn on connected-component tracking for this mixture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.mixture.Mixture.add">

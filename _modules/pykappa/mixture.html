@@ -68,7 +68,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Mixture</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A collection of agents and their connections.</span>
 
-<span class="sd">    Optionally tracks connected components, enabled via `enable_component_tracking()`.</span>
+<span class="sd">    Optionally tracks connected components.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">agents</span><span class="p">:</span> <span class="n">IndexedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span>
@@ -98,12 +98,11 @@
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">()</span> <span class="k">if</span> <span class="n">track_components</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_embedding_width</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">if</span> <span class="n">track_components</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">enable_component_tracking</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">patterns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
@@ -152,23 +151,6 @@
             <span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Component</span><span class="p">(</span><span class="n">component_agents</span><span class="p">))</span>
             <span class="n">unassigned</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">component_agents</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">components</span>
-
-<div class="viewcode-block" id="Mixture.enable_component_tracking">
-<a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.Mixture.enable_component_tracking">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">enable_component_tracking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn on connected-component tracking for this mixture.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_tracking</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
-
-        <span class="c1"># If embeddings are already tracked, add a component index to them</span>
-        <span class="k">for</span> <span class="n">embset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">embset</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span>
-                <span class="s2">&quot;component&quot;</span><span class="p">,</span>
-                <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">lookup_one</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">values</span><span class="p">())))],</span>
-            <span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="Mixture.add">
 <a class="viewcode-back" href="../../api/generated/pykappa.mixture.html#pykappa.mixture.Mixture.add">[docs]</a>
