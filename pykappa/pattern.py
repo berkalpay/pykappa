@@ -41,14 +41,17 @@ class Site(Counted):
         return f'Site(id={self.id}, kappa_str="{self.kappa_str}")'
 
     @property
+    def _kappa_state_str(self) -> str:
+        return "" if self.state in ("?", ".") else f"{{{self.state}}}"
+
+    @property
     def kappa_str(self) -> str:
         partner_str = (
             ""
             if self.partner == "?"
             else "[_]" if self.coupled else f"[{self.partner}]"
         )
-        state_str = "" if self.state == "?" else f"{{{self.state}}}"
-        return f"{self.label}{partner_str}{state_str}"
+        return f"{self.label}{partner_str}{self._kappa_state_str}"
 
     @property
     def undetermined(self) -> bool:
@@ -513,7 +516,7 @@ class Pattern:
                     bond_num_counter += 1
                 else:
                     partner_str = "" if site.partner == "?" else f"[{site.partner}]"
-                site_strs.append(f"{site.label}{partner_str}{site.kappa_state_str}")
+                site_strs.append(f"{site.label}{partner_str}{site._kappa_state_str}")
             agent_strs.append(f"{agent.type}({" ".join(site_strs)})")
         return ", ".join(agent_strs)
 
