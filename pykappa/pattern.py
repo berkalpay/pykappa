@@ -180,7 +180,7 @@ class Agent(Counted):
         return [site.partner.agent for site in self if site.coupled]
 
     @property
-    def depth_first_traversal(self) -> list[Self]:
+    def _depth_first_traversal(self) -> list[Self]:
         """Perform depth-first traversal starting from this agent."""
         visited = set()
         traversal = []
@@ -488,7 +488,7 @@ class Pattern:
         unseen = {agent for agent in self.agents if agent is not None}
         components = []
         while unseen:
-            component = Component(next(iter(unseen)).depth_first_traversal)
+            component = Component(next(iter(unseen))._depth_first_traversal)
             unseen.difference_update(component)
             components.append(component)
         return components

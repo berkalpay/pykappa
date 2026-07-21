@@ -101,7 +101,7 @@ class Mixture:
         components = IndexedSet()
         unassigned = set(self.agents)
         while unassigned:
-            component_agents = set(next(iter(unassigned)).depth_first_traversal)
+            component_agents = set(next(iter(unassigned))._depth_first_traversal)
             component_agents.intersection_update(self.agents)
             components.add(Component(component_agents))
             unassigned.difference_update(component_agents)
@@ -291,13 +291,13 @@ class Mixture:
         assert old_component == self.components.lookup_one("agent", agent2)
 
         # Check if edge removal splits the component
-        maybe_new_component = Component(agent1.depth_first_traversal)
+        maybe_new_component = Component(agent1._depth_first_traversal)
         if agent2 in maybe_new_component:
             return
 
         # Handle the split
         new_component1 = maybe_new_component
-        new_component2 = Component(agent2.depth_first_traversal)
+        new_component2 = Component(agent2._depth_first_traversal)
         with self._relocate_embeddings(old_component):
             self.components.remove(old_component)
             self.components.add(new_component1)
