@@ -272,7 +272,7 @@ class Mixture:
         with self._relocate_embeddings(component2):
             self.components.remove(component2)
             for agent in component2:
-                component1.add(agent)
+                component1.agents.add(agent)
                 self.components.indices["agent"][agent] = [component1]
 
     def _remove_edge(self, edge: _Edge) -> None:

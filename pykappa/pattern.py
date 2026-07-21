@@ -297,9 +297,6 @@ class Component(Counted):
     def kappa_str(self) -> str:
         return Pattern._agents_to_kappa_str(self.agents)
 
-    def add(self, agent: Agent):
-        self.agents.add(agent)
-
     def isomorphic(self, other: Self) -> bool:
         return next(self.isomorphisms(other), None) is not None
 
