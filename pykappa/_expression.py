@@ -70,6 +70,9 @@ class Expression:
         self.type = type
         self.attrs = attrs
 
+    def __str__(self):
+        return self.kappa_str
+
     @property
     def kappa_str(self) -> str:
         """

@@ -485,6 +485,9 @@ class Pattern:
     def __len__(self):
         return len(self.agents)
 
+    def __str__(self):
+        return self.kappa_str
+
     @cached_property
     def components(self) -> list[Component]:
         """The connected components in this pattern."""

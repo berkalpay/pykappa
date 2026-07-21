@@ -66,6 +66,9 @@ class Mixture:
     def __iter__(self) -> Iterator[Component]:
         yield from self.components
 
+    def __str__(self):
+        return self.kappa_str
+
     @property
     def kappa_str(self) -> str:
         """The mixture in Kappa format with %init declarations."""
