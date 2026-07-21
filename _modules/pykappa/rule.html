@@ -334,7 +334,7 @@
                         <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">stated</span><span class="p">:</span>
                             <span class="n">agent</span><span class="p">[</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span>
                             <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">l_agent</span><span class="p">[</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
-                                <span class="n">update</span><span class="o">.</span><span class="n">register_changed_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+                                <span class="n">update</span><span class="o">.</span><span class="n">agents_changed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
                     <span class="n">new_selection</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span>
                 <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                     <span class="k">pass</span>
