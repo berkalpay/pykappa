@@ -60,6 +60,8 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
 
+<span class="n">AVOGADRO</span> <span class="o">=</span> <span class="mf">6.02214e23</span>
+
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_ComponentPlot</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stable visualization of a Component across simulation steps.&quot;&quot;&quot;</span>
@@ -137,7 +139,6 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_kd_table</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">AVOGADRO</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_table</span>
 
     <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span> <span class="s2">&quot;k_on&quot;</span><span class="p">,</span> <span class="s2">&quot;k_off&quot;</span><span class="p">,</span> <span class="s2">&quot;K_D&quot;</span><span class="p">]</span>
