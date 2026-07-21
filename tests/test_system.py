@@ -3,7 +3,7 @@ import shutil
 import random
 
 from pykappa import System, Mixture
-from pykappa.rule import AVOGADRO
+from pykappa.analysis import AVOGADRO
 
 
 def heterodimerization_system(k_on: float = 2.5e9) -> System:

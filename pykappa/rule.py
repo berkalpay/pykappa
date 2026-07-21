@@ -12,8 +12,6 @@ from pykappa._utils import rejection_sample
 if TYPE_CHECKING:
     from pykappa.system import System
 
-AVOGADRO = 6.02214e23
-
 
 class Rule:
     """A Kappa rule, specifying the transformation of a pattern at a stochastic rate."""

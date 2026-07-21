@@ -19,6 +19,8 @@ if TYPE_CHECKING:
     from pykappa.pattern import Component
     from pykappa.system import System
 
+AVOGADRO = 6.02214e23
+
 
 class _ComponentPlot:
     """Stable visualization of a Component across simulation steps."""
@@ -96,7 +98,6 @@ class _ComponentPlot:
 
 
 def _kd_table(system, volume: float = 1.0) -> str:
-    from pykappa.rule import AVOGADRO
     from pykappa._utils import str_table
 
     header = ["name", "rule", "k_on", "k_off", "K_D"]
