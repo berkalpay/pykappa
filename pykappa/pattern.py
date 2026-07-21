@@ -41,20 +41,14 @@ class Site(Counted):
         return f'Site(id={self.id}, kappa_str="{self.kappa_str}")'
 
     @property
-    def kappa_partner_str(self) -> str:
-        if self.partner == "?":
-            return ""
-        if self.coupled:
-            return "[_]"
-        return f"[{self.partner}]"
-
-    @property
-    def kappa_state_str(self) -> str:
-        return "" if self.state == "?" else f"{{{self.state}}}"
-
-    @property
     def kappa_str(self) -> str:
-        return f"{self.label}{self.kappa_partner_str}{self.kappa_state_str}"
+        partner_str = (
+            ""
+            if self.partner == "?"
+            else "[_]" if self.coupled else f"[{self.partner}]"
+        )
+        state_str = "" if self.state == "?" else f"{{{self.state}}}"
+        return f"{self.label}{partner_str}{state_str}"
 
     @property
     def undetermined(self) -> bool:
