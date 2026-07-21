@@ -12,10 +12,7 @@ from pykappa._utils import rejection_sample
 if TYPE_CHECKING:
     from pykappa.system import System
 
-
-# Useful constants
 AVOGADRO = 6.02214e23
-DIFFUSION_RATE = 1e9
 
 
 class Rule:

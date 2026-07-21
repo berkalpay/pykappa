@@ -3,7 +3,7 @@ import shutil
 import random
 
 from pykappa import System, Mixture
-from pykappa.rule import AVOGADRO, DIFFUSION_RATE
+from pykappa.rule import AVOGADRO
 
 
 def heterodimerization_system(k_on: float = 2.5e9) -> System:
@@ -133,11 +133,12 @@ def test_equilibrium_matches_kd(b_init):
     Check that the input Kd matches what's observed empirically post-equilibrium
     within a relative margin of error.
     """
+    diffusion_rate = 1e9
     volume = 10**-13
     a_init = 2000
-    on_rate = DIFFUSION_RATE / (AVOGADRO * volume)
+    on_rate = diffusion_rate / (AVOGADRO * volume)
     kd = 10**-9
-    off_rate = DIFFUSION_RATE * kd
+    off_rate = diffusion_rate * kd
     system = System.from_ka(f"""
         %init: {a_init} A(x[.])
         %init: {b_init} B(x[.])
