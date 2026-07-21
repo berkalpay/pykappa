@@ -192,7 +192,7 @@ class Agent(Counted):
                 stack.extend(agent.neighbors)
         return traversal
 
-    def detached(self) -> Self:
+    def _detached(self) -> Self:
         """Create a clone with all sites emptied of partners."""
         detached = type(self)(
             self.type, [Site(site.label, site.state, ".") for site in self]

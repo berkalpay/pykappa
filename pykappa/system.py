@@ -398,7 +398,7 @@ class System:
             pattern = Pattern.from_kappa(pattern)
         components = [pattern] if isinstance(pattern, Component) else pattern.components
         for component in components:
-            agent_map = {agent: agent.detached() for agent in component.agents}
+            agent_map = {agent: agent._detached() for agent in component.agents}
             for agent in component.agents:
                 for site in agent:
                     if site.coupled:

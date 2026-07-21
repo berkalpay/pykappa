@@ -146,7 +146,7 @@ class Mixture:
 
     def _add_component(self, component: Component) -> None:
         component_ordered = list(component.agents)
-        new_agents = [agent.detached() for agent in component_ordered]
+        new_agents = [agent._detached() for agent in component_ordered]
         new_edges = set()
 
         # Reconstruct the bond structure in the copied agents
@@ -336,7 +336,7 @@ class _MixtureUpdate:
 
     def create_agent(self, agent: Agent) -> Agent:
         """Create a new agent based on a template (sites will be emptied)."""
-        new_agent = agent.detached()
+        new_agent = agent._detached()
         self.agents_to_add.add(new_agent)
         return new_agent
 
