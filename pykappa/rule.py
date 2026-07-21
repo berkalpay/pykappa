@@ -115,10 +115,9 @@ class Rule:
         i.e. the number of embeddings times the reaction rate, accounting
         for rule symmetry.
         """
-        n_embeddings = self.n_embeddings(system.mixture)
-        n_symmetries = self.n_symmetries
-        assert n_embeddings % n_symmetries == 0
-        return n_embeddings // n_symmetries * self.rate(system)
+        return (
+            self.n_embeddings(system.mixture) // self.n_symmetries * self.rate(system)
+        )
 
     @cached_property
     def n_symmetries(self) -> int:
