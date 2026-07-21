@@ -174,7 +174,7 @@ class Expression:
                     )
                 return (
                     len(system.mixture.embeddings(component))
-                    // component.n_automorphisms
+                    // value.attrs["n_symmetries"]
                 )
             raise NotImplementedError(
                 f"Reserved variable {value.type} not implemented yet."

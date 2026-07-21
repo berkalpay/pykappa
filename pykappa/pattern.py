@@ -382,18 +382,6 @@ class Component(Counted):
             return
         yield from self.embeddings(other, exact=True)
 
-    @cached_property
-    def n_automorphisms(self) -> int:
-        """Returns the number of automorphisms (i.e. isomorphisms onto itself)
-        of the component.
-
-        Note:
-            This uses a cached result, and thus should only be used
-            for static components, i.e. the ones in rules and observables.
-            Do not use this for components in a mixture that can change.
-        """
-        return len(list(self.isomorphisms(self)))
-
     @property
     def diameter(self) -> int:
         """Get the maximum minimum shortest path between any two agents."""

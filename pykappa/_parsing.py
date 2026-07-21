@@ -225,7 +225,11 @@ class ExpressionTransformer(Transformer):
             len(pattern.components) == 1
         ), f"The pattern {pattern} must consist of a single component."
         component = pattern.components[0]
-        return Expression("component_pattern", value=component)
+        return Expression(
+            "component_pattern",
+            value=component,
+            n_symmetries=len(list(component.isomorphisms(component))),
+        )
 
     def defined_constant(self, children):
         return Expression("defined_constant", name=children[0].value)
