@@ -298,7 +298,7 @@ class Component(Counted):
 
     @property
     def kappa_str(self) -> str:
-        return Pattern.agents_to_kappa_str(self.agents)
+        return Pattern._agents_to_kappa_str(self.agents)
 
     def add(self, agent: Agent):
         self.agents.add(agent)
@@ -497,7 +497,7 @@ class Pattern:
         return components
 
     @staticmethod
-    def agents_to_kappa_str(agents: Iterable[Optional[Agent]]) -> str:
+    def _agents_to_kappa_str(agents: Iterable[Optional[Agent]]) -> str:
         """Convert a collection of agents to Kappa string representation."""
         bond_num_counter = 1
         bond_nums: dict[Site, int] = dict()
@@ -522,7 +522,7 @@ class Pattern:
 
     @property
     def kappa_str(self) -> str:
-        return type(self).agents_to_kappa_str(self.agents)
+        return type(self)._agents_to_kappa_str(self.agents)
 
     @cached_property
     def instantiable(self) -> bool:
