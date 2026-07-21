@@ -106,11 +106,7 @@ class Mixture:
             unassigned.difference_update(component_agents)
         return components
 
-    def add(
-        self,
-        pattern: Pattern | Component | str,
-        n_copies: int = 1,
-    ) -> None:
+    def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
         """Add instances of a pattern or component to the mixture.
 
         Raises:
