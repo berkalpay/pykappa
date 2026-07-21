@@ -172,7 +172,7 @@ class Agent(Counted):
     def sites(self) -> Iterable[Site]:
         yield from self.interface.values()
 
-    @cached_property
+    @property
     def instantiable(self) -> bool:
         """Check if a concrete Agent can be created from this pattern."""
         return all(site.instantiable for site in self)
@@ -524,7 +524,7 @@ class Pattern:
     def kappa_str(self) -> str:
         return type(self)._agents_to_kappa_str(self.agents)
 
-    @cached_property
+    @property
     def instantiable(self) -> bool:
         """Check if all agents in the pattern are specific enough to instantiate."""
         return all(agent is not None and agent.instantiable for agent in self.agents)
