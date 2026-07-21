@@ -25,7 +25,7 @@ class _Edge:
 class Mixture:
     """A collection of agents and their connections.
 
-    Optionally tracks connected components, enabled via `enable_component_tracking()`.
+    Optionally tracks connected components.
     """
 
     agents: IndexedSet[Agent]
@@ -52,12 +52,11 @@ class Mixture:
     ):
         self.agents = IndexedSet()
         self.agents.create_index("type", lambda a: [a.type])
-        self._components = None
+        self._components = IndexedSet() if track_components else None
+        if self._components is not None:
+            self._components.create_index("agent", lambda c: c.agents)
         self._embeddings = {}
         self._max_embedding_width = 0
-
-        if track_components:
-            self.enable_component_tracking()
 
         if patterns is not None:
             for pattern in patterns:
@@ -106,20 +105,6 @@ class Mixture:
             components.add(Component(component_agents))
             unassigned.difference_update(component_agents)
         return components
-
-    def enable_component_tracking(self) -> None:
-        """Turn on connected-component tracking for this mixture."""
-        if self.component_tracking:
-            return
-        self._components = IndexedSet(self.components)
-        self._components.create_index("agent", lambda c: c.agents)
-
-        # If embeddings are already tracked, add a component index to them
-        for embset in self._embeddings.values():
-            embset.create_index(
-                "component",
-                lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
-            )
 
     def add(
         self,

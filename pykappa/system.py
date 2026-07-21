@@ -207,9 +207,12 @@ class System:
             {} if rules is None else {f"r{i}": rule for i, rule in enumerate(rules)}
         )
 
-        mixture = Mixture() if mixture is None else mixture
-        if any(rule.component_constraint != "any" for rule in self.rules.values()):
-            mixture.enable_component_tracking()
+        if mixture is None:
+            mixture = Mixture(
+                track_components=any(
+                    rule.component_constraint != "any" for rule in self.rules.values()
+                )
+            )
 
         self.observables = {} if observables is None else observables
         self.variables = {} if variables is None else variables
