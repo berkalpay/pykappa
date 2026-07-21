@@ -14,6 +14,9 @@ if TYPE_CHECKING:
 # String partner states can be: "#" (wildcard), "." (empty), "_" (bound), "?" (undetermined)
 # "?" is the default in pattern instantiation and a wildcard in rules and observations
 SiteType = NamedTuple("SiteType", [("site_name", str), ("agent_name", str)])
+SiteType.site_name.__doc__ = "Name of the site"
+SiteType.agent_name.__doc__ = "Type of the agent that owns the site"
+
 Partner = str | SiteType | int | Union["Site"]
 
 
