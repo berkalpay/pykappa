@@ -198,7 +198,7 @@ class Agent(Counted):
             self.type, [Site(site.label, site.state, ".") for site in self]
         )
 
-    def isomorphic(self, other: Self) -> bool:
+    def _isomorphic(self, other: Self) -> bool:
         """Check if two Agents are equivalent locally, ignoring partners.
 
         Note:
@@ -320,7 +320,7 @@ class Component(Counted):
                 a = frontier.pop()
                 b = agent_map[a]
 
-                match_func = a.isomorphic if exact else a._embeds_in
+                match_func = a._isomorphic if exact else a._embeds_in
                 if not match_func(b):
                     root_failed = True
                     break
