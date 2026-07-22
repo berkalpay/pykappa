@@ -1,6 +1,6 @@
 from lark import Lark, Tree, Token, Transformer
 
-from pykappa.pattern import Site, Agent, Pattern, SiteType
+from pykappa.pattern import Site, Agent, Pattern, _TypedPartner
 from pykappa.rule import Rule
 from pykappa._expression import Expression
 
@@ -41,7 +41,7 @@ class KappaTransformer(Transformer):
             case [Token("INT", x)]:
                 return ("partner", int(x))
             case [site_name, agent_name]:
-                return ("partner", SiteType(str(site_name), str(agent_name)))
+                return ("partner", _TypedPartner(str(site_name), str(agent_name)))
             case [Tree(data="unspecified")]:
                 return ("partner", "?")
             case _:

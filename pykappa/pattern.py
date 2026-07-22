@@ -13,11 +13,8 @@ if TYPE_CHECKING:
 
 # String partner states can be: "#" (wildcard), "." (empty), "_" (bound), "?" (undetermined)
 # "?" is the default in pattern instantiation and a wildcard in rules and observations
-SiteType = NamedTuple("SiteType", [("site_name", str), ("agent_name", str)])
-SiteType.site_name.__doc__ = "Name of the site"
-SiteType.agent_name.__doc__ = "Type of the agent that owns the site"
-
-Partner = str | SiteType | int | Union["Site"]
+_TypedPartner = NamedTuple("_TypedPartner", [("site_name", str), ("agent_name", str)])
+Partner = str | _TypedPartner | int | Union["Site"]
 
 
 class Site(Counted):
@@ -62,12 +59,12 @@ class Site(Counted):
         return not (
             self.state == "#"
             or self.partner in ("#", "_")
-            or isinstance(self.partner, SiteType)
+            or isinstance(self.partner, _TypedPartner)
         )
 
     @property
     def bound(self) -> bool:
-        return self.partner == "_" or isinstance(self.partner, (SiteType, Site))
+        return self.partner == "_" or isinstance(self.partner, (_TypedPartner, Site))
 
     @property
     def _coupled(self) -> bool:
@@ -94,7 +91,7 @@ class Site(Counted):
         match self.partner:
             case ".":
                 return other.partner == "."
-            case SiteType():
+            case _TypedPartner():
                 return (
                     self.partner.site_name == other.partner.label
                     and self.partner.agent_name == other.partner.agent.type
