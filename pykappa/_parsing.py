@@ -76,10 +76,7 @@ class KappaTransformer(Transformer):
         agent_type = children[0]
         sites = children[1] if len(children) > 1 else []
 
-        agent = Agent(type=agent_type, sites=sites)
-        for site in agent:
-            site.agent = agent
-        return agent
+        return Agent(type=agent_type, sites=sites)
 
     # --- Pattern transformations ---
     def pattern(self, children):

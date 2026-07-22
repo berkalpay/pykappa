@@ -157,6 +157,8 @@ class Agent(Counted):
         super().__init__()
         self.type = type
         self.interface = {site.label: site for site in sites}
+        for site in self:
+            site.agent = self
 
     def __iter__(self):
         yield from self.interface.values()
@@ -196,12 +198,9 @@ class Agent(Counted):
 
     def _detached(self) -> Self:
         """Create a clone with all sites emptied of partners."""
-        detached = type(self)(
+        return type(self)(
             self.type, [Site(site.label, site.state, ".") for site in self]
         )
-        for site in detached:
-            site.agent = detached
-        return detached
 
     def isomorphic(self, other: Self) -> bool:
         """Check if two Agents are equivalent locally, ignoring partners.
