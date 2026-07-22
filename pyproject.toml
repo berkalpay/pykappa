@@ -41,6 +41,6 @@ norecursedirs = [
   "*dist-packages*",
 ]
 python_files = [
-  "*.py",
+  "test_*.py",
 ]
 python_functions = [ "test_*" ]
