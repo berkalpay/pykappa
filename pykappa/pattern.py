@@ -84,7 +84,7 @@ class Site(Counted):
         """Check if the site is coupled to a specific other site."""
         return isinstance(self.partner, Site)
 
-    def embeds_in(self, other: Self) -> bool:
+    def _embeds_in(self, other: Self) -> bool:
         """Check whether self as a pattern matches other as a concrete site."""
         if (self.stated and self.state != other.state) or (
             self.bound and not other.coupled
@@ -221,7 +221,7 @@ class Agent(Counted):
         # Check that sites in `other` not mentioned in `self`are undetermined
         return all(other[site_name].undetermined for site_name in b_sites_leftover)
 
-    def embeds_in(self, other: Self) -> bool:
+    def _embeds_in(self, other: Self) -> bool:
         """Check whether self as a pattern matches other as a concrete agent."""
         if self.type != other.type:
             return False
@@ -230,7 +230,7 @@ class Agent(Counted):
             if a_site.label not in other.interface and not a_site.undetermined:
                 return False
             b_site = other[a_site.label]
-            if not a_site.embeds_in(b_site):
+            if not a_site._embeds_in(b_site):
                 return False
 
         return True
@@ -320,7 +320,7 @@ class Component(Counted):
                 a = frontier.pop()
                 b = agent_map[a]
 
-                match_func = a.isomorphic if exact else a.embeds_in
+                match_func = a.isomorphic if exact else a._embeds_in
                 if not match_func(b):
                     root_failed = True
                     break
