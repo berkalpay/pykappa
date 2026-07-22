@@ -13,5 +13,4 @@
       Embedding
       Pattern
       Site
-      SiteType
    

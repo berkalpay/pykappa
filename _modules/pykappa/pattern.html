@@ -54,11 +54,8 @@
 
 <span class="c1"># String partner states can be: &quot;#&quot; (wildcard), &quot;.&quot; (empty), &quot;_&quot; (bound), &quot;?&quot; (undetermined)</span>
 <span class="c1"># &quot;?&quot; is the default in pattern instantiation and a wildcard in rules and observations</span>
-<span class="n">SiteType</span> <span class="o">=</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="s2">&quot;SiteType&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s2">&quot;site_name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;agent_name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)])</span>
-<span class="n">SiteType</span><span class="o">.</span><span class="n">site_name</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;Name of the site&quot;</span>
-<span class="n">SiteType</span><span class="o">.</span><span class="n">agent_name</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;Type of the agent that owns the site&quot;</span>
-
-<span class="n">Partner</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">SiteType</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Site&quot;</span><span class="p">]</span>
+<span class="n">_TypedPartner</span> <span class="o">=</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="s2">&quot;_TypedPartner&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s2">&quot;site_name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;agent_name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)])</span>
+<span class="n">_Partner</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">_TypedPartner</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Site&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Site">
@@ -69,9 +66,9 @@
     <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span>  <span class="c1">#: The agent this site belongs to (set after initialization)</span>
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1">#: Name of the site</span>
     <span class="n">state</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1">#: Internal state of the site</span>
-    <span class="n">partner</span><span class="p">:</span> <span class="n">Partner</span>
+    <span class="n">partner</span><span class="p">:</span> <span class="n">_Partner</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partner</span><span class="p">:</span> <span class="n">Partner</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partner</span><span class="p">:</span> <span class="n">_Partner</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            label: Name of the site.</span>
@@ -105,12 +102,12 @@
         <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span>
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">partner</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
-            <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">,</span> <span class="n">SiteType</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">,</span> <span class="n">_TypedPartner</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">bound</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">partner</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">,</span> <span class="p">(</span><span class="n">SiteType</span><span class="p">,</span> <span class="n">Site</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">partner</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">,</span> <span class="p">(</span><span class="n">_TypedPartner</span><span class="p">,</span> <span class="n">Site</span><span class="p">))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_coupled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -137,7 +134,7 @@
         <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">:</span>
             <span class="k">case</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">partner</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span>
-            <span class="k">case</span> <span class="n">SiteType</span><span class="p">():</span>
+            <span class="k">case</span> <span class="n">_TypedPartner</span><span class="p">():</span>
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="o">.</span><span class="n">site_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">partner</span><span class="o">.</span><span class="n">label</span>
                     <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="o">.</span><span class="n">agent_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">partner</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span>
