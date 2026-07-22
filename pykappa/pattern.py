@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 # String partner states can be: "#" (wildcard), "." (empty), "_" (bound), "?" (undetermined)
 # "?" is the default in pattern instantiation and a wildcard in rules and observations
 _TypedPartner = NamedTuple("_TypedPartner", [("site_name", str), ("agent_name", str)])
-Partner = str | _TypedPartner | int | Union["Site"]
+_Partner = str | _TypedPartner | int | Union["Site"]
 
 
 class Site(Counted):
@@ -23,9 +23,9 @@ class Site(Counted):
     agent: "Agent"  #: The agent this site belongs to (set after initialization)
     label: str  #: Name of the site
     state: str  #: Internal state of the site
-    partner: Partner
+    partner: _Partner
 
-    def __init__(self, label: str, state: str, partner: Partner):
+    def __init__(self, label: str, state: str, partner: _Partner):
         """
         Args:
             label: Name of the site.
