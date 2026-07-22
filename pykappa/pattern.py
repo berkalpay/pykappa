@@ -159,7 +159,7 @@ class Agent(Counted):
         self.interface = {site.label: site for site in sites}
 
     def __iter__(self):
-        yield from self.sites
+        yield from self.interface.values()
 
     def __getitem__(self, key: str) -> Site:
         return self.interface[key]
@@ -170,10 +170,6 @@ class Agent(Counted):
     @property
     def kappa_str(self):
         return f"{self.type}({" ".join(site.kappa_str for site in self)})"
-
-    @property
-    def sites(self) -> Iterable[Site]:
-        yield from self.interface.values()
 
     @property
     def instantiable(self) -> bool:
