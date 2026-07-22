@@ -161,20 +161,6 @@
 <dd><p>Check if the site is coupled to a specific other site.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.embeds_in">
-<span class="sig-name descname"><span class="pre">embeds_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Site.embeds_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Site.embeds_in" title="Link to this definition">¶</a></dt>
-<dd><p>Check whether self as a pattern matches other as a concrete site.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -250,38 +236,6 @@
 <dt class="sig sig-object py" id="pykappa.pattern.Agent.neighbors">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">neighbors</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.neighbors" title="Link to this definition">¶</a></dt>
 <dd><p>The agents directly connected to this one.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.isomorphic">
-<span class="sig-name descname"><span class="pre">isomorphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.isomorphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.isomorphic" title="Link to this definition">¶</a></dt>
-<dd><p>Check if two Agents are equivalent locally, ignoring partners.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Doesn’t assume agents of the same type will have the same site signatures.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.embeds_in">
-<span class="sig-name descname"><span class="pre">embeds_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Agent.embeds_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Agent.embeds_in" title="Link to this definition">¶</a></dt>
-<dd><p>Check whether self as a pattern matches other as a concrete agent.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>Self</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>

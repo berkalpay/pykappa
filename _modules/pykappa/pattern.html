@@ -127,9 +127,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the site is coupled to a specific other site.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partner</span><span class="p">,</span> <span class="n">Site</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Site.embeds_in">
-<a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Site.embeds_in">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">embeds_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_embeds_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether self as a pattern matches other as a concrete site.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bound</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">coupled</span>
@@ -151,7 +149,6 @@
                 <span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
-</div>
 
 
 
@@ -253,9 +250,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">[</span><span class="n">Site</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="Agent.isomorphic">
-<a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Agent.isomorphic">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isomorphic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_isomorphic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if two Agents are equivalent locally, ignoring partners.</span>
 
 <span class="sd">        Note:</span>
@@ -276,12 +271,9 @@
                     <span class="k">return</span> <span class="kc">False</span>
 
         <span class="c1"># Check that sites in `other` not mentioned in `self`are undetermined</span>
-        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">other</span><span class="p">[</span><span class="n">site_name</span><span class="p">]</span><span class="o">.</span><span class="n">undetermined</span> <span class="k">for</span> <span class="n">site_name</span> <span class="ow">in</span> <span class="n">b_sites_leftover</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">other</span><span class="p">[</span><span class="n">site_name</span><span class="p">]</span><span class="o">.</span><span class="n">undetermined</span> <span class="k">for</span> <span class="n">site_name</span> <span class="ow">in</span> <span class="n">b_sites_leftover</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="Agent.embeds_in">
-<a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Agent.embeds_in">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">embeds_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_embeds_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether self as a pattern matches other as a concrete agent.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -290,11 +282,10 @@
             <span class="k">if</span> <span class="n">a_site</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">interface</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">a_site</span><span class="o">.</span><span class="n">undetermined</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="n">b_site</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">a_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">a_site</span><span class="o">.</span><span class="n">embeds_in</span><span class="p">(</span><span class="n">b_site</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">a_site</span><span class="o">.</span><span class="n">_embeds_in</span><span class="p">(</span><span class="n">b_site</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
-</div>
 
 
 
@@ -395,7 +386,7 @@
                 <span class="n">a</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
                 <span class="n">b</span> <span class="o">=</span> <span class="n">agent_map</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
-                <span class="n">match_func</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">isomorphic</span> <span class="k">if</span> <span class="n">exact</span> <span class="k">else</span> <span class="n">a</span><span class="o">.</span><span class="n">embeds_in</span>
+                <span class="n">match_func</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">_isomorphic</span> <span class="k">if</span> <span class="n">exact</span> <span class="k">else</span> <span class="n">a</span><span class="o">.</span><span class="n">_embeds_in</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">match_func</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
                     <span class="n">root_failed</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
