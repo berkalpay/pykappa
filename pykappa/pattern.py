@@ -45,7 +45,7 @@ class Site(Counted):
 
     @property
     def _kappa_state_str(self) -> str:
-        return "" if self.state in ("?", ".") else f"{{{self.state}}}"
+        return "" if self.state == "?" else f"{{{self.state}}}"
 
     @property
     def kappa_str(self) -> str:
