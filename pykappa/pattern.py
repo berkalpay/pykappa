@@ -77,11 +77,7 @@ class Site(Counted):
 
     @property
     def bound(self) -> bool:
-        return (
-            self.partner == "_"
-            or isinstance(self.partner, SiteType)
-            or isinstance(self.partner, Site)
-        )
+        return self.partner == "_" or isinstance(self.partner, (SiteType, Site))
 
     @property
     def coupled(self) -> bool:
