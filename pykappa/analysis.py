@@ -163,20 +163,20 @@ def _rule_graph(system: "System") -> Source:
                     continue
                 l_site = l[r_site.label]
 
-                if r_site.stated and l_site.stated and r_site.state != l_site.state:
+                if r_site._stated and l_site._stated and r_site.state != l_site.state:
                     agent_sites[l.type].add(r_site.label)
                     state_transitions[(l.type, r_site.label)].add(
                         (l_site.state, r_site.state)
                     )
 
-                if r_site.coupled and not l_site.coupled:
+                if r_site._coupled and not l_site._coupled:
                     p = r_site.partner
                     agent_sites[l.type].add(r_site.label)
                     agent_sites[p.agent.type].add(p.label)
                     bonds_formed.add(
                         tuple(sorted([(l.type, r_site.label), (p.agent.type, p.label)]))
                     )
-                elif l_site.coupled and r_site.partner == ".":
+                elif l_site._coupled and r_site.partner == ".":
                     p = l_site.partner
                     agent_sites[l.type].add(l_site.label)
                     agent_sites[p.agent.type].add(p.label)

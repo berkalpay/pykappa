@@ -133,7 +133,7 @@ class Mixture:
         # Reconstruct the bond structure in the copied agents
         for i, agent in enumerate(component_ordered):
             for site in agent:
-                if site.coupled:
+                if site._coupled:
                     partner = site.partner
                     i_partner = component_ordered.index(partner.agent)
                     new_site = new_agents[i][site.label]
@@ -325,23 +325,23 @@ class _MixtureUpdate:
         """Specify to remove an agent and its edges from the mixture."""
         self.agents_to_remove.add(agent)
         for site in agent:
-            if site.coupled:
+            if site._coupled:
                 self.edges_to_remove.add(_Edge(site, site.partner))
 
     def connect_sites(self, site1: Site, site2: Site) -> None:
         """Specify to create an edge between two sites. If the sites
         are bound to other sites, indicates to remove those edges.
         """
-        if site1.coupled and site1.partner != site2:
+        if site1._coupled and site1.partner != site2:
             self.disconnect_site(site1)
-        if site2.coupled and site2.partner != site1:
+        if site2._coupled and site2.partner != site1:
             self.disconnect_site(site2)
         if not site1.partner == site2:
             self.edges_to_add.add(_Edge(site1, site2))
 
     def disconnect_site(self, site: Site) -> None:
         """Specify that a site should be unbound."""
-        if site.coupled:
+        if site._coupled:
             self.edges_to_remove.add(_Edge(site, site.partner))
 
     @property

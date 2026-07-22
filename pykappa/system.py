@@ -404,7 +404,7 @@ class System:
             agent_map = {agent: agent._detached() for agent in component.agents}
             for agent in component.agents:
                 for site in agent:
-                    if site.coupled:
+                    if site._coupled:
                         agent_map[agent][site.label].partner = agent_map[
                             site.partner.agent
                         ][site.partner.label]

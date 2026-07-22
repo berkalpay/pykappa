@@ -52,14 +52,9 @@ class Site(Counted):
         partner_str = (
             ""
             if self.partner == "?"
-            else "[_]" if self.coupled else f"[{self.partner}]"
+            else "[_]" if self._coupled else f"[{self.partner}]"
         )
         return f"{self.label}{partner_str}{self._kappa_state_str}"
-
-    @property
-    def undetermined(self) -> bool:
-        """Check if the site is in a state equivalent to leaving it unnamed in an agent."""
-        return self.state == "?" and self.partner in ("?", ".")
 
     @property
     def instantiable(self) -> bool:
@@ -71,23 +66,28 @@ class Site(Counted):
         )
 
     @property
-    def stated(self) -> bool:
-        """Check if the site has a specific internal state."""
-        return self.state not in ("#", "?")
-
-    @property
     def bound(self) -> bool:
         return self.partner == "_" or isinstance(self.partner, (SiteType, Site))
 
     @property
-    def coupled(self) -> bool:
-        """Check if the site is coupled to a specific other site."""
+    def _coupled(self) -> bool:
+        """Check if the site is bound to a specific other site."""
         return isinstance(self.partner, Site)
+
+    @property
+    def _undetermined(self) -> bool:
+        """Check if the site is in a state equivalent to leaving it unnamed in an agent."""
+        return self.state == "?" and self.partner in ("?", ".")
+
+    @property
+    def _stated(self) -> bool:
+        """Check if the site has a specific internal state."""
+        return self.state not in ("#", "?")
 
     def _embeds_in(self, other: Self) -> bool:
         """Check whether self as a pattern matches other as a concrete site."""
-        if (self.stated and self.state != other.state) or (
-            self.bound and not other.coupled
+        if (self._stated and self.state != other.state) or (
+            self.bound and not other._coupled
         ):
             return False
 
@@ -177,7 +177,7 @@ class Agent(Counted):
     @property
     def neighbors(self) -> list[Self]:
         """The agents directly connected to this one."""
-        return [site.partner.agent for site in self if site.coupled]
+        return [site.partner.agent for site in self if site._coupled]
 
     @property
     def _depth_first_traversal(self) -> list[Self]:
@@ -215,11 +215,11 @@ class Agent(Counted):
                 if a_site.state != other[site_name].state:
                     return False
             else:
-                if not a_site.undetermined:
+                if not a_site._undetermined:
                     return False
 
         # Check that sites in `other` not mentioned in `self`are undetermined
-        return all(other[site_name].undetermined for site_name in b_sites_leftover)
+        return all(other[site_name]._undetermined for site_name in b_sites_leftover)
 
     def _embeds_in(self, other: Self) -> bool:
         """Check whether self as a pattern matches other as a concrete agent."""
@@ -227,7 +227,7 @@ class Agent(Counted):
             return False
 
         for a_site in self:
-            if a_site.label not in other.interface and not a_site.undetermined:
+            if a_site.label not in other.interface and not a_site._undetermined:
                 return False
             b_site = other[a_site.label]
             if not a_site._embeds_in(b_site):
@@ -327,15 +327,15 @@ class Component(Counted):
 
                 for a_site in a:
                     if a_site.label not in b.interface:
-                        if not a_site.undetermined:
+                        if not a_site._undetermined:
                             root_failed = True
                             break
                         else:
                             continue
                     b_site = b[a_site.label]
 
-                    if a_site.coupled:
-                        if not b_site.coupled:
+                    if a_site._coupled:
+                        if not b_site._coupled:
                             root_failed = True
                             break
 
@@ -489,7 +489,7 @@ class Pattern:
             for site in agent:
                 if site in bond_nums:
                     partner_str = f"[{bond_nums[site]}]"
-                elif site.coupled:
+                elif site._coupled:
                     partner_str = f"[{bond_num_counter}]"
                     bond_nums[site.partner] = bond_num_counter
                     bond_num_counter += 1

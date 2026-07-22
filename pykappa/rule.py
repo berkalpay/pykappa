@@ -268,7 +268,7 @@ class Rule:
                     new_selection[i] = update.create_agent(r_agent)
                 case Agent(), Agent() if l_agent.type == r_agent.type:
                     for r_site in r_agent:
-                        if r_site.stated:
+                        if r_site._stated:
                             agent[r_site.label].state = r_site.state
                             if r_site.state != l_agent[r_site.label].state:
                                 update.agents_changed.add(agent)
