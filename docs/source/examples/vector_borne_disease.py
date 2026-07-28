@@ -9,14 +9,14 @@ import matplotlib.pyplot as plt
 # The following model is adapted from ["Rule-based epidemic models"](https://doi.org/10.1016/j.jtbi.2021.110851) by Waites et al. We simulate a simple vector-borne disease which can travel between both mosquitoes (`V(x{s i})`) and hosts (`P(x{s e i r})`). The disease progresses: hosts are initially susceptible (`x{s}`) to the disease, later become exposed after coming in contact with a mosquito (`x{e}`), are infected (`x{i}`), and eventually recover (`x{r}`).
 
 # %%
-INIT_M = 5_000  # intial number of mosquitoes;
-INIT_N = 1_000  # total host population, of which...
-INIT_I = 10  # are initially infectious, and
+INIT_M = 2500  # intial number of mosquitoes;
+INIT_N = 500  # total host population, of which...
+INIT_I = 5  # are initially infectious, and
 INIT_S = INIT_N - INIT_I  # are initially susceptible
 
 variables = {
     "beta": "0.036",  # probability of infection from a bite
-    "bprime": "1",  # proabability of a vector becoming infectious
+    "bprime": "1",  # probability of a vector becoming infectious
     "alpha": "0.2",  # progression from exposed to infectious
     "gamma": "0.1429",  # progression from infectious to removed
     "kappa": "1.0",  # bites per day per mosquito
