@@ -27,6 +27,9 @@ Documentation = "https://pykappa.org/api/index.html"
 Repository = "https://github.com/berkalpay/pykappa"
 Issues = "https://github.com/berkalpay/pykappa/issues"
 
+[tool.setuptools.packages.find]
+include = ["pykappa*"]
+
 [tool.setuptools.package-data]
 pykappa = ["*.lark"]
 
