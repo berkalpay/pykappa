@@ -28,4 +28,4 @@ htmlcov/
 # Project-specific
 docs/build/
 docs/source/api/generated/
-tests/profiling/results/
+profiling/results/

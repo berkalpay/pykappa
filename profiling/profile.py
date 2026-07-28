@@ -12,7 +12,7 @@ RESULTS_DIR = SCRIPT_PATH.with_name("results")
 
 
 def heterodimerization_small() -> None:
-    tests_dir = SCRIPT_PATH.parent.parent
+    tests_dir = SCRIPT_PATH.parent.parent / "tests"
     sys.path.insert(0, str(tests_dir))
     from test_system import heterodimerization_system
 
