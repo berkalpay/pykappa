@@ -60,14 +60,14 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">INIT_M</span> <span class="o">=</span> <span class="mi">5_000</span>  <span class="c1"># intial number of mosquitoes;</span>
-<span class="n">INIT_N</span> <span class="o">=</span> <span class="mi">1_000</span>  <span class="c1"># total host population, of which...</span>
-<span class="n">INIT_I</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># are initially infectious, and</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">INIT_M</span> <span class="o">=</span> <span class="mi">2500</span>  <span class="c1"># intial number of mosquitoes;</span>
+<span class="n">INIT_N</span> <span class="o">=</span> <span class="mi">500</span>  <span class="c1"># total host population, of which...</span>
+<span class="n">INIT_I</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># are initially infectious, and</span>
 <span class="n">INIT_S</span> <span class="o">=</span> <span class="n">INIT_N</span> <span class="o">-</span> <span class="n">INIT_I</span>  <span class="c1"># are initially susceptible</span>
 
 <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;0.036&quot;</span><span class="p">,</span>  <span class="c1"># probability of infection from a bite</span>
-    <span class="s2">&quot;bprime&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>  <span class="c1"># proabability of a vector becoming infectious</span>
+    <span class="s2">&quot;bprime&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>  <span class="c1"># probability of a vector becoming infectious</span>
     <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2&quot;</span><span class="p">,</span>  <span class="c1"># progression from exposed to infectious</span>
     <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1429&quot;</span><span class="p">,</span>  <span class="c1"># progression from infectious to removed</span>
     <span class="s2">&quot;kappa&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>  <span class="c1"># bites per day per mosquito</span>
