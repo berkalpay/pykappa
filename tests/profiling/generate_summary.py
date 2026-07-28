@@ -92,7 +92,7 @@ if __name__ == "__main__":
                 "connectgaps": False,
                 "text": short_hashes,
                 "customdata": [
-                    # f"{base_url}/raw/{PERF_DATA_BRANCH}/{commit_dirs[h]}/profile_{name}_flamegraph.svg"
+                    # f"{base_url}/raw/{PROFILING_BRANCH}/{commit_dirs[h]}/profile_{name}_flamegraph.svg"
                     f"{commit_dirs[h]}/profile_{name}_flamegraph.svg"
                     for h in profiled_commits
                 ],

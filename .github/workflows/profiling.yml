@@ -38,28 +38,28 @@ jobs:
       - name: Run profiler
         run: python tests/profiling/profile.py
 
-      - name: Push results to perf-data branch
+      - name: Push results to profiling branch
         run: |
           set -euo pipefail
 
-          PERF_DATA_BRANCH=perf-data
+          PROFILING_BRANCH=profiling
           SHA_COMMIT=$(git rev-parse --short HEAD)
           RESULTS_DIR="$(date +"%Y_%m_%d")_commit_$SHA_COMMIT"
 
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
-          # Checkout perf-data branch or create it.
-          if git ls-remote --exit-code --heads origin "$PERF_DATA_BRANCH" >/dev/null; then
-            git fetch origin "$PERF_DATA_BRANCH"
-            git switch "$PERF_DATA_BRANCH"
+          # Checkout profiling branch or create it.
+          if git ls-remote --exit-code --heads origin "$PROFILING_BRANCH" >/dev/null; then
+            git fetch origin "$PROFILING_BRANCH"
+            git switch "$PROFILING_BRANCH"
           else
-            git checkout --orphan "$PERF_DATA_BRANCH"
+            git checkout --orphan "$PROFILING_BRANCH"
             git reset --hard
             echo "perf data" >> README.md
             git add README.md
             git commit -m "Initial commit"
-            git push -u origin "$PERF_DATA_BRANCH"
+            git push -u origin "$PROFILING_BRANCH"
           fi
 
           cp -r tests/profiling/results "$RESULTS_DIR"
@@ -68,4 +68,4 @@ jobs:
             PROFILE_SOURCE_SHA="$GITHUB_SHA" PROFILE_SOURCE_REF="$GITHUB_REF_NAME" python
           git add "$RESULTS_DIR" *.html
           git commit -m "Commit $SHA_COMMIT: automated report"
-          git push origin "$PERF_DATA_BRANCH"
+          git push origin "$PROFILING_BRANCH"
