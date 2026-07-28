@@ -36,44 +36,36 @@ jobs:
         run: pip install -e ".[dev]"
 
       - name: Run profiler
-        run: |
-          cd tests/cpu-profiles
-          bash run_profiler.sh
+        run: python tests/cpu-profiles/profile.py
 
       - name: Push results to perf-data branch
         run: |
-            BRANCH=$(git branch --show-current)
-            PERF_DATA_BRANCH=perf-data
-            SHA_COMMIT=$(git rev-parse --short HEAD)
-            RESULTS_DIR="$(date +"%Y_%m_%d")_commit_$SHA_COMMIT"
+          set -euo pipefail
 
-            git config --global user.name 'amber227'
-            git config --global user.email 'amber227@users.noreply.github.com'
+          PERF_DATA_BRANCH=perf-data
+          SHA_COMMIT=$(git rev-parse --short HEAD)
+          RESULTS_DIR="$(date +"%Y_%m_%d")_commit_$SHA_COMMIT"
 
-            # Checkout perf-data branch or create new
-            if git ls-remote --exit-code --heads origin $PERF_DATA_BRANCH >/dev/null; then
-                echo "Branch $PERF_DATA_BRANCH exists"
-                git fetch origin $PERF_DATA_BRANCH
-                git switch $PERF_DATA_BRANCH
-            else
-                echo "Branch $PERF_DATA_BRANCH does not exist"
-                git checkout --orphan perf-data
-                git reset --hard
-                echo "perf data" >> README.md
-                git add README.md
-                git commit -m "Initial commit"
-                git push -u origin $PERF_DATA_BRANCH --force
-            fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
-            cp -r tests/cpu-profiles/results $RESULTS_DIR
-            git add $RESULTS_DIR
+          # Checkout perf-data branch or create it.
+          if git ls-remote --exit-code --heads origin "$PERF_DATA_BRANCH" >/dev/null; then
+            git fetch origin "$PERF_DATA_BRANCH"
+            git switch "$PERF_DATA_BRANCH"
+          else
+            git checkout --orphan "$PERF_DATA_BRANCH"
+            git reset --hard
+            echo "perf data" >> README.md
+            git add README.md
+            git commit -m "Initial commit"
+            git push -u origin "$PERF_DATA_BRANCH"
+          fi
 
-            git commit -am "Commit $SHA_COMMIT: automated report"
+          cp -r tests/cpu-profiles/results "$RESULTS_DIR"
 
-            git switch $BRANCH
-
-            python tests/cpu-profiles/generate_summary.py
-            git add *.html
-            git commit --amend --no-edit
-
-            git push origin $PERF_DATA_BRANCH
+          git show "$GITHUB_SHA:tests/cpu-profiles/generate_summary.py" | \
+            PROFILE_SOURCE_SHA="$GITHUB_SHA" PROFILE_SOURCE_REF="$GITHUB_REF_NAME" python
+          git add "$RESULTS_DIR" *.html
+          git commit -m "Commit $SHA_COMMIT: automated report"
+          git push origin "$PERF_DATA_BRANCH"

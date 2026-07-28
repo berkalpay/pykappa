@@ -4,8 +4,6 @@ import json
 import subprocess
 from collections import defaultdict
 
-PERF_DATA_BRANCH = "perf-data"
-
 if __name__ == "__main__":
     print("\n\nGenerating summary branch summary...")
     base_url = re.sub(
@@ -16,17 +14,20 @@ if __name__ == "__main__":
         .strip(),
     )
 
-    # 1. Get ordered commit history from Git
+    # 1. Get ordered history of the profiled source revision
+    source_revision = os.environ.get("PROFILE_SOURCE_SHA", "HEAD")
     git_log = subprocess.check_output(
-        ["git", "log", "--reverse", "--pretty=format:%h"], text=True
+        ["git", "log", "--reverse", "--pretty=format:%h", source_revision], text=True
     ).splitlines()
 
-    branch_name = subprocess.check_output(
-        ["git", "branch", "--show-current"], text=True
-    ).strip()
+    branch_name = (
+        os.environ.get("PROFILE_SOURCE_REF")
+        or subprocess.check_output(
+            ["git", "branch", "--show-current"], text=True
+        ).strip()
+    )
 
     # 2. Identify relevant commit directories
-    subprocess.check_output(["git", "switch", PERF_DATA_BRANCH])
     commit_dirs = {}
     dir_pattern = re.compile(r"^\d{4}_\d{2}_\d{2}_commit_([a-f0-9]+)$")
     for d in os.listdir("."):

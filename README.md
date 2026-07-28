@@ -14,5 +14,5 @@ See our website [pykappa.org](https://pykappa.org) for examples and documentatio
 
 Developer requirements can be installed via `pip install -e ".[dev]"`.
 Correctness tests are run via `pytest`.
-Running `./tests/cpu-profiles/run_profiler.sh` will CPU-profile predefined Kappa models and write the results to `tests/cpu-profiles/results`.
+Running `python tests/cpu-profiles/profile.py` will CPU-profile predefined Kappa models and write the results to `tests/cpu-profiles/results`.
 We use the Black code formatter, which can be run as `black .`
