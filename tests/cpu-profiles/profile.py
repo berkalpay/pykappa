@@ -101,17 +101,19 @@ def profile_case(case: str, commit_hash: str) -> None:
     )
 
     start = time.perf_counter()
-    subprocess.run(
-        [
-            "py-spy",
-            "record",
-            "-o",
-            str(flamegraph),
-            "--",
-            *case_command,
-        ],
-        check=True,
+    py_spy = subprocess.run(
+        ["py-spy", "record", "-o", str(flamegraph), "--", *case_command],
+        text=True,
+        capture_output=True,
     )
+    print(py_spy.stdout, end="")
+    print(py_spy.stderr, end="", file=sys.stderr)
+    if py_spy.returncode and (
+        "Error: No child process (os error 10)" not in py_spy.stderr
+        or not flamegraph.exists()
+    ):
+        py_spy.check_returncode()
+
     write_summary(case, time.perf_counter() - start, peak_memory(memprofile))
 
 
