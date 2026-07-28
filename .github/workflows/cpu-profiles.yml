@@ -1,6 +1,8 @@
 name: cpu-profiles
 on:
   push:
+    paths-ignore:
+      - pyproject.toml
     branches:
       - '**'
     tags:
