@@ -1,4 +1,4 @@
-name: cpu-profiles
+name: profiling
 on:
   push:
     paths-ignore:
@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 jobs:
-  cpu-profiles:
+  profiling:
     name: python
     runs-on: ubuntu-latest
 
@@ -36,7 +36,7 @@ jobs:
         run: pip install -e ".[dev]"
 
       - name: Run profiler
-        run: python tests/cpu-profiles/profile.py
+        run: python tests/profiling/profile.py
 
       - name: Push results to perf-data branch
         run: |
@@ -62,9 +62,9 @@ jobs:
             git push -u origin "$PERF_DATA_BRANCH"
           fi
 
-          cp -r tests/cpu-profiles/results "$RESULTS_DIR"
+          cp -r tests/profiling/results "$RESULTS_DIR"
 
-          git show "$GITHUB_SHA:tests/cpu-profiles/generate_summary.py" | \
+          git show "$GITHUB_SHA:tests/profiling/generate_summary.py" | \
             PROFILE_SOURCE_SHA="$GITHUB_SHA" PROFILE_SOURCE_REF="$GITHUB_REF_NAME" python
           git add "$RESULTS_DIR" *.html
           git commit -m "Commit $SHA_COMMIT: automated report"

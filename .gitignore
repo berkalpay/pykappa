@@ -28,4 +28,4 @@ htmlcov/
 # Project-specific
 docs/build/
 docs/source/api/generated/
-tests/cpu-profiles/results/
+tests/profiling/results/
