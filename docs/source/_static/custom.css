@@ -14,6 +14,11 @@ div.nboutput.container div.output_area:not(.rendered_html)>img {
 
 /* API styling */
 
+/* Separate generated module titles from their first API definition. */
+section > h1 + dl.py {
+    margin-top: 2rem;
+}
+
 :is(dl.py.function, dl.py.exception, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) {
     margin: 1.25rem 0;
     padding: 0.8rem 1rem;
