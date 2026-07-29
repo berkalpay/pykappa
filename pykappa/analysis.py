@@ -267,6 +267,11 @@ class Monitor:
         """The number of records."""
         return len(self.history["time"])
 
+    @property
+    def dataframe(self) -> pd.DataFrame:
+        """The history of observable values as a pandas DataFrame."""
+        return pd.DataFrame(self.history)
+
     def update(self) -> None:
         """Record current time and observable values."""
         self.history["time"].append(self.system.time)
@@ -285,15 +290,6 @@ class Monitor:
         assert time <= max(times), "Simulation hasn't reached time {time}"
 
         return self.history[observable_name][bisect.bisect_right(times, time) - 1]
-
-    @property
-    def dataframe(self) -> pd.DataFrame:
-        """Get the history of observable values as a pandas DataFrame.
-
-        Returns:
-            DataFrame with time and observable columns.
-        """
-        return pd.DataFrame(self.history)
 
     def tail_mean(
         self,
