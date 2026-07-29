@@ -7,8 +7,10 @@ import csv
 import subprocess
 from collections import defaultdict
 from functools import cached_property
-from typing import Optional, Iterable, Self
-from graphviz import Source
+from typing import Optional, Iterable, Self, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from graphviz import Source
 
 from pykappa.mixture import Mixture
 from pykappa.rule import Rule
@@ -551,7 +553,7 @@ class System:
 
         return _kd_table(self, volume=volume)
 
-    def rule_graph(self) -> Source:
+    def rule_graph(self) -> "Source":
         """Visualize a ruleset as a site graph of local transformations.
 
         Solid edges = bond formation; dashed edges = bond breaking. Sites that
@@ -566,7 +568,7 @@ class System:
 
         return _rule_graph(self)
 
-    def contact_map(self) -> Source:
+    def contact_map(self) -> "Source":
         """Generate a graphviz contact map using the KaSa static analyzer."""
         from pykappa.analysis import _contact_map
 
