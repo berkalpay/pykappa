@@ -2,17 +2,3 @@
 ================
 
 .. automodule:: pykappa.analysis
-
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      equilibration_start
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      Monitor
-   

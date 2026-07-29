@@ -14,7 +14,12 @@ div.nboutput.container div.output_area:not(.rendered_html)>img {
 
 /* API styling */
 
-:is(dl.py.function, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) {
+/* Separate generated module titles from their first API definition. */
+section > h1 + dl.py {
+    margin-top: 2rem;
+}
+
+:is(dl.py.function, dl.py.exception, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) {
     margin: 1.25rem 0;
     padding: 0.8rem 1rem;
     border-left: 4px solid #5b8def;
@@ -22,11 +27,25 @@ div.nboutput.container div.output_area:not(.rendered_html)>img {
     background: #f6f8fb;
 }
 
+dl.py.class > dt {
+    margin-top: 0;
+    padding: 0.8rem 1rem;
+    border-left-color: #7c5ce7;
+    background: #f3efff;
+    border-left: 4px solid #7c5ce7;
+    border-radius: 0.25rem;
+}
+
+:is(dl.py.class, dl.py.exception) > dd > dl.py {
+    background: #fff;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
+}
+
 :is(dl.py.class, dl.py.exception) > dd > :is(dl.py.property, dl.py.attribute, dl.py.data) {
     border-left-color: #2d9d78;
     background: #f3faf7;
 }
 
-:is(dl.py.function, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) > dt {
+:is(dl.py.function, dl.py.exception, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) > dt {
     margin-top: 0;
 }

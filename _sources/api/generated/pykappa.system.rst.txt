@@ -2,11 +2,3 @@
 ==============
 
 .. automodule:: pykappa.system
-
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      System
-   

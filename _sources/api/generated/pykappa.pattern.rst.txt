@@ -2,15 +2,3 @@
 ===============
 
 .. automodule:: pykappa.pattern
-
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      Agent
-      Component
-      Embedding
-      Pattern
-      Site
-   

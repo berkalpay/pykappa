@@ -2,11 +2,3 @@
 ============
 
 .. automodule:: pykappa.rule
-
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      Rule
-   

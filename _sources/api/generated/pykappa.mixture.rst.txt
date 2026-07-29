@@ -2,11 +2,3 @@
 ===============
 
 .. automodule:: pykappa.mixture
-
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      Mixture
-   
