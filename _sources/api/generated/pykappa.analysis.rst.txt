@@ -8,10 +8,7 @@
 
    .. autosummary::
    
-      equilibrated
-      equilibration_time
-      equilibrium_value
-      relative_slope
+      equilibration_start
    
    .. rubric:: Classes
 
