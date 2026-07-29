@@ -11,3 +11,22 @@ div.nboutput.container div.output_area:not(.rendered_html)>img {
     max-width: 100%;
     box-sizing: border-box;
 }
+
+/* API styling */
+
+:is(dl.py.function, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) {
+    margin: 1.25rem 0;
+    padding: 0.8rem 1rem;
+    border-left: 4px solid #5b8def;
+    border-radius: 0.25rem;
+    background: #f6f8fb;
+}
+
+:is(dl.py.class, dl.py.exception) > dd > :is(dl.py.property, dl.py.attribute, dl.py.data) {
+    border-left-color: #2d9d78;
+    background: #f3faf7;
+}
+
+:is(dl.py.function, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) > dt {
+    margin-top: 0;
+}
