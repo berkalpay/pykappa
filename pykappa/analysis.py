@@ -291,54 +291,19 @@ class Monitor:
 
         return self.history[observable_name][bisect.bisect_right(times, time) - 1]
 
-    def tail_mean(
-        self,
-        observable_name: str,
-        tail_fraction: float = 0.1,
-    ) -> float:
+    def equilibration_start(self, observable_name: str, **kwargs) -> Optional[int]:
         """
-        Calculate the average value of an observable over a fraction of the tail.
-
-        Args:
-            observable_name: Name of the observable to measure.
-            tail_fraction: Fraction of the history to consider (from the end).
-
-        Raises:
-            AssertionError: If there are not enough measurements.
-        """
-        window_len = int(tail_fraction * len(self))
-        assert (
-            len(self) >= window_len and window_len >= 1
-        ), f"Not enough measurements ({len(self)}) to calculate tail mean for {observable_name}"
-
-        values = np.asarray(self.history[observable_name][-window_len:], dtype=float)
-        return float(np.mean(values))
-
-    def equilibrated(
-        self,
-        observable_name: Optional[str] = None,
-        **equilibration_kwargs,
-    ) -> bool:
-        """
-        Check if an observable (or all observables) has equilibrated based on
-        whether the slope of recent values is sufficiently small relative to the mean.
+        Return the index of the history at which equilibration is detected, or ``None``.
 
         Args:
             observable_name: Name of the observable to check. If None, checks all observables.
-            tail_fraction: Fraction of the history to consider.
-            tolerance: Maximum allowed fraction slope deviation from the mean.
+            **kwargs: Arguments passed to the equilibration detection function.
         """
-        if observable_name is None:
-            return all(
-                self.equilibrated(obs_name, **equilibration_kwargs)
-                for obs_name in self.system.observables
-            )
-
         values = self.history[observable_name]
         times = self.history["time"]
         assert all(v is not None for v in values)
         assert all(t is not None for t in times)
-        return equilibrated(values=values, times=times, **equilibration_kwargs)
+        return equilibration_start(values, times, **kwargs)
 
     def plot(
         self,
@@ -383,68 +348,25 @@ class Monitor:
         return fig
 
 
-def relative_slope(
-    values: list[float], times: Optional[list[float]] = None, tail_fraction: float = 0.1
-) -> float:
-    """
-    Computes the magnitude of the slope of the tail of the series.
-    Time can be provided to account for non-uniform sampling intervals.
-
-    Raises:
-        AssertionError: If there are not enough measurements to compute the slope.
-    """
-    times = times if times is not None else list(range(len(values)))
-
-    t_tail = times[-1] - tail_fraction * (times[-1] - times[0])
-    tail_indices = [i for i, t in enumerate(times) if t >= t_tail]
-
-    assert (
-        len(tail_indices) >= 2
-    ), f"Not enough measurements ({len(tail_indices)}) to compute slope"
-
-    tail_times = [times[i] for i in tail_indices]
-    tail_values = [values[i] for i in tail_indices]
-    slope, _ = np.polyfit(tail_times, tail_values, deg=1)
-
-    return float(slope / np.mean(tail_values))
-
-
-def equilibrated(
+def equilibration_start(
     values: list[float],
     times: Optional[list[float]] = None,
     tail_fraction: float = 0.1,
     tolerance: float = 0.01,
-) -> bool:
+) -> Optional[int]:
     """
     Checks whether the magnitude of the slope of the tail of the series relative to the mean
-    is sufficiently small (below tolerance). Time can be provided to account for non-uniform
-    sampling intervals.
+    is sufficiently small (below tolerance), and if so returns the first index of the stable
+    tail. Time can be provided to account for non-uniform sampling intervals. The tail_fraction
+    argument specifies the fraction of the time series to consider as the tail.
     """
-    return abs(relative_slope(values, times, tail_fraction)) <= tolerance
-
-
-def equilibration_time(
-    values: list[float],
-    times: Optional[list[float]] = None,
-    min_tail_length: int = 2,
-    tolerance: float = 0.01,
-) -> float:
-    """Earliest time from which the remaining series is equilibrated."""
     times = times if times is not None else list(range(len(values)))
-    for i in range(len(values) - min_tail_length + 1):
-        if abs(relative_slope(values[i:], times[i:], tail_fraction=1.0)) <= tolerance:
-            return times[i]
-    raise ValueError(f"Equilibrium not detected (tolerance={tolerance})")
+    tail_time = times[-1] - tail_fraction * (times[-1] - times[0])
+    tail_indices = [i for i, time in enumerate(times) if time >= tail_time]
+    assert len(tail_indices) >= 2, "Not enough measurements to compute a tail slope"
 
-
-def equilibrium_value(
-    values: list[float],
-    times: Optional[list[float]] = None,
-    min_tail_length: int = 2,
-    tolerance: float = 0.01,
-) -> float:
-    """Mean of the series from the equilibration point onward."""
-    times = times if times is not None else list(range(len(values)))
-    eq_time = equilibration_time(values, times, min_tail_length, tolerance)
-    eq_index = next(i for i, t in enumerate(times) if t >= eq_time)
-    return float(np.mean(values[eq_index:]))
+    tail_values = [values[i] for i in tail_indices]
+    slope, _ = np.polyfit([times[i] for i in tail_indices], tail_values, deg=1)
+    if abs(slope / np.mean(tail_values)) <= tolerance:
+        return tail_indices[0]
+    return None

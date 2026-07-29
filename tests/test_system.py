@@ -258,8 +258,8 @@ def test_reproducibility_from_initialization():
     ), "Systems with different seeds should produce different trajectories"
 
 
-def test_equilibrated():
-    """Test that the equilibrated method correctly detects equilibration."""
+def test_equilibration_start():
+    """Test that monitoring identifies the start of an equilibrated tail."""
     system = System.from_ka(
         """
         %init: 1000 A(x[.])
@@ -274,11 +274,11 @@ def test_equilibrated():
 
     for _ in range(100):
         system.update()
-    assert not system.monitor.equilibrated("AB")
+    assert system.monitor.equilibration_start("AB") is None
 
     for _ in range(10**4):
         system.update()
-    assert system.monitor.equilibrated("AB")
+    assert system.monitor.equilibration_start("AB") is not None
 
 
 def test_uniqueness_and_persistence_of_agent_ids():
