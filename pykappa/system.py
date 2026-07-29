@@ -277,7 +277,7 @@ class System:
         }
 
     @property
-    def tallies_str(self) -> str:
+    def tallies_table(self) -> str:
         """A formatted string showing how many times each rule has been applied."""
         return str_table(
             [
