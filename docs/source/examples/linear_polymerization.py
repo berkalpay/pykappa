@@ -50,7 +50,7 @@ polymer_len_plot(system)
 # Now let's add some of the capping agent:
 
 # %%
-system.mixture.add("C(m[.])", 500)
+system.add("C(m[.])", 500)
 
 while system.time < 200:
     system.update()

@@ -60,7 +60,7 @@ class Mixture:
 
         if patterns is not None:
             for pattern in patterns:
-                self.add(pattern)
+                self._add(pattern)
 
     def __iter__(self) -> Iterator[Component]:
         yield from self.components
@@ -106,7 +106,7 @@ class Mixture:
             unassigned.difference_update(component_agents)
         return components
 
-    def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
+    def _add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
         """Add instances of a pattern or component to the mixture.
 
         Raises:

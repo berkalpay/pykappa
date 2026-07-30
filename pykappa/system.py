@@ -413,7 +413,7 @@ class System:
             copied = Component(list(agent_map.values()))
             for agent in copied.agents:
                 self._enforce_signature(agent)
-            self.mixture.add(copied, n_copies)
+            self.mixture._add(copied, n_copies)
 
     @property
     def reactivity(self) -> float:

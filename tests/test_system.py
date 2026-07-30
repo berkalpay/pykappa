@@ -179,7 +179,7 @@ def test_system_manipulation():
     assert system["AB"] == 1
 
     # Add a pattern
-    system.mixture.add("A(x[1]), B(x[1])")
+    system.add("A(x[1]), B(x[1])")
     assert system["AB"] == 2
     total_agents_pre_removal = system["total_agents"]
     assert total_agents_pre_removal == 22
@@ -190,7 +190,7 @@ def test_system_manipulation():
     assert total_agents_pre_removal - system["total_agents"] == len(component_to_remove)
 
     # Add the component back
-    system.mixture.add(component_to_remove)
+    system.add(component_to_remove)
     assert system["total_agents"] == total_agents_pre_removal
 
     system["rate"] = 0
@@ -367,7 +367,7 @@ def test_rule_with_variable_rate():
 
     assert not system.reactivity
 
-    system.mixture.add("B(x[.])")
+    system.add("B(x[.])")
     assert system["n_B"] == 1
     for _ in range(10):
         system.update()
@@ -407,7 +407,7 @@ def test_signature_drives_interface_completion():
     system.add("A(x[.])", 1)
     agent = next(a for a in system.mixture.agents if "y" in a.interface)
     assert agent["y"].partner == "."
-    Mixture().add("A(x[1]), B(y[1])")  # bare mixture: no constraints
+    Mixture()._add("A(x[1]), B(y[1])")  # bare mixture: no constraints
 
 
 @pytest.mark.parametrize(

@@ -53,9 +53,9 @@ print("Embeddings of complex in itself:", len(self_embeddings))
 from pykappa import Mixture
 
 mixture = Mixture()
-mixture.add("A(x[.])", n_copies=3)
-mixture.add("B(x[.])", n_copies=2)
-mixture.add("A(x[1]), B(x[1])", n_copies=2)
+mixture._add("A(x[.])", n_copies=3)
+mixture._add("B(x[.])", n_copies=2)
+mixture._add("A(x[1]), B(x[1])", n_copies=2)
 
 print(f"Mixture as a Kappa string:\n{mixture.kappa_str}\n")
 
@@ -70,8 +70,8 @@ print("#AB embeddings (cached):", len(mixture.embeddings(complex)))
 
 # %%
 comp_mixture = Mixture(track_components=True)
-comp_mixture.add("A(x[.])", n_copies=2)
-comp_mixture.add("A(x[1]), B(x[1])")
+comp_mixture._add("A(x[.])", n_copies=2)
+comp_mixture._add("A(x[1]), B(x[1])")
 
 # Iterate over all components
 print("Components in mixture:")

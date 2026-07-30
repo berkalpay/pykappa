@@ -54,7 +54,7 @@ while system.time < 300:
     system.update()
 
 # Add extracellular lactose and continue simulating
-system.mixture.add("L(loc{out})", 1000)
+system.add("L(loc{out})", 1000)
 while system.time < 800:
     system.update()
 
