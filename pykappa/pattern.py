@@ -172,9 +172,9 @@ class Agent(Counted):
         return all(site.instantiable for site in self)
 
     @property
-    def neighbors(self) -> list[Self]:
+    def neighbors(self) -> tuple[Self, ...]:
         """The agents directly connected to this one."""
-        return [site.partner.agent for site in self if site._coupled]
+        return tuple(site.partner.agent for site in self if site._coupled)
 
     @property
     def _depth_first_traversal(self) -> list[Self]:
