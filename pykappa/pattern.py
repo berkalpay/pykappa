@@ -21,7 +21,7 @@ class Site(Counted):
     """A site on an agent with state and binding partner information."""
 
     agent: "Agent"  #: The agent this site belongs to (set after initialization)
-    label: str  #: Name of the site
+    _label: str
     state: str  #: Internal state of the site
     partner: _Partner
 
@@ -33,12 +33,17 @@ class Site(Counted):
             partner: Binding partner specification.
         """
         super().__init__()
-        self.label = label
+        self._label = label
         self.state = state
         self.partner = partner
 
     def __repr__(self):
         return f'Site(id={self.id}, kappa_str="{self.kappa_str}")'
+
+    @property
+    def label(self) -> str:
+        """Name of the site."""
+        return self._label
 
     @property
     def _kappa_state_str(self) -> str:
@@ -51,7 +56,7 @@ class Site(Counted):
             if self.partner == "?"
             else "[_]" if self._coupled else f"[{self.partner}]"
         )
-        return f"{self.label}{partner_str}{self._kappa_state_str}"
+        return f"{self._label}{partner_str}{self._kappa_state_str}"
 
     @property
     def instantiable(self) -> bool:
