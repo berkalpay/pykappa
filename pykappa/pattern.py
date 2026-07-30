@@ -417,12 +417,7 @@ class Pattern:
         return KappaTransformer().transform(pattern_tree)
 
     def __init__(self, agents: Iterable[Optional[Agent]]):
-        """Compile a pattern from an iterable of Agents.
-
-        Replaces integer link states with references to actual partners, and
-        constructs helper objects for tracking connected components. A None
-        in agents represents an empty slot in a rule expression pattern.
-
+        """
         Args:
             agents: Iterable of agents, where None represents empty slots.
 
