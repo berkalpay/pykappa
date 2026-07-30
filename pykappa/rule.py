@@ -132,12 +132,12 @@ class Rule:
                 l_site = Site("__temp__", "?", partner=None)
                 r_site = Site("__temp__", "?", partner=None)
 
-                l_site.agent = l
+                l_site._agent = l
                 l_site.partner = r_site
                 l_site.state = "left"
                 l.interface["__temp__"] = l_site
 
-                r_site.agent = r
+                r_site._agent = r
                 r_site.partner = l_site
                 r_site.state = "right"
                 r.interface["__temp__"] = r_site

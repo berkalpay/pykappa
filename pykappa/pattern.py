@@ -20,7 +20,7 @@ _Partner = str | _TypedPartner | int | Union["Site"]
 class Site(Counted):
     """A site on an agent with state and binding partner information."""
 
-    agent: "Agent"  #: The agent this site belongs to (set after initialization)
+    _agent: "Agent"
     _label: str
     state: str  #: Internal state of the site
     partner: _Partner
@@ -39,6 +39,11 @@ class Site(Counted):
 
     def __repr__(self):
         return f'Site(id={self.id}, kappa_str="{self.kappa_str}")'
+
+    @property
+    def agent(self) -> "Agent":
+        """The agent this site belongs to."""
+        return self._agent
 
     @property
     def label(self) -> str:
@@ -99,11 +104,11 @@ class Site(Counted):
             case _TypedPartner():
                 return (
                     self.partner.site_name == other.partner.label
-                    and self.partner.agent_name == other.partner.agent.type
+                    and self.partner.agent_name == other.partner._agent.type
                 )
             case Site():
                 return (
-                    self.partner.agent.type == other.partner.agent.type
+                    self.partner._agent.type == other.partner._agent.type
                     and self.label == other.label
                 )
 
@@ -156,7 +161,7 @@ class Agent(Counted):
         self._type = type
         self.interface = {site.label: site for site in sites}
         for site in self:
-            site.agent = self
+            site._agent = self
 
     def __iter__(self):
         yield from self.interface.values()
