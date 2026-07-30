@@ -113,7 +113,7 @@ class Site(Counted):
 class Agent(Counted):
     """Represents an agent with a type and collection of sites."""
 
-    type: str  #: Type name of the agent
+    _type: str
     interface: dict[str, Site]  #: Maps site labels to Site objects
 
     @staticmethod
@@ -153,7 +153,7 @@ class Agent(Counted):
 
     def __init__(self, type: str, sites: Iterable[Site]):
         super().__init__()
-        self.type = type
+        self._type = type
         self.interface = {site.label: site for site in sites}
         for site in self:
             site.agent = self
@@ -168,8 +168,13 @@ class Agent(Counted):
         return f'Agent(id={self.id}, kappa_str="{self.kappa_str}")'
 
     @property
+    def type(self) -> str:
+        """Type name of the agent."""
+        return self._type
+
+    @property
     def kappa_str(self):
-        return f"{self.type}({" ".join(site.kappa_str for site in self)})"
+        return f"{self._type}({" ".join(site.kappa_str for site in self)})"
 
     @property
     def instantiable(self) -> bool:
@@ -197,7 +202,7 @@ class Agent(Counted):
     def _detached(self) -> Self:
         """Create a clone with all sites emptied of partners."""
         return type(self)(
-            self.type, [Site(site.label, site.state, ".") for site in self]
+            self._type, [Site(site.label, site.state, ".") for site in self]
         )
 
     def _isomorphic(self, other: Self) -> bool:
@@ -206,7 +211,7 @@ class Agent(Counted):
         Note:
             Doesn't assume agents of the same type will have the same site signatures.
         """
-        if self.type != other.type:
+        if self._type != other._type:
             return False
 
         b_sites_leftover = set(other.interface)
@@ -225,7 +230,7 @@ class Agent(Counted):
 
     def _embeds_in(self, other: Self) -> bool:
         """Check whether self as a pattern matches other as a concrete agent."""
-        if self.type != other.type:
+        if self._type != other._type:
             return False
 
         for a_site in self:
