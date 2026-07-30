@@ -48,8 +48,12 @@ class Counted:
     counter = 0
 
     def __init__(self):
-        self.id = Counted.counter
+        self._id = Counted.counter
         Counted.counter += 1
+
+    @property
+    def id(self) -> int:
+        return self._id
 
 
 T = TypeVar("T")  # Member type of `IndexedSet`
