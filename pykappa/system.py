@@ -407,9 +407,9 @@ class System:
             for agent in component.agents:
                 for site in agent:
                     if site._coupled:
-                        agent_map[agent][site.label].partner = agent_map[
-                            site.partner.agent
-                        ][site.partner.label]
+                        agent_map[agent][site.label]._set_partner(
+                            agent_map[site.partner.agent][site.partner.label]
+                        )
             copied = Component(list(agent_map.values()))
             for agent in copied.agents:
                 self._enforce_signature(agent)

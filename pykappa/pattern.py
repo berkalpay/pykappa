@@ -23,7 +23,7 @@ class Site(Counted):
     _agent: "Agent"
     _label: str
     _state: str
-    partner: _Partner
+    _partner: _Partner
 
     def __init__(self, label: str, state: str, partner: _Partner):
         """
@@ -35,7 +35,7 @@ class Site(Counted):
         super().__init__()
         self._label = label
         self._state = state
-        self.partner = partner
+        self._partner = partner
 
     def __repr__(self):
         return f'Site(id={self.id}, kappa_str="{self.kappa_str}")'
@@ -54,6 +54,11 @@ class Site(Counted):
     def state(self) -> str:
         """Internal state of the site."""
         return self._state
+
+    @property
+    def partner(self) -> _Partner:
+        """The binding partner."""
+        return self._partner
 
     @property
     def _kappa_state_str(self) -> str:
@@ -98,6 +103,9 @@ class Site(Counted):
 
     def _set_state(self, state: str) -> None:
         self._state = state
+
+    def _set_partner(self, partner: _Partner) -> None:
+        self._partner = partner
 
     def _embeds_in(self, other: Self) -> bool:
         """Check whether self as a pattern matches other as a concrete site."""
@@ -472,8 +480,8 @@ class Pattern:
                     f"Site link {i} is referenced in more than two sites."
                 )
             else:
-                linked_sites[0].partner = linked_sites[1]
-                linked_sites[1].partner = linked_sites[0]
+                linked_sites[0]._set_partner(linked_sites[1])
+                linked_sites[1]._set_partner(linked_sites[0])
 
     def __iter__(self) -> Iterator[Optional[Agent]]:
         yield from self._agents

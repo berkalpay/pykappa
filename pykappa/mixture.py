@@ -242,8 +242,8 @@ class Mixture:
         """Add a bond between two sites."""
         assert edge.site1.agent in self.agents
         assert edge.site2.agent in self.agents
-        edge.site1.partner = edge.site2
-        edge.site2.partner = edge.site1
+        edge.site1._set_partner(edge.site2)
+        edge.site2._set_partner(edge.site1)
 
         if not self.component_tracking:
             return
@@ -267,8 +267,8 @@ class Mixture:
         """Remove a bond between two sites."""
         assert edge.site1.partner == edge.site2
         assert edge.site2.partner == edge.site1
-        edge.site1.partner = "."
-        edge.site2.partner = "."
+        edge.site1._set_partner(".")
+        edge.site2._set_partner(".")
 
         if not self.component_tracking:
             return
