@@ -132,13 +132,11 @@ class Rule:
                 l_site = Site("__temp__", "left", partner=None)
                 r_site = Site("__temp__", "right", partner=None)
 
-                l_site._agent = l
                 l_site._set_partner(r_site)
-                l.interface["__temp__"] = l_site
+                l._add_site(l_site)
 
-                r_site._agent = r
                 r_site._set_partner(l_site)
-                r.interface["__temp__"] = r_site
+                r._add_site(r_site)
 
         pattern = Pattern(left_agents + right_agents)
         return pattern.n_isomorphisms(pattern)

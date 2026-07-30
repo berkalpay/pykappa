@@ -1,7 +1,9 @@
 from collections import defaultdict
+from collections.abc import Mapping
 from functools import cached_property
 from itertools import permutations
 from math import prod
+from types import MappingProxyType
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
 from pykappa.analysis import _ComponentPlot
@@ -135,7 +137,7 @@ class Agent(Counted):
     """Represents an agent with a type and collection of sites."""
 
     _type: str
-    interface: dict[str, Site]  #: Maps site labels to Site objects
+    _interface: dict[str, Site]
 
     @staticmethod
     def neighborhood(agents: Iterable["Agent"], radius: int) -> set["Agent"]:
@@ -175,15 +177,15 @@ class Agent(Counted):
     def __init__(self, type: str, sites: Iterable[Site]):
         super().__init__()
         self._type = type
-        self.interface = {site.label: site for site in sites}
-        for site in self:
-            site._agent = self
+        self._interface = {}
+        for site in sites:
+            self._add_site(site)
 
     def __iter__(self):
-        yield from self.interface.values()
+        yield from self._interface.values()
 
     def __getitem__(self, key: str) -> Site:
-        return self.interface[key]
+        return self._interface[key]
 
     def __repr__(self):
         return f'Agent(id={self.id}, kappa_str="{self.kappa_str}")'
@@ -192,6 +194,15 @@ class Agent(Counted):
     def type(self) -> str:
         """Type name of the agent."""
         return self._type
+
+    @property
+    def interface(self) -> Mapping[str, Site]:
+        """Maps site labels to sites."""
+        return MappingProxyType(self._interface)
+
+    def _add_site(self, site: Site) -> None:
+        self._interface[site.label] = site
+        site._agent = self
 
     @property
     def kappa_str(self):
@@ -236,7 +247,7 @@ class Agent(Counted):
             return False
 
         b_sites_leftover = set(other.interface)
-        for site_name, a_site in self.interface.items():
+        for site_name, a_site in self._interface.items():
             # Check that `b` has a site with the same name and state
             if site_name in other.interface:
                 b_sites_leftover.remove(site_name)

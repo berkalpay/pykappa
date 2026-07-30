@@ -392,10 +392,9 @@ class System:
                 f"Known sites for this type: {known}"
             )
         for label in known - agent.interface.keys():
-            agent.interface[label] = site = Site(
-                label, self.site_defaults.get(agent.type, {}).get(label, "?"), "."
+            agent._add_site(
+                Site(label, self.site_defaults.get(agent.type, {}).get(label, "?"), ".")
             )
-            site._agent = agent
 
     def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
         """Add instances of a pattern or component to the mixture using inferred agent signatures."""
