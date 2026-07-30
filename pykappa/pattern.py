@@ -398,7 +398,7 @@ class Component(Counted):
 class Pattern:
     """A pattern consisting of multiple agents, some of which may be None (empty slots)."""
 
-    agents: list[Optional[Agent]]
+    _agents: list[Optional[Agent]]
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
@@ -416,24 +416,24 @@ class Pattern:
         pattern_tree = input_tree.children[0]
         return KappaTransformer().transform(pattern_tree)
 
-    def __init__(self, agents: list[Optional[Agent]]):
-        """Compile a pattern from a list of Agents.
+    def __init__(self, agents: Iterable[Optional[Agent]]):
+        """Compile a pattern from an iterable of Agents.
 
         Replaces integer link states with references to actual partners, and
         constructs helper objects for tracking connected components. A None
         in agents represents an empty slot in a rule expression pattern.
 
         Args:
-            agents: List of agents, where None represents empty slots.
+            agents: Iterable of agents, where None represents empty slots.
 
         Raises:
             AssertionError: If integer links are malformed.
         """
-        self.agents = agents
+        self._agents = tuple(agents)
 
         # Parse site connections implied by integer LinkStates
         integer_links: defaultdict[int, list[Site]] = defaultdict(list)
-        for agent in agents:
+        for agent in self._agents:
             if agent is not None:
                 for site in agent:
                     if isinstance(site.partner, int):
@@ -453,18 +453,23 @@ class Pattern:
                 linked_sites[1].partner = linked_sites[0]
 
     def __iter__(self) -> Iterator[Optional[Agent]]:
-        yield from self.agents
+        yield from self._agents
 
     def __len__(self):
-        return len(self.agents)
+        return len(self._agents)
 
     def __str__(self):
         return self.kappa_str
 
+    @property
+    def agents(self) -> tuple[Optional[Agent], ...]:
+        """The agents in this pattern, including ``None`` empty slots."""
+        return self._agents
+
     @cached_property
     def components(self) -> list[Component]:
         """The connected components in this pattern."""
-        unseen = {agent for agent in self.agents if agent is not None}
+        unseen = {agent for agent in self._agents if agent is not None}
         components = []
         while unseen:
             component = Component(next(iter(unseen))._depth_first_traversal)
@@ -498,12 +503,12 @@ class Pattern:
 
     @property
     def kappa_str(self) -> str:
-        return type(self)._agents_to_kappa_str(self.agents)
+        return type(self)._agents_to_kappa_str(self._agents)
 
     @property
     def instantiable(self) -> bool:
         """Check if all agents in the pattern are specific enough to instantiate."""
-        return all(agent is not None and agent.instantiable for agent in self.agents)
+        return all(agent is not None and agent.instantiable for agent in self._agents)
 
     def n_isomorphisms(self, other: Self) -> int:
         """Counts the number of bijections which respect links in the site graph.
