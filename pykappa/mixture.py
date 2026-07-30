@@ -125,7 +125,7 @@ class Mixture:
         if isinstance(pattern, str):
             pattern = Pattern.from_kappa(pattern)
 
-        assert pattern.instantiable, "Pattern isn't specific enough to instantiate."
+        assert pattern._instantiable, "Pattern isn't specific enough to instantiate."
         for _ in range(n_copies):
             for component in pattern.components:
                 self._add_component(component)
@@ -223,7 +223,7 @@ class Mixture:
     def _add_agent(self, agent: Agent) -> None:
         """Add an agent to the mixture (should not have any bound sites)."""
         assert all(site.partner == "." for site in agent)
-        assert agent.instantiable
+        assert agent._instantiable
         self._agents.add(agent)
 
         if self.component_tracking:

@@ -76,7 +76,7 @@ class Site(Counted):
         return f"{self._label}{partner_str}{self._kappa_state_str}"
 
     @property
-    def instantiable(self) -> bool:
+    def _instantiable(self) -> bool:
         """Check if a concrete Site can be created from this pattern."""
         return not (
             self.state == "#"
@@ -209,9 +209,9 @@ class Agent(Counted):
         return f"{self._type}({" ".join(site.kappa_str for site in self)})"
 
     @property
-    def instantiable(self) -> bool:
+    def _instantiable(self) -> bool:
         """Check if a concrete Agent can be created from this pattern."""
-        return all(site.instantiable for site in self)
+        return all(site._instantiable for site in self)
 
     @property
     def neighbors(self) -> tuple[Self, ...]:
@@ -548,9 +548,9 @@ class Pattern:
         return type(self)._agents_to_kappa_str(self._agents)
 
     @property
-    def instantiable(self) -> bool:
+    def _instantiable(self) -> bool:
         """Check if all agents in the pattern are specific enough to instantiate."""
-        return all(agent is not None and agent.instantiable for agent in self._agents)
+        return all(agent is not None and agent._instantiable for agent in self._agents)
 
     def n_isomorphisms(self, other: Self) -> int:
         """Counts the number of bijections which respect links in the site graph.
