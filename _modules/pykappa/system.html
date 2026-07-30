@@ -447,10 +447,9 @@
                 <span class="sa">f</span><span class="s2">&quot;Known sites for this type: </span><span class="si">{</span><span class="n">known</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">known</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">agent</span><span class="o">.</span><span class="n">interface</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span>
-                <span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">_add_site</span><span class="p">(</span>
+                <span class="n">Site</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">site</span><span class="o">.</span><span class="n">_agent</span> <span class="o">=</span> <span class="n">agent</span>
 
 <div class="viewcode-block" id="System.add">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.add">[docs]</a>

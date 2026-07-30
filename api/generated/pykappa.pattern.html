@@ -86,12 +86,6 @@
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.instantiable">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.instantiable" title="Link to this definition">¶</a></dt>
-<dd><p>Check if a concrete Site can be created from this pattern.</p>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Site.bound">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">bound</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Site.bound" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -144,12 +138,6 @@
 </dl>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.interface">
-<span class="sig-name descname"><span class="pre">interface</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><span class="pre">Site</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.interface" title="Link to this definition">¶</a></dt>
-<dd><p>Maps site labels to Site objects</p>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Agent.type">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Agent.type" title="Link to this definition">¶</a></dt>
@@ -157,15 +145,15 @@
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Agent.interface">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">interface</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><span class="pre">Site</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Agent.interface" title="Link to this definition">¶</a></dt>
+<dd><p>Maps site labels to sites.</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Agent.kappa_str">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><a class="headerlink" href="#pykappa.pattern.Agent.kappa_str" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Agent.instantiable">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Agent.instantiable" title="Link to this definition">¶</a></dt>
-<dd><p>Check if a concrete Agent can be created from this pattern.</p>
-</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Agent.neighbors">
@@ -322,12 +310,6 @@ in a mixture and potentially between rule patterns.</p>
 <dt class="sig sig-object py" id="pykappa.pattern.Pattern.kappa_str">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kappa_str</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.kappa_str" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pykappa.pattern.Pattern.instantiable">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#pykappa.pattern.Pattern.instantiable" title="Link to this definition">¶</a></dt>
-<dd><p>Check if all agents in the pattern are specific enough to instantiate.</p>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.pattern.Pattern.n_isomorphisms">
