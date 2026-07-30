@@ -256,16 +256,21 @@ def _contact_map(system: "System") -> Source:
 class Monitor:
     """Records the history of the values of observables in a system."""
 
-    system: "System"
+    _system: "System"
     history: dict[str, list[Optional[float]]]  #: Maps observable names to their history
 
     def __init__(self, system: "System"):
-        self.system = system
+        self._system = system
         self.history = {"time": []} | {obs_name: [] for obs_name in system.observables}
 
     def __len__(self) -> int:
         """The number of records."""
         return len(self.history["time"])
+
+    @property
+    def system(self) -> "System":
+        """The system being monitored."""
+        return self._system
 
     @property
     def dataframe(self) -> pd.DataFrame:
@@ -274,9 +279,9 @@ class Monitor:
 
     def update(self) -> None:
         """Record current time and observable values."""
-        self.history["time"].append(self.system.time)
-        for obs_name in self.system.observables:
-            self.history[obs_name].append(self.system[obs_name])
+        self.history["time"].append(self._system.time)
+        for obs_name in self._system.observables:
+            self.history[obs_name].append(self._system[obs_name])
 
     def measure(self, observable_name: str, time: Optional[float] = None):
         """Get the value of an observable at a specific time.
@@ -319,7 +324,7 @@ class Monitor:
             observables: Specific observables to plot. If None, plots all observables.
         """
         observables = (
-            list(self.system.observables) if observables is None else list(observables)
+            list(self._system.observables) if observables is None else list(observables)
         )
 
         if combined:
