@@ -28,7 +28,14 @@
 # must utilize potentially several out-of-equilibrium intermediate steps
 # to aggressively reduce the error rate.
 #
-# ![diagram](https://github.com/user-attachments/assets/70969318-5909-4c08-9bf2-e6a17d613c9c)
+# In this example, following Pigolotti and Sartori's "[Protocols for
+# Copying and Proofreading](https://doi.org/10.1007/s10955-015-1399-2)",
+# we use just two: an initial monomer addition step after which the copy
+# machine must "commit" the change. This means that each monomer
+# addition has to undergo *two* reactions, which has the effect of
+# multiplicatively enhancing the error rate.
+#
+# ![diagram](https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f)
 
 # %%
 import copy
@@ -37,7 +44,6 @@ import matplotlib.pyplot as plt
 
 from string import Template
 from pykappa import System, Mixture
-from joblib import Parallel, delayed
 
 rules = []
 rng = np.random.default_rng(seed=42)
@@ -326,42 +332,42 @@ def experiment(context, b0, b1):
 # !EXPLAIN
 
 # %%
-polymer, pattern = generate_polymer(10)
-system = System.from_kappa(rules=rules, variables=variables, mixture={polymer: 1})
-context = Context(system, polymer, pattern)
+# polymer, pattern = generate_polymer(10)
+# system = System.from_kappa(rules=rules, variables=variables, mixture={polymer: 1})
+# context = Context(system, polymer, pattern)
+# 
+# gridsize = 5
+# trials = 10
+# barrier_grid = np.linspace(0.0, 10.0, gridsize)
+# 
+# B0, B1 = np.meshgrid(barrier_grid, barrier_grid)
+# B0 = np.repeat(B0[..., None], trials, axis=-1)
+# B1 = np.repeat(B1[..., None], trials, axis=-1)
+# 
+# parallel = Parallel(n_jobs=-1, verbose=10)
+# out = parallel(
+#     delayed(experiment)(context, B0[idx], B1[idx])
+#     for idx in np.ndindex(B0.shape)
+# )
 
-gridsize = 5
-trials = 10
-barrier_grid = np.linspace(0.0, 10.0, gridsize)
-
-B0, B1 = np.meshgrid(barrier_grid, barrier_grid)
-B0 = np.repeat(B0[..., None], trials, axis=-1)
-B1 = np.repeat(B1[..., None], trials, axis=-1)
-
-parallel = Parallel(n_jobs=-1, verbose=10)
-out = parallel(
-    delayed(experiment)(context, B0[idx], B1[idx])
-    for idx in np.ndindex(B0.shape)
-)
-
-results = np.mean(np.array(out).reshape(B0.shape), axis=-1)
+# results = np.mean(np.array(out).reshape(B0.shape), axis=-1)
 
 # %% [markdown]
 # !EXPLAIN
 
 # %%
-fig, ax = plt.subplots(figsize=(7, 6))
-im = ax.imshow(
-    results,
-    origin="lower",
-    aspect="equal",
-    cmap="inferno_r",
-    extent=[barrier_grid[0], barrier_grid[-1],
-        barrier_grid[0], barrier_grid[-1]],
-)
-ax.set_xlabel("t0 barrier (0 \u2194 1)")
-ax.set_ylabel("t1 barrier (1 \u2194 2)")
-ax.set_title("Mean error rate vs. transition barriers (proofreading off)")
-fig.colorbar(im, label="mean error rate")
-plt.tight_layout()
-plt.show()
+# fig, ax = plt.subplots(figsize=(7, 6))
+# im = ax.imshow(
+#     results,
+#     origin="lower",
+#     aspect="equal",
+#     cmap="inferno_r",
+#     extent=[barrier_grid[0], barrier_grid[-1],
+#         barrier_grid[0], barrier_grid[-1]],
+# )
+# ax.set_xlabel("t0 barrier (0 \u2194 1)")
+# ax.set_ylabel("t1 barrier (1 \u2194 2)")
+# ax.set_title("Mean error rate vs. transition barriers (proofreading off)")
+# fig.colorbar(im, label="mean error rate")
+# plt.tight_layout()
+# plt.show()
