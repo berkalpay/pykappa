@@ -1,6 +1,5 @@
 import random
-from typing import Any, Optional, Iterable, Generic, TypeVar, Self
-from collections import defaultdict
+from typing import Any, Optional, Iterable, Generic, TypeVar
 from collections.abc import Callable, Hashable
 
 
@@ -56,43 +55,34 @@ T = TypeVar("T")  # Member type of `IndexedSet`
 Property = Callable[[T], Iterable[Hashable]]  # Returns the property values of an item
 
 
-class IndexedSet(set[T], Generic[T]):
-    """
-    A subclass of the built-in `set`, with support for indexing by arbitrary
-    properties of set members and integer indexing to enable random sampling.
+class IndexedSet(Generic[T]):
+    """A mutable set with property lookups and integer indexing.
 
-    Credit https://stackoverflow.com/a/15993515 for the integer indexing logic.
-
-    NOTE: Member ordering is not stable across insertions and deletions.
-
-    Example usage:
-    ```
-    [...] # define a SportsTeam class
-
-    teams: IndexedSet[SportsTeam] = IndexedSet()
-    teams.create_index("name", lambda team: [team.name])
-    teams.create_index("color", lambda team: [team.jersey_color])
-
-    [...] # populate the set with teams
-
-    teams.lookup_one("name", "Manchester") # Returns the team whose name is "Manchester"
-    teams.lookup("color", "blue") # Returns all teams with blue jerseys
-    ```
+    Member ordering is not stable across insertions and deletions.
     """
 
     _item_to_pos: dict[T, int]
     _item_list: list[T]
     properties: dict[str, Property]
-    indices: dict[str, defaultdict[Hashable, Self]]
+    indices: dict[str, dict[Hashable, "IndexedSet[T]"]]
 
     def __init__(self, iterable: Optional[Iterable[T]] = None):
-        iterable = [] if iterable is None else list(iterable)
-        super().__init__(iterable)
-
-        self._item_list = iterable
-        self._item_to_pos = {item: i for (i, item) in enumerate(iterable)}
+        self._item_list = []
+        self._item_to_pos = {}
         self.properties = {}
         self.indices = {}
+        if iterable is not None:
+            for item in iterable:
+                self.add(item)
+
+    def __contains__(self, item: object) -> bool:
+        return item in self._item_to_pos
+
+    def __iter__(self):
+        return iter(self._item_list)
+
+    def __len__(self) -> int:
+        return len(self._item_list)
 
     def __getitem__(self, i):
         assert 0 <= i < len(self)
@@ -106,26 +96,24 @@ class IndexedSet(set[T], Generic[T]):
         """
         assert name not in self.properties
         self.properties[name] = prop
-        self.indices[name] = defaultdict(IndexedSet)
+        self.indices[name] = {}
 
         for el in self:
             for val in prop(el):
-                self.indices[name][val].add(el)
+                self.indices[name].setdefault(val, IndexedSet()).add(el)
 
     def add(self, item: T):
         if item in self:
             return
-        super().add(item)
 
         self._item_list.append(item)
         self._item_to_pos[item] = len(self._item_list) - 1
         for prop_name, prop in self.properties.items():
             for val in prop(item):
-                self.indices[prop_name][val].add(item)
+                self.indices[prop_name].setdefault(val, IndexedSet()).add(item)
 
     def remove(self, item: T):
         assert item in self
-        super().remove(item)
 
         pos = self._item_to_pos.pop(item)
         last_item = self._item_list.pop()
@@ -142,17 +130,17 @@ class IndexedSet(set[T], Generic[T]):
 
     def remove_by(self, prop_name: str, value: Any):
         """Remove all set members whose given property matches `value`."""
-        if value in self.indices[prop_name]:
-            for match in list(self.indices[prop_name][value]):
+        if matches := self.indices[prop_name].get(value):
+            for match in list(matches):
                 assert match in self
                 self.remove(match)
 
-    def lookup(self, name: str, value: Any) -> Self:
-        """Return an IndexedSet of all matching items."""
-        return self.indices[name][value]
+    def lookup(self, name: str, value: Any) -> "IndexedSet[T]":
+        """Return matching items."""
+        return self.indices[name].get(value, IndexedSet())
 
     def lookup_one(self, name: str, value: Any) -> T:
         """Return a single matching item. Raises if not exactly one match."""
-        matches = self.indices[name][value]
+        matches = self.lookup(name, value)
         assert len(matches) == 1
         return next(iter(matches))
