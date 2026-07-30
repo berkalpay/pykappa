@@ -27,7 +27,7 @@ def test_neighborhood_requires_frontier_growth_for_radius_gt_1():
 def test_instantiate_pattern_one_component(test_str):
     pattern = Pattern.from_kappa(test_str)
     mixture = Mixture([pattern], track_components=True)
-    assert pattern.components.pop().isomorphic(mixture.components.pop())
+    assert pattern.components[0].isomorphic(mixture.components.pop())
 
 
 @pytest.mark.parametrize(
