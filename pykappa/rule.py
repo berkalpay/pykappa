@@ -105,15 +105,6 @@ class Rule:
             token_part = f" | {updates_str}"
         return f"{self.left.kappa_str} -> {self.right.kappa_str}{token_part} @ {self._rate_str}"
 
-    def reactivity(self, system: "System") -> float:
-        """Calculate the total reactivity of this rule in the given system,
-        i.e. the number of embeddings times the reaction rate, accounting
-        for rule symmetry.
-        """
-        return (
-            self.n_embeddings(system.mixture) // self.n_symmetries * self.rate(system)
-        )
-
     @cached_property
     def n_symmetries(self) -> int:
         """
@@ -140,6 +131,15 @@ class Rule:
 
         pattern = Pattern(left_agents + right_agents)
         return pattern.n_isomorphisms(pattern)
+
+    def reactivity(self, system: "System") -> float:
+        """Calculate the total reactivity of this rule in the given system,
+        i.e. the number of embeddings times the reaction rate, accounting
+        for rule symmetry.
+        """
+        return (
+            self.n_embeddings(system.mixture) // self.n_symmetries * self.rate(system)
+        )
 
     def rate(self, system: "System") -> float:
         return self.rate_expression.evaluate(system)
