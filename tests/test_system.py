@@ -186,7 +186,7 @@ def test_system_manipulation():
 
     # Remove a component
     component_to_remove = system.mixture.components[0]
-    system.mixture.remove(component_to_remove)
+    system.remove(component_to_remove)
     assert total_agents_pre_removal - system["total_agents"] == len(component_to_remove)
 
     # Add the component back

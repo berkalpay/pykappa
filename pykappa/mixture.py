@@ -143,7 +143,7 @@ class Mixture:
         update = _MixtureUpdate(agents_to_add=set(new_agents), edges_to_add=new_edges)
         self._apply_update(update)
 
-    def remove(self, component: Component) -> None:
+    def _remove_component(self, component: Component) -> None:
         """Remove a component from the mixture."""
         update = _MixtureUpdate()
         for agent in component:

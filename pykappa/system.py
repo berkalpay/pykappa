@@ -415,6 +415,10 @@ class System:
                 self._enforce_signature(agent)
             self.mixture._add(copied, n_copies)
 
+    def remove(self, component: Component) -> None:
+        """Remove a specific component from the current mixture."""
+        self.mixture._remove_component(component)
+
     @property
     def reactivity(self) -> float:
         """The total reactivity of the system."""
