@@ -56,17 +56,6 @@
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.state">
-<span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.state" title="Link to this definition">¶</a></dt>
-<dd><p>Internal state of the site</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.pattern.Site.partner">
-<span class="sig-name descname"><span class="pre">partner</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_TypedPartner</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><span class="pre">Site</span></a></span><a class="headerlink" href="#pykappa.pattern.Site.partner" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Site.agent">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">agent</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a></span><a class="headerlink" href="#pykappa.pattern.Site.agent" title="Link to this definition">¶</a></dt>
@@ -77,6 +66,18 @@
 <dt class="sig sig-object py" id="pykappa.pattern.Site.label">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">label</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.label" title="Link to this definition">¶</a></dt>
 <dd><p>Name of the site.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pykappa.pattern.Site.state" title="Link to this definition">¶</a></dt>
+<dd><p>Internal state of the site.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.pattern.Site.partner">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">partner</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_TypedPartner</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#pykappa.pattern.Site" title="pykappa.pattern.Site"><span class="pre">Site</span></a></span><a class="headerlink" href="#pykappa.pattern.Site.partner" title="Link to this definition">¶</a></dt>
+<dd><p>The binding partner.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -190,7 +191,7 @@
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agents</strong> (<em>IndexedSet</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>agents</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -210,10 +211,11 @@
 </dl>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Component.agents">
-<span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IndexedSet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Component.agents" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">agents</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IndexedSetView</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.pattern.Component.agents" title="Link to this definition">¶</a></dt>
+<dd><p>The agents in this component.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pykappa.pattern.Component.kappa_str">
