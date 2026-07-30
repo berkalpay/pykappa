@@ -467,7 +467,7 @@ class Pattern:
         return self._agents
 
     @cached_property
-    def components(self) -> list[Component]:
+    def components(self) -> tuple[Component, ...]:
         """The connected components in this pattern."""
         unseen = {agent for agent in self._agents if agent is not None}
         components = []
@@ -475,7 +475,7 @@ class Pattern:
             component = Component(next(iter(unseen))._depth_first_traversal)
             unseen.difference_update(component)
             components.append(component)
-        return components
+        return tuple(components)
 
     @staticmethod
     def _agents_to_kappa_str(agents: Iterable[Optional[Agent]]) -> str:
