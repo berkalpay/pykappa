@@ -129,17 +129,15 @@ class Rule:
 
         for l, r in zip(left_agents, right_agents):
             if l is not None and r is not None:
-                l_site = Site("__temp__", "?", partner=None)
-                r_site = Site("__temp__", "?", partner=None)
+                l_site = Site("__temp__", "left", partner=None)
+                r_site = Site("__temp__", "right", partner=None)
 
                 l_site._agent = l
                 l_site.partner = r_site
-                l_site.state = "left"
                 l.interface["__temp__"] = l_site
 
                 r_site._agent = r
                 r_site.partner = l_site
-                r_site.state = "right"
                 r.interface["__temp__"] = r_site
 
         pattern = Pattern(left_agents + right_agents)
@@ -269,7 +267,7 @@ class Rule:
                 case Agent(), Agent() if l_agent.type == r_agent.type:
                     for r_site in r_agent:
                         if r_site._stated:
-                            agent[r_site.label].state = r_site.state
+                            agent[r_site.label]._set_state(r_site.state)
                             if r_site.state != l_agent[r_site.label].state:
                                 update.agents_changed.add(agent)
                     new_selection[i] = agent

@@ -22,7 +22,7 @@ class Site(Counted):
 
     _agent: "Agent"
     _label: str
-    state: str  #: Internal state of the site
+    _state: str
     partner: _Partner
 
     def __init__(self, label: str, state: str, partner: _Partner):
@@ -34,7 +34,7 @@ class Site(Counted):
         """
         super().__init__()
         self._label = label
-        self.state = state
+        self._state = state
         self.partner = partner
 
     def __repr__(self):
@@ -49,6 +49,11 @@ class Site(Counted):
     def label(self) -> str:
         """Name of the site."""
         return self._label
+
+    @property
+    def state(self) -> str:
+        """Internal state of the site."""
+        return self._state
 
     @property
     def _kappa_state_str(self) -> str:
@@ -90,6 +95,9 @@ class Site(Counted):
     def _stated(self) -> bool:
         """Check if the site has a specific internal state."""
         return self.state not in ("#", "?")
+
+    def _set_state(self, state: str) -> None:
+        self._state = state
 
     def _embeds_in(self, other: Self) -> bool:
         """Check whether self as a pattern matches other as a concrete site."""
