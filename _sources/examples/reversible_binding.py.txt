@@ -49,7 +49,7 @@ times.append(system.time)
 # We'll now manually add 50 new `A` and `B` molecules each and simulate until there are no more than 10 free `A` in the mixture:
 
 # %%
-system.mixture.add("A(x[.]), B(x[.])", 50)
+system.add("A(x[.]), B(x[.])", 50)
 
 while system["A"] > 10:
     system.update()

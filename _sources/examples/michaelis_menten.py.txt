@@ -44,10 +44,10 @@ kastr = """
 # %%
 qe_system = System.from_ka(kastr, seed=42)
 
-qe_system.mixture.add("E(s[.])", 50)
-qe_system.mixture.add("S(e[.], x{u})", 50000)
-qe_system.mixture.add("_E(s[.])", 50)
-qe_system.mixture.add("_S(e[.], x{u})", 50000)
+qe_system.add("E(s[.])", 50)
+qe_system.add("S(e[.], x{u})", 50000)
+qe_system.add("_E(s[.])", 50)
+qe_system.add("_S(e[.], x{u})", 50000)
 
 while qe_system.reactivity:
     qe_system.update()
@@ -82,10 +82,10 @@ nqe_system = System.from_ka(kastr, seed=42)
 # disrupt the quasi-equilibrium
 nqe_system["k2"] = 0.1
 
-nqe_system.mixture.add("E(s[.])", 10000)
-nqe_system.mixture.add("S(e[.], x{u})", 1000)
-nqe_system.mixture.add("_E(s[.])", 10000)
-nqe_system.mixture.add("_S(e[.], x{u})", 1000)
+nqe_system.add("E(s[.])", 10000)
+nqe_system.add("S(e[.], x{u})", 1000)
+nqe_system.add("_E(s[.])", 10000)
+nqe_system.add("_S(e[.], x{u})", 1000)
 
 while nqe_system.time < 25:
     nqe_system.update()
