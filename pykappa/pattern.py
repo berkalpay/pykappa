@@ -5,7 +5,7 @@ from math import prod
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
 from pykappa.analysis import _ComponentPlot
-from pykappa._utils import Counted, IndexedSet
+from pykappa._utils import Counted, IndexedSet, IndexedSetView
 
 if TYPE_CHECKING:
     from pykappa.mixture import Mixture
@@ -265,7 +265,7 @@ class Component(Counted):
         Connectedness is not guaranteed statically and must be enforced.
     """
 
-    agents: IndexedSet[Agent]
+    _agents: IndexedSet[Agent]
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
@@ -285,13 +285,18 @@ class Component(Counted):
         """
         super().__init__()
         assert agents
-        self.agents = IndexedSet(agents)  # TODO: order by graph traversal
-        self.agents.create_index("type", lambda a: [a.type])
+        self._agents = IndexedSet(agents)  # TODO: order by graph traversal
+        self._agents.create_index("type", lambda a: [a.type])
 
         self.plot = _ComponentPlot(self)
 
     def __iter__(self):
         yield from self.agents
+
+    @property
+    def agents(self) -> IndexedSetView[Agent]:
+        """The agents in this component."""
+        return self._agents.view
 
     def __len__(self):
         return len(self.agents)
@@ -316,7 +321,7 @@ class Component(Counted):
             exact: If True, finds isomorphisms instead of embeddings.
         """
         if hasattr(other, "agents"):
-            other: IndexedSet[Agent] = other.agents
+            other: IndexedSet[Agent] | IndexedSetView[Agent] = other.agents
 
         assert "type" in other.properties
 

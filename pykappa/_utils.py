@@ -1,6 +1,7 @@
 import random
 from typing import Any, Optional, Iterable, Generic, TypeVar
-from collections.abc import Callable, Hashable
+from collections.abc import Callable, Hashable, Mapping
+from types import MappingProxyType
 
 
 def str_table(rows: list[list], header: Optional[list] = None) -> str:
@@ -144,3 +145,39 @@ class IndexedSet(Generic[T]):
         matches = self.lookup(name, value)
         assert len(matches) == 1
         return next(iter(matches))
+
+    @property
+    def view(self) -> "IndexedSetView[T]":
+        return IndexedSetView(self)
+
+
+class IndexedSetView(Generic[T]):
+    """A live, read-only view of an indexed set."""
+
+    def __init__(self, indexed_set: IndexedSet[T]):
+        self._indexed_set = indexed_set
+
+    @property
+    def properties(self) -> Mapping[str, Property]:
+        """The names and definitions of available indexes."""
+        return MappingProxyType(self._indexed_set.properties)
+
+    def __contains__(self, item: object) -> bool:
+        return item in self._indexed_set
+
+    def __iter__(self):
+        return iter(self._indexed_set)
+
+    def __len__(self) -> int:
+        return len(self._indexed_set)
+
+    def __getitem__(self, i):
+        return self._indexed_set[i]
+
+    def lookup(self, name: str, value: Any) -> "IndexedSetView[T]":
+        """Return a read-only view of matching items."""
+        return self._indexed_set.lookup(name, value).view
+
+    def lookup_one(self, name: str, value: Any) -> T:
+        """Return a single matching item. Raises if not exactly one match."""
+        return self._indexed_set.lookup_one(name, value)

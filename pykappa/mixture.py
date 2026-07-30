@@ -3,7 +3,7 @@ from typing import Optional, Iterable, Iterator, Self
 from contextlib import contextmanager
 
 from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
-from pykappa._utils import IndexedSet
+from pykappa._utils import IndexedSet, IndexedSetView
 
 
 @dataclass(frozen=True)
@@ -28,7 +28,7 @@ class Mixture:
     Optionally tracks connected components.
     """
 
-    agents: IndexedSet[Agent]
+    _agents: IndexedSet[Agent]
     _components: Optional[IndexedSet[Component]]  # Components if tracking is enabled
     _embeddings: dict[Component, IndexedSet[Embedding]]  # Cache of embeddings
     _max_embedding_width: int  # Max diameter, to compute re-embedding neighborhoods
@@ -50,8 +50,8 @@ class Mixture:
         patterns: Optional[Iterable[Pattern]] = None,
         track_components: bool = False,
     ):
-        self.agents = IndexedSet()
-        self.agents.create_index("type", lambda a: [a.type])
+        self._agents = IndexedSet()
+        self._agents.create_index("type", lambda a: [a.type])
         self._components = IndexedSet() if track_components else None
         if self._components is not None:
             self._components.create_index("agent", lambda c: c.agents)
@@ -64,6 +64,11 @@ class Mixture:
 
     def __iter__(self) -> Iterator[Component]:
         yield from self.components
+
+    @property
+    def agents(self) -> IndexedSetView[Agent]:
+        """The agents in the mixture."""
+        return self._agents.view
 
     def __str__(self):
         return self.kappa_str
@@ -93,9 +98,9 @@ class Mixture:
         return self._components is not None
 
     @property
-    def components(self) -> IndexedSet[Component]:
+    def components(self) -> IndexedSetView[Component]:
         if self.component_tracking:  # Use cached components if tracking
-            return self._components
+            return self._components.view
 
         components = IndexedSet()
         unassigned = set(self.agents)
@@ -104,7 +109,7 @@ class Mixture:
             component_agents.intersection_update(self.agents)
             components.add(Component(component_agents))
             unassigned.difference_update(component_agents)
-        return components
+        return components.view
 
     def _add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
         """Add instances of a pattern or component to the mixture.
@@ -150,14 +155,14 @@ class Mixture:
             update.remove_agent(agent)
         self._apply_update(update)
 
-    def embeddings(self, component: Component) -> IndexedSet[Embedding]:
+    def embeddings(self, component: Component) -> IndexedSetView[Embedding]:
         """Get embeddings of a tracked component (not accounting for symmetries).
 
         Raises:
             KeyError: If component is not being tracked.
         """
         try:
-            return self._embeddings[component]
+            return self._embeddings[component].view
         except KeyError as e:
             e.add_note(
                 f"Undeclared component: {component}. To track it, add it as an observable."
@@ -166,11 +171,13 @@ class Mixture:
 
     def embeddings_in_component(
         self, match_pattern: Component, mixture_component: Component
-    ) -> IndexedSet[Embedding]:
+    ) -> IndexedSetView[Embedding]:
         """Get embeddings of a pattern within a specific component."""
         if not self.component_tracking:
             raise RuntimeError("Component tracking is not enabled.")
-        return self._embeddings[match_pattern].lookup("component", mixture_component)
+        return (
+            self._embeddings[match_pattern].lookup("component", mixture_component).view
+        )
 
     def _track_component(self, component: Component):
         """Start tracking embeddings of a component."""
@@ -217,19 +224,19 @@ class Mixture:
         """Add an agent to the mixture (should not have any bound sites)."""
         assert all(site.partner == "." for site in agent)
         assert agent.instantiable
-        self.agents.add(agent)
+        self._agents.add(agent)
 
         if self.component_tracking:
-            self.components.add(Component([agent]))
+            self._components.add(Component([agent]))
 
     def _remove_agent(self, agent: Agent) -> None:
         """Remove an agent from the mixture (bonds must be removed first)."""
         assert all(site.partner == "." for site in agent)
-        self.agents.remove(agent)
+        self._agents.remove(agent)
 
         if self.component_tracking:
             component = self.components.lookup_one("agent", agent)
-            self.components.remove(component)
+            self._components.remove(component)
 
     def _add_edge(self, edge: _Edge) -> None:
         """Add a bond between two sites."""
@@ -251,10 +258,10 @@ class Mixture:
         if len(component2) > len(component1):
             component1, component2 = component2, component1
         with self._relocate_embeddings(component2):
-            self.components.remove(component2)
+            self._components.remove(component2)
             for agent in component2:
-                component1.agents.add(agent)
-                self.components.indices["agent"][agent] = [component1]
+                component1._agents.add(agent)
+                self._components.indices["agent"][agent] = [component1]
 
     def _remove_edge(self, edge: _Edge) -> None:
         """Remove a bond between two sites."""
@@ -280,9 +287,9 @@ class Mixture:
         new_component1 = maybe_new_component
         new_component2 = Component(agent2._depth_first_traversal)
         with self._relocate_embeddings(old_component):
-            self.components.remove(old_component)
-            self.components.add(new_component1)
-            self.components.add(new_component2)
+            self._components.remove(old_component)
+            self._components.add(new_component1)
+            self._components.add(new_component2)
 
     @contextmanager
     def _relocate_embeddings(self, component: Component):
