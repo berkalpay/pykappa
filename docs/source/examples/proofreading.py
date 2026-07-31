@@ -58,7 +58,7 @@ rng = np.random.default_rng(seed=42)
 # %% [markdown]
 # Below we explicitly define the energy landscape (`R1` corresponds to
 # $E_1^R$, `W2` to $E_2^W$, etc.) so that our rate constants do not
-# violate the second law.
+# violate the Second Law of Thermodynamics.
 
 # %%
 # free energies
@@ -79,7 +79,9 @@ RT = (T0 + T) * R
 # %% [markdown]
 # The function below returns a set of four rate constants for one of the
 # three reactions listed above. The derivation for these formulae is
-# given at the end of this document.
+# given at the end of this document. The rates at which a copy machine
+# should attach a new monomer should depend on whether or not that
+# monomer's type matches that of the template.
 
 # %%
 def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
@@ -96,11 +98,10 @@ def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
 # model. The contact map for this model will be:
 #
 # <img src="https://github.com/user-attachments/assets/00e6171e-39f1-40d5-b069-e8bf26e9c616" alt="contact map" style="max-width: 320px; width: 100%;">
-
-# %% [markdown]
+#
 # We specify a copy machine `C` as an abstraction for somthing like RNA
-# polymerase and a monomer `M`. Critically, this monomer carries a state
-# which specifies its code. (In the image, we use a closed circle and an
+# polymerase. We also introduce a monomer, `C`, which carries a state
+# specifying its encoding. (In the image, we use a closed circle and an
 # open circle; in code, we will use `w` and `b`.)
 #
 # The copy machine interacts with `M` in two ways: by binding the
@@ -110,20 +111,17 @@ def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
 #
 # The first rule we should specify is how the copy machine should behave
 # at the beginning of the polymer. It will be bound at initialization to
-# the template strand. But one problem presents itself. The rates at
-# which a copy machine should attach a new monomer should depend on
-# whether or not that monomer's type matches that of the template. Thus,
-# we need four different rules for each of the possible combinations. (A
-# system with four possible bases requires sixteen rule enumerations.)
+# the template strand. We will use four different rules for each
+# possible template-transcript base pairing. (A system with four
+# possible bases requires sixteen rule enumerations.)
 #
 # Thankfully, Python makes it easy to generate large rulesets. Kappa
 # rules are particularly compatible with Python's
 # [\$-strings](https://docs.python.org/3/library/string.html#template-strings-strings),
 # which consume `$` characters and thus do not conflict with Kappa's
-# existing syntax. A simple function generates four rules for each
+# existing syntax. The simple function below generates four rules for each
 # pairing: `a` is the first base, `b` is the second, and `c` is
-# `"correct"` if the bases match and `"incorrect"` otherwise. We use the
-# following function to generate rulesets:
+# `"correct"` if the bases match and `"incorrect"` otherwise.
 
 
 # %%
@@ -135,7 +133,15 @@ def generate_ruleset(rule):
 
 
 # %% [markdown]
-# Now we are ready to write the rule itself. In words:
+# For example, the simple "rule" (this is not valid Kappa) can be
+# expanded into four:
+
+# %%
+print(*generate_ruleset("$a, $b @ $c"), sep="\n")
+
+# %% [markdown]
+# The pattern should be clear. Now we are ready to write the rule
+# itself. In words:
 #
 # *Begin the construction of a transcript by attaching a monomer to the
 # copy machine's blank transcript site. This addition is tentative and
@@ -155,6 +161,21 @@ rules += generate_ruleset(
 # In general, the first line of the rule specifies the *template*
 # string; the second line specifies the *transcript* string including
 # the copy machine.
+#
+# As they say, a picture is worth a thousand words. Here's a
+# diagram which exactly corresponds to the text of the rule, applied
+# specifically to a b-w pairing:
+#
+# ![rule](https://github.com/user-attachments/assets/12de2888-149c-4a65-bb3d-0953e9889332)
+#
+# Note that we exclude some sites and states here. In particular, we
+# leave the state on the top left monomer's `t` site ambiguous; the same
+# monomer has its `r` site unspecified entirely. This means that `t` may
+# have *any* state. This is also true for `r`, but by leaving it out of the
+# pattern entirely, we also allow it to be bound or unbound. (We take
+# care to specify `t`'s binding.) This is the *don't care, don't write*
+# principle of Kappa, and is designed to make rules a little easier to
+# read and write.
 #
 # The result of `generate_ruleset` will be a set of four rules (actually
 # eight if we count the reverse cases) where `$a` and `$b` have been
@@ -240,17 +261,11 @@ rules += generate_ruleset(
 
 # %% [markdown]
 # The ruleset is complete; all that remains is to specify the rates
-# themselves. In general, one should prefer to *generate* rates by
-# specfiying free energies. This ensures that these systems do not
-# violate any rules of thermodynamics.
-#
-# !INSERT LONGER FREE ENERGY EXPLANATION
+# themselves. We do this by introducing a new helper function
+# `vars_of_rates`, which converts three sets of rate constants to the
+# Kappa variables referenced by our rules.
 
 # %%
-
-# FREE ENERGIES
-
-
 def vars_of_rates(t0, t1, pr):
     vmap = {"add": t0, "commit": t1, "proofread": pr}
     return {
@@ -262,9 +277,8 @@ def vars_of_rates(t0, t1, pr):
 
 # %% [markdown]
 # Now that we have a collection of rules, we'll need to write a function
-# to generate a polymer for the system to use. We'll perform our
-# proofreading experiments with the same polymer copied for many new
-# systems.
+# to generate a polymer for the system to use, along with functions
+# which identify the number of errors in the new transcript strand.
 
 
 # %%
@@ -302,107 +316,27 @@ def get_transcript(mixture, pattern):
     return transcript or pattern
 
 # %% [markdown]
-# !EXPLAIN
-#
-# t0 = get_rates(R0, W0, R1, W1, barrier=1.0, drive=1.0)
-# t1 = get_rates(R0, W0, R1, W1, barrier=1.0, drive=1.0)
-# pr = get_rates(R0, W0, R2, W2, omega=0.0)
-#
-# polymer, pattern = generate_polymer(25)
-# variables = {k: str(v) for k, v in vars_of_rates(t0, t1, pr).items()}
-#
-# system = System.from_kappa(
-#     rules=rules, variables=variables, mixture={polymer: 1}, seed=42
-# )
-#
-# while system.reactivity:
-#     system.update()
-#
-# transcript = get_transcript(system.mixture, pattern)
-#
-# print("base:      ", pattern)
-# print("transcript:", transcript)
-# print("errors:    ", sum(x != y for x, y in zip(pattern, transcript)))
-# print("time:      ", system.time)
-
-# %% [markdown]
-# Now that we can count errors, we can examine how changing the
-# configuration of the free energy landscape affects the effectiveness
-# of the copy machine.
-
+# A complete experiment (with the backwards "proofreading" reaction
+# disabled) follows. 
 
 # %%
-class Context:
-    def __init__(self, base, polymer, pattern):
-        self.base = base
-        self.polymer = polymer
-        self.pattern = pattern
-    
-    def new(self):
-        mixture = Mixture([copy.copy(self.polymer)])
-        return System(rules=self.base.rules.values(), 
-                      variables=self.base.variables, 
-                      mixture=mixture)
+t0 = get_rates(R0, W0, R1, W1, barrier=1.0, drive=1.0)
+t1 = get_rates(R0, W0, R1, W1, barrier=1.0, drive=1.0)
+pr = get_rates(R0, W0, R2, W2, omega=0.0)
 
-    def count_errors(self, mixture):
-        transcript = get_transcript(mixture, self.pattern)
-        return sum(x != y for x, y in zip(pattern, transcript))
+polymer, pattern = generate_polymer(25)
+variables = {k: str(v) for k, v in vars_of_rates(t0, t1, pr).items()}
 
+system = System.from_kappa(
+    rules=rules, variables=variables, mixture={polymer: 1}, seed=42
+)
 
-def experiment(context, b0, b1):
-    t0 = get_rates(R0, W0, R1, W1, barrier=b0, drive=1.0)
-    t1 = get_rates(R1, W1, R2, W2, barrier=b1, drive=1.0)
-    pr = get_rates(R0, W0, R2, W2, omega=0.0)
+while system.reactivity:
+    system.update()
 
-    system = context.new()
-    for k, v in vars_of_rates(t0, t1, pr).items():
-        system[k] = v
+transcript = get_transcript(system.mixture, pattern)
 
-    while system.reactivity:
-        system.update()
-
-    return context.count_errors(system.mixture)
-
-# %% [markdown]
-# !EXPLAIN
-
-# %%
-# polymer, pattern = generate_polymer(10)
-# system = System.from_kappa(rules=rules, variables=variables, mixture={polymer: 1})
-# context = Context(system, polymer, pattern)
-# 
-# gridsize = 5
-# trials = 10
-# barrier_grid = np.linspace(0.0, 10.0, gridsize)
-# 
-# B0, B1 = np.meshgrid(barrier_grid, barrier_grid)
-# B0 = np.repeat(B0[..., None], trials, axis=-1)
-# B1 = np.repeat(B1[..., None], trials, axis=-1)
-# 
-# parallel = Parallel(n_jobs=-1, verbose=10)
-# out = parallel(
-#     delayed(experiment)(context, B0[idx], B1[idx])
-#     for idx in np.ndindex(B0.shape)
-# )
-
-# results = np.mean(np.array(out).reshape(B0.shape), axis=-1)
-
-# %% [markdown]
-# !EXPLAIN
-
-# %%
-# fig, ax = plt.subplots(figsize=(7, 6))
-# im = ax.imshow(
-#     results,
-#     origin="lower",
-#     aspect="equal",
-#     cmap="inferno_r",
-#     extent=[barrier_grid[0], barrier_grid[-1],
-#         barrier_grid[0], barrier_grid[-1]],
-# )
-# ax.set_xlabel("t0 barrier (0 \u2194 1)")
-# ax.set_ylabel("t1 barrier (1 \u2194 2)")
-# ax.set_title("Mean error rate vs. transition barriers (proofreading off)")
-# fig.colorbar(im, label="mean error rate")
-# plt.tight_layout()
-# plt.show()
+print("base:      ", pattern)
+print("transcript:", transcript)
+print("errors:    ", sum(x != y for x, y in zip(pattern, transcript)))
+print("time:      ", system.time)
