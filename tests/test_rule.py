@@ -2,7 +2,7 @@ import pytest
 from math import comb
 
 from pykappa import System, Pattern, Rule
-from pykappa._expression import Expression
+from pykappa.expression import Expression
 
 
 @pytest.mark.parametrize(

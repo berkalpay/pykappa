@@ -2,7 +2,7 @@ from lark import Lark, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, _TypedPartner
 from pykappa.rule import Rule
-from pykappa._expression import Expression
+from pykappa.expression import Expression
 
 kappa_parser = Lark.open(
     "kappa.lark", rel_to=__file__, start="kappa_input", maybe_placeholders=False

@@ -16,7 +16,7 @@ from pykappa.mixture import Mixture
 from pykappa.rule import Rule
 from pykappa.pattern import Component, Pattern, Site
 from pykappa.analysis import Monitor
-from pykappa._expression import Expression
+from pykappa.expression import Expression
 from pykappa._utils import str_table
 
 
@@ -259,7 +259,7 @@ class System:
         """
         if name not in self.variables:
             raise KeyError(f"'{name}' is not a declared variable")
-        if self.variables[name].type != "literal":
+        if self.variables[name]._type != "literal":
             raise ValueError(
                 f"'{name}' is not a numeric literal and cannot be reassigned"
             )
@@ -368,8 +368,8 @@ class System:
                 if component not in mixture._embeddings:
                     mixture._track_component(component)
         for expr in [*self.observables.values(), *self.variables.values()]:
-            for component_expr in expr.filter("component_pattern"):
-                mixture._track_component(component_expr.attrs["value"])
+            for component_expr in expr._filter("component_pattern"):
+                mixture._track_component(component_expr._attrs["value"])
 
     def _enforce_signature(self, agent: "Agent") -> None:
         """Validate agent type and sites against the inferred signature and fill missing sites.
