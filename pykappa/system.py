@@ -1,3 +1,5 @@
+"""Implements simulation of models."""
+
 import os
 import shutil
 import tempfile

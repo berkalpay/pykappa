@@ -1,3 +1,5 @@
+"""Represents Kappa rules."""
+
 import random
 from dataclasses import dataclass, field
 from math import prod
@@ -59,8 +61,7 @@ class Rule:
             self,
             "token_updates",
             tuple(
-                (expression, name)
-                for expression, name in (self.token_updates or ())
+                (expression, name) for expression, name in (self.token_updates or ())
             ),
         )
         l = len(self.left.agents)

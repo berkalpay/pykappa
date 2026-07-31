@@ -1,3 +1,5 @@
+"""Manages collections of agents."""
+
 from dataclasses import dataclass, field
 from typing import Optional, Iterable, Iterator, Self
 from contextlib import contextmanager

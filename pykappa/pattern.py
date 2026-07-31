@@ -1,3 +1,5 @@
+"""Represents Kappa patterns and constituent objects."""
+
 from collections import defaultdict
 from collections.abc import Mapping
 from functools import cached_property

@@ -1,3 +1,5 @@
+"""Various model and simulation analysis tools."""
+
 import math
 import bisect
 import colorsys

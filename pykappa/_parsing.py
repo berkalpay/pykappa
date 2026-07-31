@@ -1,3 +1,5 @@
+"""For parsing the Kappa language into PyKappa objects."""
+
 from lark import Lark, Tree, Token, Transformer
 
 from pykappa.pattern import Site, Agent, Pattern, _TypedPartner

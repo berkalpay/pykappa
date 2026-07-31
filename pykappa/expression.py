@@ -1,3 +1,5 @@
+"""Represents Kappa arithmetic expressions."""
+
 import math
 import operator
 from collections import deque
