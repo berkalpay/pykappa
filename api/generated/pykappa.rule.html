@@ -45,7 +45,7 @@
 <span id="pykappa-rule"></span><h1>pykappa.rule<a class="headerlink" href="#module-pykappa.rule" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.rule.Rule">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">Rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_constraint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'any'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">Rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_constraint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'any'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule" title="Link to this definition">¶</a></dt>
 <dd><p>A Kappa rule, specifying the transformation of a pattern at a stochastic rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -54,10 +54,35 @@
 <li><p><strong>right</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
 <li><p><strong>rate_expression</strong> (<em>Expression</em>)</p></li>
 <li><p><strong>component_constraint</strong> (<em>Literal</em><em>[</em><em>'any'</em><em>, </em><em>'same'</em><em>, </em><em>'different'</em><em>]</em>)</p></li>
-<li><p><strong>token_updates</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>Expression</em><em>, </em><em>str</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>token_updates</strong> (<em>tuple</em><em>[</em><em>tuple</em><em>[</em><em>Expression</em><em>, </em><em>str</em><em>]</em><em>, </em><em>...</em><em>]</em>)</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.rule.Rule.left">
+<span class="sig-name descname"><span class="pre">left</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#pykappa.rule.Rule.left" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.rule.Rule.right">
+<span class="sig-name descname"><span class="pre">right</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#pykappa.rule.Rule.right" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.rule.Rule.rate_expression">
+<span class="sig-name descname"><span class="pre">rate_expression</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Expression</span></span><a class="headerlink" href="#pykappa.rule.Rule.rate_expression" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.rule.Rule.component_constraint">
+<span class="sig-name descname"><span class="pre">component_constraint</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'any'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'same'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'different'</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'any'</span></span><a class="headerlink" href="#pykappa.rule.Rule.component_constraint" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykappa.rule.Rule.token_updates">
+<span class="sig-name descname"><span class="pre">token_updates</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Expression</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></span><a class="headerlink" href="#pykappa.rule.Rule.token_updates" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pykappa.rule.Rule.list_from_kappa">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">list_from_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kappa_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule.list_from_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule.list_from_kappa" title="Link to this definition">¶</a></dt>
@@ -92,31 +117,6 @@
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.left">
-<span class="sig-name descname"><span class="pre">left</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#pykappa.rule.Rule.left" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.right">
-<span class="sig-name descname"><span class="pre">right</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><span class="pre">Pattern</span></a></span><a class="headerlink" href="#pykappa.rule.Rule.right" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.rate_expression">
-<span class="sig-name descname"><span class="pre">rate_expression</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Expression</span></span><a class="headerlink" href="#pykappa.rule.Rule.rate_expression" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.component_constraint">
-<span class="sig-name descname"><span class="pre">component_constraint</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'any'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'same'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'different'</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.rule.Rule.component_constraint" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.rule.Rule.token_updates">
-<span class="sig-name descname"><span class="pre">token_updates</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Expression</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.rule.Rule.token_updates" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pykappa.rule.Rule.kappa_str">
