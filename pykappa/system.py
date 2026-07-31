@@ -32,7 +32,7 @@ class System:
     site_defaults: dict[str, dict[str, str]]  #: Maps agent types to site default states
     tokens: dict[str, float]  #: Maps token names to their current values
     monitor: Optional["Monitor"]  #: Optionally tracks simulation history
-    time: float  #: Current simulation time
+    _time: float
     tallies: defaultdict[str, dict[str, int]]  #: Tracks rule applications
     _rng: random.Random  # Random number generator for reproducibility of updates
 
@@ -223,7 +223,7 @@ class System:
         self.site_defaults = {} if site_defaults is None else dict(site_defaults)
 
         self._set_mixture(mixture)
-        self.time = 0
+        self._time = 0
 
         self.tokens = {} if tokens is None else dict(tokens)
 
@@ -271,6 +271,11 @@ class System:
     def mixture(self) -> Mixture:
         """The current state of agents and their connections."""
         return self._mixture
+
+    @property
+    def time(self) -> float:
+        """The current simulation time."""
+        return self._time
 
     @cached_property
     def signatures(self) -> dict[str, frozenset[str]]:
@@ -442,7 +447,7 @@ class System:
                 self.monitor.update()
             return
 
-        self.time += self._rng.expovariate(reactivity)
+        self._time += self._rng.expovariate(reactivity)
 
         rule = self._rng.choices(
             list(self.rules.values()),
@@ -534,7 +539,7 @@ class System:
                     history = {name: [] for name in columns}
 
                     for row in reader:
-                        history["time"].append(self.time + float(row[0]))
+                        history["time"].append(self._time + float(row[0]))
                         for name, value in zip(columns[1:], row[1:]):
                             history[name].append(float(value))
 
@@ -549,7 +554,7 @@ class System:
 
         # Apply the update
         self._set_mixture(System.from_ka(output_kappa_str).mixture)
-        self.time += time
+        self._time += time
 
         # Update the monitor
         if self.monitor is not None and history is not None:
