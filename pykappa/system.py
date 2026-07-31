@@ -28,7 +28,7 @@ class System:
 
     _mixture: Mixture
     _rules: dict[str, Rule]
-    observables: dict[str, Expression]  #: Maps observable names to expressions
+    _observables: dict[str, Expression]
     variables: dict[str, Expression]  #: Maps variable names to expressions
     site_defaults: dict[str, dict[str, str]]  #: Maps agent types to site default states
     tokens: dict[str, float]  #: Maps token names to their current values
@@ -219,7 +219,7 @@ class System:
                 )
             )
 
-        self.observables = {} if observables is None else observables
+        self._observables = {} if observables is None else dict(observables)
         self.variables = {} if variables is None else variables
         self.site_defaults = {} if site_defaults is None else dict(site_defaults)
 
@@ -240,8 +240,8 @@ class System:
         Raises:
             KeyError: If name doesn't correspond to any observable or variable.
         """
-        if name in self.observables:
-            return self.observables[name].evaluate(self)
+        if name in self._observables:
+            return self._observables[name].evaluate(self)
         elif name in self.variables:
             return self.variables[name].evaluate(self)
         else:
@@ -300,6 +300,11 @@ class System:
         return {
             agent_type: frozenset(sites) for agent_type, sites in sites_by_type.items()
         }
+
+    @property
+    def observables(self) -> Mapping[str, Expression]:
+        """Maps observable names to expressions."""
+        return MappingProxyType(self._observables)
 
     @property
     def tallies(self) -> Mapping[str, Mapping[str, int]]:
@@ -373,7 +378,7 @@ class System:
         for var_name, var in self.variables.items():
             kappa_list.append(f"%var: '{var_name}' {var.kappa_str}")
 
-        for obs_name, obs in self.observables.items():
+        for obs_name, obs in self._observables.items():
             obs_str = (
                 f"|{obs.kappa_str}|" if isinstance(obs, Component) else obs.kappa_str
             )
@@ -395,7 +400,7 @@ class System:
             for component in rule.left.components:
                 if component not in mixture._embeddings:
                     mixture._track_component(component)
-        for expr in [*self.observables.values(), *self.variables.values()]:
+        for expr in [*self._observables.values(), *self.variables.values()]:
             for component_expr in expr._filter("component_pattern"):
                 mixture._track_component(component_expr._attrs["value"])
 
@@ -536,7 +541,7 @@ class System:
                 self.kappa_str,
                 f'%mod: alarm {time} do $SNAPSHOT "{snap_path}";',
             ]
-            if self.observables:
+            if self._observables:
                 output_lines.append("%mod: [true] do $PLOTENTRY; repeat [true]")
 
             # Run KaSim
@@ -553,7 +558,7 @@ class System:
             with open(snap_path) as f:
                 content = f.read()
 
-            if self.observables:
+            if self._observables:
                 with open(out_path) as f:
                     reader = csv.reader(f)
                     header = next(row for row in reader if row and row[0] == "[T]")
