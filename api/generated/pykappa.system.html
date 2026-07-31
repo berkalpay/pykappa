@@ -22,8 +22,8 @@
     <link rel="icon" href="../../_static/logo.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="pykappa.mixture" href="pykappa.mixture.html" />
-    <link rel="prev" title="API reference" href="../index.html" />
+    <link rel="next" title="pykappa.analysis" href="pykappa.analysis.html" />
+    <link rel="prev" title="pykappa.rule" href="pykappa.rule.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -43,6 +43,7 @@
             
   <section id="module-pykappa.system">
 <span id="pykappa-system"></span><h1>pykappa.system<a class="headerlink" href="#module-pykappa.system" title="Link to this heading">¶</a></h1>
+<p>Implements simulation of models.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.system.System">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.system.</span></span><span class="sig-name descname"><span class="pre">System</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monitor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/system.html#System"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.system.System" title="Link to this definition">¶</a></dt>
@@ -52,8 +53,8 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mixture</strong> (<a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p></li>
 <li><p><strong>rules</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a><em>]</em>)</p></li>
-<li><p><strong>observables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Expression</em><em>]</em>)</p></li>
-<li><p><strong>variables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Expression</em><em>]</em>)</p></li>
+<li><p><strong>observables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>]</em>)</p></li>
+<li><p><strong>variables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>]</em>)</p></li>
 <li><p><strong>tokens</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>)</p></li>
 <li><p><strong>site_defaults</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em>)</p></li>
 <li><p><strong>monitor</strong> (<a class="reference internal" href="pykappa.analysis.html#pykappa.analysis.Monitor" title="pykappa.analysis.Monitor"><em>Monitor</em></a><em> | </em><em>None</em>)</p></li>
@@ -130,13 +131,13 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pykappa.system.System.observables">
-<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.observables" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">observables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.observables" title="Link to this definition">¶</a></dt>
 <dd><p>Maps observable names to expressions</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pykappa.system.System.variables">
-<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Expression</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.variables" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.variables" title="Link to this definition">¶</a></dt>
 <dd><p>Maps variable names to expressions</p>
 </dd></dl>
 
@@ -372,10 +373,11 @@ multiple rulesets can yield the same graph.</p>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">pykappa.system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pykappa.mixture.html">pykappa.mixture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pykappa.rule.html">pykappa.rule</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.pattern.html">pykappa.pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.mixture.html">pykappa.mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.expression.html">pykappa.expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.rule.html">pykappa.rule</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pykappa.system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.analysis.html">pykappa.analysis</a></li>
 </ul>
 </li>
@@ -386,8 +388,8 @@ multiple rulesets can yield the same graph.</p>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">API reference</a><ul>
-      <li>Previous: <a href="../index.html" title="previous chapter">API reference</a></li>
-      <li>Next: <a href="pykappa.mixture.html" title="next chapter">pykappa.mixture</a></li>
+      <li>Previous: <a href="pykappa.rule.html" title="previous chapter">pykappa.rule</a></li>
+      <li>Next: <a href="pykappa.analysis.html" title="next chapter">pykappa.analysis</a></li>
   </ul></li>
   </ul></li>
 </ul>

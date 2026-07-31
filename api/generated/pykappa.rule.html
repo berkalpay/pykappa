@@ -22,8 +22,8 @@
     <link rel="icon" href="../../_static/logo.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="pykappa.pattern" href="pykappa.pattern.html" />
-    <link rel="prev" title="pykappa.mixture" href="pykappa.mixture.html" />
+    <link rel="next" title="pykappa.system" href="pykappa.system.html" />
+    <link rel="prev" title="pykappa.expression" href="pykappa.expression.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -43,6 +43,7 @@
             
   <section id="module-pykappa.rule">
 <span id="pykappa-rule"></span><h1>pykappa.rule<a class="headerlink" href="#module-pykappa.rule" title="Link to this heading">¶</a></h1>
+<p>Represents Kappa rules.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.rule.Rule">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.rule.</span></span><span class="sig-name descname"><span class="pre">Rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_constraint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'any'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_updates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/rule.html#Rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.rule.Rule" title="Link to this definition">¶</a></dt>
@@ -52,9 +53,9 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>left</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
 <li><p><strong>right</strong> (<a class="reference internal" href="pykappa.pattern.html#pykappa.pattern.Pattern" title="pykappa.pattern.Pattern"><em>Pattern</em></a>)</p></li>
-<li><p><strong>rate_expression</strong> (<em>Expression</em>)</p></li>
+<li><p><strong>rate_expression</strong> (<a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a>)</p></li>
 <li><p><strong>component_constraint</strong> (<em>Literal</em><em>[</em><em>'any'</em><em>, </em><em>'same'</em><em>, </em><em>'different'</em><em>]</em>)</p></li>
-<li><p><strong>token_updates</strong> (<em>tuple</em><em>[</em><em>tuple</em><em>[</em><em>Expression</em><em>, </em><em>str</em><em>]</em><em>, </em><em>...</em><em>]</em>)</p></li>
+<li><p><strong>token_updates</strong> (<em>tuple</em><em>[</em><em>tuple</em><em>[</em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>, </em><em>str</em><em>]</em><em>, </em><em>...</em><em>]</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -70,7 +71,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pykappa.rule.Rule.rate_expression">
-<span class="sig-name descname"><span class="pre">rate_expression</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Expression</span></span><a class="headerlink" href="#pykappa.rule.Rule.rate_expression" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rate_expression</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a></span><a class="headerlink" href="#pykappa.rule.Rule.rate_expression" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -80,7 +81,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pykappa.rule.Rule.token_updates">
-<span class="sig-name descname"><span class="pre">token_updates</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Expression</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></span><a class="headerlink" href="#pykappa.rule.Rule.token_updates" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">token_updates</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></span><a class="headerlink" href="#pykappa.rule.Rule.token_updates" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -220,10 +221,11 @@ applies this correction when calculating rule reactivities.</p>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">API reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="pykappa.system.html">pykappa.system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pykappa.mixture.html">pykappa.mixture</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">pykappa.rule</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.pattern.html">pykappa.pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.mixture.html">pykappa.mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.expression.html">pykappa.expression</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pykappa.rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pykappa.system.html">pykappa.system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykappa.analysis.html">pykappa.analysis</a></li>
 </ul>
 </li>
@@ -234,8 +236,8 @@ applies this correction when calculating rule reactivities.</p>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">API reference</a><ul>
-      <li>Previous: <a href="pykappa.mixture.html" title="previous chapter">pykappa.mixture</a></li>
-      <li>Next: <a href="pykappa.pattern.html" title="next chapter">pykappa.pattern</a></li>
+      <li>Previous: <a href="pykappa.expression.html" title="previous chapter">pykappa.expression</a></li>
+      <li>Next: <a href="pykappa.system.html" title="next chapter">pykappa.system</a></li>
   </ul></li>
   </ul></li>
 </ul>

@@ -118,7 +118,7 @@ print("AB count after one binding event:", len(mixture.embeddings(complex)))
 # Expressions can be parsed from Kappa strings and evaluated in the context of a system.
 
 # %%
-from pykappa._expression import Expression
+from pykappa.expression import Expression
 
 literal_expr = Expression.from_kappa("42")
 print("Literal expression value:", literal_expr.evaluate())

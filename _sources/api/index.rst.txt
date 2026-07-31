@@ -5,13 +5,13 @@ API reference
    :toctree: generated
    :recursive:
    
-   pykappa.system
-   pykappa.mixture
-   pykappa.rule
    pykappa.pattern
+   pykappa.mixture
+   
+   pykappa.expression
+   pykappa.rule
 
-.. autosummary::
-   :toctree: generated
-   :recursive:
+   pykappa.system
 
    pykappa.analysis
+
