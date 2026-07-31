@@ -349,7 +349,7 @@ def test_token_in_rate_expression():
 
     assert not system.reactivity
 
-    system.tokens["fuel"] = 5
+    system.set_token("fuel", 5)
     for _ in range(5):
         system.update()
     assert system["AB"] == 5

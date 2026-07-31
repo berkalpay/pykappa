@@ -31,7 +31,7 @@ class System:
     _observables: dict[str, Expression]
     _variables: dict[str, Expression]
     _site_defaults: dict[str, Mapping[str, str]]
-    tokens: dict[str, float]  #: Maps token names to their current values
+    _tokens: dict[str, float]
     _monitor: Optional["Monitor"]
     _time: float
     _tallies: dict[str, Mapping[str, int]]
@@ -131,7 +131,7 @@ class System:
         for init in inits:
             system.add(init[1], int(init[0].evaluate(system)))
         for token_name, amount_expr in token_inits:
-            system.tokens[token_name] = float(amount_expr.evaluate(system))
+            system._tokens[token_name] = float(amount_expr.evaluate(system))
         return system
 
     @classmethod
@@ -229,7 +229,7 @@ class System:
         self._set_mixture(mixture)
         self._time = 0
 
-        self.tokens = {} if tokens is None else dict(tokens)
+        self._tokens = {} if tokens is None else dict(tokens)
 
         self._tallies = {}
         self._monitor = Monitor(self) if monitor else None
@@ -270,6 +270,10 @@ class System:
                 f"'{name}' is not a numeric literal and cannot be reassigned"
             )
         self._variables[name] = Expression("literal", value=value)
+
+    def set_token(self, name: str, value: float) -> None:
+        """Set a token's value."""
+        self._tokens[name] = value
 
     @property
     def mixture(self) -> Mixture:
@@ -318,6 +322,11 @@ class System:
     def variables(self) -> Mapping[str, Expression]:
         """Maps variable names to expressions."""
         return MappingProxyType(self._variables)
+
+    @property
+    def tokens(self) -> Mapping[str, float]:
+        """Maps token names to their current values."""
+        return MappingProxyType(self._tokens)
 
     @property
     def tallies(self) -> Mapping[str, Mapping[str, int]]:
@@ -502,7 +511,7 @@ class System:
                 self._enforce_signature(agent)
             self._mixture._apply_update(update)
             for expr, name in rule.token_updates:
-                self.tokens[name] += expr.evaluate(self)
+                self._tokens[name] += expr.evaluate(self)
         else:
             self._tallies[name] = MappingProxyType(
                 {**tally, "failed": tally["failed"] + 1}
