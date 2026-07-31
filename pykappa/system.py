@@ -31,7 +31,7 @@ class System:
     variables: dict[str, Expression]  #: Maps variable names to expressions
     site_defaults: dict[str, dict[str, str]]  #: Maps agent types to site default states
     tokens: dict[str, float]  #: Maps token names to their current values
-    monitor: Optional["Monitor"]  #: Optionally tracks simulation history
+    _monitor: Optional["Monitor"]
     _time: float
     tallies: defaultdict[str, dict[str, int]]  #: Tracks rule applications
     _rng: random.Random  # Random number generator for reproducibility of updates
@@ -228,7 +228,7 @@ class System:
         self.tokens = {} if tokens is None else dict(tokens)
 
         self.tallies = defaultdict(lambda: {"applied": 0, "failed": 0})
-        self.monitor = Monitor(self) if monitor else None
+        self._monitor = Monitor(self) if monitor else None
 
     def __str__(self):
         return self.kappa_str
@@ -276,6 +276,11 @@ class System:
     def time(self) -> float:
         """The current simulation time."""
         return self._time
+
+    @property
+    def monitor(self) -> Optional["Monitor"]:
+        """The monitor tracking simulation history, if enabled."""
+        return self._monitor
 
     @cached_property
     def signatures(self) -> dict[str, frozenset[str]]:
@@ -438,13 +443,13 @@ class System:
     def update(self) -> None:
         """Perform one simulation step."""
 
-        if self.monitor is not None and not self.monitor.history["time"]:
-            self.monitor.update()
+        if self._monitor is not None and not self._monitor.history["time"]:
+            self._monitor.update()
 
         if (reactivity := self.reactivity) == 0:
             warnings.warn("system has no reactivity", RuntimeWarning)
-            if self.monitor is not None:
-                self.monitor.update()
+            if self._monitor is not None:
+                self._monitor.update()
             return
 
         self._time += self._rng.expovariate(reactivity)
@@ -466,8 +471,8 @@ class System:
         else:
             self.tallies[str(rule)]["failed"] += 1
 
-        if self.monitor is not None:
-            self.monitor.update()
+        if self._monitor is not None:
+            self._monitor.update()
 
     def apply(self, transformation: str, n: int = 1) -> None:
         """Apply a transformation immediately for a specified number of times.
@@ -557,9 +562,9 @@ class System:
         self._time += time
 
         # Update the monitor
-        if self.monitor is not None and history is not None:
+        if self._monitor is not None and history is not None:
             for name, values in history.items():
-                self.monitor.history[name].extend(values)
+                self._monitor.history[name].extend(values)
 
     def kd_table(self, volume: float = 1.0) -> str:
         """Summarize kinetic constants of two-component binding/unbinding rules
