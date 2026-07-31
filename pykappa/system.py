@@ -29,7 +29,7 @@ class System:
     _mixture: Mixture
     _rules: dict[str, Rule]
     _observables: dict[str, Expression]
-    variables: dict[str, Expression]  #: Maps variable names to expressions
+    _variables: dict[str, Expression]
     site_defaults: dict[str, dict[str, str]]  #: Maps agent types to site default states
     tokens: dict[str, float]  #: Maps token names to their current values
     _monitor: Optional["Monitor"]
@@ -220,7 +220,7 @@ class System:
             )
 
         self._observables = {} if observables is None else dict(observables)
-        self.variables = {} if variables is None else variables
+        self._variables = {} if variables is None else dict(variables)
         self.site_defaults = {} if site_defaults is None else dict(site_defaults)
 
         self._set_mixture(mixture)
@@ -242,8 +242,8 @@ class System:
         """
         if name in self._observables:
             return self._observables[name].evaluate(self)
-        elif name in self.variables:
-            return self.variables[name].evaluate(self)
+        elif name in self._variables:
+            return self._variables[name].evaluate(self)
         else:
             raise KeyError(
                 f"Name {name} doesn't correspond to a declared observable or variable"
@@ -260,13 +260,13 @@ class System:
             KeyError: If the name is not a declared variable.
             ValueError: If the declared variable is not a numeric literal.
         """
-        if name not in self.variables:
+        if name not in self._variables:
             raise KeyError(f"'{name}' is not a declared variable")
-        if self.variables[name]._type != "literal":
+        if self._variables[name]._type != "literal":
             raise ValueError(
                 f"'{name}' is not a numeric literal and cannot be reassigned"
             )
-        self.variables[name] = Expression("literal", value=value)
+        self._variables[name] = Expression("literal", value=value)
 
     @property
     def mixture(self) -> Mixture:
@@ -305,6 +305,11 @@ class System:
     def observables(self) -> Mapping[str, Expression]:
         """Maps observable names to expressions."""
         return MappingProxyType(self._observables)
+
+    @property
+    def variables(self) -> Mapping[str, Expression]:
+        """Maps variable names to expressions."""
+        return MappingProxyType(self._variables)
 
     @property
     def tallies(self) -> Mapping[str, Mapping[str, int]]:
@@ -375,7 +380,7 @@ class System:
             if name not in paired:
                 kappa_list.append(rule.kappa_str)
 
-        for var_name, var in self.variables.items():
+        for var_name, var in self._variables.items():
             kappa_list.append(f"%var: '{var_name}' {var.kappa_str}")
 
         for obs_name, obs in self._observables.items():
@@ -400,7 +405,7 @@ class System:
             for component in rule.left.components:
                 if component not in mixture._embeddings:
                     mixture._track_component(component)
-        for expr in [*self._observables.values(), *self.variables.values()]:
+        for expr in [*self._observables.values(), *self._variables.values()]:
             for component_expr in expr._filter("component_pattern"):
                 mixture._track_component(component_expr._attrs["value"])
 
