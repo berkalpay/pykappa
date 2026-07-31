@@ -27,7 +27,7 @@ class System:
     """A Kappa system containing agents, rules, observables, and variables for simulation."""
 
     _mixture: Mixture
-    rules: dict[str, Rule]  #: Maps rule names to Rule objects
+    _rules: dict[str, Rule]
     observables: dict[str, Expression]  #: Maps observable names to expressions
     variables: dict[str, Expression]  #: Maps variable names to expressions
     site_defaults: dict[str, dict[str, str]]  #: Maps agent types to site default states
@@ -208,14 +208,14 @@ class System:
         """
         self._rng = random.Random() if seed is None else random.Random(seed)
 
-        self.rules = (
+        self._rules = (
             {} if rules is None else {f"r{i}": rule for i, rule in enumerate(rules)}
         )
 
         if mixture is None:
             mixture = Mixture(
                 track_components=any(
-                    rule.component_constraint != "any" for rule in self.rules.values()
+                    rule.component_constraint != "any" for rule in self._rules.values()
                 )
             )
 
@@ -283,11 +283,16 @@ class System:
         """The monitor tracking simulation history, if enabled."""
         return self._monitor
 
+    @property
+    def rules(self) -> Mapping[str, Rule]:
+        """Maps rule names to rules."""
+        return MappingProxyType(self._rules)
+
     @cached_property
     def signatures(self) -> dict[str, frozenset[str]]:
         """The complete site interface for each agent type inferrred from all rules."""
         sites_by_type: dict[str, set[str]] = defaultdict(set)
-        for rule in self.rules.values():
+        for rule in self._rules.values():
             for pattern in (rule.left, rule.right):
                 for agent in pattern.agents:
                     if agent is not None:
@@ -315,19 +320,19 @@ class System:
     @cached_property
     def _reversible_rules(self) -> list[tuple[str, str]]:
         """Find forward/reverse rule pairs by checking pattern symmetry."""
-        names = list(self.rules.keys())
+        names = list(self._rules.keys())
         pairs = []
         used = set()
 
         for i, name_a in enumerate(names):
             if name_a in used:
                 continue
-            rule_a = self.rules[name_a]
+            rule_a = self._rules[name_a]
 
             for name_b in names[i + 1 :]:
                 if name_b in used:
                     continue
-                rule_b = self.rules[name_b]
+                rule_b = self._rules[name_b]
 
                 if rule_a.left.n_isomorphisms(
                     rule_b.right
@@ -354,14 +359,14 @@ class System:
         pairs = self._reversible_rules
         paired = {name for pair in pairs for name in pair}
         for fwd_name, rev_name in pairs:
-            fwd = self.rules[fwd_name]
-            rev = self.rules[rev_name]
+            fwd = self._rules[fwd_name]
+            rev = self._rules[rev_name]
             kappa_list.append(
                 f"{fwd.left.kappa_str} <-> {fwd.right.kappa_str} "
                 f"@ {fwd._rate_str}, {rev._rate_str}"
             )
         # Otherwise format with -> notation
-        for name, rule in self.rules.items():
+        for name, rule in self._rules.items():
             if name not in paired:
                 kappa_list.append(rule.kappa_str)
 
@@ -386,7 +391,7 @@ class System:
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
         self._mixture = mixture
-        for rule in self.rules.values():
+        for rule in self._rules.values():
             for component in rule.left.components:
                 if component not in mixture._embeddings:
                     mixture._track_component(component)
@@ -444,7 +449,7 @@ class System:
     @property
     def reactivity(self) -> float:
         """The total reactivity of the system."""
-        return sum(rule.reactivity(self) for rule in self.rules.values())
+        return sum(rule.reactivity(self) for rule in self._rules.values())
 
     def update(self) -> None:
         """Perform one simulation step."""
@@ -461,8 +466,8 @@ class System:
         self._time += self._rng.expovariate(reactivity)
 
         rule = self._rng.choices(
-            list(self.rules.values()),
-            weights=[rule.reactivity(self) for rule in self.rules.values()],
+            list(self._rules.values()),
+            weights=[rule.reactivity(self) for rule in self._rules.values()],
         )[0]
 
         # Apply the rule
@@ -514,7 +519,7 @@ class System:
         """
         assert shutil.which("KaSim"), "KaSim not found in the PATH."
 
-        if any(rule.n_symmetries > 1 for rule in self.rules.values()):
+        if any(rule.n_symmetries > 1 for rule in self._rules.values()):
             warnings.warn(
                 "Some rules have multiple symmetries. "
                 "PyKappa normalizes reactivities accordingly: results may differ from KaSim."
