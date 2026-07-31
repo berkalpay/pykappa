@@ -367,7 +367,7 @@ class Component(Counted):
 
     @property
     def kappa_str(self) -> str:
-        return Pattern._agents_to_kappa_str(self.agents)
+        return Pattern._agents_to_str(self.agents)
 
     @property
     def kappa_str_with_agent_ids(self) -> str:
@@ -559,11 +559,6 @@ class Pattern:
         return tuple(components)
 
     @staticmethod
-    def _agents_to_kappa_str(agents: Iterable[Optional[Agent]]) -> str:
-        """Convert a collection of agents to Kappa string representation."""
-        return Pattern._agents_to_str(agents)
-
-    @staticmethod
     def _agents_to_str(
         agents: Iterable[Optional[Agent]], include_ids: bool = False
     ) -> str:
@@ -592,7 +587,7 @@ class Pattern:
 
     @property
     def kappa_str(self) -> str:
-        return type(self)._agents_to_kappa_str(self._agents)
+        return type(self)._agents_to_str(self._agents)
 
     @property
     def kappa_str_with_agent_ids(self) -> str:
