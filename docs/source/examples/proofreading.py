@@ -37,9 +37,9 @@
 # addition has to undergo *two* reactions, which has the effect of
 # multiplicatively enhancing the error rate.
 #
-# <table><tr>
-# <td><img src="https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f" alt="diagram"></td>
-# <td><img src="https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f" alt="diagram"></td>
+# <table width="100%"><tr>
+# <td width="79%"><img src="https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f" alt="diagram" width="100%"></td>
+# <td width="21%"><img src="https://github.com/user-attachments/assets/1d8702fd-8a96-47af-a6de-281d9fb1d4c1" alt="diagram" width="100%"></td>
 # </tr></table>
 
 # %%
