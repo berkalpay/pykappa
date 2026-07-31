@@ -25,7 +25,7 @@ from pykappa._utils import str_table
 class System:
     """A Kappa system containing agents, rules, observables, and variables for simulation."""
 
-    mixture: Mixture  #: The current state of agents and their connections
+    _mixture: Mixture
     rules: dict[str, Rule]  #: Maps rule names to Rule objects
     observables: dict[str, Expression]  #: Maps observable names to expressions
     variables: dict[str, Expression]  #: Maps variable names to expressions
@@ -267,6 +267,11 @@ class System:
             )
         self.variables[name] = Expression("literal", value=value)
 
+    @property
+    def mixture(self) -> Mixture:
+        """The current state of agents and their connections."""
+        return self._mixture
+
     @cached_property
     def signatures(self) -> dict[str, frozenset[str]]:
         """The complete site interface for each agent type inferrred from all rules."""
@@ -353,7 +358,7 @@ class System:
             )
             kappa_list.append(f"%obs: '{obs_name}' {obs_str}")
 
-        kappa_list.append(self.mixture.kappa_str)
+        kappa_list.append(self._mixture.kappa_str)
 
         return "\n".join(kappa_list)
 
@@ -364,7 +369,7 @@ class System:
 
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
-        self.mixture = mixture
+        self._mixture = mixture
         for rule in self.rules.values():
             for component in rule.left.components:
                 if component not in mixture._embeddings:
@@ -414,11 +419,11 @@ class System:
             copied = Component(list(agent_map.values()))
             for agent in copied.agents:
                 self._enforce_signature(agent)
-            self.mixture._add(copied, n_copies)
+            self._mixture._add(copied, n_copies)
 
     def remove(self, component: Component) -> None:
         """Remove a specific component from the current mixture."""
-        self.mixture._remove_component(component)
+        self._mixture._remove_component(component)
 
     @property
     def reactivity(self) -> float:
@@ -445,12 +450,12 @@ class System:
         )[0]
 
         # Apply the rule
-        update = rule._select(self.mixture)
+        update = rule._select(self._mixture)
         if update is not None:
             self.tallies[str(rule)]["applied"] += 1
             for agent in update.agents_to_add:
                 self._enforce_signature(agent)
-            self.mixture._apply_update(update)
+            self._mixture._apply_update(update)
             for expr, name in rule.token_updates:
                 self.tokens[name] += expr.evaluate(self)
         else:
@@ -472,11 +477,11 @@ class System:
         """
         rule = Rule.from_kappa(transformation + " @ 0")
         for _ in range(n):
-            update = Rule._select(rule, self.mixture)
+            update = Rule._select(rule, self._mixture)
             if update is not None:
                 for agent in update.agents_to_add:
                     self._enforce_signature(agent)
-                self.mixture._apply_update(update)
+                self._mixture._apply_update(update)
 
     def update_via_kasim(self, time: float) -> None:
         """Simulate for a given amount of time using KaSim.
