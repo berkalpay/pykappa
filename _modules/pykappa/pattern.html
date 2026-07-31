@@ -330,11 +330,38 @@
 
 <div class="viewcode-block" id="Embedding">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Embedding">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Embedding</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dictionary representing a mapping from pattern agents to mixture agents.&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Embedding</span><span class="p">(</span><span class="n">Mapping</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A mapping from pattern agents to mixture agents.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_mapping&quot;</span><span class="p">,</span> <span class="s2">&quot;_hash&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_mapping</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_from_owned_mapping</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Freeze a mapping whose ownership has been transferred to the embedding.&quot;&quot;&quot;</span>
+        <span class="n">embedding</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">embedding</span><span class="o">.</span><span class="n">_set_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">embedding</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span> <span class="o">=</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Embedding(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span></div>
@@ -422,7 +449,7 @@
         <span class="c1"># Narrow the search by mapping `a_root` to agents in `other` of the same type</span>
         <span class="k">for</span> <span class="n">b_root</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">a_root</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
 
-            <span class="n">agent_map</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">({</span><span class="n">a_root</span><span class="p">:</span> <span class="n">b_root</span><span class="p">})</span>  <span class="c1"># The potential bijection</span>
+            <span class="n">agent_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">a_root</span><span class="p">:</span> <span class="n">b_root</span><span class="p">}</span>  <span class="c1"># The potential bijection</span>
             <span class="n">frontier</span> <span class="o">=</span> <span class="p">{</span><span class="n">a_root</span><span class="p">}</span>
             <span class="n">root_failed</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -467,12 +494,12 @@
                         <span class="k">break</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">root_failed</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">agent_map</span>  <span class="c1"># A valid bijection</span></div>
+                <span class="k">yield</span> <span class="n">Embedding</span><span class="o">.</span><span class="n">_from_owned_mapping</span><span class="p">(</span><span class="n">agent_map</span><span class="p">)</span>  <span class="c1"># A valid bijection</span></div>
 
 
 <div class="viewcode-block" id="Component.isomorphisms">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Component.isomorphisms">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isomorphisms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span> <span class="o">|</span> <span class="s2">&quot;Mixture&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isomorphisms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span> <span class="o">|</span> <span class="s2">&quot;Mixture&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Embedding</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find bijections which respect links in the site graph.</span>
 
 <span class="sd">        Checks for bijections ensuring that any internal site state specified</span>

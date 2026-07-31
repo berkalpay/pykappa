@@ -249,12 +249,16 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">&quot;different&quot;</span><span class="p">:</span>
                 <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_produce_update</span><span class="p">(</span>
-                    <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
-                        <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">selected_component</span><span class="p">)</span>
+                    <span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                            <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">selected_component</span><span class="p">)</span>
+                        <span class="p">)</span>
                     <span class="p">)</span>
-                    <span class="o">|</span> <span class="n">rejection_sample</span><span class="p">(</span>
-                        <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">second</span><span class="p">),</span>
-                        <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">selected_component</span><span class="p">),</span>
+                    <span class="o">|</span> <span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">rejection_sample</span><span class="p">(</span>
+                            <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">second</span><span class="p">),</span>
+                            <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">selected_component</span><span class="p">),</span>
+                        <span class="p">)</span>
                     <span class="p">),</span>
                     <span class="n">mixture</span><span class="p">,</span>
                 <span class="p">)</span>

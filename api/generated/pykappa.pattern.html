@@ -165,8 +165,13 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pykappa.pattern.Embedding">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Embedding</span></span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Embedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Embedding" title="Link to this definition">¶</a></dt>
-<dd><p>Dictionary representing a mapping from pattern agents to mixture agents.</p>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykappa.pattern.</span></span><span class="sig-name descname"><span class="pre">Embedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/pattern.html#Embedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.pattern.Embedding" title="Link to this definition">¶</a></dt>
+<dd><p>A mapping from pattern agents to mixture agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mapping</strong> (<em>Mapping</em><em>[</em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>, </em><a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a><em>]</em>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -256,7 +261,7 @@ in a mixture and potentially between rule patterns.</p>
 <dd class="field-odd"><p><strong>other</strong> (<em>Self</em><em> | </em><a class="reference internal" href="pykappa.mixture.html#pykappa.mixture.Mixture" title="pykappa.mixture.Mixture"><em>Mixture</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Iterator</em>[dict[<a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>, <a class="reference internal" href="#pykappa.pattern.Agent" title="pykappa.pattern.Agent"><em>Agent</em></a>]]</p>
+<dd class="field-even"><p><em>Iterator</em>[<a class="reference internal" href="#pykappa.pattern.Embedding" title="pykappa.pattern.Embedding"><em>Embedding</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
