@@ -1,5 +1,3 @@
-# %%
-
 # %% [markdown]
 # # Kinetic Proofreading
 #
@@ -41,6 +39,10 @@
 # <td width="79%"><img src="https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f" alt="diagram" width="100%"></td>
 # <td width="21%"><img src="https://github.com/user-attachments/assets/1d8702fd-8a96-47af-a6de-281d9fb1d4c1" alt="diagram" width="100%"></td>
 # </tr></table>
+#
+# We sketch the three reactions on the left and the corresponding free
+# energy landscape on the right. We begin by importing relevant packages
+# and defining global variables which will become important later.
 
 # %%
 import copy
@@ -53,7 +55,21 @@ from pykappa import System, Mixture
 rules = []
 rng = np.random.default_rng(seed=42)
 
-# THERMODYNAMIC CONSTANTS
+# %% [markdown]
+# Below we explicitly define the energy landscape (`R1` corresponds to
+# $E_1^R$, `W2` to $E_2^W$, etc.) so that our rate constants do not
+# violate the second law.
+
+# %%
+# free energies
+R0 = 0.0
+W0 = 0.0
+R1 = 0.0
+W1 = 1.0
+R2 = 0.0
+W2 = 1.0
+
+# thermodynamic constants
 T = 25.0
 Avogadro = 6.0221413e23
 R = 0.008314
@@ -61,7 +77,36 @@ T0 = 273.15
 RT = (T0 + T) * R
 
 # %% [markdown]
-# !EXPLAIN CONTACT MAP
+# The function below returns a set of four rate constants for one of the
+# three reactions listed above. The derivation for these formulae is
+# given at the end of this document.
+
+# %%
+def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
+    return {
+        "correct_f": omega * np.exp((r0 + drive + barrier) / RT),
+        "incorrect_f": omega * np.exp((w0 + drive) / RT),
+        "correct_r": omega * np.exp((r1 + barrier) / RT),
+        "incorrect_r": omega * np.exp(w1 / RT),
+    }
+
+# %% [markdown]
+# Now that we have a general understanding of the model's reactions and
+# function, we set out to define more explictily the function of this
+# model. The contact map for this model will be:
+#
+# <img src="https://github.com/user-attachments/assets/00e6171e-39f1-40d5-b069-e8bf26e9c616" alt="contact map" style="max-width: 320px; width: 100%;">
+
+# %% [markdown]
+# We specify a copy machine `C` as an abstraction for somthing like RNA
+# polymerase and a monomer `M`. Critically, this monomer carries a state
+# which specifies its code. (In the image, we use a closed circle and an
+# open circle; in code, we will use `w` and `b`.)
+#
+# The copy machine interacts with `M` in two ways: by binding the
+# template string (the reference polymer) via site `t` or the transcript
+# (the new polymer) via site `c`. The copy machine's job is to build a
+# growing string by matching base pairs, starting at the beginning.
 #
 # The first rule we should specify is how the copy machine should behave
 # at the beginning of the polymer. It will be bound at initialization to
@@ -204,21 +249,6 @@ rules += generate_ruleset(
 # %%
 
 # FREE ENERGIES
-R0 = 0.0
-W0 = 0.0
-R1 = 0.0
-W1 = 1.0
-R2 = 0.0
-W2 = 1.0
-
-
-def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
-    return {
-        "correct_f": omega * np.exp((r0 + drive + barrier) / RT),
-        "incorrect_f": omega * np.exp((w0 + drive) / RT),
-        "correct_r": omega * np.exp((r1 + barrier) / RT),
-        "incorrect_r": omega * np.exp(w1 / RT),
-    }
 
 
 def vars_of_rates(t0, t1, pr):
