@@ -55,7 +55,7 @@
 <li><p><strong>rules</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="pykappa.rule.html#pykappa.rule.Rule" title="pykappa.rule.Rule"><em>Rule</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>observables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>variables</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><em>Expression</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>tokens</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>tokens</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>site_defaults</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>monitor</strong> (<em>bool</em>)</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
@@ -117,10 +117,21 @@
 </dl>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykappa.system.System.tokens">
-<span class="sig-name descname"><span class="pre">tokens</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.tokens" title="Link to this definition">¶</a></dt>
-<dd><p>Maps token names to their current values</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykappa.system.System.set_token">
+<span class="sig-name descname"><span class="pre">set_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pykappa/system.html#System.set_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykappa.system.System.set_token" title="Link to this definition">¶</a></dt>
+<dd><p>Set a token’s value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><strong>value</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -169,6 +180,12 @@
 <dt class="sig sig-object py" id="pykappa.system.System.variables">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">variables</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pykappa.expression.html#pykappa.expression.Expression" title="pykappa.expression.Expression"><span class="pre">Expression</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.variables" title="Link to this definition">¶</a></dt>
 <dd><p>Maps variable names to expressions.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pykappa.system.System.tokens">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">tokens</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pykappa.system.System.tokens" title="Link to this definition">¶</a></dt>
+<dd><p>Maps token names to their current values.</p>
 </dd></dl>
 
 <dl class="py property">
