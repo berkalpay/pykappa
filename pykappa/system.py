@@ -296,8 +296,7 @@ class System:
         return MappingProxyType(self._rules)
 
     @cached_property
-    def signatures(self) -> dict[str, frozenset[str]]:
-        """The complete site interface for each agent type inferrred from all rules."""
+    def _signatures(self) -> dict[str, frozenset[str]]:
         sites_by_type: dict[str, set[str]] = defaultdict(set)
         for rule in self._rules.values():
             for pattern in (rule.left, rule.right):
@@ -307,6 +306,11 @@ class System:
         return {
             agent_type: frozenset(sites) for agent_type, sites in sites_by_type.items()
         }
+
+    @property
+    def signatures(self) -> Mapping[str, frozenset[str]]:
+        """The complete site interface for each agent type as inferred from the rule set."""
+        return MappingProxyType(self._signatures)
 
     @property
     def site_defaults(self) -> Mapping[str, Mapping[str, str]]:
@@ -378,7 +382,7 @@ class System:
         kappa_list = []
 
         # Append the inferred agent signature at the top
-        for agent, sites in self.signatures.items():
+        for agent, sites in self._signatures.items():
             sig = ", ".join(sites)
             kappa_list.append(f"%agent: {agent}({sig})")
 
@@ -432,13 +436,13 @@ class System:
         Raises:
             ValueError: If the agent type is unknown or has sites not in the signature.
         """
-        if not self.signatures:
+        if not self._signatures:
             return
-        known = self.signatures.get(agent.type)
+        known = self._signatures.get(agent.type)
         if known is None:
             raise ValueError(
                 f"Agent type '{agent.type}' is not declared by any rule. "
-                f"Known agent types: {set(self.signatures)}"
+                f"Known agent types: {set(self._signatures)}"
             )
         unknown = {s.label for s in agent} - known
         if unknown:
