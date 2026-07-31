@@ -30,7 +30,7 @@ class System:
     _rules: dict[str, Rule]
     _observables: dict[str, Expression]
     _variables: dict[str, Expression]
-    site_defaults: dict[str, dict[str, str]]  #: Maps agent types to site default states
+    _site_defaults: dict[str, Mapping[str, str]]
     tokens: dict[str, float]  #: Maps token names to their current values
     _monitor: Optional["Monitor"]
     _time: float
@@ -221,7 +221,10 @@ class System:
 
         self._observables = {} if observables is None else dict(observables)
         self._variables = {} if variables is None else dict(variables)
-        self.site_defaults = {} if site_defaults is None else dict(site_defaults)
+        self._site_defaults = {
+            agent_type: MappingProxyType(dict(defaults))
+            for agent_type, defaults in (site_defaults or {}).items()
+        }
 
         self._set_mixture(mixture)
         self._time = 0
@@ -300,6 +303,11 @@ class System:
         return {
             agent_type: frozenset(sites) for agent_type, sites in sites_by_type.items()
         }
+
+    @property
+    def site_defaults(self) -> Mapping[str, Mapping[str, str]]:
+        """Maps agent types to their default site states."""
+        return MappingProxyType(self._site_defaults)
 
     @property
     def observables(self) -> Mapping[str, Expression]:
@@ -431,7 +439,9 @@ class System:
             )
         for label in known - agent.interface.keys():
             agent._add_site(
-                Site(label, self.site_defaults.get(agent.type, {}).get(label, "?"), ".")
+                Site(
+                    label, self._site_defaults.get(agent.type, {}).get(label, "?"), "."
+                )
             )
 
     def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
