@@ -5,7 +5,7 @@ from typing import Optional, Iterable, Iterator, Self
 from contextlib import contextmanager
 
 from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
-from pykappa._utils import IndexedSet, IndexedSetView
+from pykappa._utils import IndexedSet, IndexedSetView, OrderedSet
 
 
 @dataclass(frozen=True)
@@ -106,9 +106,14 @@ class Mixture:
 
         components = IndexedSet()
         unassigned = set(self.agents)
-        while unassigned:
-            component_agents = set(next(iter(unassigned))._depth_first_traversal)
-            component_agents.intersection_update(self.agents)
+        for agent in self.agents:
+            if agent not in unassigned:
+                continue
+            component_agents = [
+                member
+                for member in agent._depth_first_traversal
+                if member in unassigned
+            ]
             components.add(Component(component_agents))
             unassigned.difference_update(component_agents)
         return components.view
@@ -135,7 +140,7 @@ class Mixture:
     def _add_component(self, component: Component) -> None:
         component_ordered = list(component.agents)
         new_agents = [agent._detached() for agent in component_ordered]
-        new_edges = set()
+        new_edges = OrderedSet()
 
         # Reconstruct the bond structure in the copied agents
         for i, agent in enumerate(component_ordered):
@@ -147,7 +152,9 @@ class Mixture:
                     new_partner = new_agents[i_partner][partner.label]
                     new_edges.add(_Edge(new_site, new_partner))
 
-        update = _MixtureUpdate(agents_to_add=set(new_agents), edges_to_add=new_edges)
+        update = _MixtureUpdate(
+            agents_to_add=OrderedSet(new_agents), edges_to_add=new_edges
+        )
         self._apply_update(update)
 
     def _remove_component(self, component: Component) -> None:
@@ -318,11 +325,11 @@ class Mixture:
 class _MixtureUpdate:
     """Specifies changes to be applied to a mixture."""
 
-    agents_to_add: set[Agent] = field(default_factory=set)
-    agents_to_remove: set[Agent] = field(default_factory=set)
-    edges_to_add: set[_Edge] = field(default_factory=set)
-    edges_to_remove: set[_Edge] = field(default_factory=set)
-    agents_changed: set[Agent] = field(default_factory=set)  # Internal state changes
+    agents_to_add: OrderedSet[Agent] = field(default_factory=OrderedSet)
+    agents_to_remove: OrderedSet[Agent] = field(default_factory=OrderedSet)
+    edges_to_add: OrderedSet[_Edge] = field(default_factory=OrderedSet)
+    edges_to_remove: OrderedSet[_Edge] = field(default_factory=OrderedSet)
+    agents_changed: OrderedSet[Agent] = field(default_factory=OrderedSet)
 
     def create_agent(self, agent: Agent) -> Agent:
         """Create a new agent based on a template (sites will be emptied)."""
@@ -354,9 +361,10 @@ class _MixtureUpdate:
             self.edges_to_remove.add(_Edge(site, site.partner))
 
     @property
-    def touched_before(self) -> set[Agent]:
+    def touched_before(self) -> OrderedSet[Agent]:
         """The agents that will be changed or removed by this update."""
-        touched = self.agents_changed | set(self.agents_to_remove)
+        touched = OrderedSet(self.agents_changed)
+        touched.update(self.agents_to_remove)
 
         for edge in self.edges_to_remove:
             touched.add(edge.site1.agent)
@@ -372,9 +380,10 @@ class _MixtureUpdate:
         return touched
 
     @property
-    def touched_after(self) -> set[Agent]:
+    def touched_after(self) -> OrderedSet[Agent]:
         """The agents that will be changed or added after this update."""
-        touched = self.agents_changed | set(self.agents_to_add)
+        touched = OrderedSet(self.agents_changed)
+        touched.update(self.agents_to_add)
 
         for edge in self.edges_to_add:
             touched.add(edge.site1.agent)

@@ -22,8 +22,14 @@ def str_table(rows: list[list], header: Optional[list] = None) -> str:
     return "\n".join(formatted_rows)
 
 
-def rejection_sample(population: Iterable, excluded: Iterable, max_attempts: int = 100):
+def rejection_sample(
+    population: Iterable,
+    excluded: Iterable,
+    max_attempts: int = 100,
+    rng: random.Random | None = None,
+):
     """Randomly sample an element from `population` that is not in `excluded`."""
+    rng = random if rng is None else rng
     population = list(population)
     if not population:
         raise ValueError("Sequence is empty")
@@ -31,7 +37,7 @@ def rejection_sample(population: Iterable, excluded: Iterable, max_attempts: int
 
     # Fast rejection sampling (O(1) average case for small exclusion sets)
     for _ in range(max_attempts):
-        choice = random.choice(population)
+        choice = rng.choice(population)
         if id(choice) not in excluded_ids:
             return choice
 
@@ -39,7 +45,7 @@ def rejection_sample(population: Iterable, excluded: Iterable, max_attempts: int
     valid_choices = [item for item in population if id(item) not in excluded_ids]
     if not valid_choices:
         raise ValueError("No valid elements to choose from")
-    return random.choice(valid_choices)
+    return rng.choice(valid_choices)
 
 
 class Counted:
@@ -58,6 +64,28 @@ class Counted:
 
 T = TypeVar("T")  # Member type of `IndexedSet`
 Property = Callable[[T], Iterable[Hashable]]  # Returns the property values of an item
+
+
+class OrderedSet(Generic[T]):
+    """A compact insertion-ordered set for order-sensitive internal updates."""
+
+    def __init__(self, iterable: Iterable[T] = ()):
+        self._items = dict.fromkeys(iterable)
+
+    def __iter__(self):
+        return iter(self._items)
+
+    def __contains__(self, item: object) -> bool:
+        return item in self._items
+
+    def __len__(self) -> int:
+        return len(self._items)
+
+    def add(self, item: T) -> None:
+        self._items[item] = None
+
+    def update(self, iterable: Iterable[T]) -> None:
+        self._items.update(dict.fromkeys(iterable))
 
 
 class IndexedSet(Generic[T]):

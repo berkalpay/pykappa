@@ -20,6 +20,17 @@ def heterodimerization_system(k_on: float = 2.5e9) -> System:
     )
 
 
+def assert_mixtures_are_isomorphic(first: System, second: System) -> None:
+    unmatched = list(second.mixture)
+    for component in first.mixture:
+        match = next(
+            (other for other in unmatched if component.isomorphic(other)), None
+        )
+        assert match is not None
+        unmatched.remove(match)
+    assert not unmatched
+
+
 def test_basic_system():
     system = System.from_kappa(
         {"A(a[.], b[.])": 100},
@@ -256,6 +267,42 @@ def test_reproducibility_from_initialization():
     assert (
         diverged
     ), "Systems with different seeds should produce different trajectories"
+
+
+def test_reproducibility_is_independent_of_global_random_state():
+    """A system seed must control both rule choice and embedding choice."""
+    kwargs = {
+        "mixture": {"A(l[.], r[.])": 12},
+        "rules": ["A(l[.]), A(r[.]) -> A(l[1]), A(r[1]) @ 1.0"],
+        "seed": 42,
+    }
+    system1 = System.from_kappa(**kwargs)
+    system2 = System.from_kappa(**kwargs)
+
+    for _ in range(12):
+        system1.update()
+        random.random()  # Must not affect the other system's trajectory.
+        system2.update()
+
+    assert_mixtures_are_isomorphic(system1, system2)
+
+
+def test_constrained_selection_is_independent_of_global_random_state():
+    """Different-component selection and rejection sampling use the system RNG."""
+    kwargs = {
+        "mixture": {"A(l[.], r[.])": 12},
+        "rules": ["A(l[.]), A(r[.]) -> A(l[1]), A(r[1]) @ 1.0 {0}"],
+        "seed": 42,
+    }
+    system1 = System.from_kappa(**kwargs)
+    system2 = System.from_kappa(**kwargs)
+
+    for _ in range(11):
+        system1.update()
+        random.random()
+        system2.update()
+
+    assert_mixtures_are_isomorphic(system1, system2)
 
 
 def test_equilibration_start():

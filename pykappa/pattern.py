@@ -9,7 +9,7 @@ from types import MappingProxyType
 from typing import Self, Optional, Iterator, Iterable, Union, NamedTuple, TYPE_CHECKING
 
 from pykappa.analysis import _ComponentPlot
-from pykappa._utils import Counted, IndexedSet, IndexedSetView
+from pykappa._utils import Counted, IndexedSet, IndexedSetView, OrderedSet
 
 if TYPE_CHECKING:
     from pykappa.mixture import Mixture
@@ -141,14 +141,19 @@ class Agent(Counted):
     _interface: dict[str, Site]
 
     @staticmethod
-    def neighborhood(agents: Iterable["Agent"], radius: int) -> set["Agent"]:
-        """Get all agents within a distance radius of the given agents."""
-        frontier = set(agents)
-        seen = set(frontier)
+    def neighborhood(agents: Iterable["Agent"], radius: int) -> OrderedSet["Agent"]:
+        """Get nearby agents with a deterministic breadth-first traversal order."""
+        seen = OrderedSet(agents)
+        frontier = list(seen)
 
         for _ in range(radius):
-            frontier = {n for cur in frontier for n in cur.neighbors} - seen
-            seen.update(frontier)
+            next_frontier = []
+            for agent in frontier:
+                for neighbor in agent.neighbors:
+                    if neighbor not in seen:
+                        seen.add(neighbor)
+                        next_frontier.append(neighbor)
+            frontier = next_frontier
             if not frontier:
                 break
 
@@ -551,10 +556,11 @@ class Pattern:
         """The connected components in this pattern."""
         unseen = {agent for agent in self._agents if agent is not None}
         components = []
-        while unseen:
-            component = Component(next(iter(unseen))._depth_first_traversal)
-            unseen.difference_update(component)
-            components.append(component)
+        for agent in self._agents:
+            if agent is not None and agent in unseen:
+                component = Component(agent._depth_first_traversal)
+                unseen.difference_update(component)
+                components.append(component)
         return tuple(components)
 
     @staticmethod

@@ -504,7 +504,7 @@ class System:
         )[0]
 
         # Apply the rule
-        update = rule._select(self._mixture)
+        update = rule._select(self._mixture, rng=self._rng)
         name = str(rule)
         tally = self._tallies.get(name, {"applied": 0, "failed": 0})
         if update is not None:
@@ -537,7 +537,7 @@ class System:
         """
         rule = Rule.from_kappa(transformation + " @ 0")
         for _ in range(n):
-            update = Rule._select(rule, self._mixture)
+            update = Rule._select(rule, self._mixture, rng=self._rng)
             if update is not None:
                 for agent in update.agents_to_add:
                     self._enforce_signature(agent)

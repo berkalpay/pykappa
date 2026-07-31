@@ -183,16 +183,20 @@ class Rule:
             len(mixture.embeddings(component)) for component in self.left.components
         )
 
-    def _select(self, mixture: Mixture) -> Optional[_MixtureUpdate]:
+    def _select(
+        self, mixture: Mixture, rng: random.Random | None = None
+    ) -> Optional[_MixtureUpdate]:
         """Select agents and specify the update (or None for invalid match).
 
         Note:
             Can change the internal states of agents in the mixture but
             records everything else in the MixtureUpdate.
         """
+        rng = random if rng is None else rng
+
         if self.component_constraint != "any":
             components = list(self._component_weights)
-            selected_component = random.choices(
+            selected_component = rng.choices(
                 components, [self._component_weights[c] for c in components]
             )[0]
 
@@ -200,7 +204,7 @@ class Rule:
                 first, second = self.left.components
                 return self._produce_update(
                     dict(
-                        random.choice(
+                        rng.choice(
                             mixture.embeddings_in_component(first, selected_component)
                         )
                     )
@@ -208,6 +212,7 @@ class Rule:
                         rejection_sample(
                             mixture.embeddings(second),
                             mixture.embeddings_in_component(second, selected_component),
+                            rng=rng,
                         )
                     ),
                     mixture,
@@ -229,7 +234,7 @@ class Rule:
             )
             if not component_embeddings:
                 return None
-            component_embedding = random.choice(component_embeddings)
+            component_embedding = rng.choice(component_embeddings)
 
             for rule_agent in component_embedding:
                 mixture_agent = component_embedding[rule_agent]
