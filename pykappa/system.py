@@ -9,7 +9,8 @@ import csv
 import subprocess
 from collections import defaultdict
 from functools import cached_property
-from typing import Optional, Iterable, Self, TYPE_CHECKING
+from types import MappingProxyType
+from typing import Optional, Iterable, Mapping, Self, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from graphviz import Source
@@ -33,7 +34,7 @@ class System:
     tokens: dict[str, float]  #: Maps token names to their current values
     _monitor: Optional["Monitor"]
     _time: float
-    tallies: defaultdict[str, dict[str, int]]  #: Tracks rule applications
+    _tallies: dict[str, Mapping[str, int]]
     _rng: random.Random  # Random number generator for reproducibility of updates
 
     @classmethod
@@ -227,7 +228,7 @@ class System:
 
         self.tokens = {} if tokens is None else dict(tokens)
 
-        self.tallies = defaultdict(lambda: {"applied": 0, "failed": 0})
+        self._tallies = {}
         self._monitor = Monitor(self) if monitor else None
 
     def __str__(self):
@@ -296,12 +297,17 @@ class System:
         }
 
     @property
+    def tallies(self) -> Mapping[str, Mapping[str, int]]:
+        """Rule application counts."""
+        return MappingProxyType(self._tallies)
+
+    @property
     def tallies_table(self) -> str:
         """A formatted string showing how many times each rule has been applied."""
         return str_table(
             [
                 [str(rule), tallies["applied"], tallies["failed"]]
-                for rule, tallies in self.tallies.items()
+                for rule, tallies in self._tallies.items()
             ],
             header=["Rule", "Applied", "Failed"],
         )
@@ -461,15 +467,21 @@ class System:
 
         # Apply the rule
         update = rule._select(self._mixture)
+        name = str(rule)
+        tally = self._tallies.get(name, {"applied": 0, "failed": 0})
         if update is not None:
-            self.tallies[str(rule)]["applied"] += 1
+            self._tallies[name] = MappingProxyType(
+                {**tally, "applied": tally["applied"] + 1}
+            )
             for agent in update.agents_to_add:
                 self._enforce_signature(agent)
             self._mixture._apply_update(update)
             for expr, name in rule.token_updates:
                 self.tokens[name] += expr.evaluate(self)
         else:
-            self.tallies[str(rule)]["failed"] += 1
+            self._tallies[name] = MappingProxyType(
+                {**tally, "failed": tally["failed"] + 1}
+            )
 
         if self._monitor is not None:
             self._monitor.update()
