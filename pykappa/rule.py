@@ -55,7 +55,14 @@ class Rule:
         return rules[0]
 
     def __post_init__(self):
-        object.__setattr__(self, "token_updates", tuple(self.token_updates or ()))
+        object.__setattr__(
+            self,
+            "token_updates",
+            tuple(
+                (expression, name)
+                for expression, name in (self.token_updates or ())
+            ),
+        )
         l = len(self.left.agents)
         r = len(self.right.agents)
         assert (

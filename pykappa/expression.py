@@ -1,6 +1,8 @@
 import math
 import operator
 from collections import deque
+from dataclasses import dataclass
+from types import MappingProxyType
 from typing import Any, Self, Optional, Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -45,11 +47,12 @@ def _parse_operator(kappa_operator: str) -> Callable:
         raise ValueError(f"Unknown operator: {kappa_operator}")
 
 
+@dataclass(frozen=True, init=False)
 class Expression:
     """Algebraic expressions as specified by the Kappa language."""
 
     _type: Any  # Type of expression (literal, variable, binary_op, etc.)
-    _attrs: dict[str, Any]  # Dictionary of attributes specific to the expression type
+    _attrs: MappingProxyType  # Attributes specific to the expression type
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> "Expression":
@@ -67,8 +70,11 @@ class Expression:
         return ExpressionTransformer.from_tree(expr_tree)
 
     def __init__(self, type, **attrs):
-        self._type = type
-        self._attrs = attrs
+        if "children" in attrs:
+            attrs["children"] = tuple(attrs["children"])
+
+        object.__setattr__(self, "_type", type)
+        object.__setattr__(self, "_attrs", MappingProxyType(dict(attrs)))
 
     def __str__(self):
         return self.kappa_str
@@ -92,7 +98,9 @@ class Expression:
             }.get(self._type, self._attrs.get("operator"))
             return f"({self._attrs['left'].kappa_str}) {operator} ({self._attrs['right'].kappa_str})"
         if self._type in ("unary_op", "logical_not"):
-            operator = "[not]" if self._type == "logical_not" else self._attrs["operator"]
+            operator = (
+                "[not]" if self._type == "logical_not" else self._attrs["operator"]
+            )
             return f"{operator} ({self._attrs['child'].kappa_str})"
         if self._type == "list_op":
             children = " ".join(
