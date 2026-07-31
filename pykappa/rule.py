@@ -1,4 +1,5 @@
 import random
+from dataclasses import dataclass, field
 from math import prod
 from typing import Literal, Optional, Self, TYPE_CHECKING
 from functools import cached_property
@@ -13,14 +14,18 @@ if TYPE_CHECKING:
     from pykappa.system import System
 
 
+@dataclass(frozen=True, eq=False)
 class Rule:
     """A Kappa rule, specifying the transformation of a pattern at a stochastic rate."""
 
     left: Pattern
     right: Pattern
     rate_expression: Expression
-    component_constraint: Literal["any", "same", "different"]
-    token_updates: list[tuple[Expression, str]]
+    component_constraint: Literal["any", "same", "different"] = "any"
+    token_updates: tuple[tuple[Expression, str], ...] = ()
+    _component_weights: dict[Component, int] = field(
+        default_factory=dict, init=False, repr=False, compare=False
+    )
 
     @classmethod
     def list_from_kappa(cls, kappa_str: str) -> list[Self]:
@@ -49,29 +54,16 @@ class Rule:
         ), "The given rule expression represents more than one rule."
         return rules[0]
 
-    def __init__(
-        self,
-        left: Pattern,
-        right: Pattern,
-        rate_expression: Expression,
-        component_constraint: Literal["any", "same", "different"] = "any",
-        token_updates: Optional[list[tuple[Expression, str]]] = None,
-    ):
-        self.left = left
-        self.right = right
-        self.rate_expression = rate_expression
-        self.component_constraint = component_constraint
-        self.token_updates = token_updates or []
-        self._component_weights: dict[Component, int] = {}
-
+    def __post_init__(self):
+        object.__setattr__(self, "token_updates", tuple(self.token_updates or ()))
         l = len(self.left.agents)
         r = len(self.right.agents)
         assert (
             l == r
         ), f"The left-hand side of this rule has {l} slots, but the right-hand side has {r}."
-        assert component_constraint in {"any", "same", "different"}
+        assert self.component_constraint in {"any", "same", "different"}
         assert (
-            component_constraint != "different" or len(self.left.components) == 2
+            self.component_constraint != "different" or len(self.left.components) == 2
         ), "A different-component constraint requires exactly 2 pattern components."
 
     def __len__(self):
@@ -152,25 +144,31 @@ class Rule:
             applies this correction when calculating rule reactivities.
         """
         if self.component_constraint == "same":
-            self._component_weights = {
-                component: prod(
-                    len(mixture.embeddings_in_component(pattern, component))
-                    for pattern in self.left.components
-                )
-                for component in mixture.components
-            }
+            self._component_weights.clear()
+            self._component_weights.update(
+                {
+                    component: prod(
+                        len(mixture.embeddings_in_component(pattern, component))
+                        for pattern in self.left.components
+                    )
+                    for component in mixture.components
+                }
+            )
             return sum(self._component_weights.values())
 
         if self.component_constraint == "different":
             first, second = self.left.components
-            self._component_weights = {
-                component: len(mixture.embeddings_in_component(first, component))
-                * (
-                    len(mixture.embeddings(second))
-                    - len(mixture.embeddings_in_component(second, component))
-                )
-                for component in mixture.components
-            }
+            self._component_weights.clear()
+            self._component_weights.update(
+                {
+                    component: len(mixture.embeddings_in_component(first, component))
+                    * (
+                        len(mixture.embeddings(second))
+                        - len(mixture.embeddings_in_component(second, component))
+                    )
+                    for component in mixture.components
+                }
+            )
             return sum(self._component_weights.values())
 
         return prod(
