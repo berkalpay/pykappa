@@ -1,0 +1,91 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>proofreading performance log</title>
+        <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .plot-container { width: 100%; height: 600px; margin-bottom: 40px; }
+            /* Change cursor to pointer for plot points */
+            .cursor-pointer .nsewdrag, .cursor-pointer .nsewdrag drag {
+                cursor: pointer !important;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Performance log, branch <a href="https://github.com/berkalpay/pykappa/tree/proofreading">proofreading</a></h1>
+
+        <div class="plot-container" id="runtimePlot"></div>
+        <div class="plot-container" id="memoryPlot"></div>
+
+        <script>
+            // Shared configuration
+            const commitHashes = ["5abc67b5"];
+            const shortHashes = ["<a href=\"https://github.com/berkalpay/pykappa/commit/5abc67b5\">5abc67b</a>"];
+            const plotConfig = {responsive: true};
+
+            // Runtime data and plot
+            const runtimeData = [{"x": ["5abc67b5"], "y": [1.7185025215148926], "name": "heterodimerization_small", "mode": "lines+markers", "connectgaps": false, "text": ["5abc67b"], "customdata": ["2026_07_31_commit_5abc67b5/profile_heterodimerization_small_flamegraph.svg"], "hovertemplate": "<b>%{text}</b><br><b>Runtime: %{y:.4f}s</b><br>(Click to open flamegraph)", "marker": {"size": 12}}, {"x": ["5abc67b5"], "y": [8.029675722122192], "name": "ktam", "mode": "lines+markers", "connectgaps": false, "text": ["5abc67b"], "customdata": ["2026_07_31_commit_5abc67b5/profile_ktam_flamegraph.svg"], "hovertemplate": "<b>%{text}</b><br><b>Runtime: %{y:.4f}s</b><br>(Click to open flamegraph)", "marker": {"size": 12}}, {"x": ["5abc67b5"], "y": [14.952495574951172], "name": "uni_bi_small", "mode": "lines+markers", "connectgaps": false, "text": ["5abc67b"], "customdata": ["2026_07_31_commit_5abc67b5/profile_uni_bi_small_flamegraph.svg"], "hovertemplate": "<b>%{text}</b><br><b>Runtime: %{y:.4f}s</b><br>(Click to open flamegraph)", "marker": {"size": 12}}];
+
+            Plotly.newPlot('runtimePlot', runtimeData, {
+                title: 'Runtime (seconds)',
+                titlefont: { size: 30, weight: 'bold' },
+                xaxis: {
+                    title: 'Commit Hash',
+                    type: 'category',
+                    tickangle: -45,
+                    tickmode: 'array',
+                    tickvals: commitHashes,
+                    ticktext: shortHashes,
+                },
+                yaxis: { title: 'Runtime (s)',
+                        rangemode: 'tozero'},
+                hovermode: 'closest',
+                showlegend: true
+            }, plotConfig);
+
+            // Memory data and plot
+            const memoryData = [{"x": ["5abc67b5"], "y": [116.492188], "name": "heterodimerization_small", "mode": "lines+markers", "connectgaps": false, "text": ["5abc67b"], "customdata": ["2026_07_31_commit_5abc67b5/profile_heterodimerization_small_memplot.png"], "hovertemplate": "<b>%{text}</b><br><b>Peak Memory: %{y:.2f} MB</b><br>(Click to open memory usage plot)", "marker": {"size": 12}}, {"x": ["5abc67b5"], "y": [105.839844], "name": "ktam", "mode": "lines+markers", "connectgaps": false, "text": ["5abc67b"], "customdata": ["2026_07_31_commit_5abc67b5/profile_ktam_memplot.png"], "hovertemplate": "<b>%{text}</b><br><b>Peak Memory: %{y:.2f} MB</b><br>(Click to open memory usage plot)", "marker": {"size": 12}}, {"x": ["5abc67b5"], "y": [110.210938], "name": "uni_bi_small", "mode": "lines+markers", "connectgaps": false, "text": ["5abc67b"], "customdata": ["2026_07_31_commit_5abc67b5/profile_uni_bi_small_memplot.png"], "hovertemplate": "<b>%{text}</b><br><b>Peak Memory: %{y:.2f} MB</b><br>(Click to open memory usage plot)", "marker": {"size": 12}}];
+            memoryData.forEach(trace => trace.marker = {size: 12});
+
+            Plotly.newPlot('memoryPlot', memoryData, {
+                title: 'Peak Memory Usage (MB)',
+                titlefont: { size: 30, weight: 'bold' },
+                xaxis: {
+                    title: 'Commit Hash',
+                    type: 'category',
+                    tickangle: -45,
+                    tickmode: 'array',
+                    tickvals: commitHashes,
+                    ticktext: shortHashes,
+                },
+                yaxis: { title: 'Peak Memory (MB)',
+                        rangemode: 'tozero'},
+                hovermode: 'closest',
+                showlegend: true
+            }, plotConfig);
+
+            ['runtimePlot', 'memoryPlot'].forEach(plotId => {
+                const plot = document.getElementById(plotId);
+
+                // Change cursor on hover
+                plot.on('plotly_hover', function(data) {
+                    plot.classList.add('cursor-pointer');
+                });
+
+                // Revert cursor when not hovering
+                plot.on('plotly_unhover', function(data) {
+                    plot.classList.remove('cursor-pointer');
+                });
+
+                // Click handler
+                plot.on('plotly_click', function(data) {
+                    const url = data.points[0].customdata;
+                    if (url) window.open(url, '_blank');
+                });
+            });
+        </script>
+    </body>
+    </html>
+    
