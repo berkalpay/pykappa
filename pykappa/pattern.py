@@ -211,6 +211,11 @@ class Agent(Counted):
         return f"{self._type}({" ".join(site.kappa_str for site in self)})"
 
     @property
+    def kappa_str_with_agent_ids(self) -> str:
+        """Kappa representation prefixed with this agent's ID."""
+        return f"x{self.id}:{self.kappa_str}"
+
+    @property
     def _instantiable(self) -> bool:
         """Check if a concrete Agent can be created from this pattern."""
         return all(site._instantiable for site in self)
@@ -363,6 +368,11 @@ class Component(Counted):
     @property
     def kappa_str(self) -> str:
         return Pattern._agents_to_kappa_str(self.agents)
+
+    @property
+    def kappa_str_with_agent_ids(self) -> str:
+        """Kappa representation with each agent prefixed by its ID."""
+        return Pattern._agents_to_str(self.agents, include_ids=True)
 
     def isomorphic(self, other: Self) -> bool:
         return next(self.isomorphisms(other), None) is not None
@@ -551,6 +561,13 @@ class Pattern:
     @staticmethod
     def _agents_to_kappa_str(agents: Iterable[Optional[Agent]]) -> str:
         """Convert a collection of agents to Kappa string representation."""
+        return Pattern._agents_to_str(agents)
+
+    @staticmethod
+    def _agents_to_str(
+        agents: Iterable[Optional[Agent]], include_ids: bool = False
+    ) -> str:
+        """Convert agents to Kappa strings, optionally prefixing each agent ID."""
         bond_num_counter = 1
         bond_nums: dict[Site, int] = dict()
         agent_strs = []
@@ -569,12 +586,18 @@ class Pattern:
                 else:
                     partner_str = "" if site.partner == "?" else f"[{site.partner}]"
                 site_strs.append(f"{site.label}{partner_str}{site._kappa_state_str}")
-            agent_strs.append(f"{agent.type}({" ".join(site_strs)})")
+            agent_str = f"{agent.type}({" ".join(site_strs)})"
+            agent_strs.append(f"x{agent.id}:{agent_str}" if include_ids else agent_str)
         return ", ".join(agent_strs)
 
     @property
     def kappa_str(self) -> str:
         return type(self)._agents_to_kappa_str(self._agents)
+
+    @property
+    def kappa_str_with_agent_ids(self) -> str:
+        """Kappa representation with each agent prefixed by its ID."""
+        return type(self)._agents_to_str(self._agents, include_ids=True)
 
     @property
     def _instantiable(self) -> bool:
