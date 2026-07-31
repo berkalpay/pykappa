@@ -275,11 +275,38 @@ class Agent(Counted):
         return True
 
 
-class Embedding(dict[Agent, Agent]):
-    """Dictionary representing a mapping from pattern agents to mixture agents."""
+class Embedding(Mapping[Agent, Agent]):
+    """A mapping from pattern agents to mixture agents."""
+
+    __slots__ = ("_mapping", "_hash")
+
+    def __init__(self, mapping: Mapping[Agent, Agent]):
+        self._set_mapping(dict(mapping))
+
+    @classmethod
+    def _from_owned_mapping(cls, mapping: dict[Agent, Agent]) -> Self:
+        """Freeze a mapping whose ownership has been transferred to the embedding."""
+        embedding = cls.__new__(cls)
+        embedding._set_mapping(mapping)
+        return embedding
+
+    def _set_mapping(self, mapping: dict[Agent, Agent]) -> None:
+        self._mapping = MappingProxyType(mapping)
+        self._hash = None
+
+    def __getitem__(self, key: Agent) -> Agent:
+        return self._mapping[key]
+
+    def __iter__(self):
+        return iter(self._mapping)
+
+    def __len__(self) -> int:
+        return len(self._mapping)
 
     def __hash__(self):
-        return hash(frozenset(self.items()))
+        if self._hash is None:
+            self._hash = hash(frozenset(self._mapping.items()))
+        return self._hash
 
     def __repr__(self):
         return f"Embedding({', '.join(f"{a.id}: {self[a].id}" for a in self)})"
@@ -356,7 +383,7 @@ class Component(Counted):
         # Narrow the search by mapping `a_root` to agents in `other` of the same type
         for b_root in other.lookup("type", a_root.type):
 
-            agent_map = Embedding({a_root: b_root})  # The potential bijection
+            agent_map = {a_root: b_root}  # The potential bijection
             frontier = {a_root}
             root_failed = False
 
@@ -401,9 +428,9 @@ class Component(Counted):
                         break
 
             if not root_failed:
-                yield agent_map  # A valid bijection
+                yield Embedding._from_owned_mapping(agent_map)  # A valid bijection
 
-    def isomorphisms(self, other: Self | "Mixture") -> Iterator[dict[Agent, Agent]]:
+    def isomorphisms(self, other: Self | "Mixture") -> Iterator[Embedding]:
         """Find bijections which respect links in the site graph.
 
         Checks for bijections ensuring that any internal site state specified

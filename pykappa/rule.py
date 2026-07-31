@@ -191,12 +191,16 @@ class Rule:
             if self.component_constraint == "different":
                 first, second = self.left.components
                 return self._produce_update(
-                    random.choice(
-                        mixture.embeddings_in_component(first, selected_component)
+                    dict(
+                        random.choice(
+                            mixture.embeddings_in_component(first, selected_component)
+                        )
                     )
-                    | rejection_sample(
-                        mixture.embeddings(second),
-                        mixture.embeddings_in_component(second, selected_component),
+                    | dict(
+                        rejection_sample(
+                            mixture.embeddings(second),
+                            mixture.embeddings_in_component(second, selected_component),
+                        )
                     ),
                     mixture,
                 )
