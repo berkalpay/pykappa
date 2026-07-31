@@ -1,3 +1,5 @@
+# %%
+
 # %% [markdown]
 # # Kinetic Proofreading
 #
@@ -29,13 +31,16 @@
 # to aggressively reduce the error rate.
 #
 # In this example, following Pigolotti and Sartori's "[Protocols for
-# Copying and Proofreading](https://doi.org/10.1007/s10955-015-1399-2)",
-# we use just two: an initial monomer addition step after which the copy
+# Copying and Proofreading](https://doi.org/10.1007/s10955-015-1399-2)"
+# &#167;6, we use just two: an initial monomer addition step after which the copy
 # machine must "commit" the change. This means that each monomer
 # addition has to undergo *two* reactions, which has the effect of
 # multiplicatively enhancing the error rate.
 #
-# ![diagram](https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f)
+# <table><tr>
+# <td><img src="https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f" alt="diagram"></td>
+# <td><img src="https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f" alt="diagram"></td>
+# </tr></table>
 
 # %%
 import copy
@@ -68,7 +73,7 @@ RT = (T0 + T) * R
 #
 # Thankfully, Python makes it easy to generate large rulesets. Kappa
 # rules are particularly compatible with Python's
-# [$-strings](https://docs.python.org/3/library/string.html#template-strings-strings),
+# [\$-strings](https://docs.python.org/3/library/string.html#template-strings-strings),
 # which consume `$` characters and thus do not conflict with Kappa's
 # existing syntax. A simple function generates four rules for each
 # pairing: `a` is the first base, `b` is the second, and `c` is
