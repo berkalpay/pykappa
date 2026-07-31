@@ -14,9 +14,12 @@ div.nboutput.container div.output_area:not(.rendered_html)>img {
 
 /* API styling */
 
-/* Separate generated module titles from their first API definition. */
 section > h1 + dl.py {
     margin-top: 2rem;
+}
+
+section > h1 + p + dl.py.class {
+    padding-top: 1.5rem;
 }
 
 :is(dl.py.function, dl.py.exception, dl.py.class > dd > dl.py, dl.py.exception > dd > dl.py) {
@@ -34,6 +37,10 @@ dl.py.class > dt {
     background: #f3efff;
     border-left: 4px solid #7c5ce7;
     border-radius: 0.25rem;
+}
+
+dl.py.class + dl.py.class {
+    padding-top: 2rem;
 }
 
 :is(dl.py.class, dl.py.exception) > dd > dl.py {
