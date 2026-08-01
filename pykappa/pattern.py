@@ -21,7 +21,7 @@ _TypedPartner = NamedTuple("_TypedPartner", [("site_name", str), ("agent_name", 
 _Partner = str | _TypedPartner | int | Union["Site"]
 
 
-class Site(Counted):
+class Site:
     """A site on an agent with state and binding partner information."""
 
     _agent: "Agent"
@@ -36,13 +36,12 @@ class Site(Counted):
             state: Internal state of the site.
             partner: Binding partner specification.
         """
-        super().__init__()
         self._label = label
         self._state = state
         self._partner = partner
 
     def __repr__(self):
-        return f'Site(id={self.id}, kappa_str="{self.kappa_str}")'
+        return f'Site(kappa_str="{self.kappa_str}")'
 
     @property
     def agent(self) -> "Agent":
