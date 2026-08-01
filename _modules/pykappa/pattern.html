@@ -64,7 +64,7 @@
 
 <div class="viewcode-block" id="Site">
 <a class="viewcode-back" href="../../api/generated/pykappa.pattern.html#pykappa.pattern.Site">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Site</span><span class="p">(</span><span class="n">Counted</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Site</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A site on an agent with state and binding partner information.&quot;&quot;&quot;</span>
 
     <span class="n">_agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span>
@@ -79,13 +79,12 @@
 <span class="sd">            state: Internal state of the site.</span>
 <span class="sd">            partner: Binding partner specification.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="n">label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_partner</span> <span class="o">=</span> <span class="n">partner</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Site(id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">, kappa_str=&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s1">&quot;)&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Site(kappa_str=&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s1">&quot;)&#39;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">agent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Agent&quot;</span><span class="p">:</span>
