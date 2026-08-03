@@ -2,7 +2,7 @@
 # # Kinetic Proofreading
 #
 # This example implements the concept of *kinetic proofreading* [first
-# formalized](https://doi.org/10.1073/pnas.71.10.4135) by John Hopfield 
+# formalized](https://doi.org/10.1073/pnas.71.10.4135) by John Hopfield
 # in 1974. This notebook is necessarily longer and more complicated than
 # the others: it implements a complex biochemical model. If you are new
 # to PyKappa, familiarize yourself with our
@@ -89,6 +89,7 @@ RT = (T0 + T) * R
 # should attach a new monomer should depend on whether or not that
 # monomer's type matches that of the template.
 
+
 # %%
 def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
     return {
@@ -97,6 +98,7 @@ def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
         "correct_r": omega * np.exp((r1 + barrier) / RT),
         "incorrect_r": omega * np.exp(w1 / RT),
     }
+
 
 # %% [markdown]
 # ## The Model
@@ -312,6 +314,7 @@ rules += generate_ruleset(
 # `vars_of_rates`, which converts three sets of rate constants to the
 # Kappa variables referenced by our rules.
 
+
 # %%
 def vars_of_rates(t0, t1, pr):
     vmap = {"add": t0, "commit": t1, "proofread": pr}
@@ -364,6 +367,7 @@ def get_transcript(mixture, pattern):
             transcript = p
     return transcript or pattern
 
+
 # %% [markdown]
 # A complete experiment follows. Note that the barrier on `pr` is
 # negative: we want the reaction to be *more* likely for incorrect
@@ -406,5 +410,3 @@ print("time:      ", system.time)
 # Errors in Biosynthetic Processes Requiring High Specificity. Proc Natl
 # Acad Sci U S A 71, 4135–4139 (1974).
 # ([URL](https://pmc.ncbi.nlm.nih.gov/articles/PMC434344/))
-
-
