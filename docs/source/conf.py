@@ -6,8 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+from datetime import date
+
 project = "PyKappa"
-copyright = "2025, PyKappa Developers"
+copyright = f"{date.today().year}, PyKappa Developers"
 author = "PyKappa Developers"
 
 # -- General configuration ---------------------------------------------------
