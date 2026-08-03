@@ -22,11 +22,10 @@
 # energy of an incorrect monomer pair (e.g. attaching a guanine to a
 # cytosine) and $E_R$ is the binding energy of a correct pair.
 #
-# Unfortunately, differences between structures used in copying are
-# small enough as to render pure energy discrimination impossible: the
-# error fraction will be unacceptably high. Indeed, copying reactions
-# must utilize potentially several out-of-equilibrium intermediate steps
-# to aggressively reduce the error rate.
+# But differences between structures used in copying are small enough as to
+# render pure energy discrimination impossible: the error fraction will be
+# unacceptably high. Indeed, copying reactions must utilize potentially several
+# out-of-equilibrium intermediate steps to aggressively reduce the error rate.
 #
 # In this example, following Pigolotti and Sartori's "[Protocols for
 # Copying and Proofreading](https://doi.org/10.1007/s10955-015-1399-2)"
@@ -34,15 +33,22 @@
 # machine must "commit" the change. This means that each monomer
 # addition has to undergo *two* reactions, which has the effect of
 # multiplicatively enhancing the error rate.
-#
-# <table width="100%"><tr>
-# <td width="79%"><img src="https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f" alt="diagram" width="100%"></td>
-# <td width="21%"><img src="https://github.com/user-attachments/assets/1d8702fd-8a96-47af-a6de-281d9fb1d4c1" alt="diagram" width="100%"></td>
-# </tr></table>
-#
-# We sketch the three reactions on the left and the corresponding free
-# energy landscape on the right. We begin by importing relevant packages
-# and defining global variables which will become important later.
+
+# %% [raw] raw_mimetype="text/restructuredtext"
+# .. image:: https://github.com/user-attachments/assets/fcaa132e-cf4d-4825-b440-640953d72c1f
+#    :alt: diagram
+
+# %% [raw] raw_mimetype="text/restructuredtext"
+# .. image:: https://github.com/user-attachments/assets/1d8702fd-8a96-47af-a6de-281d9fb1d4c1
+#    :alt: free energy landscape
+#    :align: center
+#    :width: 360px
+
+# %% [markdown]
+# We sketch the three reactions above and the corresponding free energy
+# landscape below. The dotted line represents the backwards reaction. We
+# begin by importing relevant packages and defining global variables
+# which will become important later.
 
 # %%
 import copy
@@ -93,12 +99,19 @@ def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
     }
 
 # %% [markdown]
+# ## The Model
+#
 # Now that we have a general understanding of the model's reactions and
 # function, we set out to define more explictily the function of this
 # model. The contact map for this model will be:
-#
-# <img src="https://github.com/user-attachments/assets/00e6171e-39f1-40d5-b069-e8bf26e9c616" alt="contact map" style="max-width: 320px; width: 100%;">
-#
+
+# %% [raw] raw_mimetype="text/restructuredtext"
+# .. image:: https://github.com/user-attachments/assets/00e6171e-39f1-40d5-b069-e8bf26e9c616
+#    :alt: contact map
+#    :align: center
+#    :width: 320px
+
+# %% [markdown]
 # We specify a copy machine `C` as an abstraction for somthing like RNA
 # polymerase. We also introduce a monomer, `C`, which carries a state
 # specifying its encoding. (In the image, we use a closed circle and an
@@ -133,15 +146,15 @@ def generate_ruleset(rule):
 
 
 # %% [markdown]
-# For example, the simple "rule" (this is not valid Kappa) can be
+# For example, this simple "rule" (this is not valid Kappa) can be
 # expanded into four:
 
 # %%
 print(*generate_ruleset("$a, $b @ $c"), sep="\n")
 
 # %% [markdown]
-# The pattern should be clear. Now we are ready to write the rule
-# itself. In words:
+# The pattern should be clear. Now we are ready to write the rules
+# themselves. In words:
 #
 # *Begin the construction of a transcript by attaching a monomer to the
 # copy machine's blank transcript site. This addition is tentative and
@@ -165,9 +178,12 @@ rules += generate_ruleset(
 # As they say, a picture is worth a thousand words. Here's a
 # diagram which exactly corresponds to the text of the rule, applied
 # specifically to a b-w pairing:
-#
-# ![rule](https://github.com/user-attachments/assets/12de2888-149c-4a65-bb3d-0953e9889332)
-#
+
+# %% [raw] raw_mimetype="text/restructuredtext"
+# .. image:: https://github.com/user-attachments/assets/12de2888-149c-4a65-bb3d-0953e9889332
+#    :alt: rule
+
+# %% [markdown]
 # Note that we exclude some sites and states here. In particular, we
 # leave the state on the top left monomer's `t` site ambiguous; the same
 # monomer has its `r` site unspecified entirely. This means that `t` may
@@ -260,6 +276,37 @@ rules += generate_ruleset(
 )
 
 # %% [markdown]
+# Now we will define the proofreading reaction. It should be capable of
+# removing a committed monomer from the transcript chain.
+#
+# *Undo the addition of a commited monomer.*
+
+# %%
+rules += generate_ruleset(
+    "M(t{$a}[.], r[1]), M(l[1], t[2]), "
+    "M(r[4]), M(l[4], t{$b} r[3]), C(c{0}[3], t[2]) "
+    "<-> "
+    "M(t{$a}[2], r[1]), M(l[1], t[.]), "
+    "M(r[3]), ., C(c{0}[3], t[2]) "
+    "@ 'proofread_${c}_f', 'proofread_${c}_r'"
+)
+
+# %% [markdown]
+# Finally,
+#
+# *Remove the first committed monomer via proofreading.*
+
+# %%
+rules += generate_ruleset(
+    "M(l[.], t{$a}[.], r[1]), M(l[1], t[2]), "
+    "M(l[.], t{$b}[.], r[3]), C(c{0}[3], t[2]) "
+    "<-> "
+    "M(l[.], t{$a}[2], r[1]), M(l[1], t[.]), "
+    "., C(c{0}[.], t[2]) "
+    "@ 'proofread_${c}_f', 'proofread_${c}_r'"
+)
+
+# %% [markdown]
 # The ruleset is complete; all that remains is to specify the rates
 # themselves. We do this by introducing a new helper function
 # `vars_of_rates`, which converts three sets of rate constants to the
@@ -276,6 +323,8 @@ def vars_of_rates(t0, t1, pr):
 
 
 # %% [markdown]
+# ## Simulation
+#
 # Now that we have a collection of rules, we'll need to write a function
 # to generate a polymer for the system to use, along with functions
 # which identify the number of errors in the new transcript strand.
@@ -316,13 +365,14 @@ def get_transcript(mixture, pattern):
     return transcript or pattern
 
 # %% [markdown]
-# A complete experiment (with the backwards "proofreading" reaction
-# disabled) follows. 
+# A complete experiment follows. Note that the barrier on `pr` is
+# negative: we want the reaction to be *more* likely for incorrect
+# monomer pairs.
 
 # %%
 t0 = get_rates(R0, W0, R1, W1, barrier=1.0, drive=1.0)
-t1 = get_rates(R0, W0, R1, W1, barrier=1.0, drive=1.0)
-pr = get_rates(R0, W0, R2, W2, omega=0.0)
+t1 = get_rates(R1, W1, R2, W2, barrier=1.0, drive=1.0)
+pr = get_rates(R2, W2, R0, W0, barrier=-1.0, drive=1.0)
 
 polymer, pattern = generate_polymer(25)
 variables = {k: str(v) for k, v in vars_of_rates(t0, t1, pr).items()}
@@ -340,3 +390,21 @@ print("base:      ", pattern)
 print("transcript:", transcript)
 print("errors:    ", sum(x != y for x, y in zip(pattern, transcript)))
 print("time:      ", system.time)
+
+# %% [markdown]
+# One might extend this example by systematically varying different rate
+# parameters and measuring how system behavior changes in response. For
+# example, one might expect that making reaction barriers more extreme
+# would result in a lower error rate without a time penalty.
+#
+# ## Reading Material
+# - Pigolotti, S. & Sartori, P. Protocols for Copying and Proofreading
+# in Template-Assisted Polymerization. J Stat Phys 162, 1167–1182
+# (2016). ([URL](https://doi.org/10.1007/s10955-015-1399-2))
+#
+# - Hopfield, J. J. Kinetic Proofreading: A New Mechanism for Reducing
+# Errors in Biosynthetic Processes Requiring High Specificity. Proc Natl
+# Acad Sci U S A 71, 4135–4139 (1974).
+# ([URL](https://pmc.ncbi.nlm.nih.gov/articles/PMC434344/))
+
+
