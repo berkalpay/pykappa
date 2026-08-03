@@ -117,7 +117,7 @@ def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
 # We specify a copy machine `C` as an abstraction for somthing like RNA
 # polymerase. We also introduce a monomer, `C`, which carries a state
 # specifying its encoding. (In the image, we use a closed circle and an
-# open circle; in code, we will use `w` and `b`.)
+# open circle; in code, we will use `b` and `w`, respectively.)
 #
 # The copy machine interacts with `M` in two ways: by binding the
 # template string (the reference polymer) via site `t` or the transcript
