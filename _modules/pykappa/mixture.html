@@ -46,7 +46,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Embedding</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">IndexedSet</span><span class="p">,</span> <span class="n">IndexedSetView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">IndexedSet</span><span class="p">,</span> <span class="n">IndexedSetView</span><span class="p">,</span> <span class="n">OrderedSet</span>
 
 
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -152,9 +152,14 @@
 
         <span class="n">components</span> <span class="o">=</span> <span class="n">IndexedSet</span><span class="p">()</span>
         <span class="n">unassigned</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
-        <span class="k">while</span> <span class="n">unassigned</span><span class="p">:</span>
-            <span class="n">component_agents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">unassigned</span><span class="p">))</span><span class="o">.</span><span class="n">_depth_first_traversal</span><span class="p">)</span>
-            <span class="n">component_agents</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unassigned</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">component_agents</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">member</span>
+                <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">_depth_first_traversal</span>
+                <span class="k">if</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">unassigned</span>
+            <span class="p">]</span>
             <span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Component</span><span class="p">(</span><span class="n">component_agents</span><span class="p">))</span>
             <span class="n">unassigned</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">component_agents</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">view</span>
@@ -181,7 +186,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">component_ordered</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
         <span class="n">new_agents</span> <span class="o">=</span> <span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">_detached</span><span class="p">()</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">component_ordered</span><span class="p">]</span>
-        <span class="n">new_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">new_edges</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
 
         <span class="c1"># Reconstruct the bond structure in the copied agents</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">agent</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">component_ordered</span><span class="p">):</span>
@@ -193,7 +198,9 @@
                     <span class="n">new_partner</span> <span class="o">=</span> <span class="n">new_agents</span><span class="p">[</span><span class="n">i_partner</span><span class="p">][</span><span class="n">partner</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
                     <span class="n">new_edges</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_Edge</span><span class="p">(</span><span class="n">new_site</span><span class="p">,</span> <span class="n">new_partner</span><span class="p">))</span>
 
-        <span class="n">update</span> <span class="o">=</span> <span class="n">_MixtureUpdate</span><span class="p">(</span><span class="n">agents_to_add</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">new_agents</span><span class="p">),</span> <span class="n">edges_to_add</span><span class="o">=</span><span class="n">new_edges</span><span class="p">)</span>
+        <span class="n">update</span> <span class="o">=</span> <span class="n">_MixtureUpdate</span><span class="p">(</span>
+            <span class="n">agents_to_add</span><span class="o">=</span><span class="n">OrderedSet</span><span class="p">(</span><span class="n">new_agents</span><span class="p">),</span> <span class="n">edges_to_add</span><span class="o">=</span><span class="n">new_edges</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_apply_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_remove_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -371,11 +378,11 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">_MixtureUpdate</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Specifies changes to be applied to a mixture.&quot;&quot;&quot;</span>
 
-    <span class="n">agents_to_add</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
-    <span class="n">agents_to_remove</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
-    <span class="n">edges_to_add</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">_Edge</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
-    <span class="n">edges_to_remove</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">_Edge</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
-    <span class="n">agents_changed</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>  <span class="c1"># Internal state changes</span>
+    <span class="n">agents_to_add</span><span class="p">:</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">OrderedSet</span><span class="p">)</span>
+    <span class="n">agents_to_remove</span><span class="p">:</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">OrderedSet</span><span class="p">)</span>
+    <span class="n">edges_to_add</span><span class="p">:</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="n">_Edge</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">OrderedSet</span><span class="p">)</span>
+    <span class="n">edges_to_remove</span><span class="p">:</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="n">_Edge</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">OrderedSet</span><span class="p">)</span>
+    <span class="n">agents_changed</span><span class="p">:</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">OrderedSet</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">create_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new agent based on a template (sites will be emptied).&quot;&quot;&quot;</span>
@@ -407,9 +414,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">edges_to_remove</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_Edge</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">partner</span><span class="p">))</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">touched_before</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">touched_before</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The agents that will be changed or removed by this update.&quot;&quot;&quot;</span>
-        <span class="n">touched</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_changed</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="p">)</span>
+        <span class="n">touched</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents_changed</span><span class="p">)</span>
+        <span class="n">touched</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents_to_remove</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_to_remove</span><span class="p">:</span>
             <span class="n">touched</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
@@ -425,9 +433,10 @@
         <span class="k">return</span> <span class="n">touched</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">touched_after</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">touched_after</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The agents that will be changed or added after this update.&quot;&quot;&quot;</span>
-        <span class="n">touched</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_changed</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents_to_add</span><span class="p">)</span>
+        <span class="n">touched</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents_changed</span><span class="p">)</span>
+        <span class="n">touched</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents_to_add</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_to_add</span><span class="p">:</span>
             <span class="n">touched</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">site1</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>

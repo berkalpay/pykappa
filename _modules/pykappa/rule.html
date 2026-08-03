@@ -241,16 +241,20 @@
         <span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_MixtureUpdate</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_MixtureUpdate</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Can change the internal states of agents in the mixture but</span>
 <span class="sd">            records everything else in the MixtureUpdate.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">random</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">rng</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">&quot;any&quot;</span><span class="p">:</span>
             <span class="n">components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">)</span>
-            <span class="n">selected_component</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
+            <span class="n">selected_component</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
                 <span class="n">components</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">]</span>
             <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -258,7 +262,7 @@
                 <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_produce_update</span><span class="p">(</span>
                     <span class="nb">dict</span><span class="p">(</span>
-                        <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                        <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
                             <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">selected_component</span><span class="p">)</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
@@ -266,6 +270,7 @@
                         <span class="n">rejection_sample</span><span class="p">(</span>
                             <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">second</span><span class="p">),</span>
                             <span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">selected_component</span><span class="p">),</span>
+                            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
                         <span class="p">)</span>
                     <span class="p">),</span>
                     <span class="n">mixture</span><span class="p">,</span>
@@ -287,7 +292,7 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">component_embeddings</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">component_embedding</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">component_embeddings</span><span class="p">)</span>
+            <span class="n">component_embedding</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">component_embeddings</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">rule_agent</span> <span class="ow">in</span> <span class="n">component_embedding</span><span class="p">:</span>
                 <span class="n">mixture_agent</span> <span class="o">=</span> <span class="n">component_embedding</span><span class="p">[</span><span class="n">rule_agent</span><span class="p">]</span>
