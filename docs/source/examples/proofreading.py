@@ -338,7 +338,7 @@ def generate_polymer(length):
     assert length > 1
     pattern = "".join(rng.choice(["w", "b"], length))
 
-    agents = ["C(c{0}[.], t[1])", f"M(l[.] r[2] t{{{pattern[0]}}}[1])"]
+    agents = ["C(c{0}[.] t[1])", f"M(l[.] r[2] t{{{pattern[0]}}}[1])"]
     for i, base in enumerate(pattern[1:]):
         agents.append(f"M(l[{i+2}] r[{i+3}] t{{{base}}}[.])")
     agents.append(f"M(l[{length+1}] r[.] t{{cap}}[.])")
