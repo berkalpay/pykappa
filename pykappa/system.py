@@ -537,7 +537,7 @@ class System:
         """
         rule = Rule.from_kappa(transformation + " @ 0")
         for _ in range(n):
-            update = Rule._select(rule, self._mixture, rng=self._rng)
+            update = rule._select(self._mixture, rng=self._rng)
             if update is not None:
                 for agent in update.agents_to_add:
                     self._enforce_signature(agent)
