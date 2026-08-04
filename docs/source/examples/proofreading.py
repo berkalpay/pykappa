@@ -410,3 +410,8 @@ print("time:      ", system.time)
 # Errors in Biosynthetic Processes Requiring High Specificity. Proc Natl
 # Acad Sci U S A 71, 4135–4139 (1974).
 # ([URL](https://pmc.ncbi.nlm.nih.gov/articles/PMC434344/))
+#
+# - Zaher, H. S. & Green, R. Fidelity at the Molecular Level: Lessons from
+# Protein Synthesis. Cell 136, 746–762 (2009).
+# ([URL](https://www.cell.com/cell/abstract/S0092-8674(09)00084-1))
+
