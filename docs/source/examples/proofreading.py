@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Kinetic Proofreading
+# # Kinetic proofreading
 #
 # This example implements the concept of *kinetic proofreading* [first
 # formalized](https://doi.org/10.1073/pnas.71.10.4135) by John Hopfield
@@ -11,7 +11,7 @@
 # example also makes use of advanced Python language features. Further
 # reading material is supplied at the end of this notebook.
 #
-# ## Why Kinetic Proofreading?
+# ## Why kinetic proofreading?
 #
 # Biological systems have a vested interest in preserving genetic
 # material across transcription, translation, and duplication. Small
@@ -101,10 +101,10 @@ def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
 
 
 # %% [markdown]
-# ## The Model
+# ## The model
 #
 # Now that we have a general understanding of the model's reactions and
-# function, we set out to define more explictily the function of this
+# function, we set out to define more explicitly the function of this
 # model. The contact map for this model will be:
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -114,7 +114,7 @@ def get_rates(r0, w0, r1, w1, barrier=0.0, drive=1.0, omega=1.0):
 #    :width: 320px
 
 # %% [markdown]
-# We specify a copy machine `C` as an abstraction for somthing like RNA
+# We specify a copy machine `C` as an abstraction for something like RNA
 # polymerase. We also introduce a monomer, `C`, which carries a state
 # specifying its encoding. (In the image, we use a closed circle and an
 # open circle; in code, we will use `b` and `w`, respectively.)
@@ -202,7 +202,7 @@ rules += generate_ruleset(
 # on whether the base pairs match. This boolean is given as `$c`.
 #
 # We also utilize Python's [string literal
-# concatentation](https://docs.python.org/3/reference/expressions.html#string-concatenation)
+# concatenation](https://docs.python.org/3/reference/expressions.html#string-concatenation)
 # to increase the readability of the rule by splitting it over multiple
 # lines. Indeed, these strings are equivalent:
 
@@ -252,7 +252,7 @@ rules.append(
 )
 
 # %% [markdown]
-# Because each of these rule classes concern monomer addition (occuring
+# Because each of these rule classes concern monomer addition (occurring
 # at the beginning, middle, or end), they share constants. Instructions
 # for reaching the end of the strand is not a ruleset; the rate should
 # be identical no matter the type of the penultimate monomer.
@@ -264,7 +264,7 @@ rules.append(
 # course, the exception of the proofreading rules, which we will cover
 # later.)
 #
-# *Commit a transcript change by chaning the copy machine's state to
+# *Commit a transcript change by changing the copy machine's state to
 # zero.*
 
 # %%
@@ -281,7 +281,7 @@ rules += generate_ruleset(
 # Now we will define the proofreading reaction. It should be capable of
 # removing a committed monomer from the transcript chain.
 #
-# *Undo the addition of a commited monomer.*
+# *Undo the addition of a committed monomer.*
 
 # %%
 rules += generate_ruleset(
@@ -401,7 +401,7 @@ print("time:      ", system.time)
 # example, one might expect that making reaction barriers more extreme
 # would result in a lower error rate without a time penalty.
 #
-# ## Reading Material
+# ## Reading material
 # - Pigolotti, S. & Sartori, P. Protocols for Copying and Proofreading
 # in Template-Assisted Polymerization. J Stat Phys 162, 1167–1182
 # (2016). ([URL](https://doi.org/10.1007/s10955-015-1399-2))
