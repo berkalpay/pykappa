@@ -11,3 +11,4 @@ Examples
    chemostat
    michaelis_menten
    vector_borne_disease
+   proofreading
