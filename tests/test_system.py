@@ -305,6 +305,48 @@ def test_constrained_selection_is_independent_of_global_random_state():
     assert_mixtures_are_isomorphic(system1, system2)
 
 
+def test_checkpoint_continues_exact_trajectory(tmp_path):
+    system = System.from_kappa(
+        mixture={"A(l[.], r[.])": 12},
+        rules=[
+            "A(l[.]), A(r[.]) -> A(l[1]), A(r[1]) | +1 bonds @ 'rate' {0}",
+            "A(l[1]), A(r[1]) -> A(l[.]), A(r[.]) | -1 bonds @ 0.2",
+        ],
+        observables={"free": "|A(l[.])|"},
+        variables={"rate": "1.0"},
+        tokens={"bonds": 0},
+        site_defaults={"A": {"l": "u", "r": "u"}},
+        seed=42,
+    )
+    system["rate"] = 0.8
+    for _ in range(20):
+        system.update()
+
+    checkpoint_path = tmp_path / "system.pykappa"
+    system.save(checkpoint_path)
+    resumed = System.load(checkpoint_path)
+    second_resume = System.load(checkpoint_path)
+
+    assert_mixtures_are_isomorphic(resumed, system)
+    assert resumed.time == system.time
+    assert resumed.tokens == system.tokens
+    assert resumed.tallies == system.tallies
+    assert resumed.site_defaults == system.site_defaults
+    assert resumed["rate"] == system["rate"]
+    assert resumed.monitor.history == system.monitor.history
+    assert resumed.monitor.system is resumed
+    assert resumed._rng.getstate() == system._rng.getstate()
+
+    for _ in range(50):
+        system.update()
+        resumed.update()
+        second_resume.update()
+        assert resumed.time == second_resume.time == system.time
+        assert resumed.tokens == second_resume.tokens == system.tokens
+        assert resumed.tallies == second_resume.tallies == system.tallies
+        assert resumed.kappa_str == second_resume.kappa_str == system.kappa_str
+
+
 def test_equilibration_start():
     """Test that monitoring identifies the start of an equilibrated tail."""
     system = System.from_ka(

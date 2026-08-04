@@ -12,6 +12,8 @@ from functools import cached_property
 from types import MappingProxyType
 from typing import Optional, Iterable, Mapping, Self, TYPE_CHECKING
 
+import cloudpickle
+
 if TYPE_CHECKING:
     from graphviz import Source
 
@@ -418,6 +420,27 @@ class System:
         """Write system information to a Kappa file."""
         with open(filepath, "w") as f:
             f.write(self.kappa_str)
+
+    def save(self, filepath: str) -> None:
+        """Save a checkpoint that can be continued with :meth:`System.load`."""
+        with open(filepath, "wb") as f:
+            cloudpickle.dump(self, f)
+
+    @classmethod
+    def load(cls, filepath: str) -> Self:
+        """Load a trusted checkpoint created by :meth:`System.save`.
+
+        Note:
+            Checkpoints must only be loaded from a trusted source and are intended
+            for use with the same PyKappa and Python versions.
+        """
+        with open(filepath, "rb") as f:
+            system = cloudpickle.load(f)
+        if not isinstance(system, cls):
+            raise TypeError(
+                f"Checkpoint contains {type(system).__name__}, not {cls.__name__}"
+            )
+        return system
 
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
