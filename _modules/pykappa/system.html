@@ -53,6 +53,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MappingProxyType</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">cloudpickle</span>
+
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
 
@@ -475,6 +477,33 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write system information to a Kappa file.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="System.save">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a checkpoint that can be continued with :meth:`System.load`.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="System.load">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.load">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a trusted checkpoint created by :meth:`System.save`.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Checkpoints must only be loaded from a trusted source and are intended</span>
+<span class="sd">            for use with the same PyKappa and Python versions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">system</span> <span class="o">=</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Checkpoint contains </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">system</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_mixture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
