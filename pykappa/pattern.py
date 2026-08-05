@@ -350,8 +350,8 @@ class Component(Counted):
             AssertionError: If agents list is empty.
         """
         super().__init__()
-        assert agents
         self._agents = IndexedSet(agents)  # TODO: order by graph traversal
+        assert self._agents
         self._agents.create_index("type", lambda a: [a.type])
 
         self._plot = _ComponentPlot(self)
