@@ -331,6 +331,7 @@ class Component(Counted):
     """
 
     _agents: IndexedSet[Agent]
+    _plot: _ComponentPlot
 
     @classmethod
     def from_kappa(cls, kappa_str: str) -> Self:
@@ -353,21 +354,26 @@ class Component(Counted):
         self._agents = IndexedSet(agents)  # TODO: order by graph traversal
         self._agents.create_index("type", lambda a: [a.type])
 
-        self.plot = _ComponentPlot(self)
+        self._plot = _ComponentPlot(self)
 
     def __iter__(self):
         yield from self.agents
-
-    @property
-    def agents(self) -> IndexedSetView[Agent]:
-        """The agents in this component."""
-        return self._agents.view
 
     def __len__(self):
         return len(self.agents)
 
     def __repr__(self):
         return f'Component(id={self.id}, kappa_str="{self.kappa_str}")'
+
+    @property
+    def agents(self) -> IndexedSetView[Agent]:
+        """The agents in this component."""
+        return self._agents.view
+
+    @property
+    def plot(self) -> _ComponentPlot:
+        """Return a visualization of this component."""
+        return self._plot
 
     @property
     def kappa_str(self) -> str:
