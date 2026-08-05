@@ -22,7 +22,7 @@ from pykappa.rule import Rule
 from pykappa.pattern import Component, Pattern, Site
 from pykappa.analysis import Monitor
 from pykappa.expression import Expression
-from pykappa._utils import str_table
+from pykappa._utils import str_table, uninterruptible
 
 
 class System:
@@ -480,6 +480,7 @@ class System:
                 )
             )
 
+    @uninterruptible
     def add(self, pattern: Pattern | Component | str, n_copies: int = 1) -> None:
         """Add instances of a pattern or component to the mixture using inferred agent signatures."""
         if isinstance(pattern, str):
@@ -498,6 +499,7 @@ class System:
                 self._enforce_signature(agent)
             self._mixture._add(copied, n_copies)
 
+    @uninterruptible
     def remove(self, component: Component) -> None:
         """Remove a specific component from the current mixture."""
         self._mixture._remove_component(component)
@@ -507,6 +509,7 @@ class System:
         """The total reactivity of the system."""
         return sum(rule.reactivity(self) for rule in self._rules.values())
 
+    @uninterruptible
     def update(self) -> None:
         """Perform one simulation step."""
 
@@ -547,6 +550,7 @@ class System:
         if self._monitor is not None:
             self._monitor.update()
 
+    @uninterruptible
     def apply(self, transformation: str, n: int = 1) -> None:
         """Apply a transformation immediately for a specified number of times.
 
