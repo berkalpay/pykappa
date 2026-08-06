@@ -8,6 +8,7 @@ import warnings
 import csv
 import subprocess
 from collections import defaultdict
+from dataclasses import dataclass
 from functools import cached_property
 from types import MappingProxyType
 from typing import Optional, Iterable, Mapping, Self, TYPE_CHECKING
@@ -25,6 +26,19 @@ from pykappa.expression import Expression
 from pykappa._utils import str_table
 
 
+@dataclass(frozen=True)
+class RuleTally:
+    """Counts outcomes of stochastic attempts to apply a rule."""
+
+    applied: int = 0
+    failed: int = 0
+
+    @property
+    def attempts(self) -> int:
+        """The total number of attempted rule applications."""
+        return self.applied + self.failed
+
+
 class System:
     """A Kappa system containing agents, rules, observables, and variables for simulation."""
 
@@ -36,7 +50,7 @@ class System:
     _tokens: dict[str, float]
     _monitor: Optional["Monitor"]
     _time: float
-    _tallies: dict[str, Mapping[str, int]]
+    _tallies: dict[str, RuleTally]
     _rng: random.Random  # Random number generator for reproducibility of updates
 
     @classmethod
@@ -335,19 +349,29 @@ class System:
         return MappingProxyType(self._tokens)
 
     @property
-    def tallies(self) -> Mapping[str, Mapping[str, int]]:
-        """Rule application counts."""
+    def tallies(self) -> Mapping[str, RuleTally]:
+        """Maps rule names to counts of stochastic application outcomes."""
         return MappingProxyType(self._tallies)
 
     @property
+    def tally_totals(self) -> RuleTally:
+        """Counts of all stochastic application attempts, combined across rules."""
+        return RuleTally(
+            applied=sum(tally.applied for tally in self._tallies.values()),
+            failed=sum(tally.failed for tally in self._tallies.values()),
+        )
+
+    @property
     def tallies_table(self) -> str:
-        """A formatted string showing how many times each rule has been applied."""
+        """A formatted summary of stochastic rule application outcomes."""
+        totals = self.tally_totals
         return str_table(
             [
-                [str(rule), tallies["applied"], tallies["failed"]]
-                for rule, tallies in self._tallies.items()
-            ],
-            header=["Rule", "Applied", "Failed"],
+                [str(rule), tally.applied, tally.failed, tally.attempts]
+                for rule, tally in self._tallies.items()
+            ]
+            + [["Total", totals.applied, totals.failed, totals.attempts]],
+            header=["Rule", "Applied", "Failed", "Attempts"],
         )
 
     @cached_property
@@ -529,10 +553,10 @@ class System:
         # Apply the rule
         update = rule._select(self._mixture, rng=self._rng)
         name = str(rule)
-        tally = self._tallies.get(name, {"applied": 0, "failed": 0})
+        tally = self._tallies.get(name, RuleTally())
         if update is not None:
-            self._tallies[name] = MappingProxyType(
-                {**tally, "applied": tally["applied"] + 1}
+            self._tallies[name] = RuleTally(
+                applied=tally.applied + 1, failed=tally.failed
             )
             for agent in update.agents_to_add:
                 self._enforce_signature(agent)
@@ -540,8 +564,8 @@ class System:
             for expr, name in rule.token_updates:
                 self._tokens[name] += expr.evaluate(self)
         else:
-            self._tallies[name] = MappingProxyType(
-                {**tally, "failed": tally["failed"] + 1}
+            self._tallies[name] = RuleTally(
+                applied=tally.applied, failed=tally.failed + 1
             )
 
         if self._monitor is not None:

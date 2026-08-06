@@ -51,6 +51,23 @@ def test_basic_system():
             system[obs_name]
 
 
+def test_rule_tallies():
+    system = System.from_kappa(
+        mixture={"A()": 2},
+        rules=["A() -> B() @ 1"],
+    )
+    system.update()
+    system.update()
+
+    tally = next(iter(system.tallies.values()))
+    assert (tally.applied, tally.failed, tally.attempts) == (2, 0, 2)
+    assert (
+        system.tally_totals.applied,
+        system.tally_totals.failed,
+        system.tally_totals.attempts,
+    ) == (2, 0, 2)
+
+
 def test_basic_observable_symmetry():
     system = System.from_ka("""
         %init: 1 V(v[1]), V(v[1])
