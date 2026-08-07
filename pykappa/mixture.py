@@ -97,9 +97,7 @@ class Mixture:
     @property
     def kappa_str_with_agent_ids(self) -> str:
         """Kappa representation with IDs, with one component per line."""
-        return "\n".join(
-            component.kappa_str_with_agent_ids for component in self
-        )
+        return "\n".join(component.kappa_str_with_agent_ids for component in self)
 
     @property
     def component_tracking(self) -> bool:
