@@ -546,6 +546,18 @@ class System:
         """The total reactivity of the system."""
         return sum(rule.reactivity(self) for rule in self._rules.values())
 
+    def advance_time_to(self, time: float) -> None:
+        """Advance time without applying an update.
+
+        Raises:
+            ValueError: If ``time`` is outside the interval before the next update.
+        """
+        if time < self._time:
+            raise ValueError("cannot run backwards in simulation time")
+        if self.next_update_time is not None and time >= self.next_update_time:
+            raise ValueError("cannot advance to or past the next update")
+        self._time = time
+
     def update(self) -> None:
         """Perform one simulation step."""
 
