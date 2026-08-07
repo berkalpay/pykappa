@@ -50,6 +50,7 @@ class System:
     _tokens: dict[str, float]
     _monitor: Optional["Monitor"]
     _time: float
+    _next_update_time: Optional[float]
     _tallies: dict[str, RuleTally]
     _rng: random.Random  # Random number generator for reproducibility of updates
 
@@ -244,6 +245,7 @@ class System:
 
         self._set_mixture(mixture)
         self._time = 0
+        self._next_update_time = None
 
         self._tokens = {} if tokens is None else dict(tokens)
 
@@ -286,10 +288,12 @@ class System:
                 f"'{name}' is not a numeric literal and cannot be reassigned"
             )
         self._variables[name] = Expression("literal", value=value)
+        self._next_update_time = None
 
     def set_token(self, name: str, value: float) -> None:
         """Set a token's value."""
         self._tokens[name] = value
+        self._next_update_time = None
 
     @property
     def mixture(self) -> Mixture:
@@ -300,6 +304,15 @@ class System:
     def time(self) -> float:
         """The current simulation time."""
         return self._time
+
+    @property
+    def next_update_time(self) -> Optional[float]:
+        """The time of the next update, or ``None`` if the system is nonreactive."""
+        if self._next_update_time is None:
+            if (reactivity := self.reactivity) == 0:
+                return None
+            self._next_update_time = self._time + self._rng.expovariate(reactivity)
+        return self._next_update_time
 
     @property
     def monitor(self) -> Optional["Monitor"]:
@@ -521,10 +534,12 @@ class System:
             for agent in copied.agents:
                 self._enforce_signature(agent)
             self._mixture._add(copied, n_copies)
+        self._next_update_time = None
 
     def remove(self, component: Component) -> None:
         """Remove a specific component from the current mixture."""
         self._mixture._remove_component(component)
+        self._next_update_time = None
 
     @property
     def reactivity(self) -> float:
@@ -537,13 +552,14 @@ class System:
         if self._monitor is not None and not self._monitor.history["time"]:
             self._monitor.update()
 
-        if (reactivity := self.reactivity) == 0:
+        if (next_update_time := self.next_update_time) is None:
             warnings.warn("system has no reactivity", RuntimeWarning)
             if self._monitor is not None:
                 self._monitor.update()
             return
 
-        self._time += self._rng.expovariate(reactivity)
+        self._time = next_update_time
+        self._next_update_time = None
 
         rule = self._rng.choices(
             list(self._rules.values()),
@@ -583,6 +599,7 @@ class System:
             n: Number of times to apply the rule.
         """
         rule = Rule.from_kappa(transformation + " @ 0")
+        self._next_update_time = None
         for _ in range(n):
             update = rule._select(self._mixture, rng=self._rng)
             if update is not None:
@@ -597,6 +614,7 @@ class System:
             KaSim must be installed and in the PATH.
             Some features are not compatible between PyKappa and KaSim.
         """
+        self._next_update_time = None
         assert shutil.which("KaSim"), "KaSim not found in the PATH."
 
         if any(rule.n_symmetries > 1 for rule in self._rules.values()):

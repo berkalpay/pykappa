@@ -339,6 +339,7 @@ def test_checkpoint_continues_exact_trajectory(tmp_path):
     for _ in range(20):
         system.update()
 
+    next_update_time = system.next_update_time
     checkpoint_path = tmp_path / "system.pykappa"
     system.save(checkpoint_path)
     resumed = System.load(checkpoint_path)
@@ -353,6 +354,12 @@ def test_checkpoint_continues_exact_trajectory(tmp_path):
     assert resumed.monitor.history == system.monitor.history
     assert resumed.monitor.system is resumed
     assert resumed._rng.getstate() == system._rng.getstate()
+    assert (
+        resumed.next_update_time
+        == second_resume.next_update_time
+        == system.next_update_time
+        == next_update_time
+    )
 
     for _ in range(50):
         system.update()
