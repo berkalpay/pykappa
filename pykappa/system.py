@@ -51,6 +51,7 @@ class System:
     _monitor: Optional["Monitor"]
     _time: float
     _next_update_time: Optional[float]
+    _reactivity_cache: Optional[tuple[float, ...]]
     _tallies: dict[str, RuleTally]
     _rng: random.Random  # Random number generator for reproducibility of updates
 
@@ -246,6 +247,7 @@ class System:
         self._set_mixture(mixture)
         self._time = 0
         self._next_update_time = None
+        self._reactivity_cache = None
 
         self._tokens = {} if tokens is None else dict(tokens)
 
@@ -288,12 +290,12 @@ class System:
                 f"'{name}' is not a numeric literal and cannot be reassigned"
             )
         self._variables[name] = Expression("literal", value=value)
-        self._next_update_time = None
+        self._invalidate_next_event()
 
     def set_token(self, name: str, value: float) -> None:
         """Set a token's value."""
         self._tokens[name] = value
-        self._next_update_time = None
+        self._invalidate_next_event()
 
     @property
     def mixture(self) -> Mixture:
@@ -490,6 +492,11 @@ class System:
             for component_expr in expr._filter("component_pattern"):
                 mixture._track_component(component_expr._attrs["value"])
 
+    def _invalidate_next_event(self) -> None:
+        """Discard cached reactivities after a state or rate change."""
+        self._next_update_time = None
+        self._reactivity_cache = None
+
     def _enforce_signature(self, agent: "Agent") -> None:
         """Validate agent type and sites against the inferred signature and fill missing sites.
 
@@ -534,17 +541,25 @@ class System:
             for agent in copied.agents:
                 self._enforce_signature(agent)
             self._mixture._add(copied, n_copies)
-        self._next_update_time = None
+        self._invalidate_next_event()
 
     def remove(self, component: Component) -> None:
         """Remove a specific component from the current mixture."""
         self._mixture._remove_component(component)
-        self._next_update_time = None
+        self._invalidate_next_event()
 
     @property
     def reactivity(self) -> float:
         """The total reactivity of the system."""
-        return sum(rule.reactivity(self) for rule in self._rules.values())
+        return sum(self._rule_reactivities())
+
+    def _rule_reactivities(self) -> tuple[float, ...]:
+        """Return rule reactivities cached for the pending simulation event."""
+        if self._reactivity_cache is None:
+            self._reactivity_cache = tuple(
+                rule.reactivity(self) for rule in self._rules.values()
+            )
+        return self._reactivity_cache
 
     def advance_time_to(self, time: float) -> None:
         """Advance time without applying an update.
@@ -575,7 +590,7 @@ class System:
 
         rule = self._rng.choices(
             list(self._rules.values()),
-            weights=[rule.reactivity(self) for rule in self._rules.values()],
+            weights=self._rule_reactivities(),
         )[0]
 
         # Apply the rule
@@ -598,6 +613,7 @@ class System:
 
         if self._monitor is not None:
             self._monitor.update()
+        self._reactivity_cache = None
 
     def apply(self, transformation: str, n: int = 1) -> None:
         """Apply a transformation immediately for a specified number of times.
@@ -611,7 +627,7 @@ class System:
             n: Number of times to apply the rule.
         """
         rule = Rule.from_kappa(transformation + " @ 0")
-        self._next_update_time = None
+        self._invalidate_next_event()
         for _ in range(n):
             update = rule._select(self._mixture, rng=self._rng)
             if update is not None:
@@ -626,7 +642,7 @@ class System:
             KaSim must be installed and in the PATH.
             Some features are not compatible between PyKappa and KaSim.
         """
-        self._next_update_time = None
+        self._invalidate_next_event()
         assert shutil.which("KaSim"), "KaSim not found in the PATH."
 
         if any(rule.n_symmetries > 1 for rule in self._rules.values()):
