@@ -24,6 +24,61 @@ class _Edge:
         return hash(frozenset((self.site1, self.site2)))
 
 
+class _Connectivity:
+    """Tracks cycle-closing bonds in an implicit spanning forest."""
+
+    def __init__(self):
+        self.extra_edges: set[_Edge] = set()
+
+    def add_extra_edge(self, edge: _Edge) -> None:
+        self.extra_edges.add(edge)
+
+    def remove_extra_edge(self, edge: _Edge) -> None:
+        self.extra_edges.remove(edge)
+
+    @staticmethod
+    def _other(edge: _Edge, agent: Agent) -> Agent:
+        return edge.site2.agent if edge.site1.agent == agent else edge.site1.agent
+
+    @staticmethod
+    def _edges(agent: Agent) -> Iterable[_Edge]:
+        return (_Edge(site, site.partner) for site in agent if site._coupled)
+
+    def _tree_side(self, start: Agent, limit: int | None = None) -> set[Agent]:
+        """Return a tree-connected side, stopping early once ``limit`` is exceeded."""
+        side: set[Agent] = set()
+        stack = [start]
+        while stack:
+            agent = stack.pop()
+            if agent in side:
+                continue
+            side.add(agent)
+            if limit is not None and len(side) > limit:
+                return side
+            stack.extend(
+                self._other(edge, agent)
+                for edge in self._edges(agent)
+                if edge not in self.extra_edges
+            )
+        return side
+
+    def smaller_tree_side(
+        self, agent1: Agent, agent2: Agent, component_size: int
+    ) -> set[Agent]:
+        """Return the smaller side of a forest bond removed from the graph."""
+        limit = component_size // 2
+        first = self._tree_side(agent1, limit)
+        return first if len(first) <= limit else self._tree_side(agent2)
+
+    def replacement_edge(self, side: set[Agent]) -> _Edge | None:
+        """Find an extra bond crossing from ``side`` to the other tree side."""
+        for agent in side:
+            for edge in self._edges(agent):
+                if edge in self.extra_edges and self._other(edge, agent) not in side:
+                    return edge
+        return None
+
+
 class Mixture:
     """A collection of agents and their connections.
 
@@ -34,6 +89,7 @@ class Mixture:
     _components: Optional[IndexedSet[Component]]  # Components if tracking is enabled
     _embeddings: dict[Component, IndexedSet[Embedding]]  # Cache of embeddings
     _max_embedding_width: int  # Max diameter, to compute re-embedding neighborhoods
+    _connectivity: Optional[_Connectivity]
 
     @classmethod
     def from_kappa(cls, patterns: dict[str, int]) -> Self:
@@ -59,6 +115,7 @@ class Mixture:
             self._components.create_index("agent", lambda c: c.agents)
         self._embeddings = {}
         self._max_embedding_width = 0
+        self._connectivity = _Connectivity() if track_components else None
 
         if patterns is not None:
             for pattern in patterns:
@@ -272,6 +329,7 @@ class Mixture:
         component1 = self.components.lookup_one("agent", edge.site1.agent)
         component2 = self.components.lookup_one("agent", edge.site2.agent)
         if component1 == component2:
+            self._connectivity.add_extra_edge(edge)
             return
 
         # Merge smaller component into larger for efficiency
@@ -298,14 +356,25 @@ class Mixture:
         old_component = self.components.lookup_one("agent", agent1)
         assert old_component == self.components.lookup_one("agent", agent2)
 
-        # Check if edge removal splits the component
-        maybe_new_component = Component(agent1._depth_first_traversal)
-        if agent2 in maybe_new_component:
+        if edge in self._connectivity.extra_edges:
+            self._connectivity.remove_extra_edge(edge)
             return
 
-        # Handle the split
-        new_component1 = maybe_new_component
-        new_component2 = Component(agent2._depth_first_traversal)
+        smaller_side = self._connectivity.smaller_tree_side(
+            agent1, agent2, len(old_component)
+        )
+        replacement = self._connectivity.replacement_edge(smaller_side)
+        if replacement is not None:
+            self._connectivity.remove_extra_edge(replacement)
+            return
+
+        # The component is split
+        new_component1 = Component(
+            agent for agent in old_component if agent in smaller_side
+        )
+        new_component2 = Component(
+            agent for agent in old_component if agent not in smaller_side
+        )
         with self._relocate_embeddings(old_component):
             self._components.remove(old_component)
             self._components.add(new_component1)
