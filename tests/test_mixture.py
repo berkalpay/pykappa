@@ -1,6 +1,7 @@
 import pytest
 
 from pykappa import Agent, Component, Pattern, Mixture
+from pykappa.mixture import _Edge
 
 
 def test_neighborhood_requires_frontier_growth_for_radius_gt_1():
@@ -74,3 +75,20 @@ def test_embeddings_in_component():
     mixture_component = next(c for c in mixture.components if len(c.agents) == 2)
     embeddings_in_comp = mixture.embeddings_in_component(complex, mixture_component)
     assert len(embeddings_in_comp) == 1
+
+
+def test_component_tracking_promotes_cycle_bond_before_splitting():
+    """Removing a backbone bond in a cycle should not rebuild the component."""
+    mixture = Mixture(track_components=True)
+    mixture._add("A(x[1], y[2]), B(x[1], z[3]), C(y[2], z[3])")
+    agents = {agent.type: agent for agent in mixture.agents}
+
+    removed = _Edge(agents["A"]["x"], agents["B"]["x"])
+    replacement = _Edge(agents["B"]["z"], agents["C"]["z"])
+    mixture._remove_edge(removed)
+
+    assert len(mixture.components) == 1
+    assert replacement not in mixture._connectivity.extra_edges
+
+    mixture._remove_edge(replacement)
+    assert sorted(len(component) for component in mixture.components) == [1, 2]
