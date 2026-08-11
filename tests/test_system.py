@@ -21,8 +21,8 @@ def heterodimerization_system(k_on: float = 2.5e9) -> System:
 
 
 def assert_mixtures_are_isomorphic(first: System, second: System) -> None:
-    unmatched = list(second.mixture)
-    for component in first.mixture:
+    unmatched = list(second.mixture.components)
+    for component in first.mixture.components:
         match = next(
             (other for other in unmatched if component.isomorphic(other)), None
         )
@@ -149,7 +149,7 @@ def test_polymerization_via_kasim():
         seed=42,
     )
     system.update_via_kasim(1)
-    assert len(system.mixture.agents) == 100
+    assert len(system.mixture) == 100
 
 
 @pytest.mark.parametrize(
@@ -403,13 +403,13 @@ def test_uniqueness_and_persistence_of_agent_ids():
         A(x{u}) <-> A(x{p}) @ 1, 1
         """)
 
-    initial_ids = {agent.id for agent in system.mixture.agents}
+    initial_ids = {agent.id for agent in system.mixture}
     assert len(initial_ids) == 100
 
     for _ in range(100):
         system.update()
 
-    current_ids = {agent.id for agent in system.mixture.agents}
+    current_ids = {agent.id for agent in system.mixture}
     assert initial_ids == current_ids
 
 
@@ -515,10 +515,10 @@ def test_signature_drives_interface_completion():
         ],
     )
     assert system.signatures["A"] == frozenset({"x", "y"})
-    for agent in system.mixture.agents:
+    for agent in system.mixture:
         assert {"x", "y"} <= set(agent.interface)
     system.add("A(x[.])", 1)
-    agent = next(a for a in system.mixture.agents if "y" in a.interface)
+    agent = next(a for a in system.mixture if "y" in a.interface)
     assert agent["y"].partner == "."
     Mixture()._add("A(x[1]), B(y[1])")  # bare mixture: no constraints
 
@@ -589,7 +589,7 @@ def test_apply_transformations(ka_str, observable, applications):
 def test_apply_creation_completes_interface():
     system = System.from_ka(". -> A(x{u}, y[.]) @ 1")
     system.apply(". -> A(x{u})")
-    agent = next(iter(system.mixture.agents))
+    agent = next(iter(system.mixture))
     assert set(agent.interface) == {"x", "y"}
     with pytest.raises(ValueError, match="unknown site"):
         system.apply(". -> A(z[.])")

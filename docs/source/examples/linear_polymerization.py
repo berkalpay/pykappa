@@ -38,7 +38,13 @@ while system.time < 100:
 
 # %%
 def polymer_len_plot(system):
-    plt.hist([len(component) for component in system.mixture if len(component) > 1])
+    plt.hist(
+        [
+            len(component)
+            for component in system.mixture.components
+            if len(component) > 1
+        ]
+    )
     plt.xlabel("Polymer length")
     plt.ylabel("Count")
 

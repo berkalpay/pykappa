@@ -362,7 +362,7 @@ def walk_polymer(component):
 
 def get_transcript(mixture, pattern):
     transcript = None
-    for component in mixture:
+    for component in mixture.components:
         if (p := walk_polymer(component)) and p != pattern:
             transcript = p
     return transcript or pattern

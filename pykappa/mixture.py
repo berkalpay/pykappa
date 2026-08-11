@@ -64,16 +64,19 @@ class Mixture:
             for pattern in patterns:
                 self._add(pattern)
 
-    def __iter__(self) -> Iterator[Component]:
-        yield from self.components
+    def __iter__(self) -> Iterator[Agent]:
+        yield from self.agents
+
+    def __len__(self) -> int:
+        return len(self.agents)
+
+    def __str__(self):
+        return self.kappa_str
 
     @property
     def agents(self) -> IndexedSetView[Agent]:
         """The agents in the mixture."""
         return self._agents.view
-
-    def __str__(self):
-        return self.kappa_str
 
     @property
     def kappa_str(self) -> str:
@@ -81,7 +84,7 @@ class Mixture:
 
         # Group components by isomorphism
         grouped: dict[Component, list[Component]] = {}
-        for component in self:
+        for component in self.components:
             for group in grouped:
                 if component.isomorphic(group):
                     grouped[group].append(component)
@@ -98,7 +101,8 @@ class Mixture:
     def kappa_str_with_agent_ids(self) -> str:
         """Kappa representation with IDs and one `%init: 1` per component."""
         return "\n".join(
-            f"%init: 1 {component.kappa_str_with_agent_ids}" for component in self
+            f"%init: 1 {component.kappa_str_with_agent_ids}"
+            for component in self.components
         )
 
     @property

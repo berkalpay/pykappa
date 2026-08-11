@@ -75,7 +75,7 @@ comp_mixture._add("A(x[1]), B(x[1])")
 
 # Iterate over all components
 print("Components in mixture:")
-for component in comp_mixture:
+for component in comp_mixture.components:
     print(component.kappa_str)
 
 # Query embeddings within a specific component
