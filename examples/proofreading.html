@@ -332,7 +332,7 @@ True
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_transcript</span><span class="p">(</span><span class="n">mixture</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
     <span class="n">transcript</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">mixture</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">:=</span> <span class="n">walk_polymer</span><span class="p">(</span><span class="n">component</span><span class="p">))</span> <span class="ow">and</span> <span class="n">p</span> <span class="o">!=</span> <span class="n">pattern</span><span class="p">:</span>
             <span class="n">transcript</span> <span class="o">=</span> <span class="n">p</span>
     <span class="k">return</span> <span class="n">transcript</span> <span class="ow">or</span> <span class="n">pattern</span>
