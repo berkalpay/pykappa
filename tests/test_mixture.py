@@ -100,6 +100,26 @@ def test_update_preserves_embedding_cache_for_unaffected_sites():
     assert system["y_unmodified"] == 2
 
 
+def test_component_constraint_weights_are_updated_incrementally():
+    system = System.from_kappa(
+        {"A(l[.], r[.])": 12},
+        rules=["A(l[.]), A(r[.]) <-> A(l[1]), A(r[1]) @ 1 {1}, 1"],
+        seed=1,
+    )
+
+    for _ in range(30):
+        system.update()
+        for rule in system.rules.values():
+            if rule.component_constraint == "any":
+                continue
+
+            assert (
+                rule._different_totals.weight
+                if rule.component_constraint == "different"
+                else rule._same_weight
+            ) == rule.n_embeddings(system.mixture)
+
+
 def test_component_tracking_promotes_cycle_bond_before_splitting():
     """Removing a backbone bond in a cycle should not rebuild the component."""
     mixture = Mixture(track_components=True)

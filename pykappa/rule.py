@@ -16,6 +16,19 @@ if TYPE_CHECKING:
     from pykappa.system import System
 
 
+@dataclass
+class _DifferentComponentTotals:
+    """Aggregate embedding counts for a different-component constraint."""
+
+    first: int = 0
+    second: int = 0
+    overlap: int = 0
+
+    @property
+    def weight(self) -> int:
+        return self.first * self.second - self.overlap
+
+
 @dataclass(frozen=True, eq=False)
 class Rule:
     """A Kappa rule, specifying the transformation of a pattern at a stochastic rate."""
@@ -28,6 +41,13 @@ class Rule:
     _component_weights: dict[Component, int] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
+    _component_counts: dict[Component, tuple[int, int]] = field(
+        default_factory=dict, init=False, repr=False, compare=False
+    )
+    _different_totals: _DifferentComponentTotals = field(
+        default_factory=_DifferentComponentTotals, init=False, repr=False, compare=False
+    )
+    _same_weight: int = field(default=0, init=False, repr=False, compare=False)
 
     @classmethod
     def list_from_kappa(cls, kappa_str: str) -> list[Self]:
@@ -154,34 +174,76 @@ class Rule:
         if self.component_constraint == "same":
             self._component_weights.clear()
             self._component_weights.update(
-                {
-                    component: prod(
-                        len(mixture.embeddings_in_component(pattern, component))
-                        for pattern in self.left.components
-                    )
-                    for component in mixture.components
-                }
+                (component, self._same_component_weight(mixture, component))
+                for component in mixture.components
             )
-            return sum(self._component_weights.values())
+            total = sum(self._component_weights.values())
+            object.__setattr__(self, "_same_weight", total)
+            return total
 
         if self.component_constraint == "different":
-            first, second = self.left.components
-            self._component_weights.clear()
-            self._component_weights.update(
-                {
-                    component: len(mixture.embeddings_in_component(first, component))
-                    * (
-                        len(mixture.embeddings(second))
-                        - len(mixture.embeddings_in_component(second, component))
-                    )
-                    for component in mixture.components
-                }
-            )
-            return sum(self._component_weights.values())
+            self._component_counts.clear()
+            totals = self._different_totals
+            totals.first = totals.second = totals.overlap = 0
+            for component in mixture.components:
+                counts = self._different_component_counts(mixture, component)
+                self._component_counts[component] = counts
+                self._add_different_counts(counts)
+            return totals.weight
 
         return prod(
             len(mixture.embeddings(component)) for component in self.left.components
         )
+
+    def _same_component_weight(self, mixture: Mixture, component: Component) -> int:
+        return prod(
+            len(mixture.embeddings_in_component(pattern, component))
+            for pattern in self.left.components
+        )
+
+    def _different_component_counts(
+        self, mixture: Mixture, component: Component
+    ) -> tuple[int, int]:
+        first, second = self.left.components
+        return (
+            len(mixture.embeddings_in_component(first, component)),
+            len(mixture.embeddings_in_component(second, component)),
+        )
+
+    def _add_different_counts(self, counts: tuple[int, int], sign: int = 1) -> None:
+        first, second = counts
+        totals = self._different_totals
+        totals.first += sign * first
+        totals.second += sign * second
+        totals.overlap += sign * first * second
+
+    def update_component_weights(
+        self,
+        mixture: Mixture,
+        previous_components: set[Component],
+        current_components: set[Component],
+    ) -> int:
+        """Refresh constraint weights after an event touched some components."""
+        if self.component_constraint == "same":
+            total = self._same_weight
+            for component in previous_components:
+                total -= self._component_weights.pop(component, 0)
+            for component in current_components:
+                weight = self._same_component_weight(mixture, component)
+                self._component_weights[component] = weight
+                total += weight
+            object.__setattr__(self, "_same_weight", total)
+            return total
+
+        if self.component_constraint == "different":
+            for component in previous_components:
+                if counts := self._component_counts.pop(component, None):
+                    self._add_different_counts(counts, -1)
+            for component in current_components:
+                counts = self._different_component_counts(mixture, component)
+                self._component_counts[component] = counts
+                self._add_different_counts(counts)
+            return self._different_totals.weight
 
     def _select(
         self, mixture: Mixture, rng: random.Random | None = None
@@ -195,9 +257,20 @@ class Rule:
         rng = random if rng is None else rng
 
         if self.component_constraint != "any":
-            components = list(self._component_weights)
+            components = list(mixture.components)
+            if self.component_constraint == "different":
+                second_total = self._different_totals.second
+                weights = [
+                    first * (second_total - second)
+                    for first, second in (
+                        self._component_counts[component] for component in components
+                    )
+                ]
+            else:
+                weights = [self._component_weights[component] for component in components]
             selected_component = rng.choices(
-                components, [self._component_weights[c] for c in components]
+                components,
+                weights,
             )[0]
 
             if self.component_constraint == "different":

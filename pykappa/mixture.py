@@ -266,8 +266,17 @@ class Mixture:
                 lambda e: [self.components.lookup_one("agent", next(iter(e.values())))],
             )
 
-    def _apply_update(self, update: "_MixtureUpdate") -> None:
-        """Apply a collection of changes to the mixture."""
+    def _components_containing(self, agents: Iterable[Agent]) -> set[Component]:
+        """Return tracked components containing any of the given agents."""
+        if not self.component_tracking:
+            return set()
+        return {self.components.lookup_one("agent", agent) for agent in agents}
+
+    def _apply_update(
+        self, update: "_MixtureUpdate"
+    ) -> tuple[set[Component], set[Component]]:
+        """Apply a collection of changes and return the affected components."""
+        previous_components = self._components_containing(update.touched_before)
         changes: set[tuple[str, str | None]] = {
             (site.agent.type, site.label) for site in update.sites_changed
         }
@@ -312,6 +321,8 @@ class Mixture:
             new_embeddings = component_pattern.embeddings(update_region)
             for e in new_embeddings:
                 self._embeddings[component_pattern].add(e)
+
+        return previous_components, self._components_containing(update.touched_after)
 
     def _add_agent(self, agent: Agent) -> None:
         """Add an agent to the mixture (should not have any bound sites)."""
