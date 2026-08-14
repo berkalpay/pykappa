@@ -610,11 +610,12 @@ class System:
                 self._tokens[name] += expr.evaluate(self)
             self._reactivity_cache = tuple(
                 (
-                    candidate.update_component_weights(
-                        self._mixture, previous_components, current_components
+                    candidate._reactivity_from_embeddings(
+                        candidate.update_component_weights(
+                            self._mixture, previous_components, current_components
+                        ),
+                        self,
                     )
-                    // candidate.n_symmetries
-                    * candidate.rate(self)
                     if candidate.component_constraint != "any"
                     else candidate.reactivity(self)
                 )
