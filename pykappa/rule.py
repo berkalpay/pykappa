@@ -95,7 +95,7 @@ class Rule:
             return f"{rate} {{0}}"
         return rate
 
-    @property
+    @cached_property
     def kappa_str(self) -> str:
         token_part = ""
         if self.token_updates:
@@ -280,9 +280,7 @@ class Rule:
                 case Agent(), Agent() if l_agent.type == r_agent.type:
                     for r_site in r_agent:
                         if r_site._stated:
-                            agent[r_site.label]._set_state(r_site.state)
-                            if r_site.state != l_agent[r_site.label].state:
-                                update.agents_changed.add(agent)
+                            update.set_site_state(agent[r_site.label], r_site.state)
                     new_selection[i] = agent
                 case _:
                     pass
