@@ -157,9 +157,15 @@ class Rule:
         i.e. the number of embeddings times the reaction rate, accounting
         for rule symmetry.
         """
-        return (
-            self.n_embeddings(system.mixture) // self.n_symmetries * self.rate(system)
+        return self._reactivity_from_embeddings(
+            self.n_embeddings(system.mixture), system
         )
+
+    def _reactivity_from_embeddings(self, n_embeddings: int, system: "System") -> float:
+        """Calculate reactivity without evaluating rates for impossible rules."""
+        if not n_embeddings:
+            return 0.0
+        return n_embeddings // self.n_symmetries * self.rate(system)
 
     def rate(self, system: "System") -> float:
         return self.rate_expression.evaluate(system)

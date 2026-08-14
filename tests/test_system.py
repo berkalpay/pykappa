@@ -68,6 +68,22 @@ def test_rule_tallies():
     ) == (2, 0, 2)
 
 
+def test_impossible_rule_rate_is_not_evaluated():
+    system = System.from_kappa(
+        mixture={"V(x{s})": 1},
+        rules=[
+            "V(x{s}) -> . @ 1",
+            "V(x{i}), V(x{s}) -> V(x{i}), V(x{i}) @ 1 / 'M'",
+        ],
+        observables={"M": "|V()|"},
+        seed=1,
+    )
+
+    system.update()
+
+    assert system["M"] == 0
+
+
 def test_basic_observable_symmetry():
     system = System.from_ka("""
         %init: 1 V(v[1]), V(v[1])
