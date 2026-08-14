@@ -603,9 +603,23 @@ class System:
             )
             for agent in update.agents_to_add:
                 self._enforce_signature(agent)
-            self._mixture._apply_update(update)
+            previous_components, current_components = self._mixture._apply_update(
+                update
+            )
             for expr, name in rule.token_updates:
                 self._tokens[name] += expr.evaluate(self)
+            self._reactivity_cache = tuple(
+                (
+                    candidate.update_component_weights(
+                        self._mixture, previous_components, current_components
+                    )
+                    // candidate.n_symmetries
+                    * candidate.rate(self)
+                    if candidate.component_constraint != "any"
+                    else candidate.reactivity(self)
+                )
+                for candidate in self._rules.values()
+            )
         else:
             self._tallies[name] = RuleTally(
                 applied=tally.applied, failed=tally.failed + 1
@@ -613,7 +627,8 @@ class System:
 
         if self._monitor is not None:
             self._monitor.update()
-        self._reactivity_cache = None
+        if update is None:
+            self._reactivity_cache = None
 
     def apply(self, transformation: str, n: int = 1) -> None:
         """Apply a transformation immediately for a specified number of times.
