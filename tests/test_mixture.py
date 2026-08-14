@@ -1,6 +1,6 @@
 import pytest
 
-from pykappa import Agent, Component, Pattern, Mixture
+from pykappa import Agent, Component, Pattern, Mixture, System
 from pykappa.mixture import _Edge
 
 
@@ -75,6 +75,29 @@ def test_embeddings_in_component():
     mixture_component = next(c for c in mixture.components if len(c.agents) == 2)
     embeddings_in_comp = mixture.embeddings_in_component(complex, mixture_component)
     assert len(embeddings_in_comp) == 1
+
+
+def test_update_preserves_embedding_cache_for_unaffected_sites():
+    """An x-site event must not rebuild embeddings that only inspect y."""
+    system = System.from_kappa(
+        {"A(x[.]{u}, y[.]{u})": 2},
+        rules=["A(x{u}, y) -> A(x{p}, y) @ 1"],
+        observables={"y_unmodified": "|A(y{u})|"},
+        seed=1,
+    )
+    y_pattern = next(
+        pattern
+        for pattern in system.mixture._embeddings
+        if set(next(iter(pattern)).interface) == {"y"}
+    )
+    cached_before = tuple(system.mixture._embeddings[y_pattern])
+
+    system.update()
+
+    cached_after = tuple(system.mixture._embeddings[y_pattern])
+    assert cached_after == cached_before
+    assert all(after is before for before, after in zip(cached_before, cached_after))
+    assert system["y_unmodified"] == 2
 
 
 def test_component_tracking_promotes_cycle_bond_before_splitting():

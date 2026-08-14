@@ -88,7 +88,6 @@ class Mixture:
     _agents: IndexedSet[Agent]
     _components: Optional[IndexedSet[Component]]  # Components if tracking is enabled
     _embeddings: dict[Component, IndexedSet[Embedding]]  # Cache of embeddings
-    _max_embedding_width: int  # Max diameter, to compute re-embedding neighborhoods
     _connectivity: Optional[_Connectivity]
 
     @classmethod
@@ -114,7 +113,6 @@ class Mixture:
         if self._components is not None:
             self._components.create_index("agent", lambda c: c.agents)
         self._embeddings = {}
-        self._max_embedding_width = 0
         self._connectivity = _Connectivity() if track_components else None
 
         if patterns is not None:
@@ -258,7 +256,6 @@ class Mixture:
 
     def _track_component(self, component: Component):
         """Start tracking embeddings of a component."""
-        self._max_embedding_width = max(component.diameter, self._max_embedding_width)
         embeddings = IndexedSet(component.embeddings(self))
         embeddings.create_index("agent", lambda e: iter(e.values()))
         self._embeddings[component] = embeddings
@@ -271,9 +268,25 @@ class Mixture:
 
     def _apply_update(self, update: "_MixtureUpdate") -> None:
         """Apply a collection of changes to the mixture."""
+        changes: set[tuple[str, str | None]] = {
+            (site.agent.type, site.label) for site in update.sites_changed
+        }
+        for edge in (*update.edges_to_remove, *update.edges_to_add):
+            changes.add((edge.site1.agent.type, edge.site1.label))
+            changes.add((edge.site2.agent.type, edge.site2.label))
+        changes.update(
+            (agent.type, None)
+            for agent in (*update.agents_to_remove, *update.agents_to_add)
+        )
+        affected_patterns = {
+            pattern: pattern._embedding_cache_info[0]
+            for pattern in self._embeddings
+            if changes & pattern._embedding_cache_info[1]
+        }
+
         # Clear embeddings involving agents that will change
         for agent in update.touched_before:
-            for tracked in self._embeddings:
+            for tracked in affected_patterns:
                 self._embeddings[tracked].remove_by("agent", agent)
 
         # Modify the graph structure
@@ -286,13 +299,16 @@ class Mixture:
         for edge in update.edges_to_add:
             self._add_edge(edge)
 
-        # Re-embed tracked components in the updated region around modified agents
-        update_region = Agent.neighborhood(
-            update.touched_after, self._max_embedding_width
-        )
-        update_region = IndexedSet(update_region)
-        update_region.create_index("type", lambda a: [a.type])
-        for component_pattern in self._embeddings:
+        # Re-embed each tracked pattern only as far as its own diameter requires.
+        # A single wide pattern must not make every narrower pattern search the
+        # larger neighborhood after every event.
+        update_regions: dict[int, OrderedSet[Agent]] = {}
+        for component_pattern, width in affected_patterns.items():
+            if width not in update_regions:
+                update_region = Agent.neighborhood(update.touched_after, width)
+                update_regions[width] = update_region
+            else:
+                update_region = update_regions[width]
             new_embeddings = component_pattern.embeddings(update_region)
             for e in new_embeddings:
                 self._embeddings[component_pattern].add(e)
@@ -410,6 +426,7 @@ class _MixtureUpdate:
     edges_to_add: OrderedSet[_Edge] = field(default_factory=OrderedSet)
     edges_to_remove: OrderedSet[_Edge] = field(default_factory=OrderedSet)
     agents_changed: OrderedSet[Agent] = field(default_factory=OrderedSet)
+    sites_changed: OrderedSet[Site] = field(default_factory=OrderedSet)
 
     def create_agent(self, agent: Agent) -> Agent:
         """Create a new agent based on a template (sites will be emptied)."""
@@ -423,6 +440,13 @@ class _MixtureUpdate:
         for site in agent:
             if site._coupled:
                 self.edges_to_remove.add(_Edge(site, site.partner))
+
+    def set_site_state(self, site: Site, state: str) -> None:
+        """Set a site's state and record it for embedding-cache maintenance."""
+        if site.state != state:
+            self.agents_changed.add(site.agent)
+            self.sites_changed.add(site)
+            site._set_state(state)
 
     def connect_sites(self, site1: Site, site2: Site) -> None:
         """Specify to create an edge between two sites. If the sites
