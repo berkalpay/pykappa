@@ -267,7 +267,9 @@ class Rule:
                     )
                 ]
             else:
-                weights = [self._component_weights[component] for component in components]
+                weights = [
+                    self._component_weights[component] for component in components
+                ]
             selected_component = rng.choices(
                 components,
                 weights,
