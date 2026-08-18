@@ -399,13 +399,11 @@ class Component(Counted):
         if hasattr(other, "agents"):
             other: IndexedSet[Agent] | IndexedSetView[Agent] = other.agents
 
+        assert "type" in other.properties
+
         a_root = next(iter(self.agents))  # "a" refers to `self` and "b" to `other`
         # Narrow the search by mapping `a_root` to agents in `other` of the same type
-        if hasattr(other, "properties") and "type" in other.properties:
-            root_candidates = other.lookup("type", a_root.type)
-        else:
-            root_candidates = (agent for agent in other if agent.type == a_root.type)
-        for b_root in root_candidates:
+        for b_root in other.lookup("type", a_root.type):
 
             agent_map = {a_root: b_root}  # The potential bijection
             frontier = {a_root}
