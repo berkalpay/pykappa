@@ -57,6 +57,19 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
 
 
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_DifferentComponentTotals</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Aggregate embedding counts for a different-component constraint."""</span>
+
+    <span class="n">first</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">second</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">overlap</span>
+
+
 <div class="viewcode-block" id="Rule">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -71,6 +84,13 @@
     <span class="n">_component_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
+    <span class="n">_component_counts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">_different_totals</span><span class="p">:</span> <span class="n">_DifferentComponentTotals</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="n">_DifferentComponentTotals</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">_same_weight</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Rule.list_from_kappa">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.list_from_kappa">[docs]</a>
@@ -144,7 +164,7 @@
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="s2">0</span><span class="se">}}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">rate</span>
 
-    <span class="nd">@property</span>
+    <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">token_part</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_updates</span><span class="p">:</span>
@@ -188,10 +208,16 @@
 <span class="sd">        i.e. the number of embeddings times the reaction rate, accounting</span>
 <span class="sd">        for rule symmetry.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">n_embeddings</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_symmetries</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reactivity_from_embeddings</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_embeddings</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="p">),</span> <span class="n">system</span>
         <span class="p">)</span></div>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reactivity_from_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_embeddings</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">"System"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Calculate reactivity without evaluating rates for impossible rules."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">n_embeddings</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="n">n_embeddings</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_symmetries</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Rule.rate">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.rate">[docs]</a>
@@ -211,34 +237,72 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"same"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="n">component</span><span class="p">:</span> <span class="n">prod</span><span class="p">(</span>
-                        <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">component</span><span class="p">))</span>
-                        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">components</span>
-                <span class="p">}</span>
+                <span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_counts_in_component</span><span class="p">(</span><span class="n">mixture</span><span class="p">,</span> <span class="n">component</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">components</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_same_weight"</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">total</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
-            <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="n">component</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">component</span><span class="p">))</span>
-                    <span class="o">*</span> <span class="p">(</span>
-                        <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">second</span><span class="p">))</span>
-                        <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">component</span><span class="p">))</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">components</span>
-                <span class="p">}</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_component_counts</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">totals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_different_totals</span>
+            <span class="n">totals</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">totals</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="n">totals</span><span class="o">.</span><span class="n">overlap</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counts_in_component</span><span class="p">(</span><span class="n">mixture</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_component_counts</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_different_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">totals</span><span class="o">.</span><span class="n">weight</span>
 
         <span class="k">return</span> <span class="n">prod</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">component</span><span class="p">))</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
         <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_counts_in_component</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">embeddings_in_component</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">component</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_different_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counts</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">sign</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">counts</span>
+        <span class="n">totals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_different_totals</span>
+        <span class="n">totals</span><span class="o">.</span><span class="n">first</span> <span class="o">+=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">first</span>
+        <span class="n">totals</span><span class="o">.</span><span class="n">second</span> <span class="o">+=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">second</span>
+        <span class="n">totals</span><span class="o">.</span><span class="n">overlap</span> <span class="o">+=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">first</span> <span class="o">*</span> <span class="n">second</span>
+
+<div class="viewcode-block" id="Rule.update_component_weights">
+<a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.update_component_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_component_weights</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">,</span>
+        <span class="n">previous_components</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Component</span><span class="p">],</span>
+        <span class="n">current_components</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Component</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Refresh constraint weights after an event touched some components."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"same"</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_same_weight</span>
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">previous_components</span><span class="p">:</span>
+                <span class="n">total</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">current_components</span><span class="p">:</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_counts_in_component</span><span class="p">(</span><span class="n">mixture</span><span class="p">,</span> <span class="n">component</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">weight</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_same_weight"</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">total</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">previous_components</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">counts</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_component_counts</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_different_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">current_components</span><span class="p">:</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counts_in_component</span><span class="p">(</span><span class="n">mixture</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_component_counts</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_different_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_different_totals</span><span class="o">.</span><span class="n">weight</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_select</span><span class="p">(</span>
@@ -253,9 +317,22 @@
         <span class="n">rng</span> <span class="o">=</span> <span class="n">random</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">rng</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">"any"</span><span class="p">:</span>
-            <span class="n">components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">)</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mixture</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
+                <span class="n">second_total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_different_totals</span><span class="o">.</span><span class="n">second</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">first</span> <span class="o">*</span> <span class="p">(</span><span class="n">second_total</span> <span class="o">-</span> <span class="n">second</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="ow">in</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_component_counts</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">components</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">components</span>
+                <span class="p">]</span>
             <span class="n">selected_component</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
-                <span class="n">components</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">]</span>
+                <span class="n">components</span><span class="p">,</span>
+                <span class="n">weights</span><span class="p">,</span>
             <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
@@ -338,9 +415,7 @@
                 <span class="k">case</span> <span class="n">Agent</span><span class="p">(),</span> <span class="n">Agent</span><span class="p">()</span> <span class="k">if</span> <span class="n">l_agent</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">r_agent</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">r_site</span> <span class="ow">in</span> <span class="n">r_agent</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">_stated</span><span class="p">:</span>
-                            <span class="n">agent</span><span class="p">[</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">_set_state</span><span class="p">(</span><span class="n">r_site</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
-                            <span class="k">if</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">l_agent</span><span class="p">[</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
-                                <span class="n">update</span><span class="o">.</span><span class="n">agents_changed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+                            <span class="n">update</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="n">agent</span><span class="p">[</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">],</span> <span class="n">r_site</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
                     <span class="n">new_selection</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span>
                 <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                     <span class="k">pass</span>
