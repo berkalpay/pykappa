@@ -1,7 +1,7 @@
 """Manages collections of agents."""
 
 from dataclasses import dataclass, field
-from typing import Optional, Iterable, Iterator, Self
+from typing import Callable, Optional, Iterable, Iterator, Self
 from contextlib import contextmanager
 
 from pykappa.pattern import Site, Agent, Component, Pattern, Embedding
@@ -194,19 +194,28 @@ class Mixture:
             for component in pattern.components:
                 self._add_component(component)
 
-    def _add_component(self, component: Component) -> None:
+    def _add_component(
+        self,
+        component: Component,
+        prepare_agent: Callable[[Agent], None] | None = None,
+    ) -> None:
+        """Copy and add a component."""
         component_ordered = list(component.agents)
         new_agents = [agent._detached() for agent in component_ordered]
         new_edges = OrderedSet()
+        copied_agents = dict(zip(component_ordered, new_agents, strict=True))
+
+        if prepare_agent is not None:
+            for agent in new_agents:
+                prepare_agent(agent)
 
         # Reconstruct the bond structure in the copied agents
         for i, agent in enumerate(component_ordered):
             for site in agent:
                 if site._coupled:
                     partner = site.partner
-                    i_partner = component_ordered.index(partner.agent)
                     new_site = new_agents[i][site.label]
-                    new_partner = new_agents[i_partner][partner.label]
+                    new_partner = copied_agents[partner.agent][partner.label]
                     new_edges.add(_Edge(new_site, new_partner))
 
         update = _MixtureUpdate(

@@ -530,17 +530,10 @@ class System:
             pattern = Pattern.from_kappa(pattern)
         components = [pattern] if isinstance(pattern, Component) else pattern.components
         for component in components:
-            agent_map = {agent: agent._detached() for agent in component.agents}
-            for agent in component.agents:
-                for site in agent:
-                    if site._coupled:
-                        agent_map[agent][site.label]._set_partner(
-                            agent_map[site.partner.agent][site.partner.label]
-                        )
-            copied = Component(list(agent_map.values()))
-            for agent in copied.agents:
-                self._enforce_signature(agent)
-            self._mixture._add(copied, n_copies)
+            for _ in range(n_copies):
+                self._mixture._add_component(
+                    component, prepare_agent=self._enforce_signature
+                )
         self._invalidate_next_event()
 
     def remove(self, component: Component) -> None:
