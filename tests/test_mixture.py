@@ -78,7 +78,6 @@ def test_embeddings_in_component():
 
 
 def test_update_preserves_embedding_cache_for_unaffected_sites():
-    """An x-site event must not rebuild embeddings that only inspect y."""
     system = System.from_kappa(
         {"A(x[.]{u}, y[.]{u})": 2},
         rules=["A(x{u}, y) -> A(x{p}, y) @ 1"],
@@ -121,7 +120,6 @@ def test_component_constraint_weights_are_updated_incrementally():
 
 
 def test_component_tracking_promotes_cycle_bond_before_splitting():
-    """Removing a backbone bond in a cycle should not rebuild the component."""
     mixture = Mixture(track_components=True)
     mixture._add("A(x[1], y[2]), B(x[1], z[3]), C(y[2], z[3])")
     agents = {agent.type: agent for agent in mixture.agents}

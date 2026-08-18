@@ -299,9 +299,7 @@ class Mixture:
         for edge in update.edges_to_add:
             self._add_edge(edge)
 
-        # Re-embed each tracked pattern only as far as its own diameter requires.
-        # A single wide pattern must not make every narrower pattern search the
-        # larger neighborhood after every event.
+        # Re-embed each tracked pattern as far as its own diameter requires
         update_regions: dict[int, IndexedSet[Agent]] = {}
         for component_pattern, width in affected_patterns.items():
             if width not in update_regions:
