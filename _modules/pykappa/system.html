@@ -39,7 +39,7 @@
           <div class="body" role="main">
             
   <h1>Source code for pykappa.system</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Implements simulation of models.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Implements simulation of models."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
@@ -71,14 +71,14 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.RuleTally">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RuleTally</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Counts outcomes of stochastic attempts to apply a rule.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Counts outcomes of stochastic attempts to apply a rule."""</span>
 
     <span class="n">applied</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">failed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">attempts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The total number of attempted rule applications.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The total number of attempted rule applications."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">failed</span></div>
 
 
@@ -86,7 +86,7 @@
 <div class="viewcode-block" id="System">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">System</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Kappa system containing agents, rules, observables, and variables for simulation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A Kappa system containing agents, rules, observables, and variables for simulation."""</span>
 
     <span class="n">_mixture</span><span class="p">:</span> <span class="n">Mixture</span>
     <span class="n">_rules</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Rule</span><span class="p">]</span>
@@ -94,7 +94,7 @@
     <span class="n">_variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span>
     <span class="n">_site_defaults</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
     <span class="n">_tokens</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
-    <span class="n">_monitor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Monitor&quot;</span><span class="p">]</span>
+    <span class="n">_monitor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">"Monitor"</span><span class="p">]</span>
     <span class="n">_time</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">_next_update_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="n">_tallies</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">RuleTally</span><span class="p">]</span>
@@ -104,12 +104,12 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.read_ka">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_ka</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read and parse a Kappa .ka file to create a System.</span>
+<span class="w">        </span><span class="sd">"""Read and parse a Kappa .ka file to create a System.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            filepath: Path to the Kappa file.</span>
 <span class="sd">            seed: Random seed for reproducibility.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span></div>
 
@@ -118,12 +118,12 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.from_ka">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_ka</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ka_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a System from a Kappa (.ka style) string.</span>
+<span class="w">        </span><span class="sd">"""Create a System from a Kappa (.ka style) string.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            ka_str: Kappa language string containing a system definition.</span>
 <span class="sd">            seed: Random seed for reproducibility.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._parsing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">kappa_parser</span><span class="p">,</span>
             <span class="n">KappaTransformer</span><span class="p">,</span>
@@ -131,7 +131,7 @@
         <span class="p">)</span>
 
         <span class="n">input_tree</span> <span class="o">=</span> <span class="n">kappa_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ka_str</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;kappa_input&quot;</span>
+        <span class="k">assert</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">"kappa_input"</span>
 
         <span class="n">variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">observables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -142,58 +142,58 @@
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
             <span class="n">tag</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">data</span>
 
-            <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;f_rule&quot;</span><span class="p">,</span> <span class="s2">&quot;fr_rule&quot;</span><span class="p">,</span> <span class="s2">&quot;ambi_rule&quot;</span><span class="p">,</span> <span class="s2">&quot;ambi_fr_rule&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"f_rule"</span><span class="p">,</span> <span class="s2">"fr_rule"</span><span class="p">,</span> <span class="s2">"ambi_rule"</span><span class="p">,</span> <span class="s2">"ambi_fr_rule"</span><span class="p">]:</span>
                 <span class="n">new_rules</span> <span class="o">=</span> <span class="n">KappaTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
                 <span class="n">rules</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_rules</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;variable_declaration&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"variable_declaration"</span><span class="p">:</span>
                 <span class="n">name_tree</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">assert</span> <span class="n">name_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;declared_variable_name&quot;</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">name_tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">name_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">"declared_variable_name"</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name_tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"'</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
 
                 <span class="n">expr_tree</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">assert</span> <span class="n">expr_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;algebraic_expression&quot;</span>
+                <span class="k">assert</span> <span class="n">expr_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">"algebraic_expression"</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">ExpressionTransformer</span><span class="o">.</span><span class="n">from_tree</span><span class="p">(</span><span class="n">expr_tree</span><span class="p">)</span>
 
                 <span class="n">variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;plot_declaration&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"plot_declaration"</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;observable_declaration&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"observable_declaration"</span><span class="p">:</span>
                 <span class="n">label_tree</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_tree</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">label_tree</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">label_tree</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"'</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
 
                 <span class="n">expr_tree</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">assert</span> <span class="n">expr_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;algebraic_expression&quot;</span>
+                <span class="k">assert</span> <span class="n">expr_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">"algebraic_expression"</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">ExpressionTransformer</span><span class="o">.</span><span class="n">from_tree</span><span class="p">(</span><span class="n">expr_tree</span><span class="p">)</span>
 
                 <span class="n">observables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;signature_declaration&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"signature_declaration"</span><span class="p">:</span>
                 <span class="k">pass</span>  <span class="c1"># ignore agent signatures</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;declared_token&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"declared_token"</span><span class="p">:</span>
                 <span class="k">pass</span>  <span class="c1"># token declarations are handled via init_declaration</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;init_declaration&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"init_declaration"</span><span class="p">:</span>
                 <span class="n">amount</span> <span class="o">=</span> <span class="n">ExpressionTransformer</span><span class="o">.</span><span class="n">from_tree</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;declared_token_name&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">"declared_token_name"</span><span class="p">:</span>
                     <span class="n">token_inits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">amount</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">pattern</span> <span class="o">=</span> <span class="n">KappaTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
                     <span class="n">inits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">amount</span><span class="p">,</span> <span class="n">pattern</span><span class="p">))</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;definition&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"definition"</span><span class="p">:</span>
                 <span class="k">pass</span>  <span class="c1"># %def: directives not used</span>
 
-            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;pattern&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">"pattern"</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported input type: </span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported input type: </span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">system</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rules</span><span class="p">,</span> <span class="n">observables</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">init</span> <span class="ow">in</span> <span class="n">inits</span><span class="p">:</span>
@@ -215,7 +215,7 @@
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a System from Kappa strings.</span>
+<span class="w">        </span><span class="sd">"""Create a System from Kappa strings.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            mixture: Dictionary mapping agent patterns to initial counts.</span>
@@ -224,7 +224,7 @@
 <span class="sd">            variables: Dictionary mapping variable names to expressions.</span>
 <span class="sd">            *args: Additional arguments passed to System constructor.</span>
 <span class="sd">            **kwargs: Additional keyword arguments passed to System constructor.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">real_rules</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">rules</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
@@ -234,7 +234,7 @@
             <span class="n">real_observables</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">observables</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">real_observables</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="sa">f</span><span class="s2">&quot;o</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">obs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">observables</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s2">"o</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">Expression</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">obs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">observables</span><span class="p">)</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">real_observables</span> <span class="o">=</span> <span class="p">{</span>
@@ -267,7 +267,7 @@
         <span class="n">monitor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            mixture: Initial mixture state.</span>
 <span class="sd">            rules: Collection of rules to apply.</span>
@@ -277,17 +277,17 @@
 <span class="sd">            site_defaults: Maps agent types to site default states.</span>
 <span class="sd">            monitor: Whether to enable monitoring of simulation history.</span>
 <span class="sd">            seed: Random seed for reproducibility.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span> <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">{}</span> <span class="k">if</span> <span class="n">rules</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;r</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">rule</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rules</span><span class="p">)}</span>
+            <span class="p">{}</span> <span class="k">if</span> <span class="n">rules</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{</span><span class="sa">f</span><span class="s2">"r</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">rule</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rules</span><span class="p">)}</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">mixture</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mixture</span> <span class="o">=</span> <span class="n">Mixture</span><span class="p">(</span>
                 <span class="n">track_components</span><span class="o">=</span><span class="nb">any</span><span class="p">(</span>
-                    <span class="n">rule</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">&quot;any&quot;</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                    <span class="n">rule</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">"any"</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
                 <span class="p">)</span>
             <span class="p">)</span>
 
@@ -311,22 +311,22 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of an observable or variable.</span>
+<span class="w">        </span><span class="sd">"""Get the value of an observable or variable.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            KeyError: If name doesn&#39;t correspond to any observable or variable.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            KeyError: If name doesn't correspond to any observable or variable.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observables</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> doesn&#39;t correspond to a declared observable or variable&quot;</span>
+                <span class="sa">f</span><span class="s2">"Name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> doesn't correspond to a declared observable or variable"</span>
             <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an existing variable to a new numeric value.</span>
+<span class="w">        </span><span class="sd">"""Update an existing variable to a new numeric value.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: Name of a declared variable.</span>
@@ -335,37 +335,37 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If the name is not a declared variable.</span>
 <span class="sd">            ValueError: If the declared variable is not a numeric literal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not a declared variable&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">_type</span> <span class="o">!=</span> <span class="s2">&quot;literal&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">' is not a declared variable"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">_type</span> <span class="o">!=</span> <span class="s2">"literal"</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not a numeric literal and cannot be reassigned&quot;</span>
+                <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">' is not a numeric literal and cannot be reassigned"</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;literal&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Expression</span><span class="p">(</span><span class="s2">"literal"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_update_time</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="System.set_token">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.set_token">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set a token&#39;s value.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set a token's value."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_update_time</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">mixture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mixture</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The current state of agents and their connections.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The current state of agents and their connections."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mixture</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The current simulation time.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The current simulation time."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">next_update_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The time of the next update, or ``None`` if the system is nonreactive.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The time of the next update, or ``None`` if the system is nonreactive."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_update_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">reactivity</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactivity</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
@@ -373,13 +373,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_update_time</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Monitor&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The monitor tracking simulation history, if enabled.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">"Monitor"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""The monitor tracking simulation history, if enabled."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">rules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Rule</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps rule names to rules.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Maps rule names to rules."""</span>
         <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
@@ -396,37 +396,37 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The complete site interface for each agent type as inferred from the rule set.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The complete site interface for each agent type as inferred from the rule set."""</span>
         <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">site_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps agent types to their default site states.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Maps agent types to their default site states."""</span>
         <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site_defaults</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">observables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps observable names to expressions.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Maps observable names to expressions."""</span>
         <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observables</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Expression</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps variable names to expressions.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Maps variable names to expressions."""</span>
         <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps token names to their current values.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Maps token names to their current values."""</span>
         <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">tallies</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">RuleTally</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps rule names to counts of stochastic application outcomes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Maps rule names to counts of stochastic application outcomes."""</span>
         <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tallies</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">tally_totals</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RuleTally</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Counts of all stochastic application attempts, combined across rules.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Counts of all stochastic application attempts, combined across rules."""</span>
         <span class="k">return</span> <span class="n">RuleTally</span><span class="p">(</span>
             <span class="n">applied</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="n">tally</span><span class="o">.</span><span class="n">applied</span> <span class="k">for</span> <span class="n">tally</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tallies</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
             <span class="n">failed</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="n">tally</span><span class="o">.</span><span class="n">failed</span> <span class="k">for</span> <span class="n">tally</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tallies</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
@@ -434,20 +434,20 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">tallies_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A formatted summary of stochastic rule application outcomes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""A formatted summary of stochastic rule application outcomes."""</span>
         <span class="n">totals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tally_totals</span>
         <span class="k">return</span> <span class="n">str_table</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">),</span> <span class="n">tally</span><span class="o">.</span><span class="n">applied</span><span class="p">,</span> <span class="n">tally</span><span class="o">.</span><span class="n">failed</span><span class="p">,</span> <span class="n">tally</span><span class="o">.</span><span class="n">attempts</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">rule</span><span class="p">,</span> <span class="n">tally</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tallies</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="p">]</span>
-            <span class="o">+</span> <span class="p">[[</span><span class="s2">&quot;Total&quot;</span><span class="p">,</span> <span class="n">totals</span><span class="o">.</span><span class="n">applied</span><span class="p">,</span> <span class="n">totals</span><span class="o">.</span><span class="n">failed</span><span class="p">,</span> <span class="n">totals</span><span class="o">.</span><span class="n">attempts</span><span class="p">]],</span>
-            <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Rule&quot;</span><span class="p">,</span> <span class="s2">&quot;Applied&quot;</span><span class="p">,</span> <span class="s2">&quot;Failed&quot;</span><span class="p">,</span> <span class="s2">&quot;Attempts&quot;</span><span class="p">],</span>
+            <span class="o">+</span> <span class="p">[[</span><span class="s2">"Total"</span><span class="p">,</span> <span class="n">totals</span><span class="o">.</span><span class="n">applied</span><span class="p">,</span> <span class="n">totals</span><span class="o">.</span><span class="n">failed</span><span class="p">,</span> <span class="n">totals</span><span class="o">.</span><span class="n">attempts</span><span class="p">]],</span>
+            <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="s2">"Rule"</span><span class="p">,</span> <span class="s2">"Applied"</span><span class="p">,</span> <span class="s2">"Failed"</span><span class="p">,</span> <span class="s2">"Attempts"</span><span class="p">],</span>
         <span class="p">)</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_reversible_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find forward/reverse rule pairs by checking pattern symmetry.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Find forward/reverse rule pairs by checking pattern symmetry."""</span>
         <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">pairs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -474,14 +474,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The system representation in Kappa (.ka style) format.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The system representation in Kappa (.ka style) format."""</span>
 
         <span class="n">kappa_list</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Append the inferred agent signature at the top</span>
         <span class="k">for</span> <span class="n">agent</span><span class="p">,</span> <span class="n">sites</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">sig</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sites</span><span class="p">)</span>
-            <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%agent: </span><span class="si">{</span><span class="n">agent</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">sig</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sites</span><span class="p">)</span>
+            <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"%agent: </span><span class="si">{</span><span class="n">agent</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">sig</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
         <span class="c1"># Format reversible rules with &lt;-&gt; notation</span>
         <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reversible_rules</span>
@@ -490,8 +490,8 @@
             <span class="n">fwd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="p">[</span><span class="n">fwd_name</span><span class="p">]</span>
             <span class="n">rev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="p">[</span><span class="n">rev_name</span><span class="p">]</span>
             <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;@ </span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">_rate_str</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rev</span><span class="o">.</span><span class="n">_rate_str</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"@ </span><span class="si">{</span><span class="n">fwd</span><span class="o">.</span><span class="n">_rate_str</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rev</span><span class="o">.</span><span class="n">_rate_str</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="c1"># Otherwise format with -&gt; notation</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -499,31 +499,31 @@
                 <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%var: &#39;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="n">var</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"%var: '</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2">' </span><span class="si">{</span><span class="n">var</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">obs_name</span><span class="p">,</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">obs_str</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;|</span><span class="si">{</span><span class="n">obs</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">|&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">Component</span><span class="p">)</span> <span class="k">else</span> <span class="n">obs</span><span class="o">.</span><span class="n">kappa_str</span>
+                <span class="sa">f</span><span class="s2">"|</span><span class="si">{</span><span class="n">obs</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2">|"</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">Component</span><span class="p">)</span> <span class="k">else</span> <span class="n">obs</span><span class="o">.</span><span class="n">kappa_str</span>
             <span class="p">)</span>
-            <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%obs: &#39;</span><span class="si">{</span><span class="n">obs_name</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="n">obs_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"%obs: '</span><span class="si">{</span><span class="n">obs_name</span><span class="si">}</span><span class="s2">' </span><span class="si">{</span><span class="n">obs_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">kappa_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mixture</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kappa_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kappa_list</span><span class="p">)</span>
 
-<div class="viewcode-block" id="System.to_ka">
-<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.to_ka">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_ka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write system information to a Kappa file.&quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<div class="viewcode-block" id="System.write_ka">
+<a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.write_ka">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_ka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Write system information to a Kappa file."""</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="System.save">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.save">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a checkpoint that can be continued with :meth:`System.load`.&quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save a checkpoint that can be continued with :meth:`System.load`."""</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
 
 
@@ -531,63 +531,63 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.load">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a trusted checkpoint created by :meth:`System.save`.</span>
+<span class="w">        </span><span class="sd">"""Load a trusted checkpoint created by :meth:`System.save`.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Checkpoints must only be loaded from a trusted source and are intended</span>
 <span class="sd">            for use with the same PyKappa and Python versions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">system</span> <span class="o">=</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Checkpoint contains </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Checkpoint contains </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">system</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_mixture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the system&#39;s mixture and update tracking.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set the system's mixture and update tracking."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mixture</span> <span class="o">=</span> <span class="n">mixture</span>
         <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mixture</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span>
                     <span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_observables</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="o">.</span><span class="n">values</span><span class="p">()]:</span>
-            <span class="k">for</span> <span class="n">component_expr</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="s2">&quot;component_pattern&quot;</span><span class="p">):</span>
-                <span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component_expr</span><span class="o">.</span><span class="n">_attrs</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">component_expr</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="s2">"component_pattern"</span><span class="p">):</span>
+                <span class="n">mixture</span><span class="o">.</span><span class="n">_track_component</span><span class="p">(</span><span class="n">component_expr</span><span class="o">.</span><span class="n">_attrs</span><span class="p">[</span><span class="s2">"value"</span><span class="p">])</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_enforce_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate agent type and sites against the inferred signature and fill missing sites.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enforce_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">"Agent"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Validate agent type and sites against the inferred signature and fill missing sites.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If the agent type is unknown or has sites not in the signature.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">known</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">known</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Agent type &#39;</span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39; is not declared by any rule. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Known agent types: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Agent type '</span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">' is not declared by any rule. "</span>
+                <span class="sa">f</span><span class="s2">"Known agent types: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">unknown</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">}</span> <span class="o">-</span> <span class="n">known</span>
         <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Agent &#39;</span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39; has unknown site(s) </span><span class="si">{</span><span class="n">unknown</span><span class="si">}</span><span class="s2">. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Known sites for this type: </span><span class="si">{</span><span class="n">known</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Agent '</span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">' has unknown site(s) </span><span class="si">{</span><span class="n">unknown</span><span class="si">}</span><span class="s2">. "</span>
+                <span class="sa">f</span><span class="s2">"Known sites for this type: </span><span class="si">{</span><span class="n">known</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">known</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">agent</span><span class="o">.</span><span class="n">_add_site</span><span class="p">(</span>
                 <span class="n">Site</span><span class="p">(</span>
-                    <span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span>
+                    <span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="s2">"?"</span><span class="p">),</span> <span class="s2">"."</span>
                 <span class="p">)</span>
             <span class="p">)</span>
 
 <div class="viewcode-block" id="System.add">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.add">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="n">Pattern</span> <span class="o">|</span> <span class="n">Component</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_copies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add instances of a pattern or component to the mixture using inferred agent signatures.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add instances of a pattern or component to the mixture using inferred agent signatures."""</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">Pattern</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">pattern</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">Component</span><span class="p">)</span> <span class="k">else</span> <span class="n">pattern</span><span class="o">.</span><span class="n">components</span>
@@ -609,41 +609,41 @@
 <div class="viewcode-block" id="System.remove">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.remove">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Component</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a specific component from the current mixture.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Remove a specific component from the current mixture."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mixture</span><span class="o">.</span><span class="n">_remove_component</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_update_time</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The total reactivity of the system.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The total reactivity of the system."""</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="System.advance_time_to">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.advance_time_to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">advance_time_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Advance time without applying an update.</span>
+<span class="w">        </span><span class="sd">"""Advance time without applying an update.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If ``time`` is outside the interval before the next update.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">time</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cannot run backwards in simulation time&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"cannot run backwards in simulation time"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_update_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_update_time</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cannot advance to or past the next update&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"cannot advance to or past the next update"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">time</span></div>
 
 
 <div class="viewcode-block" id="System.update">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform one simulation step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Perform one simulation step."""</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">next_update_time</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_update_time</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;system has no reactivity&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"system has no reactivity"</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
             <span class="k">return</span>
@@ -681,7 +681,7 @@
 <div class="viewcode-block" id="System.apply">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.apply">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply a transformation immediately for a specified number of times.</span>
+<span class="w">        </span><span class="sd">"""Apply a transformation immediately for a specified number of times.</span>
 
 <span class="sd">        Unlike `update`, this does not advance simulation time or use stochastic</span>
 <span class="sd">        selection — the rule fires exactly ``n`` times using randomly chosen</span>
@@ -690,8 +690,8 @@
 <span class="sd">        Args:</span>
 <span class="sd">            transformation: Kappa string representation of the rule.</span>
 <span class="sd">            n: Number of times to apply the rule.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">rule</span> <span class="o">=</span> <span class="n">Rule</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">transformation</span> <span class="o">+</span> <span class="s2">&quot; @ 0&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">rule</span> <span class="o">=</span> <span class="n">Rule</span><span class="o">.</span><span class="n">from_kappa</span><span class="p">(</span><span class="n">transformation</span> <span class="o">+</span> <span class="s2">" @ 0"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_update_time</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="n">update</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">_select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mixture</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="p">)</span>
@@ -704,41 +704,41 @@
 <div class="viewcode-block" id="System.update_via_kasim">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.update_via_kasim">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_via_kasim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulate for a given amount of time using KaSim.</span>
+<span class="w">        </span><span class="sd">"""Simulate for a given amount of time using KaSim.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            KaSim must be installed and in the PATH.</span>
 <span class="sd">            Some features are not compatible between PyKappa and KaSim.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_update_time</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">assert</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;KaSim&quot;</span><span class="p">),</span> <span class="s2">&quot;KaSim not found in the PATH.&quot;</span>
+        <span class="k">assert</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">"KaSim"</span><span class="p">),</span> <span class="s2">"KaSim not found in the PATH."</span>
 
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">n_symmetries</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rules</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;Some rules have multiple symmetries. &quot;</span>
-                <span class="s2">&quot;PyKappa normalizes reactivities accordingly: results may differ from KaSim.&quot;</span>
+                <span class="s2">"Some rules have multiple symmetries. "</span>
+                <span class="s2">"PyKappa normalizes reactivities accordingly: results may differ from KaSim."</span>
             <span class="p">)</span>
 
         <span class="n">history</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the observable history</span>
 
         <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdirname</span><span class="p">:</span>
-            <span class="n">snap_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;snap.ka&quot;</span><span class="p">)</span>
-            <span class="n">out_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;out.ka&quot;</span><span class="p">)</span>
-            <span class="n">in_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;in.ka&quot;</span><span class="p">)</span>
+            <span class="n">snap_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">"snap.ka"</span><span class="p">)</span>
+            <span class="n">out_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">"out.ka"</span><span class="p">)</span>
+            <span class="n">in_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">"in.ka"</span><span class="p">)</span>
 
             <span class="n">output_lines</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;%mod: alarm </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1"> do $SNAPSHOT &quot;</span><span class="si">{</span><span class="n">snap_path</span><span class="si">}</span><span class="s1">&quot;;&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'%mod: alarm </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s1"> do $SNAPSHOT "</span><span class="si">{</span><span class="n">snap_path</span><span class="si">}</span><span class="s1">";'</span><span class="p">,</span>
             <span class="p">]</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observables</span><span class="p">:</span>
-                <span class="n">output_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;%mod: [true] do $PLOTENTRY; repeat [true]&quot;</span><span class="p">)</span>
+                <span class="n">output_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"%mod: [true] do $PLOTENTRY; repeat [true]"</span><span class="p">)</span>
 
             <span class="c1"># Run KaSim</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_lines</span><span class="p">))</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_path</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_lines</span><span class="p">))</span>
 
             <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-                <span class="p">[</span><span class="s2">&quot;KaSim&quot;</span><span class="p">,</span> <span class="n">in_path</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">out_path</span><span class="p">],</span>
+                <span class="p">[</span><span class="s2">"KaSim"</span><span class="p">,</span> <span class="n">in_path</span><span class="p">,</span> <span class="s2">"-l"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="s2">"-d"</span><span class="p">,</span> <span class="n">tmpdirname</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">out_path</span><span class="p">],</span>
                 <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
                 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
             <span class="p">)</span>
@@ -750,22 +750,22 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observables</span><span class="p">:</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                     <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-                    <span class="n">header</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;[T]&quot;</span><span class="p">)</span>
-                    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">header</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+                    <span class="n">header</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"[T]"</span><span class="p">)</span>
+                    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="o">*</span><span class="n">header</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
                     <span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span>
 
                     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
-                        <span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                        <span class="n">history</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
                         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
                             <span class="n">history</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 
         <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-            <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span>
+            <span class="s2">",</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">", "</span>
         <span class="p">)</span>  <span class="c1"># KaSim splits long components across lines</span>
-        <span class="n">output_kappa_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">output_kappa_str</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="n">keepends</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">nit&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"</span><span class="si">%i</span><span class="s2">nit"</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># Apply the update</span>
@@ -781,8 +781,8 @@
 <div class="viewcode-block" id="System.kd_table">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.kd_table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">kd_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Summarize kinetic constants of two-component binding/unbinding rules</span>
-<span class="sd">        given volume in liters.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Summarize kinetic constants of two-component binding/unbinding rules</span>
+<span class="sd">        given volume in liters."""</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">_kd_table</span>
 
         <span class="k">return</span> <span class="n">_kd_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">)</span></div>
@@ -790,8 +790,8 @@
 
 <div class="viewcode-block" id="System.rule_graph">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.rule_graph">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rule_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Source&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualize a ruleset as a site graph of local transformations.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rule_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Source"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Visualize a ruleset as a site graph of local transformations.</span>
 
 <span class="sd">        Solid edges = bond formation; dashed edges = bond breaking. Sites that</span>
 <span class="sd">        change state show their transition as ``site {old→new}``. Creation and</span>
@@ -800,7 +800,7 @@
 <span class="sd">        Note:</span>
 <span class="sd">            This is a lossy projection that neglects conditions of transformations;</span>
 <span class="sd">            multiple rulesets can yield the same graph.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">_rule_graph</span>
 
         <span class="k">return</span> <span class="n">_rule_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
@@ -808,8 +808,8 @@
 
 <div class="viewcode-block" id="System.contact_map">
 <a class="viewcode-back" href="../../api/generated/pykappa.system.html#pykappa.system.System.contact_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">contact_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Source&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a graphviz contact map using the KaSa static analyzer.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">contact_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Source"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Generate a graphviz contact map using the KaSa static analyzer."""</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">_contact_map</span>
 
         <span class="k">return</span> <span class="n">_contact_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>

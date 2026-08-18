@@ -103,10 +103,10 @@ language features. Further reading material is supplied at the end of this noteb
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_rates</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">w0</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">w1</span><span class="p">,</span> <span class="n">barrier</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">drive</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;correct_f&quot;</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">r0</span> <span class="o">+</span> <span class="n">drive</span> <span class="o">+</span> <span class="n">barrier</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
-        <span class="s2">&quot;incorrect_f&quot;</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">w0</span> <span class="o">+</span> <span class="n">drive</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
-        <span class="s2">&quot;correct_r&quot;</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">r1</span> <span class="o">+</span> <span class="n">barrier</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
-        <span class="s2">&quot;incorrect_r&quot;</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">w1</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
+        <span class="s2">"correct_f"</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">r0</span> <span class="o">+</span> <span class="n">drive</span> <span class="o">+</span> <span class="n">barrier</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
+        <span class="s2">"incorrect_f"</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">w0</span> <span class="o">+</span> <span class="n">drive</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
+        <span class="s2">"correct_r"</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">r1</span> <span class="o">+</span> <span class="n">barrier</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
+        <span class="s2">"incorrect_r"</span><span class="p">:</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">w1</span> <span class="o">/</span> <span class="n">RT</span><span class="p">),</span>
     <span class="p">}</span>
 </pre></div>
 </div>
@@ -127,8 +127,8 @@ language features. Further reading material is supplied at the end of this noteb
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_ruleset</span><span class="p">(</span><span class="n">rule</span><span class="p">):</span>
     <span class="n">tmpl</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ww&quot;</span><span class="p">,</span> <span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="s2">&quot;bw&quot;</span><span class="p">]:</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;correct&quot;</span> <span class="k">if</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;incorrect&quot;</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"ww"</span><span class="p">,</span> <span class="s2">"bb"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">,</span> <span class="s2">"bw"</span><span class="p">]:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="s2">"correct"</span> <span class="k">if</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s2">"incorrect"</span>
         <span class="k">yield</span> <span class="n">tmpl</span><span class="o">.</span><span class="n">safe_substitute</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -138,7 +138,7 @@ language features. Further reading material is supplied at the end of this noteb
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">generate_ruleset</span><span class="p">(</span><span class="s2">&quot;$a, $b @ $c&quot;</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">generate_ruleset</span><span class="p">(</span><span class="s2">"$a, $b @ $c"</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -160,12 +160,12 @@ b, w @ incorrect
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">+=</span> <span class="n">generate_ruleset</span><span class="p">(</span>
-    <span class="s2">&quot;M(l[.], t{$a}[2], r[1]), M(l[1], t[.]), &quot;</span>
-    <span class="s2">&quot;., C(c</span><span class="si">{0}</span><span class="s2">[.], t[2]) &quot;</span>
-    <span class="s2">&quot;&lt;-&gt; &quot;</span>
-    <span class="s2">&quot;M(l[.], t{$a}[.], r[1]), M(l[1], t[2]), &quot;</span>
-    <span class="s2">&quot;M(l[.], t{$b}[.], r[3]), C(c</span><span class="si">{1}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;@ &#39;add_$</span><span class="si">{c}</span><span class="s2">_f&#39;, &#39;add_$</span><span class="si">{c}</span><span class="s2">_r&#39;&quot;</span>
+    <span class="s2">"M(l[.], t{$a}[2], r[1]), M(l[1], t[.]), "</span>
+    <span class="s2">"., C(c</span><span class="si">{0}</span><span class="s2">[.], t[2]) "</span>
+    <span class="s2">"&lt;-&gt; "</span>
+    <span class="s2">"M(l[.], t{$a}[.], r[1]), M(l[1], t[2]), "</span>
+    <span class="s2">"M(l[.], t{$b}[.], r[3]), C(c</span><span class="si">{1}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"@ 'add_$</span><span class="si">{c}</span><span class="s2">_f', 'add_$</span><span class="si">{c}</span><span class="s2">_r'"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -181,7 +181,7 @@ read and write.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;A&quot;</span> <span class="s2">&quot;B&quot;</span> <span class="o">==</span> <span class="s2">&quot;AB&quot;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="s2">"A"</span> <span class="s2">"B"</span> <span class="o">==</span> <span class="s2">"AB"</span>
 </pre></div>
 </div>
 </div>
@@ -202,12 +202,12 @@ True
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">+=</span> <span class="n">generate_ruleset</span><span class="p">(</span>
-    <span class="s2">&quot;M(t{$a}[2], r[1]), M(l[1], t[.]), &quot;</span>
-    <span class="s2">&quot;M(r[3]), ., C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;&lt;-&gt; &quot;</span>
-    <span class="s2">&quot;M(t{$a}[.], r[1]), M(l[1], t[2]), &quot;</span>
-    <span class="s2">&quot;M(r[4]), M(l[4], t{$b} r[3]), C(c</span><span class="si">{1}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;@ &#39;add_$</span><span class="si">{c}</span><span class="s2">_f&#39;, &#39;add_$</span><span class="si">{c}</span><span class="s2">_r&#39;&quot;</span>
+    <span class="s2">"M(t{$a}[2], r[1]), M(l[1], t[.]), "</span>
+    <span class="s2">"M(r[3]), ., C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"&lt;-&gt; "</span>
+    <span class="s2">"M(t{$a}[.], r[1]), M(l[1], t[2]), "</span>
+    <span class="s2">"M(r[4]), M(l[4], t{$b} r[3]), C(c</span><span class="si">{1}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"@ 'add_$</span><span class="si">{c}</span><span class="s2">_f', 'add_$</span><span class="si">{c}</span><span class="s2">_r'"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -219,12 +219,12 @@ True
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-    <span class="s2">&quot;M(t</span><span class="si">{cap}</span><span class="s2">[1]), &quot;</span>
-    <span class="s2">&quot;M(r[2]), ., C(c</span><span class="si">{0}</span><span class="s2">[2], t[1]) &quot;</span>
-    <span class="s2">&quot;-&gt; &quot;</span>
-    <span class="s2">&quot;M(t</span><span class="si">{cap}</span><span class="s2">[.]), &quot;</span>
-    <span class="s2">&quot;M(r[1]), M(l[1], t</span><span class="si">{cap}</span><span class="s2">), C(c</span><span class="si">{0}</span><span class="s2">[.], t[.]) &quot;</span>
-    <span class="s2">&quot;@ &#39;add_correct_f&#39;&quot;</span>
+    <span class="s2">"M(t</span><span class="si">{cap}</span><span class="s2">[1]), "</span>
+    <span class="s2">"M(r[2]), ., C(c</span><span class="si">{0}</span><span class="s2">[2], t[1]) "</span>
+    <span class="s2">"-&gt; "</span>
+    <span class="s2">"M(t</span><span class="si">{cap}</span><span class="s2">[.]), "</span>
+    <span class="s2">"M(r[1]), M(l[1], t</span><span class="si">{cap}</span><span class="s2">), C(c</span><span class="si">{0}</span><span class="s2">[.], t[.]) "</span>
+    <span class="s2">"@ 'add_correct_f'"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -237,12 +237,12 @@ True
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">+=</span> <span class="n">generate_ruleset</span><span class="p">(</span>
-    <span class="s2">&quot;M(t{$a}, r[1]), M(l[1], t[2]), &quot;</span>
-    <span class="s2">&quot;M(t{$b}, r[3]), C(c</span><span class="si">{1}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;&lt;-&gt; &quot;</span>
-    <span class="s2">&quot;M(t{$a}, r[1]), M(l[1], t[2]), &quot;</span>
-    <span class="s2">&quot;M(t{$b}, r[3]), C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;@ &#39;commit_$</span><span class="si">{c}</span><span class="s2">_f&#39;, &#39;commit_$</span><span class="si">{c}</span><span class="s2">_r&#39;&quot;</span>
+    <span class="s2">"M(t{$a}, r[1]), M(l[1], t[2]), "</span>
+    <span class="s2">"M(t{$b}, r[3]), C(c</span><span class="si">{1}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"&lt;-&gt; "</span>
+    <span class="s2">"M(t{$a}, r[1]), M(l[1], t[2]), "</span>
+    <span class="s2">"M(t{$b}, r[3]), C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"@ 'commit_$</span><span class="si">{c}</span><span class="s2">_f', 'commit_$</span><span class="si">{c}</span><span class="s2">_r'"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -254,12 +254,12 @@ True
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">+=</span> <span class="n">generate_ruleset</span><span class="p">(</span>
-    <span class="s2">&quot;M(t{$a}[.], r[1]), M(l[1], t[2]), &quot;</span>
-    <span class="s2">&quot;M(r[4]), M(l[4], t{$b} r[3]), C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;&lt;-&gt; &quot;</span>
-    <span class="s2">&quot;M(t{$a}[2], r[1]), M(l[1], t[.]), &quot;</span>
-    <span class="s2">&quot;M(r[3]), ., C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;@ &#39;proofread_$</span><span class="si">{c}</span><span class="s2">_f&#39;, &#39;proofread_$</span><span class="si">{c}</span><span class="s2">_r&#39;&quot;</span>
+    <span class="s2">"M(t{$a}[.], r[1]), M(l[1], t[2]), "</span>
+    <span class="s2">"M(r[4]), M(l[4], t{$b} r[3]), C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"&lt;-&gt; "</span>
+    <span class="s2">"M(t{$a}[2], r[1]), M(l[1], t[.]), "</span>
+    <span class="s2">"M(r[3]), ., C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"@ 'proofread_$</span><span class="si">{c}</span><span class="s2">_f', 'proofread_$</span><span class="si">{c}</span><span class="s2">_r'"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -271,12 +271,12 @@ True
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">+=</span> <span class="n">generate_ruleset</span><span class="p">(</span>
-    <span class="s2">&quot;M(l[.], t{$a}[.], r[1]), M(l[1], t[2]), &quot;</span>
-    <span class="s2">&quot;M(l[.], t{$b}[.], r[3]), C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) &quot;</span>
-    <span class="s2">&quot;&lt;-&gt; &quot;</span>
-    <span class="s2">&quot;M(l[.], t{$a}[2], r[1]), M(l[1], t[.]), &quot;</span>
-    <span class="s2">&quot;., C(c</span><span class="si">{0}</span><span class="s2">[.], t[2]) &quot;</span>
-    <span class="s2">&quot;@ &#39;proofread_$</span><span class="si">{c}</span><span class="s2">_f&#39;, &#39;proofread_$</span><span class="si">{c}</span><span class="s2">_r&#39;&quot;</span>
+    <span class="s2">"M(l[.], t{$a}[.], r[1]), M(l[1], t[2]), "</span>
+    <span class="s2">"M(l[.], t{$b}[.], r[3]), C(c</span><span class="si">{0}</span><span class="s2">[3], t[2]) "</span>
+    <span class="s2">"&lt;-&gt; "</span>
+    <span class="s2">"M(l[.], t{$a}[2], r[1]), M(l[1], t[.]), "</span>
+    <span class="s2">"., C(c</span><span class="si">{0}</span><span class="s2">[.], t[2]) "</span>
+    <span class="s2">"@ 'proofread_$</span><span class="si">{c}</span><span class="s2">_f', 'proofread_$</span><span class="si">{c}</span><span class="s2">_r'"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -287,9 +287,9 @@ True
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">vars_of_rates</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">pr</span><span class="p">):</span>
-    <span class="n">vmap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;add&quot;</span><span class="p">:</span> <span class="n">t0</span><span class="p">,</span> <span class="s2">&quot;commit&quot;</span><span class="p">:</span> <span class="n">t1</span><span class="p">,</span> <span class="s2">&quot;proofread&quot;</span><span class="p">:</span> <span class="n">pr</span><span class="p">}</span>
+    <span class="n">vmap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"add"</span><span class="p">:</span> <span class="n">t0</span><span class="p">,</span> <span class="s2">"commit"</span><span class="p">:</span> <span class="n">t1</span><span class="p">,</span> <span class="s2">"proofread"</span><span class="p">:</span> <span class="n">pr</span><span class="p">}</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">rate</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">rate</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rates</span> <span class="ow">in</span> <span class="n">vmap</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">rate</span> <span class="ow">in</span> <span class="n">rates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">}</span>
@@ -306,26 +306,26 @@ True
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_polymer</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="n">length</span><span class="p">))</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">"w"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="n">length</span><span class="p">))</span>
 
-    <span class="n">agents</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C(c</span><span class="si">{0}</span><span class="s2">[.] t[1])&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;M(l[.] r[2] t</span><span class="se">{{</span><span class="si">{</span><span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">}}</span><span class="s2">[1])&quot;</span><span class="p">]</span>
+    <span class="n">agents</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"C(c</span><span class="si">{0}</span><span class="s2">[.] t[1])"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"M(l[.] r[2] t</span><span class="se">{{</span><span class="si">{</span><span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">}}</span><span class="s2">[1])"</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">base</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-        <span class="n">agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;M(l[</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="si">}</span><span class="s2">] r[</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="si">}</span><span class="s2">] t</span><span class="se">{{</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="se">}}</span><span class="s2">[.])&quot;</span><span class="p">)</span>
-    <span class="n">agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;M(l[</span><span class="si">{</span><span class="n">length</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">] r[.] t</span><span class="se">{{</span><span class="s2">cap</span><span class="se">}}</span><span class="s2">[.])&quot;</span><span class="p">)</span>
+        <span class="n">agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"M(l[</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="si">}</span><span class="s2">] r[</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="si">}</span><span class="s2">] t</span><span class="se">{{</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="se">}}</span><span class="s2">[.])"</span><span class="p">)</span>
+    <span class="n">agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"M(l[</span><span class="si">{</span><span class="n">length</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">] r[.] t</span><span class="se">{{</span><span class="s2">cap</span><span class="se">}}</span><span class="s2">[.])"</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">agents</span><span class="p">),</span> <span class="n">pattern</span>
+    <span class="k">return</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">agents</span><span class="p">),</span> <span class="n">pattern</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">walk_polymer</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
-    <span class="n">head</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">bound</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"M"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">m</span><span class="p">[</span><span class="s2">"l"</span><span class="p">]</span><span class="o">.</span><span class="n">bound</span>
     <span class="n">monomer</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">component</span> <span class="k">if</span> <span class="n">head</span><span class="p">(</span><span class="n">m</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">monomer</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="n">transcript</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">while</span> <span class="n">monomer</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="s2">&quot;cap&quot;</span><span class="p">:</span>
-        <span class="n">transcript</span> <span class="o">+=</span> <span class="n">monomer</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">state</span>
-        <span class="n">monomer</span> <span class="o">=</span> <span class="n">monomer</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">partner</span><span class="o">.</span><span class="n">agent</span>
+    <span class="n">transcript</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="k">while</span> <span class="n">monomer</span><span class="p">[</span><span class="s2">"t"</span><span class="p">]</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="s2">"cap"</span><span class="p">:</span>
+        <span class="n">transcript</span> <span class="o">+=</span> <span class="n">monomer</span><span class="p">[</span><span class="s2">"t"</span><span class="p">]</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">monomer</span> <span class="o">=</span> <span class="n">monomer</span><span class="p">[</span><span class="s2">"r"</span><span class="p">]</span><span class="o">.</span><span class="n">partner</span><span class="o">.</span><span class="n">agent</span>
 
     <span class="k">return</span> <span class="n">transcript</span>
 
@@ -360,10 +360,10 @@ True
 
 <span class="n">transcript</span> <span class="o">=</span> <span class="n">get_transcript</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;base:      &quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;transcript:&quot;</span><span class="p">,</span> <span class="n">transcript</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;errors:    &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">transcript</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time:      &quot;</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"base:      "</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"transcript:"</span><span class="p">,</span> <span class="n">transcript</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"errors:    "</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">transcript</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"time:      "</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

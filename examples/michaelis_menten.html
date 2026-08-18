@@ -64,28 +64,28 @@ rule. The dynamics are instead specified by the rate term, which is based on the
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kastr</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    %var: &#39;k1&#39; 0.001</span>
-<span class="s2">    %var: &#39;k_1&#39; 0.1</span>
-<span class="s2">    %var: &#39;k2&#39; 1.0</span>
-<span class="s2">    %var: &#39;Km&#39; (&#39;k_1&#39;+&#39;k2&#39;)/&#39;k1&#39;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kastr</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    %var: 'k1' 0.001</span>
+<span class="s2">    %var: 'k_1' 0.1</span>
+<span class="s2">    %var: 'k2' 1.0</span>
+<span class="s2">    %var: 'Km' ('k_1'+'k2')/'k1'</span>
 
 <span class="s2">    // Precise model</span>
 
-<span class="s2">    E(s[.]), S(e[.],x</span><span class="si">{u}</span><span class="s2">) &lt;-&gt; E(s[1]), S(e[1],x</span><span class="si">{u}</span><span class="s2">) @ &#39;k1&#39;, &#39;k_1&#39;</span>
-<span class="s2">    E(s[1]), S(e[1],x</span><span class="si">{u}</span><span class="s2">) -&gt; E(s[.]), S(e[.],x</span><span class="si">{p}</span><span class="s2">)  @ &#39;k2&#39;</span>
+<span class="s2">    E(s[.]), S(e[.],x</span><span class="si">{u}</span><span class="s2">) &lt;-&gt; E(s[1]), S(e[1],x</span><span class="si">{u}</span><span class="s2">) @ 'k1', 'k_1'</span>
+<span class="s2">    E(s[1]), S(e[1],x</span><span class="si">{u}</span><span class="s2">) -&gt; E(s[.]), S(e[.],x</span><span class="si">{p}</span><span class="s2">)  @ 'k2'</span>
 
-<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: &#39;P&#39; |S(e[.],x</span><span class="si">{p}</span><span class="s2">)|</span>
-<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: &#39;S&#39; |S(e[.], x</span><span class="si">{u}</span><span class="s2">)|</span>
-<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: &#39;ES&#39; |E(s[1]), S(e[1],x</span><span class="si">{u}</span><span class="s2">)|</span>
+<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: 'P' |S(e[.],x</span><span class="si">{p}</span><span class="s2">)|</span>
+<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: 'S' |S(e[.], x</span><span class="si">{u}</span><span class="s2">)|</span>
+<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: 'ES' |E(s[1]), S(e[1],x</span><span class="si">{u}</span><span class="s2">)|</span>
 
 <span class="s2">    // Approximate model</span>
 
-<span class="s2">    _E(s[.]), _S(e[.],x</span><span class="si">{u}</span><span class="s2">) -&gt; _E(s[.]), _S(e[.],x</span><span class="si">{p}</span><span class="s2">) @ &#39;k2&#39;/(&#39;Km&#39;+&#39;~S&#39;)</span>
+<span class="s2">    _E(s[.]), _S(e[.],x</span><span class="si">{u}</span><span class="s2">) -&gt; _E(s[.]), _S(e[.],x</span><span class="si">{p}</span><span class="s2">) @ 'k2'/('Km'+'~S')</span>
 
-<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: &#39;~S&#39; |_S(e[.],x</span><span class="si">{u}</span><span class="s2">)|</span>
-<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: &#39;~P&#39; |_S(e[.],x</span><span class="si">{p}</span><span class="s2">)|</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: '~S' |_S(e[.],x</span><span class="si">{u}</span><span class="s2">)|</span>
+<span class="s2">    </span><span class="si">%o</span><span class="s2">bs: '~P' |_S(e[.],x</span><span class="si">{p}</span><span class="s2">)|</span>
+<span class="s2">"""</span>
 </pre></div>
 </div>
 </div>
@@ -97,10 +97,10 @@ rule. The dynamics are instead specified by the rate term, which is based on the
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qe_system</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">kastr</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;E(s[.])&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;S(e[.], x</span><span class="si">{u}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span>
-<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;_E(s[.])&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;_S(e[.], x</span><span class="si">{u}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span>
+<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"E(s[.])"</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"S(e[.], x</span><span class="si">{u}</span><span class="s2">)"</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span>
+<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"_E(s[.])"</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">qe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"_S(e[.], x</span><span class="si">{u}</span><span class="s2">)"</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span>
 
 <span class="k">while</span> <span class="n">qe_system</span><span class="o">.</span><span class="n">reactivity</span><span class="p">:</span>
     <span class="n">qe_system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -112,21 +112,21 @@ rule. The dynamics are instead specified by the rate term, which is based on the
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">qe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;~P&quot;</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">qe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">"P"</span><span class="p">,</span> <span class="s2">"S"</span><span class="p">,</span> <span class="s2">"~P"</span><span class="p">])</span>
 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">ax_twin</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
 <span class="n">ax_twin</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">ax_twin</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-    <span class="n">qe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">],</span>
-    <span class="n">qe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;ES&quot;</span><span class="p">],</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#d62728&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;ES&quot;</span><span class="p">,</span>
+    <span class="n">qe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">"time"</span><span class="p">],</span>
+    <span class="n">qe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">"ES"</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"#d62728"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"ES"</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">lines1</span><span class="p">,</span> <span class="n">labels1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
 <span class="n">lines2</span><span class="p">,</span> <span class="n">labels2</span> <span class="o">=</span> <span class="n">ax_twin</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines1</span> <span class="o">+</span> <span class="n">lines2</span><span class="p">,</span> <span class="n">labels1</span> <span class="o">+</span> <span class="n">labels2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center left&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines1</span> <span class="o">+</span> <span class="n">lines2</span><span class="p">,</span> <span class="n">labels1</span> <span class="o">+</span> <span class="n">labels2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"center left"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -146,12 +146,12 @@ rule. The dynamics are instead specified by the rate term, which is based on the
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nqe_system</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">kastr</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># disrupt the quasi-equilibrium</span>
-<span class="n">nqe_system</span><span class="p">[</span><span class="s2">&quot;k2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">nqe_system</span><span class="p">[</span><span class="s2">"k2"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;E(s[.])&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
-<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;S(e[.], x</span><span class="si">{u}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;_E(s[.])&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
-<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;_S(e[.], x</span><span class="si">{u}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"E(s[.])"</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"S(e[.], x</span><span class="si">{u}</span><span class="s2">)"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"_E(s[.])"</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">nqe_system</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"_S(e[.], x</span><span class="si">{u}</span><span class="s2">)"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 
 <span class="k">while</span> <span class="n">nqe_system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span>
     <span class="n">nqe_system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -162,7 +162,7 @@ rule. The dynamics are instead specified by the rate term, which is based on the
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nqe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;~P&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nqe_system</span><span class="o">.</span><span class="n">monitor</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">observables</span><span class="o">=</span><span class="p">[</span><span class="s2">"P"</span><span class="p">,</span> <span class="s2">"S"</span><span class="p">,</span> <span class="s2">"~P"</span><span class="p">,</span> <span class="s2">"ES"</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>

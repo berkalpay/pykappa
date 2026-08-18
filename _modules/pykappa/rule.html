@@ -39,7 +39,7 @@
           <div class="body" role="main">
             
   <h1>Source code for pykappa.rule</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Represents Kappa rules.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Represents Kappa rules."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
@@ -61,12 +61,12 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Rule</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Kappa rule, specifying the transformation of a pattern at a stochastic rate.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A Kappa rule, specifying the transformation of a pattern at a stochastic rate."""</span>
 
     <span class="n">left</span><span class="p">:</span> <span class="n">Pattern</span>
     <span class="n">right</span><span class="p">:</span> <span class="n">Pattern</span>
     <span class="n">rate_expression</span><span class="p">:</span> <span class="n">Expression</span>
-    <span class="n">component_constraint</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;any&quot;</span><span class="p">,</span> <span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="s2">&quot;different&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;any&quot;</span>
+    <span class="n">component_constraint</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"any"</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">,</span> <span class="s2">"different"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"any"</span>
     <span class="n">token_updates</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">_component_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Component</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">False</span>
@@ -76,15 +76,15 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.list_from_kappa">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">list_from_kappa</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">kappa_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse Kappa string into a list of rules.</span>
+<span class="w">        </span><span class="sd">"""Parse Kappa string into a list of rules.</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            Forward-reverse rules (with &quot;&lt;-&gt;&quot;) represent two rules.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            Forward-reverse rules (with "&lt;-&gt;") represent two rules.</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pykappa._parsing</span><span class="w"> </span><span class="kn">import</span> <span class="n">kappa_parser</span><span class="p">,</span> <span class="n">KappaTransformer</span>
 
         <span class="n">input_tree</span> <span class="o">=</span> <span class="n">kappa_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">kappa_str</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;kappa_input&quot;</span>
+        <span class="k">assert</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">"kappa_input"</span>
         <span class="n">rule_tree</span> <span class="o">=</span> <span class="n">input_tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">KappaTransformer</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">rule_tree</span><span class="p">)</span></div>
 
@@ -93,22 +93,22 @@
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.from_kappa">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_kappa</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">kappa_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a single Kappa rule from string.</span>
+<span class="w">        </span><span class="sd">"""Parse a single Kappa rule from string.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            AssertionError: If the string represents more than one rule.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">rules</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">list_from_kappa</span><span class="p">(</span><span class="n">kappa_str</span><span class="p">)</span>
         <span class="k">assert</span> <span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="p">),</span> <span class="s2">&quot;The given rule expression represents more than one rule.&quot;</span>
+        <span class="p">),</span> <span class="s2">"The given rule expression represents more than one rule."</span>
         <span class="k">return</span> <span class="n">rules</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
-            <span class="s2">&quot;token_updates&quot;</span><span class="p">,</span>
+            <span class="s2">"token_updates"</span><span class="p">,</span>
             <span class="nb">tuple</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">expression</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_updates</span> <span class="ow">or</span> <span class="p">())</span>
             <span class="p">),</span>
@@ -117,11 +117,11 @@
         <span class="n">r</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
         <span class="k">assert</span> <span class="p">(</span>
             <span class="n">l</span> <span class="o">==</span> <span class="n">r</span>
-        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;The left-hand side of this rule has </span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2"> slots, but the right-hand side has </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">.&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;any&quot;</span><span class="p">,</span> <span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="s2">&quot;different&quot;</span><span class="p">}</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">"The left-hand side of this rule has </span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2"> slots, but the right-hand side has </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">."</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"any"</span><span class="p">,</span> <span class="s2">"same"</span><span class="p">,</span> <span class="s2">"different"</span><span class="p">}</span>
         <span class="k">assert</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">&quot;different&quot;</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
-        <span class="p">),</span> <span class="s2">&quot;A different-component constraint requires exactly 2 pattern components.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">"different"</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="p">),</span> <span class="s2">"A different-component constraint requires exactly 2 pattern components."</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
@@ -130,7 +130,7 @@
         <span class="k">yield from</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(kappa_str=&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s1">&quot;)&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(kappa_str="</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s1">")'</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kappa_str</span>
@@ -138,39 +138,39 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_rate_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_expression</span><span class="o">.</span><span class="n">kappa_str</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">&quot;same&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;0 </span><span class="se">{{</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">&quot;different&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="s2">0</span><span class="se">}}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"same"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"0 </span><span class="se">{{</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="se">}}</span><span class="s2">"</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="s2">0</span><span class="se">}}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">rate</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kappa_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">token_part</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">token_part</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_updates</span><span class="p">:</span>
-            <span class="n">updates_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">expr</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">expr</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_updates</span>
+            <span class="n">updates_str</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">expr</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">expr</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_updates</span>
             <span class="p">)</span>
-            <span class="n">token_part</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; | </span><span class="si">{</span><span class="n">updates_str</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}{</span><span class="n">token_part</span><span class="si">}</span><span class="s2"> @ </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">token_part</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" | </span><span class="si">{</span><span class="n">updates_str</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">kappa_str</span><span class="si">}{</span><span class="n">token_part</span><span class="si">}</span><span class="s2"> @ </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate_str</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_symmetries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        The number of distinct automorphisms of the graph containing both left- and</span>
 <span class="sd">        right-hand side agents, augmented with edges between positionally corresponding agents.</span>
-<span class="sd">        For example, if a rule looks like &quot;l1(...), l2(...) -&gt; r1(...), r2(...)&quot;,</span>
+<span class="sd">        For example, if a rule looks like "l1(...), l2(...) -&gt; r1(...), r2(...)",</span>
 <span class="sd">        this method draws artifical edges between l1 and r1, and between l2 and r2,</span>
 <span class="sd">        then returns the number of symmetries of the resulting graph by counting</span>
 <span class="sd">        how many ways it can be mapped onto itself.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">left_agents</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
         <span class="n">right_agents</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">left_agents</span><span class="p">,</span> <span class="n">right_agents</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">l_site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="s2">&quot;__temp__&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">partner</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-                <span class="n">r_site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="s2">&quot;__temp__&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">partner</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="n">l_site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="s2">"__temp__"</span><span class="p">,</span> <span class="s2">"left"</span><span class="p">,</span> <span class="n">partner</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="n">r_site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="s2">"__temp__"</span><span class="p">,</span> <span class="s2">"right"</span><span class="p">,</span> <span class="n">partner</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
                 <span class="n">l_site</span><span class="o">.</span><span class="n">_set_partner</span><span class="p">(</span><span class="n">r_site</span><span class="p">)</span>
                 <span class="n">l</span><span class="o">.</span><span class="n">_add_site</span><span class="p">(</span><span class="n">l_site</span><span class="p">)</span>
@@ -183,11 +183,11 @@
 
 <div class="viewcode-block" id="Rule.reactivity">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.reactivity">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the total reactivity of this rule in the given system,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reactivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">"System"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Calculate the total reactivity of this rule in the given system,</span>
 <span class="sd">        i.e. the number of embeddings times the reaction rate, accounting</span>
 <span class="sd">        for rule symmetry.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_embeddings</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_symmetries</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
         <span class="p">)</span></div>
@@ -195,20 +195,20 @@
 
 <div class="viewcode-block" id="Rule.rate">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.rate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">"System"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_expression</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">system</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Rule.n_embeddings">
 <a class="viewcode-back" href="../../api/generated/pykappa.rule.html#pykappa.rule.Rule.n_embeddings">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count embeddings in the mixture.</span>
+<span class="w">        </span><span class="sd">"""Count embeddings in the mixture.</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            This doesn&#39;t do any symmetry correction, though `System`</span>
+<span class="sd">            This doesn't do any symmetry correction, though `System`</span>
 <span class="sd">            applies this correction when calculating rule reactivities.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">&quot;same&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"same"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                 <span class="p">{</span>
@@ -221,7 +221,7 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">&quot;different&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
             <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
@@ -244,21 +244,21 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_select</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_MixtureUpdate</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select agents and specify the update (or None for invalid match).</span>
+<span class="w">        </span><span class="sd">"""Select agents and specify the update (or None for invalid match).</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Can change the internal states of agents in the mixture but</span>
 <span class="sd">            records everything else in the MixtureUpdate.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">rng</span> <span class="o">=</span> <span class="n">random</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">rng</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">&quot;any&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">!=</span> <span class="s2">"any"</span><span class="p">:</span>
             <span class="n">components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">)</span>
             <span class="n">selected_component</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
                 <span class="n">components</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_weights</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">]</span>
             <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">&quot;different&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_constraint</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
                 <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">components</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_produce_update</span><span class="p">(</span>
                     <span class="nb">dict</span><span class="p">(</span>
@@ -306,12 +306,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_produce_update</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">selection_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">],</span> <span class="n">mixture</span><span class="p">:</span> <span class="n">Mixture</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MixtureUpdate</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Produce an update specification from selected agents.</span>
+<span class="w">        </span><span class="sd">"""Produce an update specification from selected agents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            selection_map: Mapping from rule agents to mixture agents.</span>
 <span class="sd">            mixture: Current mixture state.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">selection</span> <span class="o">=</span> <span class="p">[</span>
             <span class="kc">None</span> <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">selection_map</span><span class="p">[</span><span class="n">agent</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span>
@@ -357,15 +357,15 @@
                         <span class="n">partner_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">r_partner</span><span class="o">.</span><span class="n">agent</span><span class="p">)</span>
                         <span class="n">partner</span> <span class="o">=</span> <span class="n">new_selection</span><span class="p">[</span><span class="n">partner_idx</span><span class="p">][</span><span class="n">r_partner</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
                         <span class="n">update</span><span class="o">.</span><span class="n">connect_sites</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">partner</span><span class="p">)</span>
-                    <span class="k">case</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
+                    <span class="k">case</span> <span class="s2">"."</span><span class="p">:</span>
                         <span class="n">update</span><span class="o">.</span><span class="n">disconnect_site</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="p">(</span>
-                        <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;?&quot;</span>
+                        <span class="n">x</span> <span class="o">!=</span> <span class="s2">"?"</span>
                         <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                         <span class="ow">and</span> <span class="n">x</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">r_site</span><span class="o">.</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">partner</span>
                     <span class="p">):</span>
                         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Site partners of type </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2"> are unsupported for right-hand rule patterns, unless they remain unchanged from the left-hand side.&quot;</span>
+                            <span class="sa">f</span><span class="s2">"Site partners of type </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2"> are unsupported for right-hand rule patterns, unless they remain unchanged from the left-hand side."</span>
                         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">update</span></div>

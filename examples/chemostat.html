@@ -55,13 +55,13 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    %init: 10 C(n{0})  // Start with a few cells</span>
 
-<span class="sd">    %obs: &#39;C&#39; |C()|</span>
+<span class="sd">    %obs: 'C' |C()|</span>
 
-<span class="sd">    %var: &#39;inflow&#39; 1  // Nutrient inflow rate</span>
-<span class="sd">    . -&gt; N() @ &#39;inflow&#39;</span>
+<span class="sd">    %var: 'inflow' 1  // Nutrient inflow rate</span>
+<span class="sd">    . -&gt; N() @ 'inflow'</span>
 <span class="sd">    N() -&gt; . @ 0.1  // Nutrient outflow</span>
 
 <span class="sd">    // Metabolism</span>
@@ -71,7 +71,7 @@
 
 <span class="sd">    C(n{3}), . -&gt; C(n{0}), C(n{0}) @ 0.1 // Cell division</span>
 <span class="sd">    C() -&gt; . @ 0.01  // Cell death</span>
-<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+<span class="sd">    """</span><span class="p">,</span>
     <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -102,7 +102,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="p">[</span><span class="s2">&quot;inflow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="p">[</span><span class="s2">"inflow"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 
 <span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">:</span>
     <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>

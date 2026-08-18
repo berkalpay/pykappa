@@ -55,18 +55,18 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    %init: 100 L(e[.])</span>
 <span class="sd">    %init: 100 M(e[.])</span>
 
-<span class="sd">    %obs: &#39;E&#39; |E()|</span>
-<span class="sd">    %obs: &#39;Incomplete complexes&#39; |E(l[_], m[.])| + |E(l[.], m[_])|</span>
-<span class="sd">    %obs: &#39;Complete complexes&#39; |E(l[_], m[_])|</span>
+<span class="sd">    %obs: 'E' |E()|</span>
+<span class="sd">    %obs: 'Incomplete complexes' |E(l[_], m[.])| + |E(l[.], m[_])|</span>
+<span class="sd">    %obs: 'Complete complexes' |E(l[_], m[_])|</span>
 
 <span class="sd">    E(l[.]), L(e[.]) &lt;-&gt; E(l[1]), L(e[1]) @ 1, 1  // Bind L to E</span>
 <span class="sd">    E(m[.]), M(e[.]) &lt;-&gt; E(m[1]), M(e[1]) @ 1, 1  // Bind M to E</span>
 <span class="sd">    . -&gt; E(l[.], m[.]) @ 1  // Inflow of E</span>
-<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+<span class="sd">    """</span><span class="p">,</span>
     <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
