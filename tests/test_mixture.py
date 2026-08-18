@@ -131,7 +131,7 @@ def test_component_tracking_promotes_cycle_bond_before_splitting():
     mixture._remove_edge(removed)
 
     assert len(mixture.components) == 1
-    assert replacement not in mixture._connectivity.extra_edges
+    assert replacement not in mixture._connectivity
 
     mixture._remove_edge(replacement)
     assert sorted(len(component) for component in mixture.components) == [1, 2]

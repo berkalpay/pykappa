@@ -24,17 +24,8 @@ class _Edge:
         return hash(frozenset((self.site1, self.site2)))
 
 
-class _Connectivity:
+class _Connectivity(set[_Edge]):
     """Tracks cycle-closing bonds in an implicit spanning forest."""
-
-    def __init__(self):
-        self.extra_edges: set[_Edge] = set()
-
-    def add_extra_edge(self, edge: _Edge) -> None:
-        self.extra_edges.add(edge)
-
-    def remove_extra_edge(self, edge: _Edge) -> None:
-        self.extra_edges.remove(edge)
 
     @staticmethod
     def _other(edge: _Edge, agent: Agent) -> Agent:
@@ -58,7 +49,7 @@ class _Connectivity:
             stack.extend(
                 self._other(edge, agent)
                 for edge in self._edges(agent)
-                if edge not in self.extra_edges
+                if edge not in self
             )
         return side
 
@@ -74,7 +65,7 @@ class _Connectivity:
         """Find an extra bond crossing from ``side`` to the other tree side."""
         for agent in side:
             for edge in self._edges(agent):
-                if edge in self.extra_edges and self._other(edge, agent) not in side:
+                if edge in self and self._other(edge, agent) not in side:
                     return edge
         return None
 
@@ -311,10 +302,13 @@ class Mixture:
         # Re-embed each tracked pattern only as far as its own diameter requires.
         # A single wide pattern must not make every narrower pattern search the
         # larger neighborhood after every event.
-        update_regions: dict[int, OrderedSet[Agent]] = {}
+        update_regions: dict[int, IndexedSet[Agent]] = {}
         for component_pattern, width in affected_patterns.items():
             if width not in update_regions:
-                update_region = Agent.neighborhood(update.touched_after, width)
+                update_region = IndexedSet(
+                    Agent.neighborhood(update.touched_after, width)
+                )
+                update_region.create_index("type", lambda agent: [agent.type])
                 update_regions[width] = update_region
             else:
                 update_region = update_regions[width]
@@ -356,7 +350,7 @@ class Mixture:
         component1 = self.components.lookup_one("agent", edge.site1.agent)
         component2 = self.components.lookup_one("agent", edge.site2.agent)
         if component1 == component2:
-            self._connectivity.add_extra_edge(edge)
+            self._connectivity.add(edge)
             return
 
         # Merge smaller component into larger for efficiency
@@ -383,8 +377,8 @@ class Mixture:
         old_component = self.components.lookup_one("agent", agent1)
         assert old_component == self.components.lookup_one("agent", agent2)
 
-        if edge in self._connectivity.extra_edges:
-            self._connectivity.remove_extra_edge(edge)
+        if edge in self._connectivity:
+            self._connectivity.remove(edge)
             return
 
         smaller_side = self._connectivity.smaller_tree_side(
@@ -392,7 +386,7 @@ class Mixture:
         )
         replacement = self._connectivity.replacement_edge(smaller_side)
         if replacement is not None:
-            self._connectivity.remove_extra_edge(replacement)
+            self._connectivity.remove(replacement)
             return
 
         # The component is split

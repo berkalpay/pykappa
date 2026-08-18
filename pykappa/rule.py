@@ -41,7 +41,7 @@ class Rule:
     _component_weights: dict[Component, int] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
-    _component_counts: dict[Component, tuple[int, int]] = field(
+    _component_counts: dict[Component, tuple[int, ...]] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
     _different_totals: _DifferentComponentTotals = field(
@@ -180,7 +180,7 @@ class Rule:
         if self.component_constraint == "same":
             self._component_weights.clear()
             self._component_weights.update(
-                (component, self._same_component_weight(mixture, component))
+                (component, prod(self._counts_in_component(mixture, component)))
                 for component in mixture.components
             )
             total = sum(self._component_weights.values())
@@ -192,7 +192,7 @@ class Rule:
             totals = self._different_totals
             totals.first = totals.second = totals.overlap = 0
             for component in mixture.components:
-                counts = self._different_component_counts(mixture, component)
+                counts = self._counts_in_component(mixture, component)
                 self._component_counts[component] = counts
                 self._add_different_counts(counts)
             return totals.weight
@@ -201,22 +201,15 @@ class Rule:
             len(mixture.embeddings(component)) for component in self.left.components
         )
 
-    def _same_component_weight(self, mixture: Mixture, component: Component) -> int:
-        return prod(
+    def _counts_in_component(
+        self, mixture: Mixture, component: Component
+    ) -> tuple[int, ...]:
+        return tuple(
             len(mixture.embeddings_in_component(pattern, component))
             for pattern in self.left.components
         )
 
-    def _different_component_counts(
-        self, mixture: Mixture, component: Component
-    ) -> tuple[int, int]:
-        first, second = self.left.components
-        return (
-            len(mixture.embeddings_in_component(first, component)),
-            len(mixture.embeddings_in_component(second, component)),
-        )
-
-    def _add_different_counts(self, counts: tuple[int, int], sign: int = 1) -> None:
+    def _add_different_counts(self, counts: tuple[int, ...], sign: int = 1) -> None:
         first, second = counts
         totals = self._different_totals
         totals.first += sign * first
@@ -235,7 +228,7 @@ class Rule:
             for component in previous_components:
                 total -= self._component_weights.pop(component, 0)
             for component in current_components:
-                weight = self._same_component_weight(mixture, component)
+                weight = prod(self._counts_in_component(mixture, component))
                 self._component_weights[component] = weight
                 total += weight
             object.__setattr__(self, "_same_weight", total)
@@ -246,7 +239,7 @@ class Rule:
                 if counts := self._component_counts.pop(component, None):
                     self._add_different_counts(counts, -1)
             for component in current_components:
-                counts = self._different_component_counts(mixture, component)
+                counts = self._counts_in_component(mixture, component)
                 self._component_counts[component] = counts
                 self._add_different_counts(counts)
             return self._different_totals.weight
