@@ -112,11 +112,12 @@ def test_component_constraint_weights_are_updated_incrementally():
             if rule.component_constraint == "any":
                 continue
 
-            assert (
-                rule._different_totals.weight
+            weight = (
+                rule._different_weight(system.mixture)
                 if rule.component_constraint == "different"
                 else rule._same_weight
-            ) == rule.n_embeddings(system.mixture)
+            )
+            assert weight == rule.n_embeddings(system.mixture)
 
 
 def test_component_tracking_promotes_cycle_bond_before_splitting():

@@ -16,19 +16,6 @@ if TYPE_CHECKING:
     from pykappa.system import System
 
 
-@dataclass
-class _DifferentComponentTotals:
-    """Aggregate embedding counts for a different-component constraint."""
-
-    first: int = 0
-    second: int = 0
-    overlap: int = 0
-
-    @property
-    def weight(self) -> int:
-        return self.first * self.second - self.overlap
-
-
 @dataclass(frozen=True, eq=False)
 class Rule:
     """A Kappa rule, specifying the transformation of a pattern at a stochastic rate."""
@@ -44,9 +31,7 @@ class Rule:
     _component_counts: dict[Component, tuple[int, ...]] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
-    _different_totals: _DifferentComponentTotals = field(
-        default_factory=_DifferentComponentTotals, init=False, repr=False, compare=False
-    )
+    _different_overlap: int = field(default=0, init=False, repr=False, compare=False)
     _same_weight: int = field(default=0, init=False, repr=False, compare=False)
 
     @classmethod
@@ -189,13 +174,13 @@ class Rule:
 
         if self.component_constraint == "different":
             self._component_counts.clear()
-            totals = self._different_totals
-            totals.first = totals.second = totals.overlap = 0
+            overlap = 0
             for component in mixture.components:
                 counts = self._counts_in_component(mixture, component)
                 self._component_counts[component] = counts
-                self._add_different_counts(counts)
-            return totals.weight
+                overlap += prod(counts)
+            object.__setattr__(self, "_different_overlap", overlap)
+            return self._different_weight(mixture)
 
         return prod(
             len(mixture.embeddings(component)) for component in self.left.components
@@ -209,12 +194,12 @@ class Rule:
             for pattern in self.left.components
         )
 
-    def _add_different_counts(self, counts: tuple[int, ...], sign: int = 1) -> None:
-        first, second = counts
-        totals = self._different_totals
-        totals.first += sign * first
-        totals.second += sign * second
-        totals.overlap += sign * first * second
+    def _different_weight(self, mixture: Mixture) -> int:
+        first, second = self.left.components
+        return (
+            len(mixture.embeddings(first)) * len(mixture.embeddings(second))
+            - self._different_overlap
+        )
 
     def update_component_weights(
         self,
@@ -235,14 +220,16 @@ class Rule:
             return total
 
         if self.component_constraint == "different":
+            overlap = self._different_overlap
             for component in previous_components:
                 if counts := self._component_counts.pop(component, None):
-                    self._add_different_counts(counts, -1)
+                    overlap -= prod(counts)
             for component in current_components:
                 counts = self._counts_in_component(mixture, component)
                 self._component_counts[component] = counts
-                self._add_different_counts(counts)
-            return self._different_totals.weight
+                overlap += prod(counts)
+            object.__setattr__(self, "_different_overlap", overlap)
+            return self._different_weight(mixture)
 
     def _select(
         self, mixture: Mixture, rng: random.Random | None = None
@@ -258,7 +245,8 @@ class Rule:
         if self.component_constraint != "any":
             components = list(mixture.components)
             if self.component_constraint == "different":
-                second_total = self._different_totals.second
+                second = self.left.components[1]
+                second_total = len(mixture.embeddings(second))
                 weights = [
                     first * (second_total - second)
                     for first, second in (
