@@ -453,7 +453,7 @@ class System:
 
         return "\n".join(kappa_list)
 
-    def to_ka(self, filepath: str) -> None:
+    def write_ka(self, filepath: str) -> None:
         """Write system information to a Kappa file."""
         with open(filepath, "w") as f:
             f.write(self.kappa_str)
