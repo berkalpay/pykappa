@@ -69,8 +69,7 @@ MIN : "[min]"
 
 agent_name : NAME
 site_name : NAME
-pattern : agent [ ([","] _pattern)* ]
-_pattern : agent [ ([","] _pattern)* ]
+pattern : agent ( [","] agent )*
 agent : agent_name "(" interface ")"         
 interface : [ site ([","] site)* ]
 site : site_name state partner   
