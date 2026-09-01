@@ -1,7 +1,77 @@
 import random
+import signal
+import functools
+import threading
 from typing import Any, Optional, Iterable, Generic, TypeVar
 from collections.abc import Callable, Hashable, Mapping
 from types import MappingProxyType
+
+
+class _InterruptGuard:
+    """A reentrant guard that defers ``SIGINT`` while a critical section runs."""
+
+    def __init__(self):
+        self._depth = 0
+        self._pending: Optional[tuple] = None
+        self._original: Any = None
+        # A stable reference: each ``self._handler`` access makes a fresh bound
+        # method, so we pin one for identity comparisons against getsignal().
+        self._handler_ref = self._handler
+
+    def _handler(self, signum, frame):
+        if self._depth > 0:
+            # Inside a critical section: defer, keeping the first interrupt.
+            if self._pending is None:
+                self._pending = (signum, frame)
+        else:
+            # Idle: behave as the handler we replaced would have.
+            self._surface(signum, frame)
+
+    def _surface(self, signum, frame):
+        original = self._original
+        if original is signal.SIG_IGN:
+            return
+        if callable(original):
+            original(signum, frame)
+        else:  # SIG_DFL, or None when no Python handler was installed
+            raise KeyboardInterrupt
+
+    def __enter__(self):
+        # Install (or re-install, if the handler was replaced) lazily. The
+        # caller guarantees this only runs on the main thread.
+        if signal.getsignal(signal.SIGINT) is not self._handler_ref:
+            self._original = signal.getsignal(signal.SIGINT)
+            signal.signal(signal.SIGINT, self._handler_ref)
+        self._depth += 1
+        return self
+
+    def __exit__(self, *exc_info):
+        self._depth -= 1
+        if self._depth == 0 and self._pending is not None:
+            pending, self._pending = self._pending, None
+            self._surface(*pending)
+        return False
+
+
+_interrupt_guard = _InterruptGuard()
+
+
+def uninterruptible(func: Callable) -> Callable:
+    """Shield a function from being interrupted midway by a keyboard interrupt.
+
+    The wrapped function will be allowed to finish its execution. Once it
+    completes, the ``KeyboardInterrupt`` will be surfaced to the caller.
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # only the main thread can install signal handlers.
+        if threading.current_thread() is not threading.main_thread():
+            return func(*args, **kwargs)
+        with _interrupt_guard:
+            return func(*args, **kwargs)
+
+    return wrapper
 
 
 def str_table(rows: list[list], header: Optional[list] = None) -> str:
