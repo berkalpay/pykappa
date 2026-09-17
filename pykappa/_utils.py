@@ -1,7 +1,39 @@
+import functools
 import random
-from typing import Any, Optional, Iterable, Generic, TypeVar
+import signal
+import threading
 from collections.abc import Callable, Hashable, Mapping
 from types import MappingProxyType
+from typing import Any, Generic, Iterable, Optional, TypeVar
+
+
+def defer_sigint(func: Callable) -> Callable:
+    """Shield a function from being interrupted midway by a keyboard interrupt.
+
+    The wrapped function will be allowed to finish its execution. Once it
+    completes, the ``KeyboardInterrupt`` will be surfaced to the caller.
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if threading.current_thread() is not threading.main_thread():
+            return func(*args, **kwargs)
+
+        interrupted = False
+
+        def defer_interrupt(*_):
+            nonlocal interrupted
+            interrupted = True
+
+        previous = signal.signal(signal.SIGINT, defer_interrupt)
+        try:
+            return func(*args, **kwargs)
+        finally:
+            signal.signal(signal.SIGINT, previous)
+            if interrupted:
+                signal.raise_signal(signal.SIGINT)
+
+    return wrapper
 
 
 def str_table(rows: list[list], header: Optional[list] = None) -> str:
