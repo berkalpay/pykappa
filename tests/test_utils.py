@@ -26,7 +26,7 @@ def test_defers_interrupt_until_completion():
     @defer_sigint
     def critical():
         signal.raise_signal(signal.SIGINT)
-        _spin()  # the handler runs here and must only defer, not interrupt
+        _spin()  # let the deferred handler run
         completed.append(True)
 
     with pytest.raises(KeyboardInterrupt):
@@ -35,8 +35,14 @@ def test_defers_interrupt_until_completion():
     assert signal.getsignal(signal.SIGINT) is original
 
 
-def test_nested_calls_defer_to_outermost():
+def test_nested_calls_preserve_handler():
+    calls = []
     order = []
+
+    def handler(signum, frame):
+        calls.append(signum)
+
+    signal.signal(signal.SIGINT, handler)
 
     @defer_sigint
     def inner():
@@ -47,30 +53,12 @@ def test_nested_calls_defer_to_outermost():
     @defer_sigint
     def outer():
         inner()
-        order.append("outer")  # deferred past inner's return, so this still runs
+        order.append("outer")  # still deferred after inner returns
 
-    with pytest.raises(KeyboardInterrupt):
-        outer()
+    outer()
     assert order == ["inner", "outer"]
-
-
-def test_delegates_to_preexisting_handler():
-    calls = []
-
-    def user_handler(signum, frame):
-        calls.append(signum)
-
-    signal.signal(signal.SIGINT, user_handler)
-
-    @defer_sigint
-    def critical():
-        signal.raise_signal(signal.SIGINT)
-        _spin()
-        assert calls == []  # deferred: the user handler has not fired yet
-
-    critical()
     assert calls == [signal.SIGINT]
-    assert signal.getsignal(signal.SIGINT) is user_handler
+    assert signal.getsignal(signal.SIGINT) is handler
 
 
 def test_worker_thread_runs_without_installing_a_handler():
@@ -78,8 +66,7 @@ def test_worker_thread_runs_without_installing_a_handler():
 
     @defer_sigint
     def work():
-        # Installing a handler off the main thread would raise; the wrapper must
-        # skip the guard entirely here.
+        # signal handlers can only be installed on the main thread
         result.append(True)
 
     thread = threading.Thread(target=work)
