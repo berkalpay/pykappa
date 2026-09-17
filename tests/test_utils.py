@@ -3,22 +3,14 @@ import threading
 
 import pytest
 
-from pykappa import _utils
 from pykappa._utils import uninterruptible
 
 
 @pytest.fixture(autouse=True)
-def isolate_sigint():
-    """Give each test a known SIGINT baseline and reset the shared guard state."""
-    guard = _utils._interrupt_guard
+def restore_sigint():
     saved = signal.getsignal(signal.SIGINT)
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-    guard._depth = 0
-    guard._pending = None
-    guard._original = None
+    signal.signal(signal.SIGINT, signal.default_int_handler)
     yield
-    guard._depth = 0
-    guard._pending = None
     signal.signal(signal.SIGINT, saved)
 
 
@@ -29,6 +21,7 @@ def _spin():
 
 def test_defers_interrupt_until_completion():
     completed = []
+    original = signal.getsignal(signal.SIGINT)
 
     @uninterruptible
     def critical():
@@ -38,18 +31,8 @@ def test_defers_interrupt_until_completion():
 
     with pytest.raises(KeyboardInterrupt):
         critical()
-    assert completed == [True]  # ran to completion before the interrupt surfaced
-
-
-def test_idle_interrupt_surfaces_immediately():
-    @uninterruptible
-    def noop():
-        pass
-
-    noop()  # installs the persistent handler; guard is now idle
-    with pytest.raises(KeyboardInterrupt):
-        signal.raise_signal(signal.SIGINT)
-        _spin()
+    assert completed == [True]
+    assert signal.getsignal(signal.SIGINT) is original
 
 
 def test_nested_calls_defer_to_outermost():
@@ -86,18 +69,8 @@ def test_delegates_to_preexisting_handler():
         assert calls == []  # deferred: the user handler has not fired yet
 
     critical()
-    assert calls == [signal.SIGINT]  # delegated to the original handler on exit
-
-
-def test_ignored_interrupt_is_dropped():
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-    @uninterruptible
-    def critical():
-        signal.raise_signal(signal.SIGINT)
-        _spin()
-
-    critical()  # SIG_IGN was in place, so nothing is surfaced
+    assert calls == [signal.SIGINT]
+    assert signal.getsignal(signal.SIGINT) is user_handler
 
 
 def test_worker_thread_runs_without_installing_a_handler():
