@@ -3,7 +3,7 @@ import threading
 
 import pytest
 
-from pykappa._utils import uninterruptible
+from pykappa._utils import defer_sigint
 
 
 @pytest.fixture(autouse=True)
@@ -23,7 +23,7 @@ def test_defers_interrupt_until_completion():
     completed = []
     original = signal.getsignal(signal.SIGINT)
 
-    @uninterruptible
+    @defer_sigint
     def critical():
         signal.raise_signal(signal.SIGINT)
         _spin()  # the handler runs here and must only defer, not interrupt
@@ -38,13 +38,13 @@ def test_defers_interrupt_until_completion():
 def test_nested_calls_defer_to_outermost():
     order = []
 
-    @uninterruptible
+    @defer_sigint
     def inner():
         signal.raise_signal(signal.SIGINT)
         _spin()
         order.append("inner")
 
-    @uninterruptible
+    @defer_sigint
     def outer():
         inner()
         order.append("outer")  # deferred past inner's return, so this still runs
@@ -62,7 +62,7 @@ def test_delegates_to_preexisting_handler():
 
     signal.signal(signal.SIGINT, user_handler)
 
-    @uninterruptible
+    @defer_sigint
     def critical():
         signal.raise_signal(signal.SIGINT)
         _spin()
@@ -76,7 +76,7 @@ def test_delegates_to_preexisting_handler():
 def test_worker_thread_runs_without_installing_a_handler():
     result = []
 
-    @uninterruptible
+    @defer_sigint
     def work():
         # Installing a handler off the main thread would raise; the wrapper must
         # skip the guard entirely here.

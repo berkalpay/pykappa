@@ -7,7 +7,7 @@ from types import MappingProxyType
 from typing import Any, Generic, Iterable, Optional, TypeVar
 
 
-def uninterruptible(func: Callable) -> Callable:
+def defer_sigint(func: Callable) -> Callable:
     """Shield a function from being interrupted midway by a keyboard interrupt.
 
     The wrapped function will be allowed to finish its execution. Once it
