@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>
+  
+  Phase separation — PyKappa
+  
+</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=26067b32" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The lac operon" href="lac_operon.html" />
+    <link rel="prev" title="Linear polymerization" href="linear_polymerization.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="Phase-separation">
+<h1>Phase separation<a class="headerlink" href="#Phase-separation" title="Link to this heading">¶</a></h1>
+<p>Multivalent binding allows molecules to assemble into large connected complexes. Here, <code class="docutils literal notranslate"><span class="pre">A</span></code> can polymerize through its <code class="docutils literal notranslate"><span class="pre">l</span></code> and <code class="docutils literal notranslate"><span class="pre">r</span></code> sites and bind <code class="docutils literal notranslate"><span class="pre">B</span></code> through its <code class="docutils literal notranslate"><span class="pre">b</span></code> site. Each <code class="docutils literal notranslate"><span class="pre">B</span></code> has three <code class="docutils literal notranslate"><span class="pre">A</span></code>-binding sites and a dimerization site <code class="docutils literal notranslate"><span class="pre">d</span></code>. We will simulate the system and track the largest connected complex, the <em>maximer</em>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykappa</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
+</pre></div>
+</div>
+</div>
+<p>Convert concentrations to molecule counts and kinetic rate constants to stochastic rates, and set up the model.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scale</span> <span class="o">=</span> <span class="mf">0.03</span> <span class="o">*</span> <span class="mf">0.25</span>
+<span class="n">volume</span> <span class="o">=</span> <span class="mf">1e-12</span> <span class="o">*</span> <span class="n">scale</span>
+<span class="n">avogadro</span> <span class="o">=</span> <span class="mf">6.022e23</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.67e5</span> <span class="o">*</span> <span class="n">scale</span>
+<span class="n">k_on</span> <span class="o">=</span> <span class="mf">1e8</span>
+<span class="n">initial_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1e-9</span> <span class="o">*</span> <span class="n">avogadro</span> <span class="o">*</span> <span class="n">volume</span><span class="p">))</span>
+<span class="n">g_on</span> <span class="o">=</span> <span class="n">k_on</span> <span class="o">/</span> <span class="p">(</span><span class="n">avogadro</span> <span class="o">*</span> <span class="n">volume</span><span class="p">)</span>
+<span class="n">g_on_local</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">g_on</span>
+<span class="n">g_off_medium</span> <span class="o">=</span> <span class="mf">1e-7</span> <span class="o">*</span> <span class="n">k_on</span>
+<span class="n">g_off_weak</span> <span class="o">=</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="n">k_on</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
+<span class="s2">%init: </span><span class="si">{</span><span class="n">initial_count</span><span class="si">}</span><span class="s2"> A(l[.], r[.], b[.])</span>
+<span class="s2">%init: </span><span class="si">{</span><span class="n">initial_count</span><span class="si">}</span><span class="s2"> B(d[.], a1[.], a2[.], a3[.])</span>
+
+<span class="s2">A(l[.]), A(r[.]) &lt;-&gt; A(l[1]), A(r[1]) @ </span><span class="si">{</span><span class="n">g_on</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="si">{</span><span class="n">g_on_local</span><span class="si">}</span><span class="se">}}</span><span class="s2">, </span><span class="si">{</span><span class="n">g_off_weak</span><span class="si">}</span>
+<span class="s2">A(b[.]), B(a1[.]) &lt;-&gt; A(b[1]), B(a1[1]) @ </span><span class="si">{</span><span class="n">g_on</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="si">{</span><span class="n">g_on_local</span><span class="si">}</span><span class="se">}}</span><span class="s2">, </span><span class="si">{</span><span class="n">g_off_medium</span><span class="si">}</span>
+<span class="s2">A(b[.]), B(a2[.]) &lt;-&gt; A(b[1]), B(a2[1]) @ </span><span class="si">{</span><span class="n">g_on</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="si">{</span><span class="n">g_on_local</span><span class="si">}</span><span class="se">}}</span><span class="s2">, </span><span class="si">{</span><span class="n">g_off_medium</span><span class="si">}</span>
+<span class="s2">A(b[.]), B(a3[.]) &lt;-&gt; A(b[1]), B(a3[1]) @ </span><span class="si">{</span><span class="n">g_on</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="si">{</span><span class="n">g_on_local</span><span class="si">}</span><span class="se">}}</span><span class="s2">, </span><span class="si">{</span><span class="n">g_off_medium</span><span class="si">}</span>
+<span class="s2">B(d[.]), B(d[.]) &lt;-&gt; B(d[1]), B(d[1]) @ </span><span class="si">{</span><span class="n">g_on</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="si">{</span><span class="n">g_on_local</span><span class="si">}</span><span class="se">}}</span><span class="s2">, </span><span class="si">{</span><span class="n">g_off_medium</span><span class="si">}</span>
+<span class="s2">"""</span>
+
+<span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="n">from_ka</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">78746</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Follow the largest assembly over time, saving system snapshots and its history for later analysis.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"phase_separation_output"</span><span class="p">)</span>
+<span class="n">output_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">observations</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">snapshot_index</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="mf">33.0</span>
+<span class="n">observation_time</span> <span class="o">=</span> <span class="n">snapshot_time</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span>
+
+<span class="k">while</span> <span class="n">system</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
+    <span class="n">next_update_time</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">next_update_time</span>
+    <span class="k">if</span> <span class="n">next_update_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">next_update_time</span> <span class="o">&gt;=</span> <span class="n">observation_time</span><span class="p">:</span>
+        <span class="n">maximer</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">mixture</span><span class="o">.</span><span class="n">components</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+        <span class="n">encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+            <span class="n">zlib</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">maximer</span><span class="o">.</span><span class="n">kappa_str_with_agent_ids</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">level</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">observations</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">round</span><span class="p">(</span><span class="n">observation_time</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">maximer</span><span class="p">),</span> <span class="n">encoded</span><span class="p">))</span>
+        <span class="n">observation_time</span> <span class="o">+=</span> <span class="mf">0.005</span>
+
+    <span class="k">if</span> <span class="n">next_update_time</span> <span class="o">&gt;=</span> <span class="n">snapshot_time</span><span class="p">:</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">advance_time_to</span><span class="p">(</span><span class="n">snapshot_time</span><span class="p">)</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"snap_</span><span class="si">{</span><span class="n">snapshot_index</span><span class="si">:</span><span class="s2">06</span><span class="si">}</span><span class="s2">.pkl"</span><span class="p">)</span>
+        <span class="n">snapshot_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">snapshot_time</span> <span class="o">+=</span> <span class="mf">0.01</span>
+
+    <span class="n">system</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="s2">"maximer size"</span><span class="p">,</span> <span class="s2">"maximer_strings"</span><span class="p">])</span>
+<span class="n">data</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">output_directory</span> <span class="o">/</span> <span class="s2">"maximer_series.pkl"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.svg" alt="Logo of PyKappa"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">PyKappa</a></h1>
+
+
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reversible_binding.html">Reversible binding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prozone_effect.html">The prozone effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_polymerization.html">Linear polymerization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Phase separation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lac_operon.html">The lac operon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation_speed.html">Simulation speed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemostat.html">Chemostat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="michaelis_menten.html">Michaelis-Menten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_borne_disease.html">Vector-borne disease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proofreading.html">Kinetic proofreading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Examples</a><ul>
+      <li>Previous: <a href="linear_polymerization.html" title="previous chapter">Linear polymerization</a></li>
+      <li>Next: <a href="lac_operon.html" title="next chapter">The lac operon</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<div class="footer" style="margin-bottom: 0">
+  This work was funded by the John Templeton Foundation (grant no. 63448).
+</div>
+
+    <div class="footer">
+      &#169;2026, PyKappa Developers.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/examples/phase_separation.py.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/berkalpay/pykappa" class="github">
+        <img src="../_static/github-banner.svg" alt="Fork me on GitHub" class="github"/>
+    </a>
+    
+
+    
+<style>
+  .footer {
+    margin-top: 0 !important;
+  }
+</style>
+
+  </body>
+</html>

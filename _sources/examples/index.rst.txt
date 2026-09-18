@@ -7,6 +7,7 @@ Examples
    reversible_binding
    prozone_effect
    linear_polymerization
+   phase_separation
    lac_operon
    simulation_speed
    chemostat
