@@ -233,7 +233,7 @@ class System:
         if mixture is None:
             mixture = Mixture(
                 track_components=any(
-                    rule.component_constraint != "any" for rule in self._rules.values()
+                    rule.requires_component_tracking for rule in self._rules.values()
                 )
             )
 
@@ -483,6 +483,10 @@ class System:
 
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
+        if any(
+            rule.requires_component_tracking for rule in self._rules.values()
+        ) and not mixture.component_tracking:
+            raise ValueError("Rules with constraints require component tracking.")
         self._mixture = mixture
         for rule in self._rules.values():
             for component in rule.left.components:
@@ -609,7 +613,7 @@ class System:
                         ),
                         self,
                     )
-                    if candidate.component_constraint != "any"
+                    if candidate._uses_component_weights
                     else candidate.reactivity(self)
                 )
                 for candidate in self._rules.values()
