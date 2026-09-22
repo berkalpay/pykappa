@@ -1,9 +1,9 @@
 """Represents Kappa rules."""
 
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from math import prod
-from typing import Literal, Optional, Self, TYPE_CHECKING
+from typing import Literal, Mapping, Optional, Protocol, Self, TYPE_CHECKING
 from functools import cached_property
 from copy import deepcopy
 
@@ -16,6 +16,44 @@ if TYPE_CHECKING:
     from pykappa.system import System
 
 
+@dataclass(frozen=True)
+class RuleMatch:
+    """A concrete match of a rule's left-hand side in a mixture."""
+
+    embedding: Mapping[Agent, Agent]
+    components: tuple[Component, ...]
+
+
+class RuleConstraint(Protocol):
+    """A programmatic condition on a concrete rule match."""
+
+    def accepts(self, match: RuleMatch, mixture: Mixture) -> bool: ...
+
+
+class ComponentMatchConstraint:
+    """A constraint that can filter each matched mixture component independently."""
+
+    def accepts(self, match: RuleMatch, mixture: Mixture) -> bool:
+        return all(self.accepts_component(component) for component in match.components)
+
+    def accepts_component(self, component: Component) -> bool:
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class ComponentSize(ComponentMatchConstraint):
+    """Require every matched mixture component to contain at most ``max_size`` agents."""
+
+    max_size: int
+
+    def __post_init__(self):
+        if self.max_size < 1:
+            raise ValueError("max_size must be at least 1")
+
+    def accepts_component(self, component: Component) -> bool:
+        return len(component) <= self.max_size
+
+
 @dataclass(frozen=True, eq=False)
 class Rule:
     """A Kappa rule, specifying the transformation of a pattern at a stochastic rate."""
@@ -25,17 +63,22 @@ class Rule:
     rate_expression: Expression
     component_constraint: Literal["any", "same", "different"] = "any"
     token_updates: tuple[tuple[Expression, str], ...] = ()
+    constraints: tuple[RuleConstraint, ...] = ()
     _component_weights: dict[Component, int] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
     _component_counts: dict[Component, tuple[int, ...]] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
-    _different_overlap: int = field(default=0, init=False, repr=False, compare=False)
-    _same_weight: int = field(default=0, init=False, repr=False, compare=False)
+    _coincident_weight: int = field(default=0, init=False, repr=False, compare=False)
+    _component_totals: tuple[int, ...] = field(
+        default=(), init=False, repr=False, compare=False
+    )
 
     @classmethod
-    def list_from_kappa(cls, kappa_str: str) -> list[Self]:
+    def list_from_kappa(
+        cls, kappa_str: str, constraints: tuple[RuleConstraint, ...] = ()
+    ) -> list[Self]:
         """Parse Kappa string into a list of rules.
 
         Note:
@@ -46,16 +89,21 @@ class Rule:
         input_tree = kappa_parser.parse(kappa_str)
         assert input_tree.data == "kappa_input"
         rule_tree = input_tree.children[0]
-        return KappaTransformer().transform(rule_tree)
+        rules = KappaTransformer().transform(rule_tree)
+        if constraints:
+            return [replace(rule, constraints=constraints) for rule in rules]
+        return rules
 
     @classmethod
-    def from_kappa(cls, kappa_str: str) -> Self:
+    def from_kappa(
+        cls, kappa_str: str, constraints: tuple[RuleConstraint, ...] = ()
+    ) -> Self:
         """Parse a single Kappa rule from string.
 
         Raises:
             AssertionError: If the string represents more than one rule.
         """
-        rules = cls.list_from_kappa(kappa_str)
+        rules = cls.list_from_kappa(kappa_str, constraints)
         assert (
             len(rules) == 1
         ), "The given rule expression represents more than one rule."
@@ -69,6 +117,7 @@ class Rule:
                 (expression, name) for expression, name in (self.token_updates or ())
             ),
         )
+        object.__setattr__(self, "constraints", tuple(self.constraints or ()))
         l = len(self.left.agents)
         r = len(self.right.agents)
         assert (
@@ -79,6 +128,25 @@ class Rule:
             self.component_constraint != "different" or len(self.left.components) == 2
         ), "A different-component constraint requires exactly 2 pattern components."
 
+    @property
+    def requires_component_tracking(self) -> bool:
+        """Whether applying this rule requires connected-component tracking."""
+        return self.component_constraint != "any" or bool(self.constraints)
+
+    @cached_property
+    def _component_match_constraints(self) -> tuple[ComponentMatchConstraint, ...]:
+        return tuple(
+            constraint
+            for constraint in self.constraints
+            if isinstance(constraint, ComponentMatchConstraint)
+        )
+
+    @cached_property
+    def _uses_component_weights(self) -> bool:
+        return self.component_constraint != "any" or bool(
+            self._component_match_constraints
+        )
+
     def __len__(self):
         return len(self.left.agents)
 
@@ -86,7 +154,10 @@ class Rule:
         yield from zip(self.left.agents, self.right.agents)
 
     def __repr__(self):
-        return f'{type(self).__name__}(kappa_str="{self.kappa_str}")'
+        constraints = (
+            "" if not self.constraints else f", constraints={self.constraints!r}"
+        )
+        return f'{type(self).__name__}(kappa_str="{self.kappa_str}"{constraints})'
 
     def __str__(self):
         return self.kappa_str
@@ -161,26 +232,25 @@ class Rule:
         Note:
             This doesn't do any symmetry correction, though `System`
             applies this correction when calculating rule reactivities.
+            General constraints are applied during selection; component-match
+            constraints are included in this count.
         """
-        if self.component_constraint == "same":
-            self._component_weights.clear()
-            self._component_weights.update(
-                (component, prod(self._counts_in_component(mixture, component)))
-                for component in mixture.components
-            )
-            total = sum(self._component_weights.values())
-            object.__setattr__(self, "_same_weight", total)
-            return total
-
-        if self.component_constraint == "different":
+        if self._uses_component_weights:
             self._component_counts.clear()
-            overlap = 0
+            self._component_weights.clear()
+            totals = [0] * len(self.left.components)
+            coincident_weight = 0
             for component in mixture.components:
-                counts = self._counts_in_component(mixture, component)
+                counts = self._eligible_counts_in_component(mixture, component)
                 self._component_counts[component] = counts
-                overlap += prod(counts)
-            object.__setattr__(self, "_different_overlap", overlap)
-            return self._different_weight(mixture)
+                weight = prod(counts)
+                self._component_weights[component] = weight
+                coincident_weight += weight
+                for i, count in enumerate(counts):
+                    totals[i] += count
+            object.__setattr__(self, "_component_totals", tuple(totals))
+            object.__setattr__(self, "_coincident_weight", coincident_weight)
+            return self._component_weight()
 
         return prod(
             len(mixture.embeddings(component)) for component in self.left.components
@@ -194,12 +264,22 @@ class Rule:
             for pattern in self.left.components
         )
 
-    def _different_weight(self, mixture: Mixture) -> int:
-        first, second = self.left.components
-        return (
-            len(mixture.embeddings(first)) * len(mixture.embeddings(second))
-            - self._different_overlap
-        )
+    def _eligible_counts_in_component(
+        self, mixture: Mixture, component: Component
+    ) -> tuple[int, ...]:
+        if not all(
+            constraint.accepts_component(component)
+            for constraint in self._component_match_constraints
+        ):
+            return (0,) * len(self.left.components)
+        return self._counts_in_component(mixture, component)
+
+    def _component_weight(self) -> int:
+        if self.component_constraint == "same":
+            return self._coincident_weight
+        if self.component_constraint == "different":
+            return prod(self._component_totals) - self._coincident_weight
+        return prod(self._component_totals)
 
     def update_component_weights(
         self,
@@ -208,28 +288,27 @@ class Rule:
         current_components: set[Component],
     ) -> int:
         """Refresh constraint weights after an event touched some components."""
-        if self.component_constraint == "same":
-            total = self._same_weight
-            for component in previous_components:
-                total -= self._component_weights.pop(component, 0)
-            for component in current_components:
-                weight = prod(self._counts_in_component(mixture, component))
-                self._component_weights[component] = weight
-                total += weight
-            object.__setattr__(self, "_same_weight", total)
-            return total
-
-        if self.component_constraint == "different":
-            overlap = self._different_overlap
-            for component in previous_components:
-                if counts := self._component_counts.pop(component, None):
-                    overlap -= prod(counts)
-            for component in current_components:
-                counts = self._counts_in_component(mixture, component)
-                self._component_counts[component] = counts
-                overlap += prod(counts)
-            object.__setattr__(self, "_different_overlap", overlap)
-            return self._different_weight(mixture)
+        totals = list(self._component_totals)
+        coincident_weight = self._coincident_weight
+        for component in previous_components:
+            counts = self._component_counts.pop(
+                component, (0,) * len(self.left.components)
+            )
+            weight = self._component_weights.pop(component, 0)
+            coincident_weight -= weight
+            for i, count in enumerate(counts):
+                totals[i] -= count
+        for component in current_components:
+            counts = self._eligible_counts_in_component(mixture, component)
+            weight = prod(counts)
+            self._component_counts[component] = counts
+            self._component_weights[component] = weight
+            coincident_weight += weight
+            for i, count in enumerate(counts):
+                totals[i] += count
+        object.__setattr__(self, "_component_totals", tuple(totals))
+        object.__setattr__(self, "_coincident_weight", coincident_weight)
+        return self._component_weight()
 
     def _select(
         self, mixture: Mixture, rng: random.Random | None = None
@@ -242,55 +321,73 @@ class Rule:
         """
         rng = random if rng is None else rng
 
-        if self.component_constraint != "any":
+        if self._uses_component_weights:
             components = list(mixture.components)
             if self.component_constraint == "different":
-                second = self.left.components[1]
-                second_total = len(mixture.embeddings(second))
+                second_total = self._component_totals[1]
                 weights = [
                     first * (second_total - second)
                     for first, second in (
                         self._component_counts[component] for component in components
                     )
                 ]
-            else:
+            elif self.component_constraint == "same":
                 weights = [
                     self._component_weights[component] for component in components
                 ]
-            selected_component = rng.choices(
-                components,
-                weights,
-            )[0]
+            if self.component_constraint != "any":
+                selected_component = rng.choices(components, weights)[0]
 
             if self.component_constraint == "different":
                 first, second = self.left.components
-                return self._produce_update(
-                    dict(
-                        rng.choice(
-                            mixture.embeddings_in_component(first, selected_component)
-                        )
+                rule_embedding = dict(
+                    rng.choice(
+                        mixture.embeddings_in_component(first, selected_component)
                     )
-                    | dict(
-                        rejection_sample(
-                            mixture.embeddings(second),
-                            mixture.embeddings_in_component(second, selected_component),
-                            rng=rng,
-                        )
-                    ),
-                    mixture,
                 )
+                if self._component_match_constraints:
+                    second_component = rng.choices(
+                        components,
+                        [
+                            (
+                                0
+                                if component == selected_component
+                                else self._component_counts[component][1]
+                            )
+                            for component in components
+                        ],
+                    )[0]
+                    second_embedding = rng.choice(
+                        mixture.embeddings_in_component(second, second_component)
+                    )
+                else:
+                    second_embedding = rejection_sample(
+                        mixture.embeddings(second),
+                        mixture.embeddings_in_component(second, selected_component),
+                        rng=rng,
+                    )
+                rule_embedding.update(second_embedding)
+                return self._constrained_update(rule_embedding, mixture)
 
-            embeddings = lambda component: mixture.embeddings_in_component(
-                component, selected_component
-            )
+            def embeddings(component, i):
+                selected = (
+                    selected_component
+                    if self.component_constraint == "same"
+                    else rng.choices(
+                        components,
+                        [self._component_counts[c][i] for c in components],
+                    )[0]
+                )
+                return mixture.embeddings_in_component(component, selected)
+
         else:
-            embeddings = mixture.embeddings
+            embeddings = lambda component, _: mixture.embeddings(component)
 
         rule_embedding: dict[Agent, Agent] = {}
 
-        for component in self.left.components:
+        for i, component in enumerate(self.left.components):
             component_embeddings = (
-                embeddings(component)
+                embeddings(component, i)
                 if component in mixture._embeddings
                 else list(component.embeddings(mixture))
             )
@@ -305,6 +402,24 @@ class Rule:
                 else:
                     rule_embedding[rule_agent] = mixture_agent
 
+        return self._constrained_update(rule_embedding, mixture)
+
+    def _constrained_update(
+        self, rule_embedding: dict[Agent, Agent], mixture: Mixture
+    ) -> Optional[_MixtureUpdate]:
+        if not self.constraints:
+            return self._produce_update(rule_embedding, mixture)
+        components = tuple(
+            mixture.components.lookup_one(
+                "agent", rule_embedding[next(iter(component))]
+            )
+            for component in self.left.components
+        )
+        match = RuleMatch(rule_embedding, components)
+        if not all(
+            constraint.accepts(match, mixture) for constraint in self.constraints
+        ):
+            return None
         return self._produce_update(rule_embedding, mixture)
 
     def _produce_update(

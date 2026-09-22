@@ -1,8 +1,9 @@
 import pytest
 from math import comb
 
-from pykappa import System, Pattern, Rule
+from pykappa import Mixture, System, Pattern, Rule
 from pykappa.expression import Expression
+from pykappa.rule import ComponentSize
 
 
 @pytest.mark.parametrize(
@@ -208,3 +209,59 @@ def test_simple_bimolecular_rule_application(n_copies):
 def test_rule_symmetries(rule_str, n_symmetries_expected):
     rule = Rule.from_kappa(f"{rule_str} @ 1.0")
     assert rule.n_symmetries == n_symmetries_expected
+
+
+@pytest.mark.parametrize(
+    "component_constraint, n_embeddings", [("any", 1), ("same", 0), ("different", 1)]
+)
+def test_component_size_constraint(component_constraint, n_embeddings):
+    pattern = Pattern.from_kappa("A(), B()")
+    rule = Rule(
+        pattern,
+        pattern,
+        Expression.from_kappa("1"),
+        component_constraint=component_constraint,
+        constraints=(ComponentSize(max_size=1),),
+    )
+    mixture = Mixture(
+        [Pattern.from_kappa("A(), B()"), Pattern.from_kappa("A(x[1]), B(x[1])")],
+        track_components=True,
+    )
+    system = System(mixture, [rule], monitor=False)
+
+    assert rule.n_embeddings(system.mixture) == n_embeddings
+
+
+def test_component_size_constraint_is_updated_incrementally():
+    rule = Rule.from_kappa(
+        "A(x{u}) -> A(x{p}) @ 1",
+        constraints=(ComponentSize(max_size=1),),
+    )
+    mixture = Mixture(
+        [
+            Pattern.from_kappa("A(x[.]{u})"),
+            Pattern.from_kappa("A(x[1]{u}), B(x[1])"),
+        ],
+        track_components=True,
+    )
+    system = System(mixture, [rule], monitor=False, seed=1)
+
+    assert system.reactivity == 1
+    system.update()
+    assert system.reactivity == 0
+
+
+def test_general_rule_constraint_rejects_match():
+    class RejectSingleton:
+        def accepts(self, match, mixture):
+            return len(match.components[0]) > 1
+
+    rule = Rule.from_kappa(
+        "A() -> B() @ 1",
+        constraints=(RejectSingleton(),),
+    )
+    system = System(rules=[rule], monitor=False)
+    system.add("A()")
+
+    assert rule.n_embeddings(system.mixture) == 1
+    assert rule._select(system.mixture) is None

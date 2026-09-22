@@ -233,7 +233,7 @@ class System:
         if mixture is None:
             mixture = Mixture(
                 track_components=any(
-                    rule.component_constraint != "any" for rule in self._rules.values()
+                    rule.requires_component_tracking for rule in self._rules.values()
                 )
             )
 
@@ -382,8 +382,13 @@ class System:
         totals = self.tally_totals
         return str_table(
             [
-                [str(rule), tally.applied, tally.failed, tally.attempts]
-                for rule, tally in self._tallies.items()
+                [
+                    f"{name}: {self._rules[name]}",
+                    tally.applied,
+                    tally.failed,
+                    tally.attempts,
+                ]
+                for name, tally in self._tallies.items()
             ]
             + [["Total", totals.applied, totals.failed, totals.attempts]],
             header=["Rule", "Applied", "Failed", "Attempts"],
@@ -421,6 +426,17 @@ class System:
         """The system representation in Kappa (.ka style) format."""
 
         kappa_list = []
+        constrained_rules = [
+            (name, rule) for name, rule in self._rules.items() if rule.constraints
+        ]
+        if constrained_rules:
+            kappa_list.append(
+                "// WARNING: PyKappa-only constraints are omitted from this Kappa text."
+            )
+            kappa_list.extend(
+                f"// {name}: {', '.join(repr(c) for c in rule.constraints)}"
+                for name, rule in constrained_rules
+            )
 
         # Append the inferred agent signature at the top
         for agent, sites in self._signatures.items():
@@ -455,10 +471,28 @@ class System:
 
         return "\n".join(kappa_list)
 
-    def write_ka(self, filepath: str) -> None:
+    @property
+    def has_programmatic_constraints(self) -> bool:
+        """Whether any rule has a constraint unavailable in Kappa."""
+        return any(rule.constraints for rule in self._rules.values())
+
+    def to_kappa(self, allow_lossy: bool = False) -> str:
+        """Export the system to Kappa text.
+
+        Raises:
+            ValueError: If programmatic constraints would be omitted.
+        """
+        if self.has_programmatic_constraints and not allow_lossy:
+            raise ValueError(
+                "Programmatic constraints cannot be represented in Kappa. "
+                "Pass allow_lossy=True to export without them."
+            )
+        return self.kappa_str
+
+    def write_ka(self, filepath: str, allow_lossy: bool = False) -> None:
         """Write system information to a Kappa file."""
         with open(filepath, "w") as f:
-            f.write(self.kappa_str)
+            f.write(self.to_kappa(allow_lossy=allow_lossy))
 
     def save(self, filepath: str) -> None:
         """Save a checkpoint that can be continued with :meth:`System.load`."""
@@ -483,6 +517,11 @@ class System:
 
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
+        if (
+            any(rule.requires_component_tracking for rule in self._rules.values())
+            and not mixture.component_tracking
+        ):
+            raise ValueError("Rules with constraints require component tracking.")
         self._mixture = mixture
         for rule in self._rules.values():
             for component in rule.left.components:
@@ -581,14 +620,13 @@ class System:
         self._time = next_update_time
         self._next_update_time = None
 
-        rule = self._rng.choices(
-            list(self._rules.values()),
+        name, rule = self._rng.choices(
+            list(self._rules.items()),
             weights=self._rule_reactivities(),
         )[0]
 
         # Apply the rule
         update = rule._select(self._mixture, rng=self._rng)
-        name = str(rule)
         tally = self._tallies.get(name, RuleTally())
         if update is not None:
             self._tallies[name] = RuleTally(
@@ -609,7 +647,7 @@ class System:
                         ),
                         self,
                     )
-                    if candidate.component_constraint != "any"
+                    if candidate._uses_component_weights
                     else candidate.reactivity(self)
                 )
                 for candidate in self._rules.values()
@@ -651,6 +689,8 @@ class System:
             KaSim must be installed and in the PATH.
             Some features are not compatible between PyKappa and KaSim.
         """
+        if self.has_programmatic_constraints:
+            raise ValueError("KaSim cannot simulate programmatic rule constraints.")
         self._invalidate_next_event()
         assert shutil.which("KaSim"), "KaSim not found in the PATH."
 
