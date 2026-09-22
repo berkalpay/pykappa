@@ -349,9 +349,11 @@ class Rule:
                     second_component = rng.choices(
                         components,
                         [
-                            0
-                            if component == selected_component
-                            else self._component_counts[component][1]
+                            (
+                                0
+                                if component == selected_component
+                                else self._component_counts[component][1]
+                            )
                             for component in components
                         ],
                     )[0]
@@ -377,6 +379,7 @@ class Rule:
                     )[0]
                 )
                 return mixture.embeddings_in_component(component, selected)
+
         else:
             embeddings = lambda component, _: mixture.embeddings(component)
 
@@ -407,11 +410,15 @@ class Rule:
         if not self.constraints:
             return self._produce_update(rule_embedding, mixture)
         components = tuple(
-            mixture.components.lookup_one("agent", rule_embedding[next(iter(component))])
+            mixture.components.lookup_one(
+                "agent", rule_embedding[next(iter(component))]
+            )
             for component in self.left.components
         )
         match = RuleMatch(rule_embedding, components)
-        if not all(constraint.accepts(match, mixture) for constraint in self.constraints):
+        if not all(
+            constraint.accepts(match, mixture) for constraint in self.constraints
+        ):
             return None
         return self._produce_update(rule_embedding, mixture)
 
