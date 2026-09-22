@@ -1,8 +1,9 @@
 import pytest
 from math import comb
 
-from pykappa import ComponentSize, Mixture, System, Pattern, Rule
+from pykappa import Mixture, System, Pattern, Rule
 from pykappa.expression import Expression
+from pykappa.rule import ComponentSize
 
 
 @pytest.mark.parametrize(
