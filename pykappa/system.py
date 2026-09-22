@@ -427,9 +427,7 @@ class System:
 
         kappa_list = []
         constrained_rules = [
-            (name, rule)
-            for name, rule in self._rules.items()
-            if rule.constraints
+            (name, rule) for name, rule in self._rules.items() if rule.constraints
         ]
         if constrained_rules:
             kappa_list.append(
