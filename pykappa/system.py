@@ -382,8 +382,13 @@ class System:
         totals = self.tally_totals
         return str_table(
             [
-                [str(rule), tally.applied, tally.failed, tally.attempts]
-                for rule, tally in self._tallies.items()
+                [
+                    f"{name}: {self._rules[name]}",
+                    tally.applied,
+                    tally.failed,
+                    tally.attempts,
+                ]
+                for name, tally in self._tallies.items()
             ]
             + [["Total", totals.applied, totals.failed, totals.attempts]],
             header=["Rule", "Applied", "Failed", "Attempts"],
@@ -483,9 +488,10 @@ class System:
 
     def _set_mixture(self, mixture: Mixture) -> None:
         """Set the system's mixture and update tracking."""
-        if any(
-            rule.requires_component_tracking for rule in self._rules.values()
-        ) and not mixture.component_tracking:
+        if (
+            any(rule.requires_component_tracking for rule in self._rules.values())
+            and not mixture.component_tracking
+        ):
             raise ValueError("Rules with constraints require component tracking.")
         self._mixture = mixture
         for rule in self._rules.values():
@@ -585,14 +591,13 @@ class System:
         self._time = next_update_time
         self._next_update_time = None
 
-        rule = self._rng.choices(
-            list(self._rules.values()),
+        name, rule = self._rng.choices(
+            list(self._rules.items()),
             weights=self._rule_reactivities(),
         )[0]
 
         # Apply the rule
         update = rule._select(self._mixture, rng=self._rng)
-        name = str(rule)
         tally = self._tallies.get(name, RuleTally())
         if update is not None:
             self._tallies[name] = RuleTally(

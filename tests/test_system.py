@@ -68,6 +68,21 @@ def test_rule_tallies():
     ) == (2, 0, 2)
 
 
+def test_tallies_distinguish_identical_rules():
+    system = System.from_kappa(
+        mixture={"A()": 20},
+        rules=["A() -> B() @ 1", "A() -> B() @ 1"],
+        monitor=False,
+        seed=1,
+    )
+
+    while system.reactivity:
+        system.update()
+
+    assert set(system.tallies) == {"r0", "r1"}
+    assert system.tally_totals.applied == 20
+
+
 def test_impossible_rule_rate_is_not_evaluated():
     system = System.from_kappa(
         mixture={"V(x{s})": 1},
