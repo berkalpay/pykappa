@@ -154,7 +154,10 @@ class Rule:
         yield from zip(self.left.agents, self.right.agents)
 
     def __repr__(self):
-        return f'{type(self).__name__}(kappa_str="{self.kappa_str}")'
+        constraints = (
+            "" if not self.constraints else f", constraints={self.constraints!r}"
+        )
+        return f'{type(self).__name__}(kappa_str="{self.kappa_str}"{constraints})'
 
     def __str__(self):
         return self.kappa_str

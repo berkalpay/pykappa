@@ -4,6 +4,7 @@ import random
 
 from pykappa import System, Mixture
 from pykappa.analysis import AVOGADRO
+from pykappa.rule import Rule
 
 
 def heterodimerization_system(k_on: float = 2.5e9) -> System:
@@ -66,6 +67,25 @@ def test_rule_tallies():
         system.tally_totals.failed,
         system.tally_totals.attempts,
     ) == (2, 0, 2)
+
+
+def test_programmatic_constraints_are_not_exported(tmp_path):
+    class RejectAll:
+        def accepts(self, match, mixture):
+            return False
+
+    rule = Rule.from_kappa("A() -> B() @ 1", constraints=(RejectAll(),))
+    system = System(rules=[rule], monitor=False)
+    system.add("A()")
+
+    assert "PyKappa-only constraints" in system.kappa_str
+    with pytest.raises(ValueError, match="cannot be represented"):
+        system.to_kappa()
+    assert system.to_kappa(allow_lossy=True) == system.kappa_str
+    with pytest.raises(ValueError, match="cannot be represented"):
+        system.write_ka(tmp_path / "system.ka")
+    with pytest.raises(ValueError, match="cannot simulate"):
+        system.update_via_kasim(1)
 
 
 def test_tallies_distinguish_identical_rules():

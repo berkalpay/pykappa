@@ -426,6 +426,19 @@ class System:
         """The system representation in Kappa (.ka style) format."""
 
         kappa_list = []
+        constrained_rules = [
+            (name, rule)
+            for name, rule in self._rules.items()
+            if rule.constraints
+        ]
+        if constrained_rules:
+            kappa_list.append(
+                "// WARNING: PyKappa-only constraints are omitted from this Kappa text."
+            )
+            kappa_list.extend(
+                f"// {name}: {', '.join(repr(c) for c in rule.constraints)}"
+                for name, rule in constrained_rules
+            )
 
         # Append the inferred agent signature at the top
         for agent, sites in self._signatures.items():
@@ -460,10 +473,28 @@ class System:
 
         return "\n".join(kappa_list)
 
-    def write_ka(self, filepath: str) -> None:
+    @property
+    def has_programmatic_constraints(self) -> bool:
+        """Whether any rule has a constraint unavailable in Kappa."""
+        return any(rule.constraints for rule in self._rules.values())
+
+    def to_kappa(self, allow_lossy: bool = False) -> str:
+        """Export the system to Kappa text.
+
+        Raises:
+            ValueError: If programmatic constraints would be omitted.
+        """
+        if self.has_programmatic_constraints and not allow_lossy:
+            raise ValueError(
+                "Programmatic constraints cannot be represented in Kappa. "
+                "Pass allow_lossy=True to export without them."
+            )
+        return self.kappa_str
+
+    def write_ka(self, filepath: str, allow_lossy: bool = False) -> None:
         """Write system information to a Kappa file."""
         with open(filepath, "w") as f:
-            f.write(self.kappa_str)
+            f.write(self.to_kappa(allow_lossy=allow_lossy))
 
     def save(self, filepath: str) -> None:
         """Save a checkpoint that can be continued with :meth:`System.load`."""
@@ -660,6 +691,8 @@ class System:
             KaSim must be installed and in the PATH.
             Some features are not compatible between PyKappa and KaSim.
         """
+        if self.has_programmatic_constraints:
+            raise ValueError("KaSim cannot simulate programmatic rule constraints.")
         self._invalidate_next_event()
         assert shutil.which("KaSim"), "KaSim not found in the PATH."
 
