@@ -6,6 +6,8 @@ It supports
    * cached :class:`tracking <pykappa.mixture.Mixture>` of rule embeddings for algorithmically efficient simulation :class:`updates <pykappa.system.System.update>`; and
    * :class:`passing systems<pykappa.system.System.update_via_kasim>` to `KaSim <https://github.com/Kappa-Dev/KappaTools>`_ for faster compiled execution (see :doc:`here <examples/simulation_speed>` for a speed comparison).
 Visit the :doc:`examples <examples/index>` gallery to see how PyKappa can be used to simulate systems of molecular interactions such as :doc:`polymerization <examples/linear_polymerization>` and :doc:`gene regulation <examples/lac_operon>`.
+
+Our `preprint on bioRxiv <https://doi.org/10.64898/2026.09.18.752660>`_ describes PyKappa with an :doc:`example of phase separation <examples/phase_separation>`.
 See the `language manual <https://kappalanguage.org/static/manual.pdf>`_ for a detailed description of the Kappa language.
 
 PyKappa is available via pip:

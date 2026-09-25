@@ -8,6 +8,7 @@
 
 PyKappa is a Python package for simulation and analysis of rule-based models, which describe systems in terms of local, stochastic graph transformations.
 See our website [pykappa.org](https://pykappa.org) for examples and documentation.
+Our [preprint on bioRxiv](https://doi.org/10.64898/2026.09.18.752660) describes PyKappa with an application to modeling phase separation.
 
 
 ## Development
