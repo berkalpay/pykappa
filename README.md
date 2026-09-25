@@ -10,10 +10,15 @@ PyKappa is a Python package for simulation and analysis of rule-based models, wh
 See our website [pykappa.org](https://pykappa.org) for examples and documentation.
 Our [preprint on bioRxiv](https://doi.org/10.64898/2026.09.18.752660) describes PyKappa with an application to modeling phase separation.
 
-
 ## Development
 
 Developer requirements can be installed via `pip install -e ".[dev]"`.
 Correctness tests are run via `pytest`.
 Running `python profiling/profile.py` will profile the performance of predefined Kappa models and write the results to `profiling/results`.
 We use the Black code formatter, which can be run as `black .`
+
+## License
+
+Copyright © 2025–2026 PyKappa authors and contributors.
+
+Licensed under GPL-3.0-or-later; see [LICENSE](LICENSE).
